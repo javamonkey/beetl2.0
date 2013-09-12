@@ -22,9 +22,9 @@ public class NumberTest {
 	
 
 	 void testAdd(){
-		int loop = 10000*50000;
-		Object a = 3;
-		Object b = 22;
+		int loop = 10000*5000;
+		Object a = 333;
+		Object b = 2332;
 		
 		
 		Log.key1Start();
@@ -46,6 +46,12 @@ public class NumberTest {
 		}
 		Log.key3End();
 		
+		Log.key4Start();
+		for(int i=0;i<loop;i++){
+			testAddPlan4(a,b);
+		}
+		Log.key4End();
+		
 		Log.display();
 		
 	}
@@ -65,7 +71,7 @@ public class NumberTest {
 		int t = 1;
 		switch(t){
 		case 1:{
-			 return ((Integer)a).intValue()+((Integer)b).intValue();
+			 return new Integer(((Integer)a).intValue()+((Integer)b).intValue());
 		}
 		}
 		return 0;
@@ -73,6 +79,17 @@ public class NumberTest {
 	}
 	
 	public Object testAddPlan3(Object a,Object b){
+		int t = 1;
+		switch(t){
+		case 1:{
+			 return ((Integer)a).intValue()+((Integer)b).intValue();
+		}
+		}
+		return 0;
+		
+	}
+	
+	public Object testAddPlan4(Object a,Object b){
 		int t = 1;
 		switch(t){
 		case 1:{
@@ -88,6 +105,7 @@ public class NumberTest {
 		return 0;
 		
 	}
+	
 	
 	
 	

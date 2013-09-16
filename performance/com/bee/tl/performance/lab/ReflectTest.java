@@ -6,11 +6,12 @@ import com.bee.tl.performance.Log;
 import com.esotericsoftware.reflectasm.MethodAccess;
 
 /**
- * key1=1032 百分比,Infinity
-key2=6384 百分比,Infinity
-key3=0 百分比,NaN
-key4=463 百分比,Infinity
-key5=89 百分比,Infinity
+缓存并反射调用=967 百分比,Infinity
+反射=6552 百分比,Infinity
+方法调用=10 百分比,Infinity
+asm调用=422 百分比,Infinity
+缓存并asm调用=91 百分比,Infinity
+
 
  * @author joelli
  *
@@ -62,11 +63,11 @@ public class ReflectTest {
 	
 		//太慢了，不考虑
 		
-//		Log.key3Start();
-//		for(int i=0;i<loop;i++){
-//			t.asmplan(t, "getName");
-//		}
-//		Log.key3End();
+		Log.key3Start();
+		for(int i=0;i<loop;i++){
+			t.call(t);
+		}
+		Log.key3End();
 //	
 		
 		Log.key4Start();
@@ -81,19 +82,17 @@ public class ReflectTest {
 		}
 		Log.key5End();
 	
-		Log.display();
-	}
-	
-	public void asmplan(Object o,String name){
-		MethodAccess access = MethodAccess.get(ReflectTest.class);
-		access.invoke(o, name);
-		
+		Log.display("缓存并反射调用","反射","方法调用","asm调用","缓存并asm调用");
 	}
 	
 	public void asmCacheplan(Object o,String name){
-		
 		access.invoke(o, name);
 		
+	}
+	
+	public void call(Object o){
+		
+		((ReflectTest)o).getName();
 	}
 	
 	public void asmCacheplan(Object o,int index){

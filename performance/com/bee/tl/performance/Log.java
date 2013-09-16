@@ -98,5 +98,17 @@ public class Log
 		System.out.println("key5=" + key5End + " 百分比," + key5End * 1.0 / total);
 
 	}
+	
+	public static void display(String...cat)
+	{
+		long total = endAll;
+		System.out.println(cat[0] +"=" +  key1End + " 百分比," + key1End * 1.0 / total);
+		System.out.println((cat.length>=2?cat[1]:"key2") +"="+key2End + " 百分比," + key2End * 1.0 / total);
+		System.out.println((cat.length>=3?cat[2]:"key3") +"="+ key3End + " 百分比," + key3End * 1.0 / total);
+		System.out.println((cat.length>=4?cat[3]:"key4") +"=" + key4End + " 百分比," + key4End * 1.0 / total);
+		System.out.println((cat.length>=5?cat[4]:"key5") +"=" + key5End + " 百分比," + key5End * 1.0 / total);
+
+	}
+
 
 }

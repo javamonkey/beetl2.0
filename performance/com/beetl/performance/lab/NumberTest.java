@@ -1,6 +1,6 @@
-package com.bee.tl.performance.lab;
+package com.beetl.performance.lab;
 
-import com.bee.tl.performance.Log;
+import com.beetl.performance.Log;
 
 public class NumberTest {
 

@@ -12,19 +12,19 @@ public interface Template {
 	 * @return
 	 * @throws BeetlException
 	 */
-	public String getText() throws BeetlException;
+	public String render() throws BeetlException;
 	
 	/** 获取模板输出的文本,输出到Writer里
 	 * @param w
 	 * @throws BeetlException
 	 */
-	public void getText(Writer writer)throws BeetlException;
+	public void renderTo(Writer writer)throws BeetlException;
 	
 	/**获取模板输出的文本,输出到OutputStream里,tempalte必须在二进制输出模式下才能使用
 	 * @param os
 	 * @throws BeetlException
 	 */
-	public void getText(OutputStream os) throws BeetlException;
+	public void renderTo(OutputStream os) throws BeetlException;
 	
 
 	

@@ -1,6 +1,7 @@
 package org.beetl.core;
 
 import java.io.Reader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
 
@@ -11,6 +12,13 @@ import java.util.Map;
  *
  */
 public class BeetlKit {
+	
+	/** 使用默认配置，调用此方法可以改变模板配置
+	 * @param conf
+	 */
+	public static void setConfiguration(Configuration conf){
+		
+	}
 	
 	/*模板部分*/
 	
@@ -33,15 +41,33 @@ public class BeetlKit {
 	
 	/*脚本部分*/
 	
-	public Map execute(String script,Map<String,Object> paras){
+	public static Map execute(String script,Map<String,Object> paras){
 		return null;
 	}
 	
-	public Map execute(Reader script,Map<String,Object> paras){
+	public static Map execute(Reader script,Map<String,Object> paras){
 		return null;
 	}
 	
-	public Map execute(Reader script,Map<String,Object> paras,StringBuilder console){
+	public static Map execute(Reader script,Map<String,Object> paras,StringBuilder console){
 		return null;
 	}
+	
+	
+	
+	
+	/*模板自测试部分*/
+	
+	
+	/**
+	 * @param template 模板内容
+	 * @param initValue 模板初始化值
+	 * @param console 模板的输出
+	 * @return 模板渲染结果
+	 */
+	public static String testTemplate(String template,String initValue,StringWriter console){
+		return null;
+	}
+	
+	
 }

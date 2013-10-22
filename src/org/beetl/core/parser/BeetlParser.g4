@@ -16,25 +16,25 @@ block
 
 // STATMENT
 statement
-    
-    :   block
-    |   textStatment
-    |   constantsTextStatment
-    |   PARAS  
-    |   If parExpression statement (Else statement)?
-    |   For LEFT_PAR forControl RIGHT_PAR statement
-    |   While parExpression statement
-    |   Switch parExpression switchBlock
-    |   Select g_switchStatment
-    |   Try NOT? block (Catch  LEFT_PAR Identifier RIGHT_PAR  block   )?  
-    |   Return expression? END
-    |   Break END
-    |   Continue END 
-    |   Var varDeclareList END 
-    |   Directive  directiveExp
-    |   assignMent END
-    |   functionTagCall
-    |   statementExpression END  
+  
+    :   block   #blockStatment
+    |   textStatment    #textOutputSt
+    |   constantsTextStatment #staticOutputSt
+    |   PARAS  #commentParasSt
+    |   If parExpression statement (Else statement)? #ifSt
+    |   For LEFT_PAR forControl RIGHT_PAR statement    #forSt
+    |   While parExpression statement   #whileSt
+    |   Switch parExpression switchBlock    #siwchSt
+    |   Select g_switchStatment #selectSt
+    |   Try NOT? block (Catch  LEFT_PAR Identifier RIGHT_PAR  block   )?    #trySt
+    |   Return expression? END  #returnSt
+    |   Break END   #breakSt
+    |   Continue END    #continueSt
+    |   Var varDeclareList END  #varSt
+    |   Directive  directiveExp #directiveSt 
+    |   assignMent END  #assignSt
+    |   functionTagCall #functionSt
+    |   statementExpression END   #statmentExpSt
      
     ;
     
@@ -108,7 +108,7 @@ constantExpression
     :   expression
     ;
 
-       expression
+        expression
     :   literal     
     |   AT nativeCall   
     |   functionCall

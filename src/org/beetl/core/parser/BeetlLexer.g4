@@ -162,6 +162,14 @@ JavaIDDigit
        '\u0ed0'..'\u0ed9' |
        '\u1040'..'\u1049'
    ;
+ 
+WS  :   [ \r\t\u000C\n]+ -> channel(HIDDEN)
+    ;
+
+LINE_COMMENT
+    : '//' ~[\r\n]* '\r'? '\n' -> channel(HIDDEN)
+    ;
+
 COMMENT_OPEN
     :   '/*'    ->mode(ISLAND),channel(HIDDEN) 
     ;
@@ -171,9 +179,3 @@ WS1  :   [ \r\t\u000C\n]+ -> channel(HIDDEN);
 COMMENT_END: '*/'  -> mode(DEFAULT_MODE),channel(HIDDEN)
 ;
 
-WS  :   [ \r\t\u000C\n]+ -> channel(HIDDEN)
-    ;
-
-LINE_COMMENT
-    : '//' ~[\r\n]* '\r'? '\n' -> channel(HIDDEN)
-    ;

@@ -52,9 +52,10 @@ g_defaultStatment
 
 varDeclareList :  assignMent (COMMA assignMent)*  ;	
 assignMent	
-	:	Identifier  
-	|	Identifier ASSIN expression 
-	|	Identifier ASSIN  block
+	:	Identifier                 #varDefine
+	|	Identifier ASSIN expression #varDefineValue 
+	|	Identifier ASSIN  block     #varTemplate
+
 
 ;
 

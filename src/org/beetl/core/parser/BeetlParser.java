@@ -88,6 +88,14 @@ public class BeetlParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_prog; }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterProg(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitProg(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitProg(this);
 			else return visitor.visitChildren(this);
@@ -141,6 +149,14 @@ public class BeetlParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_block; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterBlock(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitBlock(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitBlock(this);
@@ -206,6 +222,14 @@ public class BeetlParser extends Parser {
 		}
 		public ForStContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterForSt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitForSt(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitForSt(this);
 			else return visitor.visitChildren(this);
@@ -217,6 +241,14 @@ public class BeetlParser extends Parser {
 		}
 		public TerminalNode END() { return getToken(BeetlParser.END, 0); }
 		public StatmentExpStContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterStatmentExpSt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitStatmentExpSt(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitStatmentExpSt(this);
@@ -231,6 +263,14 @@ public class BeetlParser extends Parser {
 		public TerminalNode END() { return getToken(BeetlParser.END, 0); }
 		public ReturnStContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterReturnSt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitReturnSt(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitReturnSt(this);
 			else return visitor.visitChildren(this);
@@ -240,6 +280,14 @@ public class BeetlParser extends Parser {
 		public TerminalNode Break() { return getToken(BeetlParser.Break, 0); }
 		public TerminalNode END() { return getToken(BeetlParser.END, 0); }
 		public BreakStContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterBreakSt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitBreakSt(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitBreakSt(this);
@@ -253,6 +301,14 @@ public class BeetlParser extends Parser {
 		public TerminalNode Directive() { return getToken(BeetlParser.Directive, 0); }
 		public DirectiveStContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterDirectiveSt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitDirectiveSt(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitDirectiveSt(this);
 			else return visitor.visitChildren(this);
@@ -263,6 +319,14 @@ public class BeetlParser extends Parser {
 			return getRuleContext(TextStatmentContext.class,0);
 		}
 		public TextOutputStContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterTextOutputSt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitTextOutputSt(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitTextOutputSt(this);
@@ -277,6 +341,14 @@ public class BeetlParser extends Parser {
 		}
 		public VarStContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterVarSt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitVarSt(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitVarSt(this);
 			else return visitor.visitChildren(this);
@@ -288,6 +360,14 @@ public class BeetlParser extends Parser {
 		}
 		public StaticOutputStContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterStaticOutputSt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitStaticOutputSt(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitStaticOutputSt(this);
 			else return visitor.visitChildren(this);
@@ -297,6 +377,14 @@ public class BeetlParser extends Parser {
 		public TerminalNode Continue() { return getToken(BeetlParser.Continue, 0); }
 		public TerminalNode END() { return getToken(BeetlParser.END, 0); }
 		public ContinueStContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterContinueSt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitContinueSt(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitContinueSt(this);
@@ -316,6 +404,14 @@ public class BeetlParser extends Parser {
 			return getRuleContext(StatementContext.class,i);
 		}
 		public IfStContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterIfSt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitIfSt(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitIfSt(this);
@@ -337,6 +433,14 @@ public class BeetlParser extends Parser {
 		}
 		public TryStContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterTrySt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitTrySt(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitTrySt(this);
 			else return visitor.visitChildren(this);
@@ -352,6 +456,14 @@ public class BeetlParser extends Parser {
 		}
 		public WhileStContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterWhileSt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitWhileSt(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitWhileSt(this);
 			else return visitor.visitChildren(this);
@@ -362,6 +474,14 @@ public class BeetlParser extends Parser {
 			return getRuleContext(FunctionTagCallContext.class,0);
 		}
 		public FunctionStContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterFunctionSt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitFunctionSt(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitFunctionSt(this);
@@ -378,6 +498,14 @@ public class BeetlParser extends Parser {
 		public TerminalNode Switch() { return getToken(BeetlParser.Switch, 0); }
 		public SiwchStContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterSiwchSt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitSiwchSt(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitSiwchSt(this);
 			else return visitor.visitChildren(this);
@@ -386,6 +514,14 @@ public class BeetlParser extends Parser {
 	public static class CommentParasStContext extends StatementContext {
 		public TerminalNode PARAS() { return getToken(BeetlParser.PARAS, 0); }
 		public CommentParasStContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterCommentParasSt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitCommentParasSt(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitCommentParasSt(this);
@@ -397,6 +533,14 @@ public class BeetlParser extends Parser {
 			return getRuleContext(BlockContext.class,0);
 		}
 		public BlockStatmentContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterBlockStatment(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitBlockStatment(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitBlockStatment(this);
@@ -410,6 +554,14 @@ public class BeetlParser extends Parser {
 		public TerminalNode END() { return getToken(BeetlParser.END, 0); }
 		public AssignStContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterAssignSt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitAssignSt(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitAssignSt(this);
 			else return visitor.visitChildren(this);
@@ -421,6 +573,14 @@ public class BeetlParser extends Parser {
 		}
 		public TerminalNode Select() { return getToken(BeetlParser.Select, 0); }
 		public SelectStContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterSelectSt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitSelectSt(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitSelectSt(this);
@@ -657,6 +817,14 @@ public class BeetlParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_directiveExp; }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterDirectiveExp(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitDirectiveExp(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitDirectiveExp(this);
 			else return visitor.visitChildren(this);
@@ -715,6 +883,14 @@ public class BeetlParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_g_switchStatment; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterG_switchStatment(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitG_switchStatment(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitG_switchStatment(this);
@@ -796,6 +972,14 @@ public class BeetlParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_g_caseStatment; }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterG_caseStatment(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitG_caseStatment(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitG_caseStatment(this);
 			else return visitor.visitChildren(this);
@@ -851,6 +1035,14 @@ public class BeetlParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_g_defaultStatment; }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterG_defaultStatment(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitG_defaultStatment(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitG_defaultStatment(this);
 			else return visitor.visitChildren(this);
@@ -895,6 +1087,14 @@ public class BeetlParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_varDeclareList; }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterVarDeclareList(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitVarDeclareList(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitVarDeclareList(this);
 			else return visitor.visitChildren(this);
@@ -937,21 +1137,72 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class AssignMentContext extends ParserRuleContext {
+		public AssignMentContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_assignMent; }
+	 
+		public AssignMentContext() { }
+		public void copyFrom(AssignMentContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class VarDefineValueContext extends AssignMentContext {
 		public TerminalNode ASSIN() { return getToken(BeetlParser.ASSIN, 0); }
 		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
+		public VarDefineValueContext(AssignMentContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterVarDefineValue(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitVarDefineValue(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitVarDefineValue(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class VarTemplateContext extends AssignMentContext {
+		public TerminalNode ASSIN() { return getToken(BeetlParser.ASSIN, 0); }
+		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
 		public BlockContext block() {
 			return getRuleContext(BlockContext.class,0);
 		}
-		public AssignMentContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
+		public VarTemplateContext(AssignMentContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterVarTemplate(this);
 		}
-		@Override public int getRuleIndex() { return RULE_assignMent; }
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitVarTemplate(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitAssignMent(this);
+			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitVarTemplate(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class VarDefineContext extends AssignMentContext {
+		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
+		public VarDefineContext(AssignMentContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterVarDefine(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitVarDefine(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitVarDefine(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -963,6 +1214,7 @@ public class BeetlParser extends Parser {
 			setState(209);
 			switch ( getInterpreter().adaptivePredict(_input,13,_ctx) ) {
 			case 1:
+				_localctx = new VarDefineContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(202); match(Identifier);
@@ -970,6 +1222,7 @@ public class BeetlParser extends Parser {
 				break;
 
 			case 2:
+				_localctx = new VarDefineValueContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(203); match(Identifier);
@@ -979,6 +1232,7 @@ public class BeetlParser extends Parser {
 				break;
 
 			case 3:
+				_localctx = new VarTemplateContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(206); match(Identifier);
@@ -1018,6 +1272,14 @@ public class BeetlParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_switchBlock; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterSwitchBlock(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitSwitchBlock(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitSwitchBlock(this);
@@ -1094,6 +1356,14 @@ public class BeetlParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_switchBlockStatementGroup; }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterSwitchBlockStatementGroup(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitSwitchBlockStatementGroup(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitSwitchBlockStatementGroup(this);
 			else return visitor.visitChildren(this);
@@ -1165,6 +1435,14 @@ public class BeetlParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_switchLabel; }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterSwitchLabel(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitSwitchLabel(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitSwitchLabel(this);
 			else return visitor.visitChildren(this);
@@ -1219,6 +1497,14 @@ public class BeetlParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_forControl; }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterForControl(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitForControl(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitForControl(this);
 			else return visitor.visitChildren(this);
@@ -1267,6 +1553,14 @@ public class BeetlParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_parExpression; }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterParExpression(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitParExpression(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitParExpression(this);
 			else return visitor.visitChildren(this);
@@ -1310,6 +1604,14 @@ public class BeetlParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_expressionList; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterExpressionList(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitExpressionList(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitExpressionList(this);
@@ -1361,6 +1663,14 @@ public class BeetlParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_statementExpression; }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterStatementExpression(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitStatementExpression(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitStatementExpression(this);
 			else return visitor.visitChildren(this);
@@ -1400,6 +1710,14 @@ public class BeetlParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_textStatment; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterTextStatment(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitTextStatment(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitTextStatment(this);
@@ -1460,6 +1778,14 @@ public class BeetlParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_textVar; }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterTextVar(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitTextVar(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitTextVar(this);
 			else return visitor.visitChildren(this);
@@ -1507,6 +1833,14 @@ public class BeetlParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_textformat; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterTextformat(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitTextformat(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitTextformat(this);
@@ -1562,6 +1896,14 @@ public class BeetlParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_constantsTextStatment; }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterConstantsTextStatment(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitConstantsTextStatment(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitConstantsTextStatment(this);
 			else return visitor.visitChildren(this);
@@ -1598,6 +1940,14 @@ public class BeetlParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_constantExpression; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterConstantExpression(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitConstantExpression(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitConstantExpression(this);
@@ -1674,6 +2024,14 @@ public class BeetlParser extends Parser {
 			this._p = _p;
 		}
 		@Override public int getRuleIndex() { return RULE_expression; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterExpression(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitExpression(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitExpression(this);
@@ -1976,6 +2334,14 @@ public class BeetlParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_varRef; }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterVarRef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitVarRef(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitVarRef(this);
 			else return visitor.visitChildren(this);
@@ -2031,6 +2397,14 @@ public class BeetlParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_varAttribute; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterVarAttribute(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitVarAttribute(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitVarAttribute(this);
@@ -2100,6 +2474,14 @@ public class BeetlParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_functionCall; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterFunctionCall(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitFunctionCall(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitFunctionCall(this);
@@ -2171,6 +2553,14 @@ public class BeetlParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_functionTagCall; }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterFunctionTagCall(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitFunctionTagCall(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitFunctionTagCall(this);
 			else return visitor.visitChildren(this);
@@ -2222,6 +2612,14 @@ public class BeetlParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_functionNs; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterFunctionNs(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitFunctionNs(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitFunctionNs(this);
@@ -2291,6 +2689,14 @@ public class BeetlParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_nativeCall; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterNativeCall(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitNativeCall(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitNativeCall(this);
@@ -2370,6 +2776,14 @@ public class BeetlParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_nativeMethod; }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterNativeMethod(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitNativeMethod(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitNativeMethod(this);
 			else return visitor.visitChildren(this);
@@ -2431,6 +2845,14 @@ public class BeetlParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_nativeArray; }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterNativeArray(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitNativeArray(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitNativeArray(this);
 			else return visitor.visitChildren(this);
@@ -2472,6 +2894,14 @@ public class BeetlParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_nativeVarRefChain; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterNativeVarRefChain(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitNativeVarRefChain(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitNativeVarRefChain(this);
@@ -2537,6 +2967,14 @@ public class BeetlParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_json; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterJson(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitJson(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitJson(this);
@@ -2635,6 +3073,14 @@ public class BeetlParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_jsonKeyValue; }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterJsonKeyValue(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitJsonKeyValue(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitJsonKeyValue(this);
 			else return visitor.visitChildren(this);
@@ -2693,6 +3139,14 @@ public class BeetlParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_literal; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterLiteral(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitLiteral(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitLiteral(this);
@@ -2769,6 +3223,14 @@ public class BeetlParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_integerLiteral; }
 		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterIntegerLiteral(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitIntegerLiteral(this);
+		}
+		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitIntegerLiteral(this);
 			else return visitor.visitChildren(this);
@@ -2808,6 +3270,14 @@ public class BeetlParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_booleanLiteral; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterBooleanLiteral(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitBooleanLiteral(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitBooleanLiteral(this);
@@ -2851,6 +3321,14 @@ public class BeetlParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_arguments; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterArguments(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitArguments(this);
+		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitArguments(this);

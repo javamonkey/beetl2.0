@@ -82,6 +82,22 @@ public class BeetlParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
 	 * The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.
 	 */
+	@Override public T visitVarDefineValue(@NotNull BeetlParser.VarDefineValueContext ctx) { return visitChildren(ctx); }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.
+	 */
+	@Override public T visitNativeVarRefChain(@NotNull BeetlParser.NativeVarRefChainContext ctx) { return visitChildren(ctx); }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.
+	 */
 	@Override public T visitBlockStatment(@NotNull BeetlParser.BlockStatmentContext ctx) { return visitChildren(ctx); }
 
 	/**
@@ -91,14 +107,6 @@ public class BeetlParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
 	 * {@link #visitChildren} on {@code ctx}.
 	 */
 	@Override public T visitSiwchSt(@NotNull BeetlParser.SiwchStContext ctx) { return visitChildren(ctx); }
-
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
-	 */
-	@Override public T visitNativeVarRefChain(@NotNull BeetlParser.NativeVarRefChainContext ctx) { return visitChildren(ctx); }
 
 	/**
 	 * {@inheritDoc}
@@ -146,7 +154,7 @@ public class BeetlParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
 	 * The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.
 	 */
-	@Override public T visitTextOutputSt(@NotNull BeetlParser.TextOutputStContext ctx) { return visitChildren(ctx); }
+	@Override public T visitVarTemplate(@NotNull BeetlParser.VarTemplateContext ctx) { return visitChildren(ctx); }
 
 	/**
 	 * {@inheritDoc}
@@ -154,7 +162,7 @@ public class BeetlParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
 	 * The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.
 	 */
-	@Override public T visitAssignMent(@NotNull BeetlParser.AssignMentContext ctx) { return visitChildren(ctx); }
+	@Override public T visitTextOutputSt(@NotNull BeetlParser.TextOutputStContext ctx) { return visitChildren(ctx); }
 
 	/**
 	 * {@inheritDoc}
@@ -315,6 +323,14 @@ public class BeetlParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
 	 * {@link #visitChildren} on {@code ctx}.
 	 */
 	@Override public T visitWhileSt(@NotNull BeetlParser.WhileStContext ctx) { return visitChildren(ctx); }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.
+	 */
+	@Override public T visitVarDefine(@NotNull BeetlParser.VarDefineContext ctx) { return visitChildren(ctx); }
 
 	/**
 	 * {@inheritDoc}

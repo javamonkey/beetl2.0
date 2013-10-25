@@ -68,6 +68,20 @@ public interface BeetlParserVisitor<T> extends ParseTreeVisitor<T> {
 	T visitTextformat(@NotNull BeetlParser.TextformatContext ctx);
 
 	/**
+	 * Visit a parse tree produced by {@link BeetlParser#varDefineValue}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVarDefineValue(@NotNull BeetlParser.VarDefineValueContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link BeetlParser#nativeVarRefChain}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNativeVarRefChain(@NotNull BeetlParser.NativeVarRefChainContext ctx);
+
+	/**
 	 * Visit a parse tree produced by {@link BeetlParser#blockStatment}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -80,13 +94,6 @@ public interface BeetlParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitSiwchSt(@NotNull BeetlParser.SiwchStContext ctx);
-
-	/**
-	 * Visit a parse tree produced by {@link BeetlParser#nativeVarRefChain}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNativeVarRefChain(@NotNull BeetlParser.NativeVarRefChainContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link BeetlParser#selectSt}.
@@ -124,18 +131,18 @@ public interface BeetlParserVisitor<T> extends ParseTreeVisitor<T> {
 	T visitDirectiveSt(@NotNull BeetlParser.DirectiveStContext ctx);
 
 	/**
+	 * Visit a parse tree produced by {@link BeetlParser#varTemplate}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVarTemplate(@NotNull BeetlParser.VarTemplateContext ctx);
+
+	/**
 	 * Visit a parse tree produced by {@link BeetlParser#textOutputSt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitTextOutputSt(@NotNull BeetlParser.TextOutputStContext ctx);
-
-	/**
-	 * Visit a parse tree produced by {@link BeetlParser#assignMent}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAssignMent(@NotNull BeetlParser.AssignMentContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link BeetlParser#switchBlock}.
@@ -276,6 +283,13 @@ public interface BeetlParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitWhileSt(@NotNull BeetlParser.WhileStContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link BeetlParser#varDefine}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVarDefine(@NotNull BeetlParser.VarDefineContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link BeetlParser#jsonKeyValue}.

@@ -9,6 +9,17 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface BeetlParserListener extends ParseTreeListener {
 	/**
+	 * Enter a parse tree produced by {@link BeetlParser#assignTemplateVar}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssignTemplateVar(@NotNull BeetlParser.AssignTemplateVarContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#assignTemplateVar}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssignTemplateVar(@NotNull BeetlParser.AssignTemplateVarContext ctx);
+
+	/**
 	 * Enter a parse tree produced by {@link BeetlParser#expression}.
 	 * @param ctx the parse tree
 	 */
@@ -97,17 +108,6 @@ public interface BeetlParserListener extends ParseTreeListener {
 	void exitTextformat(@NotNull BeetlParser.TextformatContext ctx);
 
 	/**
-	 * Enter a parse tree produced by {@link BeetlParser#varDefineValue}.
-	 * @param ctx the parse tree
-	 */
-	void enterVarDefineValue(@NotNull BeetlParser.VarDefineValueContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link BeetlParser#varDefineValue}.
-	 * @param ctx the parse tree
-	 */
-	void exitVarDefineValue(@NotNull BeetlParser.VarDefineValueContext ctx);
-
-	/**
 	 * Enter a parse tree produced by {@link BeetlParser#nativeVarRefChain}.
 	 * @param ctx the parse tree
 	 */
@@ -117,17 +117,6 @@ public interface BeetlParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitNativeVarRefChain(@NotNull BeetlParser.NativeVarRefChainContext ctx);
-
-	/**
-	 * Enter a parse tree produced by {@link BeetlParser#blockStatment}.
-	 * @param ctx the parse tree
-	 */
-	void enterBlockStatment(@NotNull BeetlParser.BlockStatmentContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link BeetlParser#blockStatment}.
-	 * @param ctx the parse tree
-	 */
-	void exitBlockStatment(@NotNull BeetlParser.BlockStatmentContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link BeetlParser#siwchSt}.
@@ -174,17 +163,6 @@ public interface BeetlParserListener extends ParseTreeListener {
 	void exitForSt(@NotNull BeetlParser.ForStContext ctx);
 
 	/**
-	 * Enter a parse tree produced by {@link BeetlParser#varAttribute}.
-	 * @param ctx the parse tree
-	 */
-	void enterVarAttribute(@NotNull BeetlParser.VarAttributeContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link BeetlParser#varAttribute}.
-	 * @param ctx the parse tree
-	 */
-	void exitVarAttribute(@NotNull BeetlParser.VarAttributeContext ctx);
-
-	/**
 	 * Enter a parse tree produced by {@link BeetlParser#directiveSt}.
 	 * @param ctx the parse tree
 	 */
@@ -194,17 +172,6 @@ public interface BeetlParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDirectiveSt(@NotNull BeetlParser.DirectiveStContext ctx);
-
-	/**
-	 * Enter a parse tree produced by {@link BeetlParser#varTemplate}.
-	 * @param ctx the parse tree
-	 */
-	void enterVarTemplate(@NotNull BeetlParser.VarTemplateContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link BeetlParser#varTemplate}.
-	 * @param ctx the parse tree
-	 */
-	void exitVarTemplate(@NotNull BeetlParser.VarTemplateContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link BeetlParser#textOutputSt}.
@@ -229,6 +196,17 @@ public interface BeetlParserListener extends ParseTreeListener {
 	void exitSwitchBlock(@NotNull BeetlParser.SwitchBlockContext ctx);
 
 	/**
+	 * Enter a parse tree produced by {@link BeetlParser#varAttributeArrayOrMap}.
+	 * @param ctx the parse tree
+	 */
+	void enterVarAttributeArrayOrMap(@NotNull BeetlParser.VarAttributeArrayOrMapContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#varAttributeArrayOrMap}.
+	 * @param ctx the parse tree
+	 */
+	void exitVarAttributeArrayOrMap(@NotNull BeetlParser.VarAttributeArrayOrMapContext ctx);
+
+	/**
 	 * Enter a parse tree produced by {@link BeetlParser#ifSt}.
 	 * @param ctx the parse tree
 	 */
@@ -238,6 +216,17 @@ public interface BeetlParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitIfSt(@NotNull BeetlParser.IfStContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link BeetlParser#nativeCall}.
+	 * @param ctx the parse tree
+	 */
+	void enterNativeCall(@NotNull BeetlParser.NativeCallContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#nativeCall}.
+	 * @param ctx the parse tree
+	 */
+	void exitNativeCall(@NotNull BeetlParser.NativeCallContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link BeetlParser#constantExpression}.
@@ -251,15 +240,15 @@ public interface BeetlParserListener extends ParseTreeListener {
 	void exitConstantExpression(@NotNull BeetlParser.ConstantExpressionContext ctx);
 
 	/**
-	 * Enter a parse tree produced by {@link BeetlParser#nativeCall}.
+	 * Enter a parse tree produced by {@link BeetlParser#assignId}.
 	 * @param ctx the parse tree
 	 */
-	void enterNativeCall(@NotNull BeetlParser.NativeCallContext ctx);
+	void enterAssignId(@NotNull BeetlParser.AssignIdContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link BeetlParser#nativeCall}.
+	 * Exit a parse tree produced by {@link BeetlParser#assignId}.
 	 * @param ctx the parse tree
 	 */
-	void exitNativeCall(@NotNull BeetlParser.NativeCallContext ctx);
+	void exitAssignId(@NotNull BeetlParser.AssignIdContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link BeetlParser#forControl}.
@@ -315,6 +304,17 @@ public interface BeetlParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitStatementExpression(@NotNull BeetlParser.StatementExpressionContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link BeetlParser#varAttributeGeneral}.
+	 * @param ctx the parse tree
+	 */
+	void enterVarAttributeGeneral(@NotNull BeetlParser.VarAttributeGeneralContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#varAttributeGeneral}.
+	 * @param ctx the parse tree
+	 */
+	void exitVarAttributeGeneral(@NotNull BeetlParser.VarAttributeGeneralContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link BeetlParser#block}.
@@ -438,17 +438,6 @@ public interface BeetlParserListener extends ParseTreeListener {
 	void exitWhileSt(@NotNull BeetlParser.WhileStContext ctx);
 
 	/**
-	 * Enter a parse tree produced by {@link BeetlParser#varDefine}.
-	 * @param ctx the parse tree
-	 */
-	void enterVarDefine(@NotNull BeetlParser.VarDefineContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link BeetlParser#varDefine}.
-	 * @param ctx the parse tree
-	 */
-	void exitVarDefine(@NotNull BeetlParser.VarDefineContext ctx);
-
-	/**
 	 * Enter a parse tree produced by {@link BeetlParser#jsonKeyValue}.
 	 * @param ctx the parse tree
 	 */
@@ -458,6 +447,17 @@ public interface BeetlParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitJsonKeyValue(@NotNull BeetlParser.JsonKeyValueContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link BeetlParser#varAttributeVirtual}.
+	 * @param ctx the parse tree
+	 */
+	void enterVarAttributeVirtual(@NotNull BeetlParser.VarAttributeVirtualContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#varAttributeVirtual}.
+	 * @param ctx the parse tree
+	 */
+	void exitVarAttributeVirtual(@NotNull BeetlParser.VarAttributeVirtualContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link BeetlParser#parExpression}.
@@ -491,6 +491,17 @@ public interface BeetlParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFunctionTagCall(@NotNull BeetlParser.FunctionTagCallContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link BeetlParser#blockSt}.
+	 * @param ctx the parse tree
+	 */
+	void enterBlockSt(@NotNull BeetlParser.BlockStContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#blockSt}.
+	 * @param ctx the parse tree
+	 */
+	void exitBlockSt(@NotNull BeetlParser.BlockStContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link BeetlParser#breakSt}.
@@ -557,6 +568,17 @@ public interface BeetlParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitG_defaultStatment(@NotNull BeetlParser.G_defaultStatmentContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link BeetlParser#assignGeneral}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssignGeneral(@NotNull BeetlParser.AssignGeneralContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#assignGeneral}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssignGeneral(@NotNull BeetlParser.AssignGeneralContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link BeetlParser#functionNs}.

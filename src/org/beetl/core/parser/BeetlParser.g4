@@ -17,7 +17,7 @@ block
 // STATMENT
 statement
   
-    :   block   #blockStatment
+    :   block   #blockSt
     |   textStatment    #textOutputSt
     |   constantsTextStatment #staticOutputSt
     |   PARAS  #commentParasSt
@@ -50,11 +50,12 @@ g_caseStatment
 g_defaultStatment
 	:	Default COLON statement;	
 
-varDeclareList :  assignMent (COMMA assignMent)*  ;	
+varDeclareList :  assignMent (COMMA assignMent)* 
+;	
 assignMent	
-	:	Identifier                 #varDefine
-	|	Identifier ASSIN expression #varDefineValue 
-	|	Identifier ASSIN  block     #varTemplate
+	:	Identifier                  #assignId
+	|	Identifier ASSIN expression #assignGeneral 
+	|	Identifier ASSIN  block     #assignTemplateVar
 
 
 ;
@@ -109,7 +110,7 @@ constantExpression
     :   expression
     ;
 
-        expression
+ expression
     :   literal     
     |   AT nativeCall   
     |   functionCall
@@ -132,11 +133,11 @@ constantExpression
     ;
     
 
-varRef:Identifier ( varAttribute)*
+varRef:Identifier ( varAttribute)*  
 ;
-varAttribute :PERIOD Identifier
-             | VIRTUAL Identifier
-             |LEFT_SQBR expression RIGHT_SQBR
+varAttribute :PERIOD Identifier   #varAttributeGeneral
+             | VIRTUAL Identifier #varAttributeVirtual
+             |LEFT_SQBR expression RIGHT_SQBR #varAttributeArrayOrMap
              ;
 
 

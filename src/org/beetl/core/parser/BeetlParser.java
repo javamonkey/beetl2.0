@@ -235,6 +235,25 @@ public class BeetlParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
+	public static class BlockStContext extends StatementContext {
+		public BlockContext block() {
+			return getRuleContext(BlockContext.class,0);
+		}
+		public BlockStContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterBlockSt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitBlockSt(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitBlockSt(this);
+			else return visitor.visitChildren(this);
+		}
+	}
 	public static class StatmentExpStContext extends StatementContext {
 		public StatementExpressionContext statementExpression() {
 			return getRuleContext(StatementExpressionContext.class,0);
@@ -528,25 +547,6 @@ public class BeetlParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class BlockStatmentContext extends StatementContext {
-		public BlockContext block() {
-			return getRuleContext(BlockContext.class,0);
-		}
-		public BlockStatmentContext(StatementContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterBlockStatment(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitBlockStatment(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitBlockStatment(this);
-			else return visitor.visitChildren(this);
-		}
-	}
 	public static class AssignStContext extends StatementContext {
 		public AssignMentContext assignMent() {
 			return getRuleContext(AssignMentContext.class,0);
@@ -596,7 +596,7 @@ public class BeetlParser extends Parser {
 			setState(152);
 			switch ( getInterpreter().adaptivePredict(_input,6,_ctx) ) {
 			case 1:
-				_localctx = new BlockStatmentContext(_localctx);
+				_localctx = new BlockStContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(91); block();
@@ -1147,62 +1147,62 @@ public class BeetlParser extends Parser {
 			super.copyFrom(ctx);
 		}
 	}
-	public static class VarDefineValueContext extends AssignMentContext {
-		public TerminalNode ASSIN() { return getToken(BeetlParser.ASSIN, 0); }
-		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
-		}
-		public VarDefineValueContext(AssignMentContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterVarDefineValue(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitVarDefineValue(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitVarDefineValue(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class VarTemplateContext extends AssignMentContext {
+	public static class AssignTemplateVarContext extends AssignMentContext {
 		public TerminalNode ASSIN() { return getToken(BeetlParser.ASSIN, 0); }
 		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
 		public BlockContext block() {
 			return getRuleContext(BlockContext.class,0);
 		}
-		public VarTemplateContext(AssignMentContext ctx) { copyFrom(ctx); }
+		public AssignTemplateVarContext(AssignMentContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterVarTemplate(this);
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterAssignTemplateVar(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitVarTemplate(this);
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitAssignTemplateVar(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitVarTemplate(this);
+			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitAssignTemplateVar(this);
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class VarDefineContext extends AssignMentContext {
+	public static class AssignGeneralContext extends AssignMentContext {
+		public TerminalNode ASSIN() { return getToken(BeetlParser.ASSIN, 0); }
 		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
-		public VarDefineContext(AssignMentContext ctx) { copyFrom(ctx); }
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public AssignGeneralContext(AssignMentContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterVarDefine(this);
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterAssignGeneral(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitVarDefine(this);
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitAssignGeneral(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitVarDefine(this);
+			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitAssignGeneral(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class AssignIdContext extends AssignMentContext {
+		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
+		public AssignIdContext(AssignMentContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterAssignId(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitAssignId(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitAssignId(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1214,7 +1214,7 @@ public class BeetlParser extends Parser {
 			setState(209);
 			switch ( getInterpreter().adaptivePredict(_input,13,_ctx) ) {
 			case 1:
-				_localctx = new VarDefineContext(_localctx);
+				_localctx = new AssignIdContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(202); match(Identifier);
@@ -1222,7 +1222,7 @@ public class BeetlParser extends Parser {
 				break;
 
 			case 2:
-				_localctx = new VarDefineValueContext(_localctx);
+				_localctx = new AssignGeneralContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(203); match(Identifier);
@@ -1232,7 +1232,7 @@ public class BeetlParser extends Parser {
 				break;
 
 			case 3:
-				_localctx = new VarTemplateContext(_localctx);
+				_localctx = new AssignTemplateVarContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(206); match(Identifier);
@@ -2385,29 +2385,70 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class VarAttributeContext extends ParserRuleContext {
-		public TerminalNode RIGHT_SQBR() { return getToken(BeetlParser.RIGHT_SQBR, 0); }
-		public TerminalNode LEFT_SQBR() { return getToken(BeetlParser.LEFT_SQBR, 0); }
-		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
-		}
-		public TerminalNode VIRTUAL() { return getToken(BeetlParser.VIRTUAL, 0); }
-		public TerminalNode PERIOD() { return getToken(BeetlParser.PERIOD, 0); }
 		public VarAttributeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_varAttribute; }
+	 
+		public VarAttributeContext() { }
+		public void copyFrom(VarAttributeContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class VarAttributeGeneralContext extends VarAttributeContext {
+		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
+		public TerminalNode PERIOD() { return getToken(BeetlParser.PERIOD, 0); }
+		public VarAttributeGeneralContext(VarAttributeContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterVarAttribute(this);
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterVarAttributeGeneral(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitVarAttribute(this);
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitVarAttributeGeneral(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitVarAttribute(this);
+			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitVarAttributeGeneral(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class VarAttributeArrayOrMapContext extends VarAttributeContext {
+		public TerminalNode RIGHT_SQBR() { return getToken(BeetlParser.RIGHT_SQBR, 0); }
+		public TerminalNode LEFT_SQBR() { return getToken(BeetlParser.LEFT_SQBR, 0); }
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public VarAttributeArrayOrMapContext(VarAttributeContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterVarAttributeArrayOrMap(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitVarAttributeArrayOrMap(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitVarAttributeArrayOrMap(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class VarAttributeVirtualContext extends VarAttributeContext {
+		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
+		public TerminalNode VIRTUAL() { return getToken(BeetlParser.VIRTUAL, 0); }
+		public VarAttributeVirtualContext(VarAttributeContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).enterVarAttributeVirtual(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BeetlParserListener ) ((BeetlParserListener)listener).exitVarAttributeVirtual(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BeetlParserVisitor ) return ((BeetlParserVisitor<? extends T>)visitor).visitVarAttributeVirtual(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2419,6 +2460,7 @@ public class BeetlParser extends Parser {
 			setState(377);
 			switch (_input.LA(1)) {
 			case PERIOD:
+				_localctx = new VarAttributeGeneralContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(369); match(PERIOD);
@@ -2426,6 +2468,7 @@ public class BeetlParser extends Parser {
 				}
 				break;
 			case VIRTUAL:
+				_localctx = new VarAttributeVirtualContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(371); match(VIRTUAL);
@@ -2433,6 +2476,7 @@ public class BeetlParser extends Parser {
 				}
 				break;
 			case LEFT_SQBR:
+				_localctx = new VarAttributeArrayOrMapContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(373); match(LEFT_SQBR);

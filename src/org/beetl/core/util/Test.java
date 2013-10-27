@@ -17,7 +17,7 @@ public class Test {
 	 */
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		String str = "var a=3 ; b=1;";
+		String str = "var a;{var b = 1+a;{ var c;} {var d,e=c+a;}}";
 		// create a CharStream that reads from standard input
 		ANTLRInputStream input = new ANTLRInputStream(str);
 		// create a lexer that feeds off of input CharStream
@@ -28,8 +28,9 @@ public class Test {
 		BeetlParser parser = new BeetlParser(tokens);
 		ParseTree tree = parser.prog(); // begin parsing at init rule
 		ParseTreeWalker walker = new ParseTreeWalker();
-		
-		walker.walk(new TestParserListener(), tree);
+		TestParserListener parserLitener = new TestParserListener();
+		walker.walk(parserLitener, tree);
+		parserLitener.anzlysze();
 		//System.out.println(tree.toStringTree(parser)); // print LISP-style tree
 		
 	}

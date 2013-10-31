@@ -2,7 +2,6 @@ package com.beetl.performance.lab;
 
 import java.lang.reflect.Method;
 
-import com.beetl.performance.Log;
 import com.esotericsoftware.reflectasm.MethodAccess;
 
 /**
@@ -40,49 +39,49 @@ public class ReflectTest {
 	}
 	
 	public void testReflect() throws Exception{
-		int loop = 10000*200;
+//		int loop = 10000*200;
 		ReflectTest t = new ReflectTest();
-		Log.key1Start();
-		for(int i=0;i<loop;i++){
-			t.reflectplan(t, "getName");
-		}
-		Log.key1End();
-	
-		
-		Log.key2Start();
-		for(int i=0;i<loop;i++){
-			t.reflectCacheplan(t, "getName");
-		}
-		Log.key2End();
-	
-		Log.key1Start();
-		for(int i=0;i<loop;i++){
-			t.reflectplan(t, "getName");
-		}
-		Log.key1End();
-	
-		//太慢了，不考虑
-		
-		Log.key3Start();
-		for(int i=0;i<loop;i++){
-			t.call(t);
-		}
-		Log.key3End();
+//		Log.key1Start();
+//		for(int i=0;i<loop;i++){
+//			t.reflectplan(t, "getName");
+//		}
+//		Log.key1End();
 //	
-		
-		Log.key4Start();
-		for(int i=0;i<loop;i++){
-			t.asmCacheplan(t, "getName");
-		}
-		Log.key4End();
-	
-		Log.key5Start();
-		for(int i=0;i<loop;i++){
+//		
+//		Log.key2Start();
+//		for(int i=0;i<loop;i++){
+//			t.reflectCacheplan(t, "getName");
+//		}
+//		Log.key2End();
+//	
+//		Log.key1Start();
+//		for(int i=0;i<loop;i++){
+//			t.reflectplan(t, "getName");
+//		}
+//		Log.key1End();
+//	
+//		//太慢了，不考虑
+//		
+//		Log.key3Start();
+//		for(int i=0;i<loop;i++){
+//			t.call(t);
+//		}
+//		Log.key3End();
+////	
+//		
+//		Log.key4Start();
+//		for(int i=0;i<loop;i++){
+//			t.asmCacheplan(t, "getName");
+//		}
+//		Log.key4End();
+//	
+//		Log.key5Start();
+		for(int i=0;i<1;i++){
 			t.asmCacheplan(t, methodIndex);
 		}
-		Log.key5End();
-	
-		Log.display("缓存并反射调用","反射","方法调用","asm调用","缓存并asm调用");
+//		Log.key5End();
+//	
+//		Log.display("缓存并反射调用","反射","方法调用","asm调用","缓存并asm调用");
 	}
 	
 	public void asmCacheplan(Object o,String name){

@@ -1,0 +1,74 @@
+<project name="client" default="jarClass" basedir=".">
+    <property name="product" value="beetl"/>
+    <property name="version" value="2.0"/>
+    <property name="classes.dir" value="${basedir}/bin"/>
+    <property name="build.dir" value="${basedir}/build"/>
+    <property name="lib.dir" value="${basedir}"/>
+    <!--property name="lib.dir" value="E:\lijz\javamonkey\bee\trunk\workspace\tl_sample_web\WebContent\WEB-INF\lib"/-->
+	
+
+    <property name="jar.file" value="${product}.${version}.jar"/>
+
+    
+
+    <target name="clean">
+        <echo>clean build dir</echo>
+        <delete dir="${build.dir}" quiet="true"/>       
+    </target>
+
+    <target name="init" depends="clean">
+        <mkdir dir="${build.dir}"/>
+    </target>
+    
+    <target name="jarClass" depends="init">
+        <jar destfile="${lib.dir}/${jar.file}">
+            <fileset dir="${classes.dir}">
+                <exclude name="org/beetl/test/**" />
+                <exclude name="org/antlr/**" />
+                <exclude name="**/*.g" />
+                <exclude name="**/*.tokens" />   
+            	<exclude name="org/beetl/performance/**" />                
+                <include name="org/beetl/core/**"/>    
+            	<include name="org/beetl/ext/**"/> 
+            	           
+            </fileset>
+        	<zipfileset  src="alllib/antlr-runtime-4.1.jar"/>
+        </jar>
+    </target>
+	
+	 <target name="jarSrc" depends="init">
+	        <jar destfile="${basedir}/beetl_src_${version}.jar">
+	            <fileset dir="${basedir}/src">	               
+	            	<exclude name="**/samples/**" />
+	            </fileset>     
+	        	<fileset dir="${basedir}/ext">
+	        		
+	        	</fileset> 
+	        	
+	        </jar>
+	    </target>
+	
+	 <target name="javadoc" description="Generate the Javadoc HTML pages.">  
+	        <delete dir="../javadoc" />  
+	        <mkdir dir="../javadoc" />  
+	        <javadoc destdir="../javadoc"   
+	                 windowtitle="Beetl API"  
+	                 use="yes"  
+	                 linksource="no"  
+	                 splitindex="yes"  
+	                 encoding="UTF-8" docencoding="UTF-8">  
+	            <classpath>  
+	                <fileset dir="${basedir}/lib">  
+	                    <include name="*.jar"/>  
+	                 </fileset>  
+	               
+	            </classpath>  
+	            <!-- 需要修改 Begin -->  
+	            <packageset dir="src" defaultexcludes="yes">  
+	                <include name="org/beetl/**"/>  
+	            </packageset>  
+	            <!-- 需要修改 End -->  
+	        </javadoc>  
+	    </target>  
+    
+</project>

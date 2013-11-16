@@ -170,12 +170,20 @@ LINE_COMMENT
     : '//' ~[\r\n]* '\r'? '\n' -> channel(HIDDEN)
     ;
 
-COMMENT_OPEN
-    :   '/*'    ->mode(ISLAND),channel(HIDDEN) 
-    ;
-mode ISLAND;
-PARAS:'@' Identifier ':' Identifier ('.' Identifier)*  ;
-WS1  :   [ \r\t\u000C\n]+ -> channel(HIDDEN);
-COMMENT_END: '*/'  -> mode(DEFAULT_MODE),channel(HIDDEN)
-;
 
+COMMENT_OPEN
+    :   '/*'    ->pushMode(MODE_COMMENT),channel(HIDDEN) 
+    ;
+mode MODE_COMMENT;
+COMMENT_TAG:'@' ->pushMode(MODE_COMMENT_TYPE)     ;
+
+COMMENT_END: '*/'  -> popMode,channel(HIDDEN)
+;
+mode MODE_COMMENT_TYPE;
+Identifier1:Identifier;
+PERIOD1:PERIOD;
+LEFT_PAR1:LEFT_PAR;
+RIGHT_PAR1:RIGHT_PAR;
+COMMA1:COMMA;
+TYPE_END: [\r\n]  -> popMode,channel(HIDDEN)
+        ;

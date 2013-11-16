@@ -1,5 +1,7 @@
 parser  grammar BeetlParser;
-options { tokenVocab=BeetlLexer; }
+options { 
+    tokenVocab=BeetlLexer;
+}
 
 
 // starting point for parsing a java file
@@ -20,7 +22,7 @@ statement
     :   block   #blockSt
     |   textStatment    #textOutputSt
     |   constantsTextStatment #staticOutputSt
-    |   PARAS  #commentParasSt
+    |   COMMENT_TAG commentTypeTag  #commentTagSt
     |   If parExpression statement (Else statement)? #ifSt
     |   For LEFT_PAR forControl RIGHT_PAR statement    #forSt
     |   While parExpression statement   #whileSt
@@ -37,7 +39,11 @@ statement
     |   statementExpression END   #statmentExpSt
      
     ;
-    
+
+commentTypeTag:Identifier1 commentTypeItemTag (COMMA1 commentTypeItemTag);
+commentTypeItemTag:   (LEFT_PAR1 Identifier1 (PERIOD1 Identifier1 )*)  RIGHT_PAR1  Identifier1    
+                  ;
+                      
 directiveExp:  Identifier (StringLiteral)? END;
 
 g_switchStatment

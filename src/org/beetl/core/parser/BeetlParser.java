@@ -16,8 +16,8 @@ public class BeetlParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		Switch=5, Try=14, LEFT_TEXT_TOKEN=50, OctalLiteral=53, MOD=29, CharacterLiteral=55, 
-		PARAS=61, INCREASE=22, While=4, NOT=35, Case=12, AND=36, RIGHT_TOKEN=49, 
-		RIGHT_SQBR=21, DECREASE=23, Identifier=57, Default=13, AT=39, NOT_EQUAL=31, 
+		INCREASE=22, While=4, NOT=35, Case=12, AND=36, RIGHT_TOKEN=49, RIGHT_SQBR=21, 
+		DECREASE=23, Identifier=57, TYPE=61, Default=13, AT=39, NOT_EQUAL=31, 
 		COMMA=44, LEFT_TOKEN=48, EQUAL=30, LESS=34, LEFT_PAR=18, Select=6, MUlTIP=27, 
 		Return=7, VIRTUAL=24, If=1, LEFT_SQBR=20, ADD=25, RIGHT_BRACE=17, HexLiteral=51, 
 		QUESTOIN=38, Continue=9, LINE_COMMENT=59, Catch=15, PERIOD=46, NULL=40, 
@@ -34,7 +34,7 @@ public class BeetlParser extends Parser {
 		"'false'", "';'", "','", "':'", "'.'", "'in'", "'<<'", "'>>'", "'<$'", 
 		"HexLiteral", "DecimalLiteral", "OctalLiteral", "FloatingPointLiteral", 
 		"CharacterLiteral", "StringLiteral", "Identifier", "WS", "LINE_COMMENT", 
-		"COMMENT_OPEN", "PARAS", "WS1", "COMMENT_END"
+		"COMMENT_OPEN", "TYPE", "WS1", "COMMENT_END"
 	};
 	public static final int
 		RULE_prog = 0, RULE_block = 1, RULE_statement = 2, RULE_directiveExp = 3, 
@@ -112,7 +112,7 @@ public class BeetlParser extends Parser {
 			setState(77);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << If) | (1L << For) | (1L << While) | (1L << Switch) | (1L << Select) | (1L << Return) | (1L << Break) | (1L << Continue) | (1L << Var) | (1L << Directive) | (1L << Try) | (1L << LEFT_BRACE) | (1L << LEFT_PAR) | (1L << LEFT_SQBR) | (1L << INCREASE) | (1L << DECREASE) | (1L << ADD) | (1L << MIN) | (1L << NOT) | (1L << AT) | (1L << NULL) | (1L << TRUE) | (1L << FALSE) | (1L << LEFT_TOKEN) | (1L << LEFT_TEXT_TOKEN) | (1L << HexLiteral) | (1L << DecimalLiteral) | (1L << OctalLiteral) | (1L << FloatingPointLiteral) | (1L << CharacterLiteral) | (1L << StringLiteral) | (1L << Identifier) | (1L << PARAS))) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << If) | (1L << For) | (1L << While) | (1L << Switch) | (1L << Select) | (1L << Return) | (1L << Break) | (1L << Continue) | (1L << Var) | (1L << Directive) | (1L << Try) | (1L << LEFT_BRACE) | (1L << LEFT_PAR) | (1L << LEFT_SQBR) | (1L << INCREASE) | (1L << DECREASE) | (1L << ADD) | (1L << MIN) | (1L << NOT) | (1L << AT) | (1L << NULL) | (1L << TRUE) | (1L << FALSE) | (1L << LEFT_TOKEN) | (1L << LEFT_TEXT_TOKEN) | (1L << HexLiteral) | (1L << DecimalLiteral) | (1L << OctalLiteral) | (1L << FloatingPointLiteral) | (1L << CharacterLiteral) | (1L << StringLiteral) | (1L << Identifier) | (1L << TYPE))) != 0)) {
 				{
 				{
 				setState(74); statement();
@@ -175,7 +175,7 @@ public class BeetlParser extends Parser {
 			setState(86);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << If) | (1L << For) | (1L << While) | (1L << Switch) | (1L << Select) | (1L << Return) | (1L << Break) | (1L << Continue) | (1L << Var) | (1L << Directive) | (1L << Try) | (1L << LEFT_BRACE) | (1L << LEFT_PAR) | (1L << LEFT_SQBR) | (1L << INCREASE) | (1L << DECREASE) | (1L << ADD) | (1L << MIN) | (1L << NOT) | (1L << AT) | (1L << NULL) | (1L << TRUE) | (1L << FALSE) | (1L << LEFT_TOKEN) | (1L << LEFT_TEXT_TOKEN) | (1L << HexLiteral) | (1L << DecimalLiteral) | (1L << OctalLiteral) | (1L << FloatingPointLiteral) | (1L << CharacterLiteral) | (1L << StringLiteral) | (1L << Identifier) | (1L << PARAS))) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << If) | (1L << For) | (1L << While) | (1L << Switch) | (1L << Select) | (1L << Return) | (1L << Break) | (1L << Continue) | (1L << Var) | (1L << Directive) | (1L << Try) | (1L << LEFT_BRACE) | (1L << LEFT_PAR) | (1L << LEFT_SQBR) | (1L << INCREASE) | (1L << DECREASE) | (1L << ADD) | (1L << MIN) | (1L << NOT) | (1L << AT) | (1L << NULL) | (1L << TRUE) | (1L << FALSE) | (1L << LEFT_TOKEN) | (1L << LEFT_TEXT_TOKEN) | (1L << HexLiteral) | (1L << DecimalLiteral) | (1L << OctalLiteral) | (1L << FloatingPointLiteral) | (1L << CharacterLiteral) | (1L << StringLiteral) | (1L << Identifier) | (1L << TYPE))) != 0)) {
 				{
 				{
 				setState(83); statement();
@@ -531,7 +531,7 @@ public class BeetlParser extends Parser {
 		}
 	}
 	public static class CommentParasStContext extends StatementContext {
-		public TerminalNode PARAS() { return getToken(BeetlParser.PARAS, 0); }
+		public TerminalNode TYPE() { return getToken(BeetlParser.TYPE, 0); }
 		public CommentParasStContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
@@ -623,7 +623,7 @@ public class BeetlParser extends Parser {
 				_localctx = new CommentParasStContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(94); match(PARAS);
+				setState(94); match(TYPE);
 				}
 				break;
 
@@ -1400,7 +1400,7 @@ public class BeetlParser extends Parser {
 			setState(234);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << If) | (1L << For) | (1L << While) | (1L << Switch) | (1L << Select) | (1L << Return) | (1L << Break) | (1L << Continue) | (1L << Var) | (1L << Directive) | (1L << Try) | (1L << LEFT_BRACE) | (1L << LEFT_PAR) | (1L << LEFT_SQBR) | (1L << INCREASE) | (1L << DECREASE) | (1L << ADD) | (1L << MIN) | (1L << NOT) | (1L << AT) | (1L << NULL) | (1L << TRUE) | (1L << FALSE) | (1L << LEFT_TOKEN) | (1L << LEFT_TEXT_TOKEN) | (1L << HexLiteral) | (1L << DecimalLiteral) | (1L << OctalLiteral) | (1L << FloatingPointLiteral) | (1L << CharacterLiteral) | (1L << StringLiteral) | (1L << Identifier) | (1L << PARAS))) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << If) | (1L << For) | (1L << While) | (1L << Switch) | (1L << Select) | (1L << Return) | (1L << Break) | (1L << Continue) | (1L << Var) | (1L << Directive) | (1L << Try) | (1L << LEFT_BRACE) | (1L << LEFT_PAR) | (1L << LEFT_SQBR) | (1L << INCREASE) | (1L << DECREASE) | (1L << ADD) | (1L << MIN) | (1L << NOT) | (1L << AT) | (1L << NULL) | (1L << TRUE) | (1L << FALSE) | (1L << LEFT_TOKEN) | (1L << LEFT_TEXT_TOKEN) | (1L << HexLiteral) | (1L << DecimalLiteral) | (1L << OctalLiteral) | (1L << FloatingPointLiteral) | (1L << CharacterLiteral) | (1L << StringLiteral) | (1L << Identifier) | (1L << TYPE))) != 0)) {
 				{
 				{
 				setState(231); statement();

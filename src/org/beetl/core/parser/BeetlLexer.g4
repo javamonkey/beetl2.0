@@ -8,6 +8,7 @@ lexer grammar BeetlLexer;
 
 If:'if';
 For:'for';
+Elsefor:'elsefor';
 Else:'else';
 While:'while';
 Switch:'switch';

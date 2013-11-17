@@ -24,7 +24,7 @@ statement
     |   constantsTextStatment #staticOutputSt
     |   COMMENT_TAG commentTypeTag  #commentTagSt
     |   If parExpression statement (Else statement)? #ifSt
-    |   For LEFT_PAR forControl RIGHT_PAR statement    #forSt
+    |   For LEFT_PAR forControl RIGHT_PAR statement  ( Elsefor statement)?  #forSt
     |   While parExpression statement   #whileSt
     |   Switch parExpression switchBlock    #siwchSt
     |   Select g_switchStatment #selectSt
@@ -59,10 +59,10 @@ g_switchStatment
 	 ;
 
 g_caseStatment 
-	:	Case expression (COMMA expression)* COLON statement ;
+	:	Case expression (COMMA expression)* COLON statement* ;
 
 g_defaultStatment
-	:	Default COLON statement;	
+	:	Default COLON statement*;	
 
 varDeclareList :  assignMent (COMMA assignMent)* 
 ;	

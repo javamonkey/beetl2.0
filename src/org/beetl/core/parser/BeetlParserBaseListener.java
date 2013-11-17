@@ -56,6 +56,19 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * <p/>
 	 * The default implementation does nothing.
 	 */
+	@Override public void enterCommentTagSt(@NotNull BeetlParser.CommentTagStContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitCommentTagSt(@NotNull BeetlParser.CommentTagStContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
 	@Override public void enterExpressionList(@NotNull BeetlParser.ExpressionListContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -128,6 +141,19 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * The default implementation does nothing.
 	 */
 	@Override public void exitTextformat(@NotNull BeetlParser.TextformatContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void enterCommentTypeItemTag(@NotNull BeetlParser.CommentTypeItemTagContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitCommentTypeItemTag(@NotNull BeetlParser.CommentTypeItemTagContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -212,6 +238,19 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * <p/>
 	 * The default implementation does nothing.
 	 */
+	@Override public void enterTypeArguments(@NotNull BeetlParser.TypeArgumentsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitTypeArguments(@NotNull BeetlParser.TypeArgumentsContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
 	@Override public void enterTextOutputSt(@NotNull BeetlParser.TextOutputStContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -225,19 +264,6 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * <p/>
 	 * The default implementation does nothing.
 	 */
-	@Override public void enterSwitchBlock(@NotNull BeetlParser.SwitchBlockContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation does nothing.
-	 */
-	@Override public void exitSwitchBlock(@NotNull BeetlParser.SwitchBlockContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation does nothing.
-	 */
 	@Override public void enterVarAttributeArrayOrMap(@NotNull BeetlParser.VarAttributeArrayOrMapContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -245,6 +271,19 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * The default implementation does nothing.
 	 */
 	@Override public void exitVarAttributeArrayOrMap(@NotNull BeetlParser.VarAttributeArrayOrMapContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void enterSwitchBlock(@NotNull BeetlParser.SwitchBlockContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitSwitchBlock(@NotNull BeetlParser.SwitchBlockContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -323,6 +362,19 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * The default implementation does nothing.
 	 */
 	@Override public void exitNativeArray(@NotNull BeetlParser.NativeArrayContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void enterClassOrInterfaceType(@NotNull BeetlParser.ClassOrInterfaceTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitClassOrInterfaceType(@NotNull BeetlParser.ClassOrInterfaceTypeContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -602,6 +654,19 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * <p/>
 	 * The default implementation does nothing.
 	 */
+	@Override public void enterCommentTypeTag(@NotNull BeetlParser.CommentTypeTagContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitCommentTypeTag(@NotNull BeetlParser.CommentTypeTagContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
 	@Override public void enterBreakSt(@NotNull BeetlParser.BreakStContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -693,6 +758,19 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * <p/>
 	 * The default implementation does nothing.
 	 */
+	@Override public void enterTypeArgument(@NotNull BeetlParser.TypeArgumentContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitTypeArgument(@NotNull BeetlParser.TypeArgumentContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
 	@Override public void enterFunctionNs(@NotNull BeetlParser.FunctionNsContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -726,19 +804,6 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * The default implementation does nothing.
 	 */
 	@Override public void exitAssignSt(@NotNull BeetlParser.AssignStContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation does nothing.
-	 */
-	@Override public void enterCommentParasSt(@NotNull BeetlParser.CommentParasStContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation does nothing.
-	 */
-	@Override public void exitCommentParasSt(@NotNull BeetlParser.CommentParasStContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

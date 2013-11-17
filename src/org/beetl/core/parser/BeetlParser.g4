@@ -36,14 +36,22 @@ statement
     |   Directive  directiveExp #directiveSt 
     |   assignMent END  #assignSt
     |   functionTagCall #functionSt
-    |   statementExpression END   #statmentExpSt
+    |   statementExpression END   #statmentExpSt 
      
     ;
-
-commentTypeTag:Identifier1 commentTypeItemTag (COMMA1 commentTypeItemTag);
-commentTypeItemTag:   (LEFT_PAR1 Identifier1 (PERIOD1 Identifier1 )*)  RIGHT_PAR1  Identifier1    
+//ЧўЅв:@type (User)user,(List<User>userList
+commentTypeTag: commentTypeItemTag (COMMA1 commentTypeItemTag);
+commentTypeItemTag:   LEFT_PAR1 classOrInterfaceType RIGHT_PAR1  Identifier1    
                   ;
-                      
+classOrInterfaceType: Identifier1 (PERIOD1 Identifier1 )* typeArguments?;
+typeArguments
+    :   LEFT_ANGULAR typeArgument (COMMA1 typeArgument)* RIGHT_ANGULAR
+    ;
+typeArgument
+    :   classOrInterfaceType 
+    ;
+
+//ЦёБо  directive object xx,xx,xx                 
 directiveExp:  Identifier (StringLiteral)? END;
 
 g_switchStatment
@@ -160,12 +168,12 @@ nativeArray: LEFT_SQBR expression RIGHT_SQBR;
 nativeVarRefChain:Identifier (PERIOD Identifier)*;        
 
 
-json	:	LEFT_SQBR (expression  (',' expression)*)? RIGHT_SQBR
-	|	LEFT_BRACE (jsonKeyValue (',' jsonKeyValue)*)? RIGHT_BRACE
+json	:	LEFT_SQBR (expression  (COMMA expression)*)? RIGHT_SQBR
+	|	LEFT_BRACE (jsonKeyValue (COMMA jsonKeyValue)*)? RIGHT_BRACE
 	;
 jsonKeyValue
-	:	StringLiteral ':' expression  
-	|	Identifier ':' expression 
+	:	StringLiteral COLON expression  
+	|	Identifier COLON expression 
 	;
 literal
     :   integerLiteral

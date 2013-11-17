@@ -175,15 +175,27 @@ COMMENT_OPEN
     :   '/*'    ->pushMode(MODE_COMMENT),channel(HIDDEN) 
     ;
 mode MODE_COMMENT;
-COMMENT_TAG:'@' ->pushMode(MODE_COMMENT_TYPE)     ;
 
-COMMENT_END: '*/'  -> popMode,channel(HIDDEN)
+COMMENT_TAG:TYPE_CHAR ->pushMode(MODE_COMMENT_TYPE)  ;
+
+COMMENT_END: COMMENT_END_CHAR  -> popMode,channel(HIDDEN)
 ;
+
+fragment
+    COMMENT_END_CHAR:'*/';
+fragment
+    TYPE_CHAR:'@type';
+
+ALL_COMMENT_CHAR:.->channel(HIDDEN);
+
 mode MODE_COMMENT_TYPE;
 Identifier1:Identifier;
-PERIOD1:PERIOD;
-LEFT_PAR1:LEFT_PAR;
-RIGHT_PAR1:RIGHT_PAR;
-COMMA1:COMMA;
+PERIOD1:'.';
+LEFT_PAR1:'(';
+RIGHT_PAR1:')';
+COMMA1:','; 
+LEFT_ANGULAR:'<';
+RIGHT_ANGULAR:'>';
+WS1  :   [ \r\t\u000C]+ -> channel(HIDDEN);
 TYPE_END: [\r\n]  -> popMode,channel(HIDDEN)
         ;

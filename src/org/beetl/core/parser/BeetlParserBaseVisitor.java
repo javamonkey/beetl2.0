@@ -42,6 +42,14 @@ public class BeetlParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
 	 * The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.
 	 */
+	@Override public T visitCommentTagSt(@NotNull BeetlParser.CommentTagStContext ctx) { return visitChildren(ctx); }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.
+	 */
 	@Override public T visitExpressionList(@NotNull BeetlParser.ExpressionListContext ctx) { return visitChildren(ctx); }
 
 	/**
@@ -83,6 +91,14 @@ public class BeetlParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
 	 * {@link #visitChildren} on {@code ctx}.
 	 */
 	@Override public T visitTextformat(@NotNull BeetlParser.TextformatContext ctx) { return visitChildren(ctx); }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.
+	 */
+	@Override public T visitCommentTypeItemTag(@NotNull BeetlParser.CommentTypeItemTagContext ctx) { return visitChildren(ctx); }
 
 	/**
 	 * {@inheritDoc}
@@ -138,6 +154,14 @@ public class BeetlParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
 	 * The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.
 	 */
+	@Override public T visitTypeArguments(@NotNull BeetlParser.TypeArgumentsContext ctx) { return visitChildren(ctx); }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.
+	 */
 	@Override public T visitTextOutputSt(@NotNull BeetlParser.TextOutputStContext ctx) { return visitChildren(ctx); }
 
 	/**
@@ -146,7 +170,7 @@ public class BeetlParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
 	 * The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.
 	 */
-	@Override public T visitSwitchBlock(@NotNull BeetlParser.SwitchBlockContext ctx) { return visitChildren(ctx); }
+	@Override public T visitVarAttributeArrayOrMap(@NotNull BeetlParser.VarAttributeArrayOrMapContext ctx) { return visitChildren(ctx); }
 
 	/**
 	 * {@inheritDoc}
@@ -154,7 +178,7 @@ public class BeetlParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
 	 * The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.
 	 */
-	@Override public T visitVarAttributeArrayOrMap(@NotNull BeetlParser.VarAttributeArrayOrMapContext ctx) { return visitChildren(ctx); }
+	@Override public T visitSwitchBlock(@NotNull BeetlParser.SwitchBlockContext ctx) { return visitChildren(ctx); }
 
 	/**
 	 * {@inheritDoc}
@@ -203,6 +227,14 @@ public class BeetlParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
 	 * {@link #visitChildren} on {@code ctx}.
 	 */
 	@Override public T visitNativeArray(@NotNull BeetlParser.NativeArrayContext ctx) { return visitChildren(ctx); }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.
+	 */
+	@Override public T visitClassOrInterfaceType(@NotNull BeetlParser.ClassOrInterfaceTypeContext ctx) { return visitChildren(ctx); }
 
 	/**
 	 * {@inheritDoc}
@@ -378,6 +410,14 @@ public class BeetlParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
 	 * The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.
 	 */
+	@Override public T visitCommentTypeTag(@NotNull BeetlParser.CommentTypeTagContext ctx) { return visitChildren(ctx); }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.
+	 */
 	@Override public T visitBreakSt(@NotNull BeetlParser.BreakStContext ctx) { return visitChildren(ctx); }
 
 	/**
@@ -434,6 +474,14 @@ public class BeetlParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
 	 * The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.
 	 */
+	@Override public T visitTypeArgument(@NotNull BeetlParser.TypeArgumentContext ctx) { return visitChildren(ctx); }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.
+	 */
 	@Override public T visitFunctionNs(@NotNull BeetlParser.FunctionNsContext ctx) { return visitChildren(ctx); }
 
 	/**
@@ -451,14 +499,6 @@ public class BeetlParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
 	 * {@link #visitChildren} on {@code ctx}.
 	 */
 	@Override public T visitAssignSt(@NotNull BeetlParser.AssignStContext ctx) { return visitChildren(ctx); }
-
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
-	 */
-	@Override public T visitCommentParasSt(@NotNull BeetlParser.CommentParasStContext ctx) { return visitChildren(ctx); }
 
 	/**
 	 * {@inheritDoc}

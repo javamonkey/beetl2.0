@@ -33,19 +33,24 @@ public class TestParserListener extends BeetlParserBaseListener {
 	public void anzlysze(){
 		anzlysze(blockVar,0);
 		System.out.println(blockVar);
+		System.out.println("=============");
+		System.out.println(globalVar);
 	}
+	
 	
 	protected void anzlysze(BlockVar block,int nextIndex){
 		
 		
 		for(Entry<String,VarDescrption> entry:block.vars.entrySet()){
 			VarDescrption vd = entry.getValue();
-			
-			for(BeetlTerminalNode node:vd.where){
-				node.setIndex(nextIndex);
-								
+			//变量有可能没有被引用，（for 循环中的状态变量），因此不需要分配空间
+			if(!vd.where.isEmpty()){
+				for(BeetlTerminalNode node:vd.where){
+					node.setIndex(nextIndex);
+				}
+				nextIndex++;
 			}
-			nextIndex++;
+			
 		}
 		varIndexSize = Math.max(varIndexSize, nextIndex);
 		
@@ -81,16 +86,13 @@ public class TestParserListener extends BeetlParserBaseListener {
 	@Override
 	public void enterBlock(@NotNull BeetlParser.BlockContext ctx) {
 
-		BlockVar newBlockVar = new BlockVar();
-		newBlockVar.setParent(currentBlockVar);
-		currentBlockVar.getBlockList().add(newBlockVar);
-		currentBlockVar = newBlockVar;
+		this.enterBlock();
 
 	}
 
 	@Override
 	public void exitBlock(@NotNull BeetlParser.BlockContext ctx) {
-		currentBlockVar = currentBlockVar.parent;
+		this.exitBlock();
 	}
 
 	@Override
@@ -119,10 +121,11 @@ public class TestParserListener extends BeetlParserBaseListener {
 	}
 
 	
-	
+	@Override
 	public void enterVarRef(@NotNull BeetlParser.VarRefContext ctx) { 
 		BeetlTerminalNode node = new BeetlTerminalNode(ctx.Identifier());
 		ctx.children.set(0, node);
+	
 		Token token =node.getSymbol();	
 		String varName = token.getText();		
 		VarDescrption vd = currentBlockVar.getVarDescrption(varName);
@@ -145,6 +148,71 @@ public class TestParserListener extends BeetlParserBaseListener {
 		}
 		
 	}
+	@Override
+	public void enterForControl(@NotNull BeetlParser.ForControlContext ctx){
+		Token token = ctx.Identifier().getSymbol();	
+		BeetlTerminalNode node = new BeetlTerminalNode(ctx.Identifier());
+		if(ctx.Var()==null){
+			ctx.children.set(0, node);
+		}else{
+			ctx.children.set(1, node);
+		}
+		analyzeAssign(node);
+		//增加for循环中额外三个变量
+		String name = token.getText();
+		String name_index = name+"_index";
+		String name_size = name+"_size";
+		String name_status = name+"LP";
+		
+		VarDescrption forIndex = new VarDescrption();		
+		forIndex.setVarName(name_index);		
+		currentBlockVar.getVars().put(name_index, forIndex);
+		
+		VarDescrption forSize = new VarDescrption();		
+		forSize.setVarName(name_size);
+		currentBlockVar.getVars().put(name_size, forSize);
+		
+		VarDescrption forStatus = new VarDescrption();		
+		forStatus.setVarName(name_status);
+		currentBlockVar.getVars().put(name_status, forStatus);
+		
+	}
+	
+	@Override 	
+	public void enterSwitchBlockStatementGroup(@NotNull BeetlParser.SwitchBlockStatementGroupContext ctx) { 
+		//相当于一个block
+		enterBlock();
+	}
+	
+	@Override 
+	public void enterG_switchStatment(@NotNull BeetlParser.G_switchStatmentContext ctx) { 
+		//相当于一个block
+		enterBlock();
+	}
+	
+	
+	@Override 
+	public void exitSwitchBlockStatementGroup(@NotNull BeetlParser.SwitchBlockStatementGroupContext ctx) {
+		exitBlock();
+	}
+	
+	@Override 
+	
+	public void exitG_switchStatment(@NotNull BeetlParser.G_switchStatmentContext ctx) { 
+		exitBlock();
+	}
+
+	protected void enterBlock(){
+		BlockVar newBlockVar = new BlockVar();
+		newBlockVar.setParent(currentBlockVar);
+		currentBlockVar.getBlockList().add(newBlockVar);
+		currentBlockVar = newBlockVar;
+	}
+	protected void exitBlock(){
+		currentBlockVar = currentBlockVar.parent;
+	}
+
+
 	
 	protected void anzlyszeAttribute(VarDescrption vd, BeetlParser.VarRefContext ctx){
 		List<VarAttributeContext>  list = ctx.varAttribute();
@@ -176,6 +244,7 @@ public class TestParserListener extends BeetlParserBaseListener {
 
 	class BlockVar {
 		Map<String, VarDescrption> vars = new HashMap<String, VarDescrption>();
+		//chidren
 		List<BlockVar> blockList = new ArrayList<BlockVar>();
 		BlockVar parent = null;
 
@@ -214,11 +283,15 @@ public class TestParserListener extends BeetlParserBaseListener {
 		}
 		
 		public String toString(){
+			
 			StringBuilder sb = new StringBuilder();
-			sb.append("vars:").append(vars.toString());
+			
+			sb.append(vars.toString());
+			
 			for(BlockVar block:blockList){
-				sb.append(block);
+				sb.append(block).append("\n");
 			}
+		
 			return sb.append("\n").toString();
 		}
 		
@@ -249,9 +322,8 @@ public class TestParserListener extends BeetlParserBaseListener {
 		}
 		
 		public String toString(){
-			StringBuilder sb = new StringBuilder();
-			sb.append(varName).append("\n");
-			sb.append("attrs=").append(attrList).append("\n");
+			StringBuilder sb = new StringBuilder();			
+			sb.append("").append(attrList).append("\n");
 			sb.append("where:").append(where).append("\n");
 			return sb.toString();
 		}

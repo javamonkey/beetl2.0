@@ -7,15 +7,19 @@ import java.util.Map;
 
 
 public class Context {
-	BeetlScript script;
-	ByteWriter byteWriter;
+
+	protected ByteWriter byteWriter;
 	/*全局变量*/
-	Map<String,Object> globalVar = new HashMap<String,Object>(8);
+	protected Map<String,Object> globalVar = new HashMap<String,Object>(8);
 	/*内容为Object的变量，beetl要求全局变量类型总是一致，如果一个key
 	 * 对应的类型不一样，则需要设置objectKeys*/
-	List<String> objectKeys = new ArrayList(2); 
+	protected List<String> objectKeys = new ArrayList(2); 
+	protected String[] staticTextArray = null;
 	//存放临时变量都放在数组里
-	Object[] vars = new Object[8];
+	protected Object[] vars = null;		
+	protected Object[] cachedArray = null;
+	
+	protected boolean byteOutputMode =  false ;
 	
 	
 	/**得到临时模板变量
@@ -23,6 +27,7 @@ public class Context {
 	 * @return
 	 */
 	protected Object getVar(int i){
+		
 		return vars[i];
 	}
 	
@@ -47,8 +52,6 @@ public class Context {
 	public Object getGlobal(String key){
 		return globalVar.get(key);
 	}
-	
-	
 	
 	
 }

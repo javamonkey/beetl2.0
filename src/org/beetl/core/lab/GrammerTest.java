@@ -8,9 +8,9 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.beetl.core.BeetlScriptParserListener;
 import org.beetl.core.parser.BeetlLexer;
 import org.beetl.core.parser.BeetlParser;
-import org.beetl.core.parser.TestParserListener;
 
 /**
  * 测试模板语法
@@ -33,7 +33,7 @@ public class GrammerTest {
 		BeetlParser parser = new BeetlParser(tokens);
 		ParseTree tree = parser.prog(); // begin parsing at init rule
 		ParseTreeWalker walker = new ParseTreeWalker();
-		TestParserListener parserLitener = new TestParserListener();
+		BeetlScriptParserListener parserLitener = new BeetlScriptParserListener();
 		walker.walk(parserLitener, tree);
 		parserLitener.anzlysze();
 		//System.out.println(tree.toStringTree(parser)); // print LISP-style tree

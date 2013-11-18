@@ -117,7 +117,7 @@ textformat:
         | StringLiteral  ;
 
 constantsTextStatment
-	:	LEFT_TEXT_TOKEN  integerLiteral RIGHT_TOKEN   ; // 常量输出,代表数组搜应
+	:	LEFT_TEXT_TOKEN  DecimalLiteral RIGHT_TOKEN   ; // 常量输出,代表数组搜应
 
 
 constantExpression
@@ -125,24 +125,21 @@ constantExpression
     ;
 
  expression
-    :   literal     
-    |   AT nativeCall   
-    |   functionCall
-    |   varRef
-    |   json
-    |   expression (INCREASE | DECREASE) 
-    |   (ADD|MIN) expression
-    |    (INCREASE|DECREASE) expression
-    |   NOT expression
-    |   expression (MUlTIP|DIV|MOD) expression
-    |   expression (ADD|MIN) expression
-    |   expression (LESS ASSIN | LARGE ASSIN |LARGE |LESS) expression
-    |   expression (EQUAL | NOT_EQUAL) expression
-    |   expression AND expression
-    |   expression OR expression
-    |   expression QUESTOIN expression? COLON expression? 
-    |   expression NOT expression? //SAFE OUTPUT
-    |  LEFT_PAR expression RIGHT_PAR
+    :   literal        #literalExp
+    |   AT nativeCall   #nativeCallExp
+    |   functionCall    #functionCallExp
+    |   varRef ( NOT expression)?           #varRefExp
+    |   json        #jsonExp  
+    |   (ADD|MIN) expression    #negExp
+    |   NOT expression      #notExp
+    |   expression (MUlTIP|DIV|MOD) expression #muldivmodExp
+    |   expression (ADD|MIN) expression #addminExp
+    |   expression (LESS ASSIN | LARGE ASSIN |LARGE |LESS) expression   #compareExp
+    |   expression (EQUAL | NOT_EQUAL) expression #equalExp
+    |   expression AND expression   #andExp
+    |   expression OR expression    #orExp
+    |   expression QUESTOIN expression? COLON expression?  #ternaryExp
+    |   LEFT_PAR expression RIGHT_PAR #parExp
   
     ;
     
@@ -176,19 +173,13 @@ jsonKeyValue
 	|	Identifier COLON expression 
 	;
 literal
-    :   integerLiteral
-    |   FloatingPointLiteral
-    |   CharacterLiteral
+    :   DecimalLiteral 
+    |   FloatingPointLiteral  
     |   StringLiteral
     |   booleanLiteral
     |   NULL
     ;
 
-integerLiteral
-    :   HexLiteral
-    |   OctalLiteral
-    |   DecimalLiteral
-    ;
 
 booleanLiteral
     :   TRUE

@@ -19,18 +19,18 @@ public interface BeetlParserVisitor<T> extends ParseTreeVisitor<T> {
 	T visitAssignTemplateVar(@NotNull BeetlParser.AssignTemplateVarContext ctx);
 
 	/**
-	 * Visit a parse tree produced by {@link BeetlParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExpression(@NotNull BeetlParser.ExpressionContext ctx);
-
-	/**
 	 * Visit a parse tree produced by {@link BeetlParser#g_caseStatment}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitG_caseStatment(@NotNull BeetlParser.G_caseStatmentContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link BeetlParser#parExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParExp(@NotNull BeetlParser.ParExpContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link BeetlParser#commentTagSt}.
@@ -45,6 +45,20 @@ public interface BeetlParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitExpressionList(@NotNull BeetlParser.ExpressionListContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link BeetlParser#notExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNotExp(@NotNull BeetlParser.NotExpContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link BeetlParser#addminExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAddminExp(@NotNull BeetlParser.AddminExpContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link BeetlParser#varRef}.
@@ -89,6 +103,13 @@ public interface BeetlParserVisitor<T> extends ParseTreeVisitor<T> {
 	T visitCommentTypeItemTag(@NotNull BeetlParser.CommentTypeItemTagContext ctx);
 
 	/**
+	 * Visit a parse tree produced by {@link BeetlParser#jsonExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJsonExp(@NotNull BeetlParser.JsonExpContext ctx);
+
+	/**
 	 * Visit a parse tree produced by {@link BeetlParser#nativeVarRefChain}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -110,6 +131,13 @@ public interface BeetlParserVisitor<T> extends ParseTreeVisitor<T> {
 	T visitSelectSt(@NotNull BeetlParser.SelectStContext ctx);
 
 	/**
+	 * Visit a parse tree produced by {@link BeetlParser#negExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNegExp(@NotNull BeetlParser.NegExpContext ctx);
+
+	/**
 	 * Visit a parse tree produced by {@link BeetlParser#textVar}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -122,6 +150,13 @@ public interface BeetlParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitForSt(@NotNull BeetlParser.ForStContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link BeetlParser#orExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOrExp(@NotNull BeetlParser.OrExpContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link BeetlParser#directiveSt}.
@@ -180,6 +215,13 @@ public interface BeetlParserVisitor<T> extends ParseTreeVisitor<T> {
 	T visitConstantExpression(@NotNull BeetlParser.ConstantExpressionContext ctx);
 
 	/**
+	 * Visit a parse tree produced by {@link BeetlParser#muldivmodExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMuldivmodExp(@NotNull BeetlParser.MuldivmodExpContext ctx);
+
+	/**
 	 * Visit a parse tree produced by {@link BeetlParser#assignId}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -199,6 +241,20 @@ public interface BeetlParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitNativeArray(@NotNull BeetlParser.NativeArrayContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link BeetlParser#literalExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLiteralExp(@NotNull BeetlParser.LiteralExpContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link BeetlParser#varAttributeGeneral}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVarAttributeGeneral(@NotNull BeetlParser.VarAttributeGeneralContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link BeetlParser#classOrInterfaceType}.
@@ -229,13 +285,6 @@ public interface BeetlParserVisitor<T> extends ParseTreeVisitor<T> {
 	T visitStatementExpression(@NotNull BeetlParser.StatementExpressionContext ctx);
 
 	/**
-	 * Visit a parse tree produced by {@link BeetlParser#varAttributeGeneral}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitVarAttributeGeneral(@NotNull BeetlParser.VarAttributeGeneralContext ctx);
-
-	/**
 	 * Visit a parse tree produced by {@link BeetlParser#block}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -250,13 +299,6 @@ public interface BeetlParserVisitor<T> extends ParseTreeVisitor<T> {
 	T visitDirectiveExp(@NotNull BeetlParser.DirectiveExpContext ctx);
 
 	/**
-	 * Visit a parse tree produced by {@link BeetlParser#integerLiteral}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIntegerLiteral(@NotNull BeetlParser.IntegerLiteralContext ctx);
-
-	/**
 	 * Visit a parse tree produced by {@link BeetlParser#varSt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -269,6 +311,13 @@ public interface BeetlParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitStaticOutputSt(@NotNull BeetlParser.StaticOutputStContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link BeetlParser#varRefExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVarRefExp(@NotNull BeetlParser.VarRefExpContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link BeetlParser#textStatment}.
@@ -292,11 +341,25 @@ public interface BeetlParserVisitor<T> extends ParseTreeVisitor<T> {
 	T visitJson(@NotNull BeetlParser.JsonContext ctx);
 
 	/**
+	 * Visit a parse tree produced by {@link BeetlParser#ternaryExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTernaryExp(@NotNull BeetlParser.TernaryExpContext ctx);
+
+	/**
 	 * Visit a parse tree produced by {@link BeetlParser#constantsTextStatment}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitConstantsTextStatment(@NotNull BeetlParser.ConstantsTextStatmentContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link BeetlParser#nativeCallExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNativeCallExp(@NotNull BeetlParser.NativeCallExpContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link BeetlParser#trySt}.
@@ -325,6 +388,20 @@ public interface BeetlParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitVarAttributeVirtual(@NotNull BeetlParser.VarAttributeVirtualContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link BeetlParser#compareExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCompareExp(@NotNull BeetlParser.CompareExpContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link BeetlParser#equalExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEqualExp(@NotNull BeetlParser.EqualExpContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link BeetlParser#parExpression}.
@@ -388,6 +465,20 @@ public interface BeetlParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitNativeMethod(@NotNull BeetlParser.NativeMethodContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link BeetlParser#andExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAndExp(@NotNull BeetlParser.AndExpContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link BeetlParser#functionCallExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionCallExp(@NotNull BeetlParser.FunctionCallExpContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link BeetlParser#arguments}.

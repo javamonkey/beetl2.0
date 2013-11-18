@@ -30,19 +30,6 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * <p/>
 	 * The default implementation does nothing.
 	 */
-	@Override public void enterExpression(@NotNull BeetlParser.ExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation does nothing.
-	 */
-	@Override public void exitExpression(@NotNull BeetlParser.ExpressionContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation does nothing.
-	 */
 	@Override public void enterG_caseStatment(@NotNull BeetlParser.G_caseStatmentContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -50,6 +37,19 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * The default implementation does nothing.
 	 */
 	@Override public void exitG_caseStatment(@NotNull BeetlParser.G_caseStatmentContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void enterParExp(@NotNull BeetlParser.ParExpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitParExp(@NotNull BeetlParser.ParExpContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -76,6 +76,32 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * The default implementation does nothing.
 	 */
 	@Override public void exitExpressionList(@NotNull BeetlParser.ExpressionListContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void enterNotExp(@NotNull BeetlParser.NotExpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitNotExp(@NotNull BeetlParser.NotExpContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void enterAddminExp(@NotNull BeetlParser.AddminExpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitAddminExp(@NotNull BeetlParser.AddminExpContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -160,6 +186,19 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * <p/>
 	 * The default implementation does nothing.
 	 */
+	@Override public void enterJsonExp(@NotNull BeetlParser.JsonExpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitJsonExp(@NotNull BeetlParser.JsonExpContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
 	@Override public void enterNativeVarRefChain(@NotNull BeetlParser.NativeVarRefChainContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -199,6 +238,19 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * <p/>
 	 * The default implementation does nothing.
 	 */
+	@Override public void enterNegExp(@NotNull BeetlParser.NegExpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitNegExp(@NotNull BeetlParser.NegExpContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
 	@Override public void enterTextVar(@NotNull BeetlParser.TextVarContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -219,6 +271,19 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * The default implementation does nothing.
 	 */
 	@Override public void exitForSt(@NotNull BeetlParser.ForStContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void enterOrExp(@NotNull BeetlParser.OrExpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitOrExp(@NotNull BeetlParser.OrExpContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -329,6 +394,19 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * <p/>
 	 * The default implementation does nothing.
 	 */
+	@Override public void enterMuldivmodExp(@NotNull BeetlParser.MuldivmodExpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitMuldivmodExp(@NotNull BeetlParser.MuldivmodExpContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
 	@Override public void enterAssignId(@NotNull BeetlParser.AssignIdContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -362,6 +440,32 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * The default implementation does nothing.
 	 */
 	@Override public void exitNativeArray(@NotNull BeetlParser.NativeArrayContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void enterLiteralExp(@NotNull BeetlParser.LiteralExpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitLiteralExp(@NotNull BeetlParser.LiteralExpContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void enterVarAttributeGeneral(@NotNull BeetlParser.VarAttributeGeneralContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitVarAttributeGeneral(@NotNull BeetlParser.VarAttributeGeneralContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -420,19 +524,6 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * <p/>
 	 * The default implementation does nothing.
 	 */
-	@Override public void enterVarAttributeGeneral(@NotNull BeetlParser.VarAttributeGeneralContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation does nothing.
-	 */
-	@Override public void exitVarAttributeGeneral(@NotNull BeetlParser.VarAttributeGeneralContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation does nothing.
-	 */
 	@Override public void enterBlock(@NotNull BeetlParser.BlockContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -459,19 +550,6 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * <p/>
 	 * The default implementation does nothing.
 	 */
-	@Override public void enterIntegerLiteral(@NotNull BeetlParser.IntegerLiteralContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation does nothing.
-	 */
-	@Override public void exitIntegerLiteral(@NotNull BeetlParser.IntegerLiteralContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation does nothing.
-	 */
 	@Override public void enterVarSt(@NotNull BeetlParser.VarStContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -492,6 +570,19 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * The default implementation does nothing.
 	 */
 	@Override public void exitStaticOutputSt(@NotNull BeetlParser.StaticOutputStContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void enterVarRefExp(@NotNull BeetlParser.VarRefExpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitVarRefExp(@NotNull BeetlParser.VarRefExpContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -537,6 +628,19 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * <p/>
 	 * The default implementation does nothing.
 	 */
+	@Override public void enterTernaryExp(@NotNull BeetlParser.TernaryExpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitTernaryExp(@NotNull BeetlParser.TernaryExpContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
 	@Override public void enterConstantsTextStatment(@NotNull BeetlParser.ConstantsTextStatmentContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -544,6 +648,19 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * The default implementation does nothing.
 	 */
 	@Override public void exitConstantsTextStatment(@NotNull BeetlParser.ConstantsTextStatmentContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void enterNativeCallExp(@NotNull BeetlParser.NativeCallExpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitNativeCallExp(@NotNull BeetlParser.NativeCallExpContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -596,6 +713,32 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * The default implementation does nothing.
 	 */
 	@Override public void exitVarAttributeVirtual(@NotNull BeetlParser.VarAttributeVirtualContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void enterCompareExp(@NotNull BeetlParser.CompareExpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitCompareExp(@NotNull BeetlParser.CompareExpContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void enterEqualExp(@NotNull BeetlParser.EqualExpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitEqualExp(@NotNull BeetlParser.EqualExpContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
@@ -713,6 +856,32 @@ public class BeetlParserBaseListener implements BeetlParserListener {
 	 * The default implementation does nothing.
 	 */
 	@Override public void exitNativeMethod(@NotNull BeetlParser.NativeMethodContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void enterAndExp(@NotNull BeetlParser.AndExpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitAndExp(@NotNull BeetlParser.AndExpContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void enterFunctionCallExp(@NotNull BeetlParser.FunctionCallExpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 * <p/>
+	 * The default implementation does nothing.
+	 */
+	@Override public void exitFunctionCallExp(@NotNull BeetlParser.FunctionCallExpContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

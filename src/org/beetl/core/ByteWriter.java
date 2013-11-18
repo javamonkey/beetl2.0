@@ -6,5 +6,17 @@ package org.beetl.core;
  *
  */
 public class ByteWriter {
+	public void write(String str){
+		System.out.println(str);
+	}
+	public void writeStaticContent(Object o){
+		if(o!=null)
+		System.out.println(o.toString());
 	
+	}
+	
+	public void writePlaceholderContent(Object o){
+		if(o!=null)
+		System.out.println(o.toString());
+	}
 }

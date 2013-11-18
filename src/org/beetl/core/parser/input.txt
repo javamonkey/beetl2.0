@@ -1,6 +1,1 @@
-/**
-一个简单的测试模板
-@type (User)user,(List<User>)list
-
-*/
-var  a = 1;
+var a = a.name!"cc";

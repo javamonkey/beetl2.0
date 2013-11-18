@@ -20,17 +20,6 @@ public interface BeetlParserListener extends ParseTreeListener {
 	void exitAssignTemplateVar(@NotNull BeetlParser.AssignTemplateVarContext ctx);
 
 	/**
-	 * Enter a parse tree produced by {@link BeetlParser#expression}.
-	 * @param ctx the parse tree
-	 */
-	void enterExpression(@NotNull BeetlParser.ExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link BeetlParser#expression}.
-	 * @param ctx the parse tree
-	 */
-	void exitExpression(@NotNull BeetlParser.ExpressionContext ctx);
-
-	/**
 	 * Enter a parse tree produced by {@link BeetlParser#g_caseStatment}.
 	 * @param ctx the parse tree
 	 */
@@ -40,6 +29,17 @@ public interface BeetlParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitG_caseStatment(@NotNull BeetlParser.G_caseStatmentContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link BeetlParser#parExp}.
+	 * @param ctx the parse tree
+	 */
+	void enterParExp(@NotNull BeetlParser.ParExpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#parExp}.
+	 * @param ctx the parse tree
+	 */
+	void exitParExp(@NotNull BeetlParser.ParExpContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link BeetlParser#commentTagSt}.
@@ -62,6 +62,28 @@ public interface BeetlParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitExpressionList(@NotNull BeetlParser.ExpressionListContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link BeetlParser#notExp}.
+	 * @param ctx the parse tree
+	 */
+	void enterNotExp(@NotNull BeetlParser.NotExpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#notExp}.
+	 * @param ctx the parse tree
+	 */
+	void exitNotExp(@NotNull BeetlParser.NotExpContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link BeetlParser#addminExp}.
+	 * @param ctx the parse tree
+	 */
+	void enterAddminExp(@NotNull BeetlParser.AddminExpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#addminExp}.
+	 * @param ctx the parse tree
+	 */
+	void exitAddminExp(@NotNull BeetlParser.AddminExpContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link BeetlParser#varRef}.
@@ -130,6 +152,17 @@ public interface BeetlParserListener extends ParseTreeListener {
 	void exitCommentTypeItemTag(@NotNull BeetlParser.CommentTypeItemTagContext ctx);
 
 	/**
+	 * Enter a parse tree produced by {@link BeetlParser#jsonExp}.
+	 * @param ctx the parse tree
+	 */
+	void enterJsonExp(@NotNull BeetlParser.JsonExpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#jsonExp}.
+	 * @param ctx the parse tree
+	 */
+	void exitJsonExp(@NotNull BeetlParser.JsonExpContext ctx);
+
+	/**
 	 * Enter a parse tree produced by {@link BeetlParser#nativeVarRefChain}.
 	 * @param ctx the parse tree
 	 */
@@ -163,6 +196,17 @@ public interface BeetlParserListener extends ParseTreeListener {
 	void exitSelectSt(@NotNull BeetlParser.SelectStContext ctx);
 
 	/**
+	 * Enter a parse tree produced by {@link BeetlParser#negExp}.
+	 * @param ctx the parse tree
+	 */
+	void enterNegExp(@NotNull BeetlParser.NegExpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#negExp}.
+	 * @param ctx the parse tree
+	 */
+	void exitNegExp(@NotNull BeetlParser.NegExpContext ctx);
+
+	/**
 	 * Enter a parse tree produced by {@link BeetlParser#textVar}.
 	 * @param ctx the parse tree
 	 */
@@ -183,6 +227,17 @@ public interface BeetlParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitForSt(@NotNull BeetlParser.ForStContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link BeetlParser#orExp}.
+	 * @param ctx the parse tree
+	 */
+	void enterOrExp(@NotNull BeetlParser.OrExpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#orExp}.
+	 * @param ctx the parse tree
+	 */
+	void exitOrExp(@NotNull BeetlParser.OrExpContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link BeetlParser#directiveSt}.
@@ -273,6 +328,17 @@ public interface BeetlParserListener extends ParseTreeListener {
 	void exitConstantExpression(@NotNull BeetlParser.ConstantExpressionContext ctx);
 
 	/**
+	 * Enter a parse tree produced by {@link BeetlParser#muldivmodExp}.
+	 * @param ctx the parse tree
+	 */
+	void enterMuldivmodExp(@NotNull BeetlParser.MuldivmodExpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#muldivmodExp}.
+	 * @param ctx the parse tree
+	 */
+	void exitMuldivmodExp(@NotNull BeetlParser.MuldivmodExpContext ctx);
+
+	/**
 	 * Enter a parse tree produced by {@link BeetlParser#assignId}.
 	 * @param ctx the parse tree
 	 */
@@ -304,6 +370,28 @@ public interface BeetlParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitNativeArray(@NotNull BeetlParser.NativeArrayContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link BeetlParser#literalExp}.
+	 * @param ctx the parse tree
+	 */
+	void enterLiteralExp(@NotNull BeetlParser.LiteralExpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#literalExp}.
+	 * @param ctx the parse tree
+	 */
+	void exitLiteralExp(@NotNull BeetlParser.LiteralExpContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link BeetlParser#varAttributeGeneral}.
+	 * @param ctx the parse tree
+	 */
+	void enterVarAttributeGeneral(@NotNull BeetlParser.VarAttributeGeneralContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#varAttributeGeneral}.
+	 * @param ctx the parse tree
+	 */
+	void exitVarAttributeGeneral(@NotNull BeetlParser.VarAttributeGeneralContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link BeetlParser#classOrInterfaceType}.
@@ -350,17 +438,6 @@ public interface BeetlParserListener extends ParseTreeListener {
 	void exitStatementExpression(@NotNull BeetlParser.StatementExpressionContext ctx);
 
 	/**
-	 * Enter a parse tree produced by {@link BeetlParser#varAttributeGeneral}.
-	 * @param ctx the parse tree
-	 */
-	void enterVarAttributeGeneral(@NotNull BeetlParser.VarAttributeGeneralContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link BeetlParser#varAttributeGeneral}.
-	 * @param ctx the parse tree
-	 */
-	void exitVarAttributeGeneral(@NotNull BeetlParser.VarAttributeGeneralContext ctx);
-
-	/**
 	 * Enter a parse tree produced by {@link BeetlParser#block}.
 	 * @param ctx the parse tree
 	 */
@@ -383,17 +460,6 @@ public interface BeetlParserListener extends ParseTreeListener {
 	void exitDirectiveExp(@NotNull BeetlParser.DirectiveExpContext ctx);
 
 	/**
-	 * Enter a parse tree produced by {@link BeetlParser#integerLiteral}.
-	 * @param ctx the parse tree
-	 */
-	void enterIntegerLiteral(@NotNull BeetlParser.IntegerLiteralContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link BeetlParser#integerLiteral}.
-	 * @param ctx the parse tree
-	 */
-	void exitIntegerLiteral(@NotNull BeetlParser.IntegerLiteralContext ctx);
-
-	/**
 	 * Enter a parse tree produced by {@link BeetlParser#varSt}.
 	 * @param ctx the parse tree
 	 */
@@ -414,6 +480,17 @@ public interface BeetlParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitStaticOutputSt(@NotNull BeetlParser.StaticOutputStContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link BeetlParser#varRefExp}.
+	 * @param ctx the parse tree
+	 */
+	void enterVarRefExp(@NotNull BeetlParser.VarRefExpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#varRefExp}.
+	 * @param ctx the parse tree
+	 */
+	void exitVarRefExp(@NotNull BeetlParser.VarRefExpContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link BeetlParser#textStatment}.
@@ -449,6 +526,17 @@ public interface BeetlParserListener extends ParseTreeListener {
 	void exitJson(@NotNull BeetlParser.JsonContext ctx);
 
 	/**
+	 * Enter a parse tree produced by {@link BeetlParser#ternaryExp}.
+	 * @param ctx the parse tree
+	 */
+	void enterTernaryExp(@NotNull BeetlParser.TernaryExpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#ternaryExp}.
+	 * @param ctx the parse tree
+	 */
+	void exitTernaryExp(@NotNull BeetlParser.TernaryExpContext ctx);
+
+	/**
 	 * Enter a parse tree produced by {@link BeetlParser#constantsTextStatment}.
 	 * @param ctx the parse tree
 	 */
@@ -458,6 +546,17 @@ public interface BeetlParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitConstantsTextStatment(@NotNull BeetlParser.ConstantsTextStatmentContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link BeetlParser#nativeCallExp}.
+	 * @param ctx the parse tree
+	 */
+	void enterNativeCallExp(@NotNull BeetlParser.NativeCallExpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#nativeCallExp}.
+	 * @param ctx the parse tree
+	 */
+	void exitNativeCallExp(@NotNull BeetlParser.NativeCallExpContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link BeetlParser#trySt}.
@@ -502,6 +601,28 @@ public interface BeetlParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitVarAttributeVirtual(@NotNull BeetlParser.VarAttributeVirtualContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link BeetlParser#compareExp}.
+	 * @param ctx the parse tree
+	 */
+	void enterCompareExp(@NotNull BeetlParser.CompareExpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#compareExp}.
+	 * @param ctx the parse tree
+	 */
+	void exitCompareExp(@NotNull BeetlParser.CompareExpContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link BeetlParser#equalExp}.
+	 * @param ctx the parse tree
+	 */
+	void enterEqualExp(@NotNull BeetlParser.EqualExpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#equalExp}.
+	 * @param ctx the parse tree
+	 */
+	void exitEqualExp(@NotNull BeetlParser.EqualExpContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link BeetlParser#parExpression}.
@@ -601,6 +722,28 @@ public interface BeetlParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitNativeMethod(@NotNull BeetlParser.NativeMethodContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link BeetlParser#andExp}.
+	 * @param ctx the parse tree
+	 */
+	void enterAndExp(@NotNull BeetlParser.AndExpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#andExp}.
+	 * @param ctx the parse tree
+	 */
+	void exitAndExp(@NotNull BeetlParser.AndExpContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link BeetlParser#functionCallExp}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionCallExp(@NotNull BeetlParser.FunctionCallExpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link BeetlParser#functionCallExp}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionCallExp(@NotNull BeetlParser.FunctionCallExpContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link BeetlParser#arguments}.

@@ -25,6 +25,7 @@ public class BeetlScriptTest {
 		BeetlScript script = new BeetlScript(null);
 		script.parse(reader, staticText);
 		Log.key1Start();
+		System.out.println("-----------模板输出");
 		for(int i=0;i<1;i++){
 			script.execute(ctx, bw);
 		}

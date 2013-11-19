@@ -2,6 +2,8 @@ package org.beetl.core;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -23,6 +25,8 @@ public class BeetlScript {
 	String[] staticText = null;
 	int locaVarArraySize = 0;
 	Object[] cachedArray = null;
+	Map<String,Integer> globalIndexMap = null;
+	
 	
 	
 	public BeetlScript(GroupTemplate gt){
@@ -50,6 +54,7 @@ public class BeetlScript {
 		//模板的信息
 		this.locaVarArraySize = listener.varIndexSize;
 		cachedArray = listener.cachedNodeArray.toArray();
+		globalIndexMap = listener.globalIndexMap;
 		
 		
 	}
@@ -59,10 +64,16 @@ public class BeetlScript {
 	 * @param bt
 	 */
 	public void execute(Context ctx,ByteWriter bw) throws BeetlException{
+		//模板的静态文本存放地
 		ctx.staticTextArray = staticText;
 		ctx.byteWriter = bw;
-		ctx.vars = new Object[locaVarArraySize];	
+		//模板变量存放地
+		ctx.vars = new Object[globalIndexMap.size()+locaVarArraySize];	
+		//模板各种缓存存放地
 		ctx.cachedArray = this.cachedArray;
+		//将全局变量转为数组
+		ctx.putGlobaToArray(globalIndexMap);
+		
 		BeetlScriptParserVistor vistor = new BeetlScriptParserVistor(ctx);
 		vistor.visit(tree);
 		

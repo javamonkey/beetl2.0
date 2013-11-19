@@ -23,8 +23,10 @@ public class BeetlScriptParserListener extends BeetlParserBaseListener {
 	BlockVar blockVar = new BlockVar();
 	BlockVar currentBlockVar = blockVar;
 	Map<String,VarDescrption> globalVar = new HashMap<String,VarDescrption> ();
-	int varIndexSize = 0;
 	List<Object> cachedNodeArray = new ArrayList<Object>();
+	
+	int varIndexSize = 0;
+	Map<String,Integer> globalIndexMap =  new HashMap<String,Integer>();
 	
 	public BeetlScriptParserListener() {
 
@@ -36,12 +38,25 @@ public class BeetlScriptParserListener extends BeetlParserBaseListener {
 	}
 	
 	public void anzlysze(){
-		anzlysze(blockVar,0);
+		anzlyszeGlobal();
+		anzlysze(blockVar,globalVar.size());
 		
 		System.out.println(blockVar);
 		System.out.println("=============");
 		System.out.println(globalVar);
 		
+	}
+	
+	public void anzlyszeGlobal(){
+		int index = 0;
+		for(Entry<String,VarDescrption> entry:globalVar.entrySet()){
+			globalIndexMap.put(entry.getKey(), index);
+			VarDescrption vd = entry.getValue();
+			for(TerminalNode node:vd.where){
+				node.setCachedIndex(index);
+			}
+			index++;
+		}
 	}
 	
 	

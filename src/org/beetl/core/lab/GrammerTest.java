@@ -24,6 +24,7 @@ public class GrammerTest {
 		Reader reader = new InputStreamReader(GrammerTest.class.getResourceAsStream("/org/beetl/core/lab/grammer.txt"),"utf-8");
 		
 		// create a CharStream that reads from standard input
+		
 		ANTLRInputStream input = new ANTLRInputStream(reader);
 		// create a lexer that feeds off of input CharStream
 		BeetlLexer lexer = new BeetlLexer(input);

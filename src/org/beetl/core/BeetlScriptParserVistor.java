@@ -172,8 +172,9 @@ public class BeetlScriptParserVistor extends AbstractParseTreeVisitor<Object> im
 
 	@Override
 	public Object visitTextVar(TextVarContext ctx) {
-		// TODO Auto-generated method stub
+		//上一级完成
 		return null;
+		
 	}
 
 	@Override
@@ -199,6 +200,7 @@ public class BeetlScriptParserVistor extends AbstractParseTreeVisitor<Object> im
 		TextStatmentContext textStCtx = ctx.textStatment();
 		try{
 			TextVarContext textVarCtx = textStCtx.textVar();
+			
 			Object o = this.visit(textVarCtx.expression());
 			env.byteWriter.writePlaceholderContent(o);
 			
@@ -528,23 +530,9 @@ public class BeetlScriptParserVistor extends AbstractParseTreeVisitor<Object> im
 		TerminalNode node = refCtx.Identifier();
 		int index = node.getCachedIndex();
 		boolean hasSafe = ctx.NOT()!=null;
-		Object value = null ;
-		if(index==-1){
-			String name = node.getText();
-			if(env.globalVar.containsKey(name)){
-				value = env.globalVar.get(name);
-			}else{
-				//全局变量未定义
-				if(hasSafe){
-					ExpressionContext safeExp = ctx.expression();
-					return this.visit(safeExp);
-				}else{
-					throw new TempException("变量不存在");
-				}
-			}
-		}else{
-			value = env.vars[index];
-		}
+		
+		Object value =  env.getVar(index);
+		
 		
 		//取变量属性
 		for(VarAttributeContext attrCtx:refCtx.varAttribute()){
@@ -557,7 +545,7 @@ public class BeetlScriptParserVistor extends AbstractParseTreeVisitor<Object> im
 		
 		
 		
-		return null;
+		return value;
 		
 		
 	}

@@ -24,6 +24,17 @@ public class ReflectTest {
 	 */
 	
 	static Method method = null;	
+	static{
+		try {
+			method = User.class.getMethod("getName", new Class[]{});
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	UserNameFiledAccess  unf = new UserNameFiledAccess();
 	User user = new User();
 	public static void main(String[] args) throws Exception {
@@ -33,14 +44,18 @@ public class ReflectTest {
 	}
 	
 	public void testReflect() throws Exception{
-		long loop = 1000000*2000;
+		long loop = 1000000*200;
 		//warmer
 		for(int i=0;i<10000000;i++){
 			user.getName();
 		}
 		
 		for(int i=0;i<10000000;i++){
-			unf.get(user, 0, "name");
+			unf.value(user, "name");
+		}
+		
+		for(int i=0;i<10000000;i++){
+			method.invoke(user, new Object[]{});
 		}
 		
 		Log.key1Start();
@@ -48,18 +63,25 @@ public class ReflectTest {
 			user.getName();
 		}
 		Log.key1End();	
+		
 		Log.key2Start();
 		for(int i=0;i<loop;i++){
-			unf.get(user, 0, "name");
+			unf.value(user,  "name");
 		}
 		Log.key2End();
+		
+		Log.key3Start();
+		for(int i=0;i<loop;i++){
+			method.invoke(user, new Object[]{});
+		}
+		Log.key3End();
 		
 //		
 	
 	
 	
 		
-		Log.display("方法调用","asmField调用");
+		Log.display("方法调用","asmField调用","java反射");
 	}
 	
 	

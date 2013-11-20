@@ -8,6 +8,7 @@ import org.beetl.core.ByteWriter;
 import org.beetl.core.Context;
 
 import com.beetl.performance.Log;
+import com.beetl.performance.lab.User;
 
 public class BeetlScriptTest {
 
@@ -21,7 +22,7 @@ public class BeetlScriptTest {
 		
 		ByteWriter bw = new ByteWriter();
 		Context ctx = new Context();
-		ctx.set("name", "hello");
+		ctx.set("user", new User());
 		BeetlScript script = new BeetlScript(null);
 		script.parse(reader, staticText);
 		Log.key1Start();

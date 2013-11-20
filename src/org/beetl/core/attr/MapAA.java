@@ -6,7 +6,7 @@ public class MapAA implements AA {
 
 
 	@Override
-	public Object getAttribute(Object o, int index, String name) {
+	public Object value(Object o,  Object name) {
 		return ((Map)o).get(name);
 	}
 

@@ -8,7 +8,7 @@ public class NumberUtil {
 		}
 	}
 	
-	public static Integer outbox(int i){
+	public static Integer valueOf(int i){
 		if(i<INTEGER.length){
 			return INTEGER[i];
 		}else{

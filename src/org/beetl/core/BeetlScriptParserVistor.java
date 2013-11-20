@@ -2,6 +2,8 @@ package org.beetl.core;
 
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.beetl.core.attr.AA;
+import org.beetl.core.attr.AAFactory;
 import org.beetl.core.parser.BeetlParser.AddminExpContext;
 import org.beetl.core.parser.BeetlParser.AndExpContext;
 import org.beetl.core.parser.BeetlParser.ArgumentsContext;
@@ -203,6 +205,7 @@ public class BeetlScriptParserVistor extends AbstractParseTreeVisitor<Object> im
 			env.byteWriter.writePlaceholderContent(o);
 			
 			}catch(Exception ex){
+				ex.printStackTrace();
 				if(textStCtx.NOT()==null){
 					throw new RuntimeException(ex.getMessage());
 				}
@@ -534,27 +537,38 @@ public class BeetlScriptParserVistor extends AbstractParseTreeVisitor<Object> im
 		
 		//取变量属性
 		for(VarAttributeContext attrCtx:refCtx.varAttribute()){
-			
+			Object attrExp = null;
 			if(attrCtx instanceof VarAttributeGeneralContext ){
 				VarAttributeGeneralContext gc = (VarAttributeGeneralContext)attrCtx;				
 				TerminalNode idNode = gc.Identifier();
-				Object accessor = env.cachedArray[gc.getCachedIndex()];
-				if(accessor==null){
-					synchronized(gc){
-						accessor = 
-					}
-				}
+				attrExp = idNode.getText();
+			
+				
+			}else if(attrCtx instanceof VarAttributeArrayOrMapContext){
+				VarAttributeArrayOrMapContext gc = (VarAttributeArrayOrMapContext)attrCtx;
+				attrExp = this.visit(gc.expression());
 				
 			}
+			
+			
+			int cacheIndex = attrCtx.getCachedIndex();
+			AA accessor = (AA)env.cachedArray[cacheIndex];
+			if(accessor==null){
+				synchronized(attrCtx){
+					if(accessor==null){
+						accessor =AAFactory.build(value, attrExp);
+						env.cachedArray[cacheIndex] = accessor;
+					}
+					
+				}
+			}
+			value = accessor.value(value,  attrExp);
 		}
 		
 		
 		
-		
-		
 		return value;
-		
-		
+	
 	}
 	@Override
 	public Object visitTernaryExp(TernaryExpContext ctx) {

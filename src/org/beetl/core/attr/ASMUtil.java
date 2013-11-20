@@ -28,24 +28,20 @@ public class ASMUtil implements Opcodes {
 		return util;
 	}
 
-	public AA createAAClass(Class c, String name,String methodName,Class returnType) {
+	public AA createAAClass(Class c, String name, String methodName,
+			Class returnType) {
 		String cPath = c.getName().replace('.', '/');
-		String newClsName = c.getName()+"$"+name;
+		String newClsName = c.getName() + "$_" + name;
 		String newClsPath = newClsName.replace('.', '/');
 		String returnTypeClass = this.getRetrunTypeDesc(returnType);
-		
+
 		ClassWriter cw = new ClassWriter(0);
 		FieldVisitor fv;
 		MethodVisitor mv;
 		AnnotationVisitor av0;
 
-		cw.visit(
-				V1_6,
-				ACC_PUBLIC + ACC_SUPER,
-				newClsPath,
-				null,
-				"java/lang/Object",
-				new String[] { "org/beetl/core/attr/AttributeAccessor" });
+		cw.visit(V1_6, ACC_PUBLIC + ACC_SUPER, newClsPath, null,
+				"java/lang/Object", new String[] { "org/beetl/core/attr/AA" });
 
 		{
 			mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
@@ -58,16 +54,44 @@ public class ASMUtil implements Opcodes {
 			mv.visitEnd();
 		}
 		{
-			mv = cw.visitMethod(
-					ACC_PUBLIC,
-					"getAttribute",
-					"(Ljava/lang/Object;ILjava/lang/String;)Ljava/lang/Object;",
-					null, null);
+			mv = cw.visitMethod(ACC_PUBLIC, "value", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", null, null);
 			mv.visitCode();
 			mv.visitVarInsn(ALOAD, 1);
 			mv.visitTypeInsn(CHECKCAST, cPath);
-			mv.visitMethodInsn(INVOKEVIRTUAL, cPath,
-					methodName, "()"+returnTypeClass+";");
+			mv.visitMethodInsn(INVOKEVIRTUAL, cPath, methodName, "()"
+					+ returnTypeClass);
+			if (returnType.isPrimitive()) {
+				if (returnType == int.class) {
+					mv.visitMethodInsn(INVOKESTATIC,
+							"org/beetl/core/util/NumberUtil", "valueOf",
+							"(I)Ljava/lang/Integer;");
+				} else if (returnType == boolean.class) {
+					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Boolean",
+							"valueOf", "(Z)Ljava/lang/Boolean;");
+
+				} else if (c == char.class) {
+					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Character",
+							"valueOf", "(C)Ljava/lang/Character;");
+
+				} else if (c == short.class) {
+					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Short",
+							"valueOf", "(S)Ljava/lang/Short;");
+
+				} else if (c == float.class) {
+					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Float",
+							"valueOf", "(F)Ljava/lang/Float;");
+
+				} else if (c == long.class) {
+					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Long",
+							"valueOf", "(J)Ljava/lang/Long;");
+
+				} else if (c == double.class) {
+					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Double",
+							"valueOf", "(D)Ljava/lang/Double;");
+
+				}
+			}
+
 			mv.visitInsn(ARETURN);
 			mv.visitMaxs(1, 4);
 			mv.visitEnd();
@@ -76,40 +100,50 @@ public class ASMUtil implements Opcodes {
 
 		byte[] bs = cw.toByteArray();
 		Class cls = loader.defineClass(newClsName, bs);
-		try{
+		try {
 			return (AA) cls.newInstance();
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new TempException(ex.getMessage());
 		}
-		
-	
-		
 
 	}
-	
-	private String getRetrunTypeDesc(Class c){
+
+	private String getRetrunTypeDesc(Class c) {
 		StringBuilder sb = new StringBuilder();
-		if(c.isArray()){
+		if (c.isArray()) {
 			sb.append("[");
+			if (c.getComponentType().isArray()) {
+				sb.append("[");
+			}
 		}
-		
-		if(c==int.class){
+		if (c == int.class) {
 			sb.append("I");
-		}else{
-			sb.append("L").append(c.getName().replace(".", "/"));
+		} else if (c == boolean.class) {
+			sb.append("Z");
+		} else if (c == char.class) {
+			sb.append("C");
+		} else if (c == short.class) {
+			sb.append("S");
+		} else if (c == float.class) {
+			sb.append("F");
+		} else if (c == long.class) {
+			sb.append("J");
+		} else if (c == double.class) {
+			sb.append("D");
+		} else {
+			sb.append("L").append(c.getName().replace(".", "/")).append(";");
 		}
 		return sb.toString();
 	}
-	
-	public static void main(String[] args){
+
+	public static void main(String[] args) {
 		ASMUtil util = ASMUtil.instance();
-		AA aa = util.createAAClass(User.class, "name", "getName", String.class);
+		AA aa = util.createAAClass(User.class, "id", "getId", int.class);
 		User user = new User();
-		String test = (String)aa.getAttribute(user, 0, "name");
+		Integer test = (Integer) aa.value(user,  "id");
 		System.out.println(test);
-		
+
 	}
-	
 
 }

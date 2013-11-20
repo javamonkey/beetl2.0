@@ -29,20 +29,20 @@
  */
 package org.antlr.v4.runtime;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Future;
+
+import javax.print.PrintException;
+import javax.swing.JDialog;
+
 import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.misc.Nullable;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 import org.antlr.v4.runtime.tree.RuleNode;
 import org.antlr.v4.runtime.tree.Trees;
-import org.antlr.v4.runtime.tree.gui.TreeViewer;
-
-import javax.print.PrintException;
-import javax.swing.JDialog;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.Future;
 
 /** A rule context is a record of a single rule invocation. It knows
  *  which context invoked it, if any. If there is no parent context, then
@@ -162,8 +162,8 @@ public class RuleContext implements RuleNode {
 	}
 
 	public Future<JDialog> inspect(@Nullable List<String> ruleNames) {
-		TreeViewer viewer = new TreeViewer(ruleNames, this);
-		return viewer.open();
+		//changed by joelli
+		return  null;
 	}
 
 	/** Save this tree in a postscript file */

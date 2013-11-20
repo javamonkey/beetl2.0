@@ -30,13 +30,6 @@
 
 package org.antlr.v4.runtime.tree;
 
-import org.antlr.v4.runtime.Parser;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.misc.NotNull;
-import org.antlr.v4.runtime.misc.Nullable;
-import org.antlr.v4.runtime.misc.Utils;
-import org.antlr.v4.runtime.tree.gui.TreePostScriptGenerator;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -45,15 +38,22 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.antlr.v4.runtime.Parser;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.misc.NotNull;
+import org.antlr.v4.runtime.misc.Nullable;
+import org.antlr.v4.runtime.misc.Utils;
+
 /** A set of utility routines useful for all kinds of ANTLR trees. */
 public class Trees {
 
 	public static String getPS(Tree t, @Nullable List<String> ruleNames,
 							   String fontName, int fontSize)
 	{
-		TreePostScriptGenerator psgen =
-			new TreePostScriptGenerator(ruleNames, t, fontName, fontSize);
-		return psgen.getPS();
+//		TreePostScriptGenerator psgen =
+//			new TreePostScriptGenerator(ruleNames, t, fontName, fontSize);
+//		return psgen.getPS();
+		return null;
 	}
 
 	public static String getPS(Tree t, @Nullable List<String> ruleNames) {

@@ -2,16 +2,16 @@ package com.beetl.performance.lab.asm.field;
 
 import com.beetl.performance.lab.User;
 
-public class UserNameFiledAccess implements FieldAccess {
+public class UserIdFiledAccess implements FieldAccess {
 
-	public UserNameFiledAccess() {
+	public UserIdFiledAccess() {
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public Object value(Object o,  Object name) {
+	public Object value(Object o, Object name) {
 		// TODO Auto-generated method stub
-		return ((User)o).getName();
+		return ((User)o).getId();
 	}
 
 

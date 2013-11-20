@@ -1,6 +1,5 @@
 package com.beetl.performance.lab.asm;
 
-import org.objectweb.asm.util.ASMifier;
 
 public class ASMSource {
 

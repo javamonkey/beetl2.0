@@ -1,4 +1,4 @@
-package org.beetl.core.util;
+package org.beetl.core.attr;
 
 import java.lang.reflect.Method;
 
@@ -9,8 +9,13 @@ import org.beetl.core.exception.TempException;
  * @author joelli
  *
  */
-public class GeneralGetAttributeAccessor implements AttributeAccessor {
+public class GeneralGetAA implements AA {
 	
+	public Method getMethod = null;
+	
+	GeneralGetAA(Method m){
+		this.getMethod = m;
+	}
 	
 	@Override
 	public Object getAttribute(Object o, int index,String name) {

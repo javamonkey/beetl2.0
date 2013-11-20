@@ -1,7 +1,7 @@
 package com.beetl.performance.lab;
 
 public class User {
-	String name;
+	String name = "user";
 	int id ;
 	public String getName() {
 		return name;

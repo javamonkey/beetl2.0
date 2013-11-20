@@ -2,7 +2,6 @@ package org.beetl.core;
 
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.beetl.core.exception.TempException;
 import org.beetl.core.parser.BeetlParser.AddminExpContext;
 import org.beetl.core.parser.BeetlParser.AndExpContext;
 import org.beetl.core.parser.BeetlParser.ArgumentsContext;
@@ -26,7 +25,6 @@ import org.beetl.core.parser.BeetlParser.ContinueStContext;
 import org.beetl.core.parser.BeetlParser.DirectiveExpContext;
 import org.beetl.core.parser.BeetlParser.DirectiveStContext;
 import org.beetl.core.parser.BeetlParser.EqualExpContext;
-import org.beetl.core.parser.BeetlParser.ExpressionContext;
 import org.beetl.core.parser.BeetlParser.ExpressionListContext;
 import org.beetl.core.parser.BeetlParser.ForControlContext;
 import org.beetl.core.parser.BeetlParser.ForStContext;
@@ -536,7 +534,16 @@ public class BeetlScriptParserVistor extends AbstractParseTreeVisitor<Object> im
 		
 		//取变量属性
 		for(VarAttributeContext attrCtx:refCtx.varAttribute()){
+			
 			if(attrCtx instanceof VarAttributeGeneralContext ){
+				VarAttributeGeneralContext gc = (VarAttributeGeneralContext)attrCtx;				
+				TerminalNode idNode = gc.Identifier();
+				Object accessor = env.cachedArray[gc.getCachedIndex()];
+				if(accessor==null){
+					synchronized(gc){
+						accessor = 
+					}
+				}
 				
 			}
 		}

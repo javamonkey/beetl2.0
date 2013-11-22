@@ -284,6 +284,7 @@ public class BeetlScriptParserListener extends BeetlParserBaseListener {
 				int cachedIndex = cachedNodeArray.size();
 				zf.setCachedIndex(cachedIndex);
 				cachedNodeArray.add(null);
+//				cachedNodeArray.add(null);
 				String attrName = ((VarAttributeGeneralContext)zf).Identifier().getText();
 				if(!vd.attrList.contains(attrName)){
 					vd.attrList.add(attrName);

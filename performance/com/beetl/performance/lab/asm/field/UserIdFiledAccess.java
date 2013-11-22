@@ -2,7 +2,7 @@ package com.beetl.performance.lab.asm.field;
 
 import com.beetl.performance.lab.User;
 
-public class UserIdFiledAccess implements FieldAccess {
+public class UserIdFiledAccess implements ObjectAccess {
 
 	public UserIdFiledAccess() {
 		// TODO Auto-generated constructor stub

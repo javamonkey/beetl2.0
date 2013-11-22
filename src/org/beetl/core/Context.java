@@ -22,14 +22,16 @@ public class Context {
 	
 	protected String[] staticTextArray = null;
 	
-	//全局变量和临时变量都放在数组里，全局变量放在前面
-	protected Object[] vars = null;
-	
 	protected int tempVarStartIndex = -1;
 	
 	protected Object[] cachedArray = null;
 	
 	protected boolean byteOutputMode =  false ;
+	
+	//当前会话相关变量全局变量和临时变量都放在数组里，全局变量放在前面
+	protected Object[] vars = null;
+	
+
 	
 	
 	/**得到临时模板变量

@@ -2,7 +2,7 @@ package com.beetl.performance.lab.asm;
 
 import com.beetl.performance.lab.User;
 
-public class UserAsmAccessor implements Access {
+public class UserAsmAccessor implements ObjectAccess {
 	public Object get(Object o,int index) throws ASMCastException{
 		User user = null;
 		try{

@@ -3,15 +3,15 @@ package com.beetl.performance.lab;
 import java.lang.reflect.Method;
 
 import com.beetl.performance.Log;
+import com.beetl.performance.lab.asm.field.UserGeneralAccess;
 import com.beetl.performance.lab.asm.field.UserNameFiledAccess;
 
 
 /**
-缓存并反射调用=967 百分比,Infinity
-反射=6552 百分比,Infinity
-方法调用=10 百分比,Infinity
-asm调用=422 百分比,Infinity
-缓存并asm调用=91 百分比,Infinity
+方法调用=228 百分比,Infinity
+asmField调用=226 百分比,Infinity
+java反射=556 百分比,Infinity
+asmMethod=326 百分比,Infinity
 
 
  * @author joelli
@@ -36,9 +36,11 @@ public class ReflectTest {
 		}
 	}
 	UserNameFiledAccess  unf = new UserNameFiledAccess();
+	UserGeneralAccess uga = new UserGeneralAccess();
 	User user = new User();
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
+		System.out.println( "name".hashCode());
 		new ReflectTest().testReflect();
 
 	}
@@ -56,6 +58,10 @@ public class ReflectTest {
 		
 		for(int i=0;i<10000000;i++){
 			method.invoke(user, new Object[]{});
+		}
+		
+		for(int i=0;i<10000000;i++){
+			uga.value(user, "name");
 		}
 		
 		Log.key1Start();
@@ -76,12 +82,18 @@ public class ReflectTest {
 		}
 		Log.key3End();
 		
+		Log.key4Start();
+		for(int i=0;i<loop;i++){
+			uga.value(user, "name");
+		}
+		Log.key4End();
+		
 //		
 	
 	
 	
 		
-		Log.display("方法调用","asmField调用","java反射");
+		Log.display("方法调用","asmField调用","java反射","asmMethod");
 	}
 	
 	

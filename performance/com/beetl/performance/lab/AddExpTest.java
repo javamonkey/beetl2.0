@@ -34,24 +34,28 @@ public class AddExpTest {
 			Object c = ALU.plus(type,a, b);
 		}
 		
+		Log.key3Start();
+		for(int i=0;i<loop;i++){
+			Object c = ALU.plus(a, b);
+		}
+		Log.key3End();
+		
+		Log.key2Start();
+		
+		for(int i=0;i<loop;i++){
+			Object c = ALU.plusInteger(a, b);
+		}
+		Log.key2End();
+	
+		
 		Log.key1Start();		
 		for(int i=0;i<loop;i++){
 			Object c = exp.add(a,b);
 		}
 		Log.key1End();
 		
-		Log.key2Start();
-	
-		for(int i=0;i<loop;i++){
-			Object c = ALU.plusInteger(a, b);
-		}
-		Log.key2End();
-	
-		Log.key3Start();
-		for(int i=0;i<loop;i++){
-			Object c = ALU.plus(a, b);
-		}
-		Log.key3End();
+		
+		
 	
 	
 	

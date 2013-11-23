@@ -19,4 +19,8 @@ public class User {
 	public int[][] getBooks(){
 		return null;
 	}
+	
+	public User getPeer(){
+		return new User();
+	}
 }

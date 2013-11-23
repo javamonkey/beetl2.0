@@ -44,7 +44,7 @@ public class AAFactory {
 				return aa;
 			}else{
 				aa = ASMUtil.instance().createAAClass(pojoResult.c, name, pojoResult.realMethodName, pojoResult.returnType);
-				
+			
 				pojoCache.put(className, aa);
 				return aa;
 				
@@ -119,7 +119,7 @@ public class AAFactory {
 			}
 			result = findResult(inc, getName, isName);
 			if(result!=null){
-				return result;
+				resetFindResult(findMethod,result);
 			}
 		}
 		
@@ -127,6 +127,7 @@ public class AAFactory {
 		if(!parent.getName().startsWith("java.")){
 			result = findResult(parent, getName, isName);
 			if(result!=null){
+				resetFindResult(findMethod,result);
 				return result;
 			}
 		}
@@ -142,8 +143,15 @@ public class AAFactory {
 		}
 		
 		
-		
-		
+	}
+	
+	private static void resetFindResult(Method m,FindResult parent){
+		if(m.getReturnType()==parent.returnType){
+			return ;
+		}else{
+			//和父接口不一致，模型比较复杂类型推测很难，统一改成Object
+			parent.returnType = Object.class;
+		}
 	}
 	
 	

@@ -13,23 +13,23 @@ public class Context {
 	
 	public static Object NOT_EXIST_OBJECT = new Object();
 
-	protected ByteWriter byteWriter;
+	public ByteWriter byteWriter;
 	/*全局变量*/
-	protected Map<String,Object> globalVar = new HashMap<String,Object>(8);
+	public  Map<String,Object> globalVar = new HashMap<String,Object>(8);
 	/*内容为Object的变量，beetl要求全局变量类型总是一致，如果一个key
 	 * 对应的类型不一样，则需要设置objectKeys*/
-	protected List<String> objectKeys = new ArrayList<String>(2); 
+	public  List<String> objectKeys = new ArrayList<String>(2); 
 	
-	protected String[] staticTextArray = null;
+	public  String[] staticTextArray = null;
 	
-	protected int tempVarStartIndex = -1;
+	public  int tempVarStartIndex = -1;
 	
-	protected Object[] cachedArray = null;
+	public  Object[] cachedArray = null;
 	
-	protected boolean byteOutputMode =  false ;
+	public boolean byteOutputMode =  false ;
 	
 	//当前会话相关变量全局变量和临时变量都放在数组里，全局变量放在前面
-	protected Object[] vars = null;
+	public Object[] vars = null;
 	
 
 	

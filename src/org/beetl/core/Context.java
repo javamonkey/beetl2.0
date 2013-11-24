@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.beetl.core.exception.TempException;
 
@@ -20,16 +19,20 @@ public class Context {
 	 * 对应的类型不一样，则需要设置objectKeys*/
 	public  List<String> objectKeys = new ArrayList<String>(2); 
 	
+	public boolean byteOutputMode =  false ;
+	
+	//当前会话相关变量全局变量和临时变量都放在数组里，全局变量放在前面
+	public Object[] vars = null;
+	
+	
+	
+	//这些变量来自于ProgrameMeta
 	public  String[] staticTextArray = null;
 	
 	public  int tempVarStartIndex = -1;
 	
 	public  Object[] cachedArray = null;
 	
-	public boolean byteOutputMode =  false ;
-	
-	//当前会话相关变量全局变量和临时变量都放在数组里，全局变量放在前面
-	public Object[] vars = null;
 	
 
 	
@@ -91,24 +94,7 @@ public class Context {
 		return globalVar.get(key);
 	}
 	
-	/**将模板全局变量转为数组
-	 * @param map
-	 */
-	protected void putGlobaToArray(Map<String,Integer> map){
-		tempVarStartIndex = map.size();
-		for(Entry<String,Integer> entry:map.entrySet()){
-			String key = entry.getKey();
-			int index = entry.getValue();
-			if(globalVar.containsKey(key)){
-				
-				this.vars[index] = globalVar.get(key);
-				
-			}else{
-				//不存在
-				this.vars[index] = NOT_EXIST_OBJECT;
-			}
-		}
-	}
+	
 	
 	
 }

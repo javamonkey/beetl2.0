@@ -1,6 +1,7 @@
 package com.beetl.performance.lab.asm.field;
 
-public interface FieldAccess {
+public abstract class FieldAccess {
 
-	public Object value(Object o, Object name);
+	public Class returnType;
+	public abstract Object value(Object o,Object name);
 }

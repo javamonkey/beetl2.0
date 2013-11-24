@@ -1,6 +1,6 @@
 package org.beetl.core.statement;
 
-import org.antlr.v4.runtime.Token;
+
 import org.beetl.core.Context;
 
 public class StaticTextASTNode extends ASTNode {

@@ -41,13 +41,13 @@ public class ASMUtil implements Opcodes {
 		AnnotationVisitor av0;
 
 		cw.visit(V1_6, ACC_PUBLIC + ACC_SUPER, newClsPath, null,
-				"java/lang/Object", new String[] { "org/beetl/core/attr/AA" });
+				 "org/beetl/core/attr/AA" ,null);
 
 		{
 			mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
 			mv.visitCode();
 			mv.visitVarInsn(ALOAD, 0);
-			mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>",
+			mv.visitMethodInsn(INVOKESPECIAL, "org/beetl/core/attr/AA", "<init>",
 					"()V");
 			mv.visitInsn(RETURN);
 			mv.visitMaxs(1, 1);
@@ -139,7 +139,7 @@ public class ASMUtil implements Opcodes {
 
 	public static void main(String[] args) {
 		ASMUtil util = ASMUtil.instance();
-		AA aa = util.createAAClass(User.class, "id", "getId", int.class);
+		AA aa = util.createAAClass(User.class, "id", "getId", int.class);		
 		User user = new User();
 		Integer test = (Integer) aa.value(user,  "id");
 		System.out.println(test);

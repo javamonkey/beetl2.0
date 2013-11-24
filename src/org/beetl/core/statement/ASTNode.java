@@ -1,12 +1,13 @@
 package org.beetl.core.statement;
 
-import org.antlr.v4.runtime.Token;
+
 import org.beetl.core.Context;
 
 public  abstract class ASTNode {
 	public Token token ;
 	public int refIndex;	
 	public Object cachedValue;
+	public NodeType nodeType;
 	public ASTNode(Token token){
 		this.token = token;
 	}
@@ -17,19 +18,14 @@ public  abstract class ASTNode {
 	public abstract Object run(Context ctx);
 	
 	/**
-	 * 推测此节点类型
+	 * 节点优化，用于优化引擎
 	 * @param ctx
 	 */
-	public void infer(Context ctx){
+	public void optimize(Context ctx){
 		
 	}
 	
-	/**转节点到java代码
-	 * @param ctx
-	 */
-	public void writeCode(Context ctx){
-		
-	}
+	
 	
 	
 }

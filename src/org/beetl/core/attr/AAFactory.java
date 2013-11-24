@@ -17,8 +17,16 @@ public class AAFactory {
 	static MapAA mapAA = new MapAA();
 	static ListAA listAA = new ListAA();
 	static ArrayAA arrayAA = new ArrayAA();
+	static ObjectAA objectAA = new ObjectAA();
 	
-	static public AA  build(Object o,Object attrExp){
+	
+	
+	static public AA  build(Class type,Object o,Object attrExp){
+		
+		if(type==Object.class){
+			return objectAA;
+		}
+		
 		// map属性
 		if(o instanceof Map){
 			return mapAA;

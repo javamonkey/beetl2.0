@@ -7,7 +7,7 @@ public class ASTNodeUtil {
 		if(value instanceof Boolean){
 			return ((Boolean)value).booleanValue();
 		}else{
-			throw new TempException(node.token.getText());
+			throw new TempException(node.token.text);
 		}
 	}
 }

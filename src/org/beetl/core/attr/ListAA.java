@@ -3,7 +3,7 @@ package org.beetl.core.attr;
 import java.util.List;
 
 
-public class ListAA implements AA {
+public class ListAA extends AA {
 
 
 	@Override

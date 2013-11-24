@@ -2,7 +2,7 @@ package org.beetl.core.attr;
 
 
 
-public class ArrayAA implements AA {
+public class ArrayAA extends AA {
 
 
 	@Override

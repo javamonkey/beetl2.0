@@ -21,7 +21,10 @@ import org.beetl.core.parser.BeetlParser.BooleanLiteralContext;
 import org.beetl.core.parser.BeetlParser.ExpressionContext;
 import org.beetl.core.parser.BeetlParser.LiteralExpContext;
 import org.beetl.core.parser.BeetlParser.ProgContext;
+import org.beetl.core.parser.BeetlParser.VarAttributeArrayOrMapContext;
 import org.beetl.core.parser.BeetlParser.VarAttributeContext;
+import org.beetl.core.parser.BeetlParser.VarAttributeGeneralContext;
+import org.beetl.core.parser.BeetlParser.VarAttributeVirtualContext;
 import org.beetl.core.parser.BeetlParser.VarRefContext;
 import org.beetl.core.parser.BeetlParser.VarRefExpContext;
 import org.beetl.core.parser.BeetlParser.VarStContext;
@@ -32,6 +35,9 @@ import org.beetl.core.statement.Literal;
 import org.beetl.core.statement.Program;
 import org.beetl.core.statement.ProgramMetaData;
 import org.beetl.core.statement.VarAssignStatement;
+import org.beetl.core.statement.VarAttribute;
+import org.beetl.core.statement.VarSquareAttribute;
+import org.beetl.core.statement.VarVirtualAttribute;
 
 public class AntlrProgramBuilder {
 	public  Program build(ParseTree tree){
@@ -95,8 +101,21 @@ public class AntlrProgramBuilder {
 			
 		}
 		List<VarAttributeContext> list = varRef.varAttribute();
+		List<VarAttribute> listVarAttr = new ArrayList<VarAttribute>();
 		for(VarAttributeContext vac:list){
-			
+			if(vac instanceof VarAttributeGeneralContext){
+				VarAttributeGeneralContext zf = (VarAttributeGeneralContext)varc;
+				VarAttribute attr = new VarAttribute(this.getBTToken(zf.Identifier().getSymbol());
+				listVarAttr.add(attr);
+			}else if(vac instanceof VarAttributeArrayOrMapContext){
+				VarAttributeArrayOrMapContext zf = (VarAttributeArrayOrMapContext)vac;
+				Expression exp = this.parseExpress(zf.expression());
+				VarSquareAttribute attr = new VarSquareAttribute(exp,null);
+				listVarAttr.add(attr);
+			}else if(vac instanceof VarAttributeVirtualContext){
+				VarAttributeVirtualContext zf = (VarAttributeVirtualContext)vac;
+				VarVirtualAttribute attr = new VarVirtualAttribute(this.getBTToken(zf.Identifier().getSymbol()));
+			}
 		}
 	}
 	

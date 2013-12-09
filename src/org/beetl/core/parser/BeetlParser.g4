@@ -144,7 +144,7 @@ constantExpression
     ;
     
 
-varRef:Identifier ( varAttribute)*  
+    varRef:Identifier ( varAttribute)*  
 ;
 varAttribute :PERIOD Identifier   #varAttributeGeneral
              | VIRTUAL Identifier #varAttributeVirtual

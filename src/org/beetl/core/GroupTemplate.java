@@ -47,20 +47,15 @@ public class GroupTemplate {
 		
 	}
 	
-	/** 为事件类型注册一个监听器
-	 * @param type
-	 * @param e
-	 */
-	public void onEvent(int type,Listener e){
-		
-	}
+//	/** 为事件类型注册一个监听器
+//	 * @param type
+//	 * @param e
+//	 */
+//	public void onEvent(int type,Listener e){
+//		
+//	}
 	
-	/**通知一个事件发生
-	 * @param e
-	 */
-	public void fireEvent(Event e){
-		
-	}
+	
 	public ResourceLoader getResourceLoader() {
 		return resourceLoader;
 	}

@@ -25,6 +25,8 @@ public class ProgramMetaData {
 	int  tempVarStartIndex = 0;
 	//为全局变量在数组里分配的位置
 	Map<String,Integer> globalIndexMap =  new HashMap<String,Integer>();
+	//全局变量属性
+	Map<String,String[]> globalVarAttri = new HashMap<String,String[]>();
 	
 	public void initContext(Context ctx){
 		//模板静态文本部分

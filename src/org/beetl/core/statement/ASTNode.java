@@ -4,10 +4,7 @@ package org.beetl.core.statement;
 import org.beetl.core.Context;
 
 public  abstract class ASTNode {
-	public Token token ;
-	public int refIndex;	
-	public Object cachedValue;
-	public NodeType nodeType;
+	public Token token ;	
 	public ASTNode(Token token){
 		this.token = token;
 	}

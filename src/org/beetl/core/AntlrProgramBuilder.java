@@ -36,17 +36,24 @@ import org.beetl.core.statement.Program;
 import org.beetl.core.statement.ProgramMetaData;
 import org.beetl.core.statement.VarAssignStatement;
 import org.beetl.core.statement.VarAttribute;
+import org.beetl.core.statement.VarRef;
 import org.beetl.core.statement.VarSquareAttribute;
 import org.beetl.core.statement.VarVirtualAttribute;
 
 public class AntlrProgramBuilder {
+	
+	Program program = new Program();
+	ProgramMetaData data = new ProgramMetaData();
+	
+	public AntlrProgramBuilder(){
+		
+	}
 	public  Program build(ParseTree tree){
 		
-			Program program = new Program();
-			ProgramMetaData data = new ProgramMetaData();
 			
 			ProgramBuilderContext pbCtx = new ProgramBuilderContext();
-			for(int i=0;i<tree.getChildCount();i++){
+			int size = tree.getChildCount()-1;
+			for(int i=0;i<size;i++){
 				parseStatment((ParserRuleContext)tree.getChild(i),pbCtx);
 				
 			}
@@ -86,7 +93,7 @@ public class AntlrProgramBuilder {
 		if(ctx instanceof LiteralExpContext){
 			return parseLiteralExpress((LiteralExpContext)ctx);
 		}else if(ctx instanceof VarRefExpContext){
-			
+			return this.parseVarRefExpression((VarRefExpContext)ctx);
 		}
 		else{
 			return null;
@@ -95,17 +102,18 @@ public class AntlrProgramBuilder {
 	
 	protected Expression parseVarRefExpression(VarRefExpContext ctx){
 		VarRefContext varRef  = ctx.varRef();
+		Expression safeExp = null;
 		if(ctx.NOT()!=null){
 			ExpressionContext safeExpression = ctx.expression();
-			Expression exp = this.parseExpress(safeExpression);
+			safeExp = this.parseExpress(safeExpression);
 			
 		}
 		List<VarAttributeContext> list = varRef.varAttribute();
 		List<VarAttribute> listVarAttr = new ArrayList<VarAttribute>();
 		for(VarAttributeContext vac:list){
 			if(vac instanceof VarAttributeGeneralContext){
-				VarAttributeGeneralContext zf = (VarAttributeGeneralContext)varc;
-				VarAttribute attr = new VarAttribute(this.getBTToken(zf.Identifier().getSymbol());
+				VarAttributeGeneralContext zf = (VarAttributeGeneralContext)vac;
+				VarAttribute attr = new VarAttribute(this.getBTToken(zf.Identifier().getSymbol()));
 				listVarAttr.add(attr);
 			}else if(vac instanceof VarAttributeArrayOrMapContext){
 				VarAttributeArrayOrMapContext zf = (VarAttributeArrayOrMapContext)vac;
@@ -117,6 +125,9 @@ public class AntlrProgramBuilder {
 				VarVirtualAttribute attr = new VarVirtualAttribute(this.getBTToken(zf.Identifier().getSymbol()));
 			}
 		}
+		
+		VarRef var = new VarRef(listVarAttr.toArray(new VarAttribute[0]),safeExp,this.getBTToken(varRef.Identifier().getSymbol()));
+		return var;
 	}
 	
 	

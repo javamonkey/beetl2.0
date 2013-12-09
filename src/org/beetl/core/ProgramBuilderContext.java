@@ -12,7 +12,30 @@ import org.beetl.core.statement.IVarIndex;
 
 
 public class ProgramBuilderContext {
-
+	
+	BlockVar root = new BlockVar();
+	BlockVar current = root;
+	public void enterBlock(){
+		BlockVar blockVar = new BlockVar();
+		blockVar.setParent(current);
+		current = blockVar;
+	}
+	
+	public void exitBlock(){
+		current = current.parent;
+	}
+	
+	public void addVar(String varName){
+		
+	}
+	
+	public void setVarAttr(String varName,String attrName){
+		
+	}
+	
+	public void setVarPosition(String varname,ASTNode where){
+		
+	}
 }
 
 class BlockVar {

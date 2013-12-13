@@ -20,8 +20,5 @@ public interface ResourceLoader {
 	 */
 	public void close();
 	
-	/**得到跟此ResourceLoader相关的GroupTemplate
-	 * @return
-	 */
-	public GroupTemplate getGroupTemplate();
+
 }

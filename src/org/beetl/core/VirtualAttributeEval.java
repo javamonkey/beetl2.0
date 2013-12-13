@@ -25,47 +25,14 @@
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.beetl.core.accessory;
+package org.beetl.core;
+
 
 /**
- * 格式化函数，用于模版里占位符里的变量格式化后输出，如:
- * <p/>
- * ${user.birthday,dateFormat='yyyy-MM-dd'}
- * <p/>
- * dateFormat为格式化函数，通过groupTemplate的registerFormat函数注册，等号后面的
- * 字符串是需要格式化的样式，如果没有，可以不写，如：
- * <p/>
- * ${user.birthday,dateFormat},格式化函数应该支持pattern为null的情况
- * 
- * <pre>
- * public Object format(Object data, String pattern) {
- * 	if (data instanceof Date) {
- * 		SimpleDateFormat sdf = null;
- * 		if (pattern == null) {
- * 			sdf = new SimpleDateFormat();
- * 		} else {
- * 			sdf = new SimpleDateFormat(pattern);
- * 		}
- * 		return sdf.format(data);
- * 
- * 	} else {
- * 		throw new RuntimeException(&quot;Arg Error:Type should be Date&quot;);
- * 	}
- * }
- * </pre>
- * 
+ * 虚拟属性
  * @author joelli
- * 
+ *
  */
-public interface Format {
-
-	/**
-	 * @param data
-	 *            格式化对象
-	 * @param pattern
-	 *            ，模式，格式换函数需要考虑到pattern为null的情况
-	 * @return
-	 */
-	public Object format(Object data, String pattern);
-
+public interface  VirtualAttributeEval {
+	public Object eval(Object o,String attributeName,Context ctx);		
 }

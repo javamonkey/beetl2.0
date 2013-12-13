@@ -1,8 +1,6 @@
-package org.beetl.core.accessory;
+package org.beetl.core;
 
 
-import org.beetl.core.Context;
-import org.beetl.core.GroupTemplate;
 
 /**
  *  Beetl函数接口，用户可以通过实现此接口来自定一方法，譬如

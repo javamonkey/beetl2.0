@@ -48,7 +48,7 @@ public class Configuration {
 	
 	
 	public static Configuration defaultConfiguration(){
-		return null;
+		return new Configuration();
 	}
 	
 	

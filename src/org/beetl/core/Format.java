@@ -25,77 +25,47 @@
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.beetl.core.accessory;
-
-import org.beetl.core.ByteWriter;
-import org.beetl.core.Context;
-import org.beetl.core.GroupTemplate;
-
-
+package org.beetl.core;
 
 /**
- * 请使用GeneralBeetlTag
+ * 格式化函数，用于模版里占位符里的变量格式化后输出，如:
+ * <p/>
+ * ${user.birthday,dateFormat='yyyy-MM-dd'}
+ * <p/>
+ * dateFormat为格式化函数，通过groupTemplate的registerFormat函数注册，等号后面的
+ * 字符串是需要格式化的样式，如果没有，可以不写，如：
+ * <p/>
+ * ${user.birthday,dateFormat},格式化函数应该支持pattern为null的情况
  * 
- *
- * <p/>
- * &lt;% cache(key){ %>
- * <p/>
- * ip=10.1.1.1
- * <p/>
- * port=9090
- * <p/>
- * &lt;%}%>
+ * <pre>
+ * public Object format(Object data, String pattern) {
+ * 	if (data instanceof Date) {
+ * 		SimpleDateFormat sdf = null;
+ * 		if (pattern == null) {
+ * 			sdf = new SimpleDateFormat();
+ * 		} else {
+ * 			sdf = new SimpleDateFormat(pattern);
+ * 		}
+ * 		return sdf.format(data);
  * 
- * <p/>
- * @author joeli
- * @create 2011-5-31
+ * 	} else {
+ * 		throw new RuntimeException(&quot;Arg Error:Type should be Date&quot;);
+ * 	}
+ * }
+ * </pre>
+ * 
+ * @author joelli
+ * 
  */
-public abstract class Tag
-{
-	protected Object[] args = null;	
-	protected ByteWriter tagBody;
-	protected GroupTemplate group;
-	protected Context ctx;
-
-	public void setParas(Object[] args)
-	{
-		this.args = args;
-	}
+public interface Format {
 
 	/**
-	 * 是否需要解析运行标签体，有些情况是不用输入文本的，譬如{@link org.bee.tl.ext.includeFileTemplate includeFileTemplate}标签，
-	 * 有些情况下是要用，如{@link org.bee.tl.ext.LayoutTag layout} 标签
-	 */
-	public boolean requriedInput()
-	{
-		return true;
-	}
-	
-	
-
-	/**
-	 * @param input 标签体的内容
-	 */
-	public void setInput(ByteWriter tagBody)
-	{
-		this.tagBody = tagBody;
-	}
-
-	/**
-	 * @param ctx 上下文，可以通过__this获取template，通过__pw获取Writer， __group 获取GroupTemplate
-	 */
-	public void setContext(Context ctx)
-	{
-
-		this.ctx = ctx;
-		
-
-	}
-
-	/**
-	 * 将标签内容输出到里
+	 * @param data
+	 *            格式化对象
+	 * @param pattern
+	 *            ，模式，格式换函数需要考虑到pattern为null的情况
 	 * @return
 	 */
-	public abstract void writeTo(ByteWriter writer);
+	public Object format(Object data, String pattern);
 
 }

@@ -2,11 +2,12 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 
-public class VarAssignStatement extends ASTNode {
+public class VarAssignStatement extends Statement implements IVarIndex {
 
 	protected int varIndex;
 	Expression exp;
-	public VarAssignStatement(Expression exp,Token token) {
+
+	public VarAssignStatement(Expression exp, Token token) {
 		super(token);
 		this.varIndex = varIndex;
 		this.exp = exp;
@@ -25,7 +26,5 @@ public class VarAssignStatement extends ASTNode {
 	public void setVarIndex(int varIndex) {
 		this.varIndex = varIndex;
 	}
-	
-	
 
 }

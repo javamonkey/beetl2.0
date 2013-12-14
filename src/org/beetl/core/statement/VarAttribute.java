@@ -3,7 +3,7 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 
-public class VarAttribute extends ASTNode implements IAAIndex {
+public class VarAttribute extends ASTNode implements INodeEvalIndex {
 	protected int aaIndex = -1;
 	protected short type = 0;
 	public VarAttribute(Token token) {
@@ -16,13 +16,13 @@ public class VarAttribute extends ASTNode implements IAAIndex {
 	}
 
 	@Override
-	public void setAAIndex(int index) {
+	public void setNEI(int index) {
 		this.aaIndex = index;
 		
 	}
 
 	@Override
-	public int getAAIndex(int index) {
+	public int getNEI(int index) {
 		return this.aaIndex ;
 	}
 	

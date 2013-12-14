@@ -1,12 +1,12 @@
 package org.beetl.core.statement;
 
-
 import org.beetl.core.Context;
 
-public class StaticTextASTNode extends ASTNode {
+public class StaticTextASTNode extends Statement {
 
 	int textIndex;
-	public StaticTextASTNode(int textIndex,Token token) {
+
+	public StaticTextASTNode(int textIndex, Token token) {
 		super(token);
 		// TODO Auto-generated constructor stub
 	}
@@ -16,7 +16,7 @@ public class StaticTextASTNode extends ASTNode {
 		// TODO 先不考虑字节还是字符
 		ctx.byteWriter.writeStaticContent(ctx.staticTextArray[textIndex]);
 		return null;
-		
+
 	}
 
 }

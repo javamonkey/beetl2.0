@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.beetl.core.exception.TempException;
+import org.beetl.core.statement.IGoto;
 
 public class Context {
 
@@ -30,6 +31,9 @@ public class Context {
 	public int tempVarStartIndex = -1;
 
 	public Object[] cachedArray = null;
+
+	// 0 正常语句，继续执行，1 continue，2 break，3 return；
+	public short gotoFlag = IGoto.NORMAL;
 
 	/**
 	 * 得到临时模板变量
@@ -94,6 +98,10 @@ public class Context {
 
 	public Object getGlobal(String key) {
 		return globalVar.get(key);
+	}
+
+	public void resetGotoFlag() {
+		this.gotoFlag = IGoto.NORMAL;
 	}
 
 }

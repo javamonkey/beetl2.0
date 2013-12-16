@@ -2,21 +2,45 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 
-public class BlockStatement extends Statement {
+public class BlockStatement extends Statement implements IGoto {
 
-	ASTNode[] nodes = null;
+	Statement[] nodes = null;
+	boolean hasGoto = false;
 
-	public BlockStatement(ASTNode[] nodes, Token token) {
+	public BlockStatement(Statement[] nodes, Token token) {
 		super(token);
 
 		// TODO Auto-generated constructor stub
 	}
 
 	public Object run(Context ctx) {
-		for (ASTNode node : nodes) {
-			node.run(ctx);
+		if (this.hasGoto) {
+			for (ASTNode node : nodes) {
+				node.run(ctx);
+				if (ctx.gotoFlag != 0) {
+					return null;
+				}
+
+			}
+		} else {
+			for (ASTNode node : nodes) {
+				node.run(ctx);
+			}
 		}
+
 		return null;
+	}
+
+	@Override
+	public boolean hasGoto() {
+		// TODO Auto-generated method stub
+		return hasGoto;
+	}
+
+	@Override
+	public void setGoto(boolean occour) {
+		this.hasGoto = occour;
+
 	}
 
 }

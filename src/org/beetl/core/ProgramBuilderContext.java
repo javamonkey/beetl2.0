@@ -14,9 +14,9 @@ import org.beetl.core.statement.IVarIndex;
 
 public class ProgramBuilderContext {
 	// 程序根
-	BlockVar root = new BlockVar();
+	BlockContext root = new BlockContext();
 	// 当前block
-	BlockVar current = root;
+	BlockContext current = root;
 	// 节点运算辅助对象
 	List<Object> listNodeEval = new LinkedList<Object>();
 	// 全局变量名以及描述
@@ -29,7 +29,7 @@ public class ProgramBuilderContext {
 	public Map<String, Integer> globalIndexMap = new HashMap<String, Integer>();
 
 	public void enterBlock() {
-		BlockVar blockVar = new BlockVar();
+		BlockContext blockVar = new BlockContext();
 		blockVar.setParent(current);
 		current = blockVar;
 	}
@@ -55,7 +55,7 @@ public class ProgramBuilderContext {
 	}
 
 	protected VarDescrption findVar(String varName) {
-		BlockVar scope = current;
+		BlockContext scope = current;
 		while (scope != null) {
 			VarDescrption varDesc = scope.getVarDescrption(varName);
 			if (varDesc != null) {
@@ -100,7 +100,7 @@ public class ProgramBuilderContext {
 		anzlysze(this.root, this.globalVar.size());
 	}
 
-	private void anzlysze(BlockVar block, int nextIndex) {
+	private void anzlysze(BlockContext block, int nextIndex) {
 
 		for (Entry<String, VarDescrption> entry : block.vars.entrySet()) {
 			VarDescrption vd = entry.getValue();
@@ -115,7 +115,7 @@ public class ProgramBuilderContext {
 		}
 		varIndexSize = Math.max(varIndexSize, nextIndex);
 
-		for (BlockVar subBlock : block.blockList) {
+		for (BlockContext subBlock : block.blockList) {
 			anzlysze(subBlock, nextIndex);
 			int inc = subBlock.vars.size();
 			varIndexSize = Math.max(varIndexSize, nextIndex + inc);
@@ -125,11 +125,12 @@ public class ProgramBuilderContext {
 
 }
 
-class BlockVar {
+class BlockContext {
 	Map<String, VarDescrption> vars = new HashMap<String, VarDescrption>();
 	// chidren
-	List<BlockVar> blockList = new ArrayList<BlockVar>();
-	BlockVar parent = null;
+	List<BlockContext> blockList = new ArrayList<BlockContext>();
+	BlockContext parent = null;
+	boolean hasGoto = false;
 
 	public Map<String, VarDescrption> getVars() {
 		return vars;
@@ -139,19 +140,19 @@ class BlockVar {
 		this.vars = vars;
 	}
 
-	public List<BlockVar> getBlockList() {
+	public List<BlockContext> getBlockList() {
 		return blockList;
 	}
 
-	public void setBlockList(List<BlockVar> blockList) {
+	public void setBlockList(List<BlockContext> blockList) {
 		this.blockList = blockList;
 	}
 
-	public BlockVar getParent() {
+	public BlockContext getParent() {
 		return parent;
 	}
 
-	public void setParent(BlockVar parent) {
+	public void setParent(BlockContext parent) {
 		this.parent = parent;
 	}
 
@@ -165,7 +166,7 @@ class BlockVar {
 
 		sb.append(vars.toString());
 
-		for (BlockVar block : blockList) {
+		for (BlockContext block : blockList) {
 			sb.append(block).append("\n");
 		}
 

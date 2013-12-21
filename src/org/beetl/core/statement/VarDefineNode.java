@@ -1,0 +1,31 @@
+package org.beetl.core.statement;
+
+import org.beetl.core.Context;
+
+public class VarDefineNode extends ASTNode implements IVarIndex {
+
+	int varIndex = 0;
+
+	public VarDefineNode(Token token) {
+		super(token);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public Object run(Context ctx) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setVarIndex(int index) {
+		this.varIndex = index;
+
+	}
+
+	@Override
+	public int getVarIndex() {
+		return varIndex;
+	}
+
+}

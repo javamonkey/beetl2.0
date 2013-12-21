@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.beetl.core.statement.ASTNode;
+import org.beetl.core.statement.IGoto;
 import org.beetl.core.statement.IVarIndex;
 
 public class ProgramBuilderContext {
@@ -36,6 +37,11 @@ public class ProgramBuilderContext {
 
 	public void exitBlock() {
 		current = current.parent;
+	}
+
+	public void addVarAndPostion(ASTNode first) {
+		this.addVar(first.token.text);
+		this.setVarPosition(first.token.text, first);
 	}
 
 	public void addVar(String varName) {
@@ -104,13 +110,13 @@ public class ProgramBuilderContext {
 
 		for (Entry<String, VarDescrption> entry : block.vars.entrySet()) {
 			VarDescrption vd = entry.getValue();
-			// 变量有可能没有被引用，（for 循环中的状态变量），因此不需要分配空间
-			if (!vd.where.isEmpty()) {
-				for (ASTNode node : vd.where) {
-					((IVarIndex) node).setVarIndex(nextIndex);
-				}
-				nextIndex++;
+			// 暂时不考虑变量有可能没有被引用，（for 循环中的状态变量），因此不需要分配空间
+			// if (!vd.where.isEmpty()) {
+			for (ASTNode node : vd.where) {
+				((IVarIndex) node).setVarIndex(nextIndex);
 			}
+			nextIndex++;
+			// }
 
 		}
 		varIndexSize = Math.max(varIndexSize, nextIndex);
@@ -130,7 +136,7 @@ class BlockContext {
 	// chidren
 	List<BlockContext> blockList = new ArrayList<BlockContext>();
 	BlockContext parent = null;
-	boolean hasGoto = false;
+	int gotoValue = IGoto.NORMAL;
 
 	public Map<String, VarDescrption> getVars() {
 		return vars;
@@ -154,6 +160,7 @@ class BlockContext {
 
 	public void setParent(BlockContext parent) {
 		this.parent = parent;
+		parent.blockList.add(this);
 	}
 
 	public VarDescrption getVarDescrption(String varName) {

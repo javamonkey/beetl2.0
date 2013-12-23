@@ -14,7 +14,7 @@ public class ProgramMetaData {
 	// 二元表达式,性能不理想，待定
 
 	// 模板静态数据
-	public String[] staticTextArray = null;
+	public Object[] staticTextArray = null;
 
 	// 所有变量存放在数组中，数组长度为varIndexSize
 	public int varIndexSize = 0;
@@ -33,8 +33,26 @@ public class ProgramMetaData {
 		ctx.tempVarStartIndex = tempVarStartIndex;
 		// 分配变量空间
 		ctx.vars = new Object[varIndexSize];
+
+		ctx.cachedArray = this.nodesEval;
+
 		// 将全局变量放到数组
 		putGlobaToArray(ctx);
+		ctx.isInit = true;
+	}
+
+	public void replaceGlobal(Context ctx) {
+		putGlobaToArray(ctx);
+
+	}
+
+	/**
+	 * 重用此类，仅仅全局变量需要赋值
+	 * 
+	 * @param ctx
+	 */
+	public void initContextAgain(Context ctx) {
+		this.putGlobaToArray(ctx);
 	}
 
 	/**

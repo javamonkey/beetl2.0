@@ -9,8 +9,7 @@ public class BlockStatement extends Statement implements IGoto {
 
 	public BlockStatement(Statement[] nodes, Token token) {
 		super(token);
-
-		// TODO Auto-generated constructor stub
+		this.nodes = nodes;
 	}
 
 	public Object run(Context ctx) {

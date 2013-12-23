@@ -7,7 +7,6 @@ public class Program {
 	public ProgramMetaData metaData = null;
 
 	public void execute(Context ctx) {
-		metaData.initContext(ctx);
 
 		for (Statement node : metaData.statements) {
 			node.run(ctx);

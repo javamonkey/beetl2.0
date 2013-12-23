@@ -39,8 +39,10 @@ public class VarRef extends Expression implements IVarIndex {
 
 			case 0: // 普通属性访问
 				attrExp = attr.token.text;
+				break;
 			case 1: // map or list
 				attrExp = ((VarSquareAttribute) attr).exp.run(ctx);
+				break;
 			case 2:
 				// 虚拟属性，待定
 

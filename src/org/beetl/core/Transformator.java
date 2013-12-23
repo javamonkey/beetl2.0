@@ -32,11 +32,11 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Stack;
+import java.util.TreeMap;
 
 import org.beetl.core.exception.HTMLTagParserException;
 import org.beetl.core.statement.Token;
@@ -60,9 +60,9 @@ public class Transformator {
 	String startStatement = "#:";
 	String endStatement = null;
 	boolean appendCR = false;
-	String vname = "__V";
+	String vname = "";
 	int vnamesuffix = 0;
-	Map<String, String> textMap = new HashMap<String, String>();
+	Map<String, String> textMap = new TreeMap<String, String>();
 
 	// 1 解析在文本处，2 解析在控制语句处，3 解析在占位符号里 4文件结束 5,html tag begin 6 html tag end
 	int status = 1;

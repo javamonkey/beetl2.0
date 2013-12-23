@@ -1,33 +1,28 @@
 package org.beetl.core;
 
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.beetl.core.attr.ObjectAA;
-import org.beetl.core.lab.GrammerTest;
-import org.beetl.core.parser.BeetlLexer;
 import org.beetl.core.parser.BeetlParser;
 import org.beetl.core.parser.BeetlParser.AssignGeneralContext;
 import org.beetl.core.parser.BeetlParser.AssignMentContext;
 import org.beetl.core.parser.BeetlParser.BlockStContext;
 import org.beetl.core.parser.BeetlParser.BooleanLiteralContext;
 import org.beetl.core.parser.BeetlParser.BreakStContext;
+import org.beetl.core.parser.BeetlParser.ConstantsTextStatmentContext;
 import org.beetl.core.parser.BeetlParser.ContinueStContext;
 import org.beetl.core.parser.BeetlParser.ExpressionContext;
 import org.beetl.core.parser.BeetlParser.ForControlContext;
 import org.beetl.core.parser.BeetlParser.ForStContext;
 import org.beetl.core.parser.BeetlParser.LiteralExpContext;
-import org.beetl.core.parser.BeetlParser.ProgContext;
 import org.beetl.core.parser.BeetlParser.ReturnStContext;
 import org.beetl.core.parser.BeetlParser.StatementContext;
+import org.beetl.core.parser.BeetlParser.StaticOutputStContext;
 import org.beetl.core.parser.BeetlParser.TextOutputStContext;
 import org.beetl.core.parser.BeetlParser.TextStatmentContext;
 import org.beetl.core.parser.BeetlParser.TextVarContext;
@@ -48,11 +43,11 @@ import org.beetl.core.statement.ForStatement;
 import org.beetl.core.statement.IGoto;
 import org.beetl.core.statement.Literal;
 import org.beetl.core.statement.PlaceholderST;
-import org.beetl.core.statement.Program;
 import org.beetl.core.statement.ProgramMetaData;
 import org.beetl.core.statement.ReturnStatement;
 import org.beetl.core.statement.SafePlaceholderST;
 import org.beetl.core.statement.Statement;
+import org.beetl.core.statement.StaticTextASTNode;
 import org.beetl.core.statement.VarAssignStatement;
 import org.beetl.core.statement.VarAssignStatementSeq;
 import org.beetl.core.statement.VarAttribute;
@@ -60,8 +55,6 @@ import org.beetl.core.statement.VarDefineNode;
 import org.beetl.core.statement.VarRef;
 import org.beetl.core.statement.VarSquareAttribute;
 import org.beetl.core.statement.VarVirtualAttribute;
-
-import com.beetl.performance.Log;
 
 public class AntlrProgramBuilder {
 
@@ -88,7 +81,7 @@ public class AntlrProgramBuilder {
 		data.statements = ls.toArray(new Statement[0]);
 		data.globalIndexMap = pbCtx.globalIndexMap;
 		data.globalVarAttr = pbCtx.globaVarAttr;
-
+		data.nodesEval = pbCtx.listNodeEval.toArray();
 		return data;
 
 	}
@@ -99,7 +92,8 @@ public class AntlrProgramBuilder {
 			return parseVarSt((VarStContext) node);
 
 		} else if (node instanceof BlockStContext) {
-			Statement block = parseBlock(node);
+			BlockStContext bc = (BlockStContext) node;
+			Statement block = parseBlock(bc.block().statement());
 			return block;
 		} else if (node instanceof TextOutputStContext) {
 			return this.parseTextOutputSt((TextOutputStContext) node);
@@ -115,8 +109,15 @@ public class AntlrProgramBuilder {
 		} else if (node instanceof ForStContext) {
 			ForStatement forStatement = parseForSt((ForStContext) node);
 			return forStatement;
+		} else if (node instanceof StaticOutputStContext) {
+			StaticOutputStContext st = (StaticOutputStContext) node;
+			ConstantsTextStatmentContext cst = st.constantsTextStatment();
+			String str = cst.DecimalLiteral().getSymbol().getText();
+			int position = Integer.parseInt(str);
+			StaticTextASTNode textNode = new StaticTextASTNode(position, null);
+			return textNode;
 		} else {
-			return null;
+			throw new UnsupportedOperationException();
 		}
 
 	}
@@ -290,12 +291,12 @@ public class AntlrProgramBuilder {
 
 	}
 
-	protected BlockStatement parseBlock(ParserRuleContext node) {
+	protected BlockStatement parseBlock(List list) {
 		pbCtx.enterBlock();
-		ASTNode[] statements = new ASTNode[node.getChildCount()];
+		ASTNode[] statements = new ASTNode[list.size()];
 		List<Statement> nodes = new ArrayList<Statement>();
 		for (int i = 0; i < statements.length; i++) {
-			nodes.add(parseStatment((ParserRuleContext) node.getChild(i)));
+			nodes.add(parseStatment((ParserRuleContext) list.get(i)));
 
 		}
 
@@ -325,30 +326,4 @@ public class AntlrProgramBuilder {
 		return token;
 	}
 
-	public static void main(String[] args) throws Exception {
-		Log.key1Start();
-		// for (int i = 0; i < 10000; i++) {
-
-		Reader reader = new InputStreamReader(
-				GrammerTest.class
-						.getResourceAsStream("/org/beetl/core/lab/grammer.txt"),
-				"utf-8");
-
-		ANTLRInputStream input = new ANTLRInputStream(reader);
-		BeetlLexer lexer = new BeetlLexer(input);
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
-
-		BeetlParser parser = new BeetlParser(tokens);
-		ProgContext tree = parser.prog(); // begin parsing at init rule
-		AntlrProgramBuilder pb = new AntlrProgramBuilder();
-		ProgramMetaData data = pb.build(tree);
-
-		Program program = new Program();
-		program.metaData = data;
-		/*
-		 * Context ctx = new Context(); ctx.byteWriter = new ByteWriter(); Map
-		 * map = new HashMap(); map.put("aa", "hello"); ctx.globalVar = map;
-		 * program.execute(ctx);
-		 */
-	}
 }

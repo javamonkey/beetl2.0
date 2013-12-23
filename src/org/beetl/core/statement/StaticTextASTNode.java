@@ -1,6 +1,9 @@
 package org.beetl.core.statement;
 
+import java.io.IOException;
+
 import org.beetl.core.Context;
+import org.beetl.core.exception.TempException;
 
 public class StaticTextASTNode extends Statement {
 
@@ -13,8 +16,16 @@ public class StaticTextASTNode extends Statement {
 
 	@Override
 	public Object run(Context ctx) {
-		// TODO 先不考虑字节还是字符
-		ctx.byteWriter.writeStaticContent(ctx.staticTextArray[textIndex]);
+		try {
+			if (ctx.byteOutputMode) {
+				ctx.byteWriter.write((byte[]) ctx.staticTextArray[textIndex]);
+			} else {
+				ctx.byteWriter.write((char[]) ctx.staticTextArray[textIndex]);
+			}
+		} catch (IOException ex) {
+			throw new TempException(ex.getMessage());
+		}
+
 		return null;
 
 	}

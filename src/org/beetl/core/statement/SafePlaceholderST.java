@@ -13,7 +13,7 @@ public class SafePlaceholderST extends PlaceholderST {
 	public Object run(Context ctx) {
 		try {
 			Object value = expression.run(ctx);
-			ctx.byteWriter.writePlaceholderContent(value);
+			ctx.byteWriter.write(value);
 		} catch (Exception ex) {
 
 		}

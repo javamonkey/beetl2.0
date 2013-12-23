@@ -1,18 +1,27 @@
 package org.beetl.core.res;
 
+import java.io.File;
+
 import org.beetl.core.Resource;
 import org.beetl.core.ResourceLoader;
 
 public class FileResourceLoader implements ResourceLoader {
 
-	public FileResourceLoader(String root) {
+	String root = null;
+	String charset = null;
 
+	public FileResourceLoader(String root, String charset) {
+		this.root = root;
+		this.charset = charset;
 	}
 
 	@Override
 	public Resource getResource(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		File file = new File(root, key);
+		Resource resource = new FileResource(file);
+		resource.setResourceLoader(this);
+		return resource;
+
 	}
 
 	@Override

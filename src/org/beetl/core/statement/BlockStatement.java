@@ -12,12 +12,12 @@ public class BlockStatement extends Statement implements IGoto {
 		this.nodes = nodes;
 	}
 
-	public Object run(Context ctx) {
+	public void execute(Context ctx) {
 		if (this.hasGoto) {
 			for (Statement node : nodes) {
 				node.execute(ctx);
 				if (ctx.gotoFlag != 0) {
-					return null;
+					return;
 				}
 
 			}
@@ -27,7 +27,7 @@ public class BlockStatement extends Statement implements IGoto {
 			}
 		}
 
-		return null;
+		return;
 	}
 
 	@Override

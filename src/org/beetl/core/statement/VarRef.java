@@ -48,7 +48,7 @@ public class VarRef extends Expression implements IVarIndex {
 
 			}
 
-			AA accessor = (AA) ctx.cachedArray[attr.aaIndex];
+			AA accessor = (AA) attr.aa;
 			value = accessor.value(value, attrExp);
 			if (value == null && safe != null) {
 				return safe.evaluate(ctx);

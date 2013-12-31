@@ -5,13 +5,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.beetl.core.Context;
+import org.beetl.core.util.ObjectUtil;
 
-public class ProgramMetaData {
+public class ProgramMetaData implements java.io.Serializable {
 	public Statement[] statements = null;
-
-	// 节点辅助访问器，通过替换来获取更好的性能
-	public Object[] nodesEval = null;
-	// 二元表达式,性能不理想，待定
 
 	// 模板静态数据
 	public Object[] staticTextArray = null;
@@ -33,8 +30,6 @@ public class ProgramMetaData {
 		ctx.tempVarStartIndex = tempVarStartIndex;
 		// 分配变量空间
 		ctx.vars = new Object[varIndexSize];
-
-		ctx.cachedArray = this.nodesEval;
 
 		// 将全局变量放到数组
 		putGlobaToArray(ctx);
@@ -72,6 +67,11 @@ public class ProgramMetaData {
 				ctx.vars[index] = ctx.NOT_EXIST_OBJECT;
 			}
 		}
+	}
+
+	public ProgramMetaData copy() {
+		ProgramMetaData newCopy = (ProgramMetaData) ObjectUtil.copy(this);
+		return newCopy;
 	}
 
 }

@@ -64,6 +64,11 @@ public class GroupTemplate {
 
 	}
 
+	public Program getProgram(String key) {
+		Program program = this.programCache.get(key);
+		return program;
+	}
+
 	private Program loadTemplate(Resource res) {
 		Reader reader = res.openReader();
 		Transformator sf = new Transformator(conf.placeholderStart,

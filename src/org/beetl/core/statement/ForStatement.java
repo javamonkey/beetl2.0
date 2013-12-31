@@ -20,7 +20,7 @@ public class ForStatement extends Statement implements IGoto {
 
 	}
 
-	public void run(Context ctx) {
+	public void execute(Context ctx) {
 		// idNode 是其后设置的
 		int varIndex = ((IVarIndex) idNode).getVarIndex();
 		IteratorStatus it = IteratorStatus.getIteratorStatus(exp.evaluate(ctx),

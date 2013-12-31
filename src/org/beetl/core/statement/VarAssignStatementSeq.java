@@ -10,7 +10,7 @@ public class VarAssignStatementSeq extends Statement {
 		this.sts = sts;
 	}
 
-	public void run(Context ctx) {
+	public void execute(Context ctx) {
 		for (Statement st : sts) {
 			st.execute(ctx);
 		}

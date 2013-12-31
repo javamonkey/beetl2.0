@@ -81,7 +81,7 @@ public class AntlrProgramBuilder {
 		data.statements = ls.toArray(new Statement[0]);
 		data.globalIndexMap = pbCtx.globalIndexMap;
 		data.globalVarAttr = pbCtx.globaVarAttr;
-		data.nodesEval = pbCtx.listNodeEval.toArray();
+
 		return data;
 
 	}
@@ -233,9 +233,7 @@ public class AntlrProgramBuilder {
 							.Identifier().getText());
 					isFirstAttr = false;
 				}
-
-				int index = pbCtx.setNodeEvalObject(ObjectAA.defaultObjectAA());
-				attr.setNEI(index);
+				attr.setAA(ObjectAA.defaultObjectAA());
 
 			} else if (vac instanceof VarAttributeArrayOrMapContext) {
 				VarAttributeArrayOrMapContext zf = (VarAttributeArrayOrMapContext) vac;

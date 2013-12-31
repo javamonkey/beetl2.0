@@ -100,6 +100,10 @@ public class Template {
 	public void fastRender(Map map, ByteWriter byteWriter) {
 		if (ctx.isInit) {
 			ctx.globalVar = map;
+			// 重用
+			for (int i = ctx.tempVarStartIndex; i < ctx.vars.length; i++) {
+				ctx.vars[i] = null;
+			}
 			ctx.byteWriter = byteWriter;
 			program.metaData.replaceGlobal(ctx);
 			program.execute(ctx);

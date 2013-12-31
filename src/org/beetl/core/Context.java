@@ -30,8 +30,6 @@ public class Context {
 
 	public int tempVarStartIndex = -1;
 
-	public Object[] cachedArray = null;
-
 	// 0 正常语句，继续执行，1 continue，2 break，3 return；
 	public short gotoFlag = IGoto.NORMAL;
 

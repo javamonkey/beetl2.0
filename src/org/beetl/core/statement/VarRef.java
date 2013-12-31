@@ -19,12 +19,12 @@ public class VarRef extends Expression implements IVarIndex {
 	}
 
 	@Override
-	public Object run(Context ctx) {
+	public Object evaluate(Context ctx) {
 		// TODO Auto-generated method stub
 		Object value = ctx.vars[varIndex];
 		if (value == null || value == Context.NOT_EXIST_OBJECT) {
 			if (safe != null) {
-				return safe.run(ctx);
+				return safe.evaluate(ctx);
 			} else {
 				throw new TempException("未定义或者是空" + this.token.text);
 			}
@@ -39,8 +39,10 @@ public class VarRef extends Expression implements IVarIndex {
 
 			case 0: // 普通属性访问
 				attrExp = attr.token.text;
+				break;
 			case 1: // map or list
-				attrExp = ((VarSquareAttribute) attr).exp.run(ctx);
+				attrExp = ((VarSquareAttribute) attr).exp.evaluate(ctx);
+				break;
 			case 2:
 				// 虚拟属性，待定
 
@@ -49,7 +51,7 @@ public class VarRef extends Expression implements IVarIndex {
 			AA accessor = (AA) ctx.cachedArray[attr.aaIndex];
 			value = accessor.value(value, attrExp);
 			if (value == null && safe != null) {
-				return safe.run(ctx);
+				return safe.evaluate(ctx);
 			}
 		}
 		return value;

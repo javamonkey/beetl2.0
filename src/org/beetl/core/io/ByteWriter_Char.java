@@ -30,6 +30,7 @@ package org.beetl.core.io;
 import java.io.IOException;
 import java.io.Writer;
 
+import org.beetl.core.ByteWriter;
 import org.beetl.core.SuperVar;
 
 public class ByteWriter_Char extends ByteWriter {

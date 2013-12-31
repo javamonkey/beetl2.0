@@ -9,22 +9,21 @@ public class BlockStatement extends Statement implements IGoto {
 
 	public BlockStatement(Statement[] nodes, Token token) {
 		super(token);
-
-		// TODO Auto-generated constructor stub
+		this.nodes = nodes;
 	}
 
 	public Object run(Context ctx) {
 		if (this.hasGoto) {
-			for (ASTNode node : nodes) {
-				node.run(ctx);
+			for (Statement node : nodes) {
+				node.execute(ctx);
 				if (ctx.gotoFlag != 0) {
 					return null;
 				}
 
 			}
 		} else {
-			for (ASTNode node : nodes) {
-				node.run(ctx);
+			for (Statement node : nodes) {
+				node.execute(ctx);
 			}
 		}
 

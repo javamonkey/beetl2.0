@@ -2,7 +2,7 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 
-public class VarDefineNode extends ASTNode implements IVarIndex {
+public class VarDefineNode extends Expression implements IVarIndex {
 
 	int varIndex = 0;
 
@@ -12,7 +12,7 @@ public class VarDefineNode extends ASTNode implements IVarIndex {
 	}
 
 	@Override
-	public Object run(Context ctx) {
+	public Object evaluate(Context ctx) {
 		// TODO Auto-generated method stub
 		return null;
 	}

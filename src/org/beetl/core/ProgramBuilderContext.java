@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.beetl.core.statement.ASTNode;
 import org.beetl.core.statement.IGoto;
@@ -15,9 +16,9 @@ import org.beetl.core.statement.IVarIndex;
 
 public class ProgramBuilderContext {
 	// 程序根
-	BlockContext root = new BlockContext();
+	BlockEnvContext root = new BlockEnvContext();
 	// 当前block
-	BlockContext current = root;
+	BlockEnvContext current = root;
 	// 节点运算辅助对象
 	List<Object> listNodeEval = new LinkedList<Object>();
 	// 全局变量名以及描述
@@ -30,7 +31,7 @@ public class ProgramBuilderContext {
 	public Map<String, Integer> globalIndexMap = new HashMap<String, Integer>();
 
 	public void enterBlock() {
-		BlockContext blockVar = new BlockContext();
+		BlockEnvContext blockVar = new BlockEnvContext();
 		blockVar.setParent(current);
 		current = blockVar;
 	}
@@ -61,7 +62,7 @@ public class ProgramBuilderContext {
 	}
 
 	protected VarDescrption findVar(String varName) {
-		BlockContext scope = current;
+		BlockEnvContext scope = current;
 		while (scope != null) {
 			VarDescrption varDesc = scope.getVarDescrption(varName);
 			if (varDesc != null) {
@@ -106,7 +107,7 @@ public class ProgramBuilderContext {
 		anzlysze(this.root, this.globalVar.size());
 	}
 
-	private void anzlysze(BlockContext block, int nextIndex) {
+	private void anzlysze(BlockEnvContext block, int nextIndex) {
 
 		for (Entry<String, VarDescrption> entry : block.vars.entrySet()) {
 			VarDescrption vd = entry.getValue();
@@ -121,7 +122,7 @@ public class ProgramBuilderContext {
 		}
 		varIndexSize = Math.max(varIndexSize, nextIndex);
 
-		for (BlockContext subBlock : block.blockList) {
+		for (BlockEnvContext subBlock : block.blockList) {
 			anzlysze(subBlock, nextIndex);
 			int inc = subBlock.vars.size();
 			varIndexSize = Math.max(varIndexSize, nextIndex + inc);
@@ -131,11 +132,11 @@ public class ProgramBuilderContext {
 
 }
 
-class BlockContext {
-	Map<String, VarDescrption> vars = new HashMap<String, VarDescrption>();
+class BlockEnvContext {
+	Map<String, VarDescrption> vars = new TreeMap<String, VarDescrption>();
 	// chidren
-	List<BlockContext> blockList = new ArrayList<BlockContext>();
-	BlockContext parent = null;
+	List<BlockEnvContext> blockList = new ArrayList<BlockEnvContext>();
+	BlockEnvContext parent = null;
 	int gotoValue = IGoto.NORMAL;
 
 	public Map<String, VarDescrption> getVars() {
@@ -146,19 +147,19 @@ class BlockContext {
 		this.vars = vars;
 	}
 
-	public List<BlockContext> getBlockList() {
+	public List<BlockEnvContext> getBlockList() {
 		return blockList;
 	}
 
-	public void setBlockList(List<BlockContext> blockList) {
+	public void setBlockList(List<BlockEnvContext> blockList) {
 		this.blockList = blockList;
 	}
 
-	public BlockContext getParent() {
+	public BlockEnvContext getParent() {
 		return parent;
 	}
 
-	public void setParent(BlockContext parent) {
+	public void setParent(BlockEnvContext parent) {
 		this.parent = parent;
 		parent.blockList.add(this);
 	}
@@ -173,7 +174,7 @@ class BlockContext {
 
 		sb.append(vars.toString());
 
-		for (BlockContext block : blockList) {
+		for (BlockEnvContext block : blockList) {
 			sb.append(block).append("\n");
 		}
 

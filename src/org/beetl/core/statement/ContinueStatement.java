@@ -10,9 +10,9 @@ public class ContinueStatement extends Statement {
 	}
 
 	@Override
-	public Object run(Context ctx) {
+	public final void execute(Context ctx) {
 		ctx.gotoFlag = IGoto.CONTINUE;
-		return null;
+
 	}
 
 }

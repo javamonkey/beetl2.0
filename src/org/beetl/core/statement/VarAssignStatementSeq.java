@@ -10,12 +10,11 @@ public class VarAssignStatementSeq extends Statement {
 		this.sts = sts;
 	}
 
-	@Override
-	public Object run(Context ctx) {
+	public void run(Context ctx) {
 		for (Statement st : sts) {
-			st.run(ctx);
+			st.execute(ctx);
 		}
-		return null;
+
 	}
 
 }

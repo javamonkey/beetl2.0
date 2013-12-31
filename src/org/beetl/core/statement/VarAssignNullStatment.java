@@ -12,10 +12,10 @@ public class VarAssignNullStatment extends Statement {
 	}
 
 	@Override
-	public Object run(Context ctx) {
+	public void execute(Context ctx) {
 		// TODO Auto-generated method stub
 		ctx.vars[varIndex] = null;
-		return null;
+
 	}
 
 }

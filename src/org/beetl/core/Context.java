@@ -1,9 +1,9 @@
 package org.beetl.core;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.beetl.core.exception.TempException;
 import org.beetl.core.statement.IGoto;
@@ -18,7 +18,7 @@ public class Context {
 	/*
 	 * 内容为Object的变量，beetl要求全局变量类型总是一致，如果一个key 对应的类型不一样，则需要设置objectKeys
 	 */
-	public List<String> objectKeys = new ArrayList<String>(2);
+	public Set<String> objectKeys = new HashSet<String>();
 
 	public boolean byteOutputMode = false;
 
@@ -26,7 +26,7 @@ public class Context {
 	public Object[] vars = null;
 
 	// 这些变量来自于ProgrameMeta
-	public String[] staticTextArray = null;
+	public Object[] staticTextArray = null;
 
 	public int tempVarStartIndex = -1;
 
@@ -34,6 +34,8 @@ public class Context {
 
 	// 0 正常语句，继续执行，1 continue，2 break，3 return；
 	public short gotoFlag = IGoto.NORMAL;
+
+	public boolean isInit = false;
 
 	/**
 	 * 得到临时模板变量

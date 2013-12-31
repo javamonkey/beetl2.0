@@ -5,11 +5,11 @@ import org.beetl.core.Context;
 public class IfStatement extends Statement {
 
 	Expression condtion;
-	ASTNode ifStatement;
-	ASTNode elseStatement;
+	Statement ifStatement;
+	Statement elseStatement;
 
-	public IfStatement(Expression condtion, ASTNode ifStatement,
-			ASTNode elseStatement, Token token) {
+	public IfStatement(Expression condtion, Statement ifStatement,
+			Statement elseStatement, Token token) {
 		super(token);
 		this.condtion = condtion;
 		this.ifStatement = ifStatement;
@@ -18,18 +18,17 @@ public class IfStatement extends Statement {
 	}
 
 	@Override
-	public Object run(Context ctx) {
+	public void execute(Context ctx) {
 		// TODO Auto-generated method stub
-		Object value = condtion.run(ctx);
+		Object value = condtion.evaluate(ctx);
 		if (ASTNodeUtil.isTrue(value, this)) {
-			ifStatement.run(ctx);
+			ifStatement.execute(ctx);
 		} else {
 			if (elseStatement != null) {
-				elseStatement.run(ctx);
+				elseStatement.execute(ctx);
 			}
 		}
 
-		return null;
 	}
 
 }

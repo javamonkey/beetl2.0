@@ -13,10 +13,9 @@ public class VarAssignStatement extends Statement implements IVarIndex {
 		this.exp = exp;
 	}
 
-	@Override
-	public Object run(Context ctx) {
-		ctx.vars[varIndex] = exp.run(ctx);
-		return null;
+	public void execute(Context ctx) {
+		ctx.vars[varIndex] = exp.evaluate(ctx);
+
 	}
 
 	public int getVarIndex() {

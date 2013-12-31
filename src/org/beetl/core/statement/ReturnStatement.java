@@ -10,9 +10,9 @@ public class ReturnStatement extends Statement {
 	}
 
 	@Override
-	public Object run(Context ctx) {
+	public void execute(Context ctx) {
 		ctx.gotoFlag = IGoto.RETURN;
-		return null;
+
 	}
 
 }

@@ -9,10 +9,8 @@ public class Statement extends ASTNode {
 
 	}
 
-	@Override
-	public Object run(Context ctx) {
-		// TODO Auto-generated method stub
-		return null;
+	public void execute(Context ctx) {
+
 	}
 
 }

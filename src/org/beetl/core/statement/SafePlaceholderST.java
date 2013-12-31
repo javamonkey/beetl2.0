@@ -10,15 +10,14 @@ public class SafePlaceholderST extends PlaceholderST {
 	}
 
 	@Override
-	public Object run(Context ctx) {
+	public void execute(Context ctx) {
 		try {
-			Object value = expression.run(ctx);
-			ctx.byteWriter.writePlaceholderContent(value);
+			Object value = expression.evaluate(ctx);
+			ctx.byteWriter.write(value);
 		} catch (Exception ex) {
 
 		}
 
-		return null;
 	}
 
 }

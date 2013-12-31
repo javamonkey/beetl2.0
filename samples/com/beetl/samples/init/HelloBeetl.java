@@ -18,7 +18,7 @@ public class HelloBeetl {
 		Map map = new HashMap();
 		map.put("name", "world");
 		t.binding(map);
-		t.binding(varName, o,false)
+		// t.binding(varName, o,false)
 		String str = t.render();
 
 	}

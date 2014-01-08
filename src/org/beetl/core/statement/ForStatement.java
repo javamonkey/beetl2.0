@@ -4,7 +4,7 @@ import org.beetl.core.Context;
 import org.beetl.core.IteratorStatus;
 
 public class ForStatement extends Statement implements IGoto {
-	ASTNode idNode;
+	Expression idNode;
 	Expression exp;
 	Statement forPart;
 	Statement elseforPart;
@@ -73,6 +73,20 @@ public class ForStatement extends Statement implements IGoto {
 	@Override
 	public void setGoto(boolean occour) {
 		this.hasGoto = occour;
+
+	}
+
+	@Override
+	public void infer(Type[] types, Object temp) {
+		exp.infer(types, null);
+		idNode.type = exp.getType().types[0];
+		int index = ((IVarIndex) idNode).getVarIndex();
+		types[index] = idNode.type;
+		types[index + 1] = new Type(IteratorStatus.class, idNode.type.cls);
+		forPart.infer(types, null);
+		if (elseforPart != null) {
+			elseforPart.infer(types, null);
+		}
 
 	}
 

@@ -1,13 +1,12 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
-import org.beetl.core.attr.AA;
 import org.beetl.core.exception.TempException;
 
 public class VarRef extends Expression implements IVarIndex {
 
-	VarAttribute[] attributes;
-	Expression safe = null;
+	public VarAttribute[] attributes;
+	public Expression safe = null;
 	int varIndex;
 
 	public VarRef(VarAttribute[] attributes, Expression safe, Token token) {
@@ -15,12 +14,12 @@ public class VarRef extends Expression implements IVarIndex {
 
 		this.attributes = attributes;
 		this.safe = safe;
-		// TODO Auto-generated constructor stub
+
 	}
 
 	@Override
 	public Object evaluate(Context ctx) {
-		// TODO Auto-generated method stub
+
 		Object value = ctx.vars[varIndex];
 		if (value == null || value == Context.NOT_EXIST_OBJECT) {
 			if (safe != null) {
@@ -35,21 +34,9 @@ public class VarRef extends Expression implements IVarIndex {
 		}
 		Object attrExp = null;
 		for (VarAttribute attr : attributes) {
-			switch (attr.type) {
 
-			case 0: // 普通属性访问
-				attrExp = attr.token.text;
-				break;
-			case 1: // map or list
-				attrExp = ((VarSquareAttribute) attr).exp.evaluate(ctx);
-				break;
-			case 2:
-				// 虚拟属性，待定
+			value = attr.evaluate(ctx);
 
-			}
-
-			AA accessor = (AA) attr.aa;
-			value = accessor.value(value, attrExp);
 			if (value == null && safe != null) {
 				return safe.evaluate(ctx);
 			}
@@ -67,6 +54,19 @@ public class VarRef extends Expression implements IVarIndex {
 	@Override
 	public int getVarIndex() {
 		return this.varIndex;
+	}
+
+	@Override
+	public void infer(Type[] types, Object temp) {
+		Type type = types[this.varIndex];
+		Type lastType = type;
+		for (VarAttribute attr : attributes) {
+			attr.type = lastType;
+			attr.infer(types, lastType);
+			lastType = attr.type;
+
+		}
+		this.type = lastType;
 	}
 
 }

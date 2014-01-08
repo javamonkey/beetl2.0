@@ -8,4 +8,7 @@ public class VarVirtualAttribute extends VarAttribute {
 
 	}
 
+	public void infer(Type[] types, Object temp) {
+		throw new UnsupportedOperationException();
+	}
 }

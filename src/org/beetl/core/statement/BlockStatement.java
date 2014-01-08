@@ -42,4 +42,11 @@ public class BlockStatement extends Statement implements IGoto {
 
 	}
 
+	@Override
+	public void infer(Type[] types, Object temp) {
+		for (Statement st : nodes) {
+			st.infer(types, temp);
+		}
+	}
+
 }

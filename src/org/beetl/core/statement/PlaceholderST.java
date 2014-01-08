@@ -26,4 +26,9 @@ public class PlaceholderST extends Statement {
 
 	}
 
+	@Override
+	public void infer(Type[] types, Object temp) {
+		// do nothing
+	}
+
 }

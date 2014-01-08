@@ -15,4 +15,8 @@ public class VarSquareAttribute extends VarAttribute {
 		this.exp = exp;
 	}
 
+	public void infer(Type[] types, Object temp) {
+		super.infer(types, temp);
+	}
+
 }

@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import org.beetl.core.exception.HTMLTagParserException;
 import org.beetl.core.exception.TempException;
+import org.beetl.core.filter.TypeBindingFilter;
 import org.beetl.core.statement.Program;
 
 public class GroupTemplate {
@@ -84,6 +85,8 @@ public class GroupTemplate {
 		}
 
 		Program program = engine.createProgram(scriptReader);
+		// test
+		program.filter = new TypeBindingFilter(program);
 		program.metaData.staticTextArray = new Object[sf.textMap.size()];
 		int i = 0;
 

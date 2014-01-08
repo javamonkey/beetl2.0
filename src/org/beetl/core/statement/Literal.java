@@ -18,4 +18,8 @@ public class Literal extends Expression {
 		return obj;
 	}
 
+	public void infer(Type[] types, Object temp) {
+		this.type = new Type(obj.getClass());
+	}
+
 }

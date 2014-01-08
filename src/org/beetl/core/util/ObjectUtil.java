@@ -32,6 +32,13 @@ public class ObjectUtil {
 		return null;
 	}
 
+	public static String getMethod(String attrName) {
+		StringBuilder mbuffer = new StringBuilder("get");
+		mbuffer.append(attrName.substring(0, 1).toUpperCase()).append(
+				attrName.substring(1));
+		return mbuffer.toString();
+	}
+
 	public static void main(String[] args) {
 
 	}

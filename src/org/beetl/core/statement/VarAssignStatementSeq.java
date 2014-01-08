@@ -10,11 +10,19 @@ public class VarAssignStatementSeq extends Statement {
 		this.sts = sts;
 	}
 
+	@Override
 	public void execute(Context ctx) {
 		for (Statement st : sts) {
 			st.execute(ctx);
 		}
 
+	}
+
+	@Override
+	public void infer(Type[] types, Object temp) {
+		for (Statement st : sts) {
+			st.infer(types, temp);
+		}
 	}
 
 }

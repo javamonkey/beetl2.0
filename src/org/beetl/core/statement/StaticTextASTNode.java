@@ -28,4 +28,9 @@ public class StaticTextASTNode extends Statement {
 
 	}
 
+	@Override
+	public void infer(Type[] types, Object temp) {
+		// do nothing
+	}
+
 }

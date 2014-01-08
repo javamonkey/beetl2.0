@@ -20,4 +20,9 @@ public class SafePlaceholderST extends PlaceholderST {
 
 	}
 
+	@Override
+	public void infer(Type[] types, Object temp) {
+		// do nothing
+	}
+
 }

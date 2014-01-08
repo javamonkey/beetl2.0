@@ -9,7 +9,6 @@ public class VarAssignStatement extends Statement implements IVarIndex {
 
 	public VarAssignStatement(Expression exp, Token token) {
 		super(token);
-		this.varIndex = varIndex;
 		this.exp = exp;
 	}
 
@@ -24,6 +23,11 @@ public class VarAssignStatement extends Statement implements IVarIndex {
 
 	public void setVarIndex(int varIndex) {
 		this.varIndex = varIndex;
+	}
+
+	public void infer(Type[] types, Object temp) {
+		exp.infer(types, temp);
+		types[varIndex] = exp.type;
 	}
 
 }

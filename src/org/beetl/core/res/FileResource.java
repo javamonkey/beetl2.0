@@ -13,9 +13,11 @@ import org.beetl.core.Resource;
 public class FileResource extends Resource {
 
 	File file = null;
+	String id = null;
 
-	public FileResource(File file) {
+	public FileResource(File file, String id) {
 		this.file = file;
+		this.id = id;
 
 	}
 
@@ -44,6 +46,11 @@ public class FileResource extends Resource {
 	public boolean isModified() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public String getId() {
+		return this.id;
 	}
 
 }

@@ -3,13 +3,12 @@ package org.beetl.core;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 
+import org.beetl.core.cache.Cache;
+import org.beetl.core.cache.ProgramCacheFactory;
 import org.beetl.core.exception.HTMLTagParserException;
 import org.beetl.core.exception.TempException;
-import org.beetl.core.filter.TypeBindingFilter;
 import org.beetl.core.statement.Program;
 
 public class GroupTemplate {
@@ -19,7 +18,7 @@ public class GroupTemplate {
 	ResourceLoader resourceLoader = null;
 	Configuration conf = null;
 	TemplateEngine engine = null;
-	Map<String, Program> programCache = new HashMap<String, Program>();
+	Cache programCache = ProgramCacheFactory.defaulCache();
 
 	/**
 	 * 使用loader 和 conf初始化GroupTempalte
@@ -50,13 +49,13 @@ public class GroupTemplate {
 
 	public Template getTemplate(String key) {
 		key = key.intern();
-		Program program = this.programCache.get(key);
+		Program program = (Program) this.programCache.get(key);
 		if (program == null) {
 			synchronized (key) {
 				if (program == null) {
 					Resource resource = resourceLoader.getResource(key);
 					program = this.loadTemplate(resource);
-					this.programCache.put(key, program);
+					this.programCache.set(key, program);
 				}
 			}
 		}
@@ -66,11 +65,12 @@ public class GroupTemplate {
 	}
 
 	public Program getProgram(String key) {
-		Program program = this.programCache.get(key);
+		Program program = (Program) this.programCache.get(key);
 		return program;
 	}
 
 	private Program loadTemplate(Resource res) {
+
 		Reader reader = res.openReader();
 		Transformator sf = new Transformator(conf.placeholderStart,
 				conf.placeholderEnd, conf.statementStart, conf.statementEnd);
@@ -84,9 +84,8 @@ public class GroupTemplate {
 			throw new TempException(e.getMessage());
 		}
 
-		Program program = engine.createProgram(scriptReader);
-		// test
-		program.filter = new TypeBindingFilter(program);
+		Program program = engine.createProgram(res.getId(), scriptReader, this);
+
 		program.metaData.staticTextArray = new Object[sf.textMap.size()];
 		int i = 0;
 

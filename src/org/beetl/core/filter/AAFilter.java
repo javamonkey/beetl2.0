@@ -5,6 +5,7 @@ import java.util.Stack;
 import org.beetl.core.Context;
 import org.beetl.core.attr.AA;
 import org.beetl.core.attr.AAFactory;
+import org.beetl.core.cache.Cache;
 import org.beetl.core.statement.ASTNode;
 import org.beetl.core.statement.Program;
 import org.beetl.core.statement.Type;
@@ -13,8 +14,11 @@ import org.beetl.core.statement.VarRef;
 
 public class AAFilter extends Filter implements Executor {
 
+	Cache cache = null;
+
 	public AAFilter(Program program) {
 		super(program);
+		this.cache = cache;
 	}
 
 	@Override
@@ -22,6 +26,8 @@ public class AAFilter extends Filter implements Executor {
 		StatementSeacher seacher = new StatementSeacher();
 		Class[] matchClasses = new Class[] { VarRef.class };
 		seacher.match(program.metaData.statements, matchClasses, this);
+		// 替换成性能较好的
+		cache.set(program.id, program);
 
 	}
 

@@ -1,7 +1,15 @@
 package org.beetl.core;
 
 public class TemplateEngineFactory {
+	// public static String ENGINE = "org.beetl.core.DefaultTemplateEngine";
+	public static String ENGINE = "org.beetl.core.FastRuntimeTemplateEngine";
+
 	public static TemplateEngine getEngine() {
-		return new DefaultTemplateEngine();
+		try {
+			return (TemplateEngine) Class.forName(ENGINE).newInstance();
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
+
 	}
 }

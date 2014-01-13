@@ -20,14 +20,19 @@ public class TypeBindingFilter extends Filter {
 	boolean isCompleted = false;
 	Type[] types = null;
 	ProgramMetaData copyProgramMetaData = null;
+	Filter nextFilter = null;
 
-	public TypeBindingFilter(Program p) {
+	public TypeBindingFilter(Program p, Filter nextFilter) {
 		super(p);
+		// 一个新的copy，用于分析
 		ProgramMetaData metaData = p.metaData.copy();
 		Program copyProgram = new Program();
 		copyProgram.metaData = metaData;
+		copyProgram.id = p.id;
 		this.program = copyProgram;
+		this.nextFilter = nextFilter;
 		types = new Type[program.metaData.varIndexSize];
+
 	}
 
 	@Override
@@ -60,7 +65,7 @@ public class TypeBindingFilter extends Filter {
 			infer();
 			isCompleted = true;
 			// 调用下一个filter
-			AAFilter aaFilter = new AAFilter(program);
+			nextFilter.check(ctx);
 
 		}
 	}

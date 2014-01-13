@@ -18,7 +18,7 @@ public class FileResourceLoader implements ResourceLoader {
 	@Override
 	public Resource getResource(String key) {
 		File file = new File(root, key);
-		Resource resource = new FileResource(file);
+		Resource resource = new FileResource(file, key);
 		resource.setResourceLoader(this);
 		return resource;
 

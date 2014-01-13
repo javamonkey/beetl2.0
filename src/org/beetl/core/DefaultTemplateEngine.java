@@ -14,7 +14,7 @@ import org.beetl.core.statement.ProgramMetaData;
 public class DefaultTemplateEngine implements TemplateEngine {
 
 	@Override
-	public Program createProgram(Reader reader) {
+	public Program createProgram(String id, Reader reader, GroupTemplate gt) {
 		ANTLRInputStream input;
 		try {
 			input = new ANTLRInputStream(reader);
@@ -31,6 +31,8 @@ public class DefaultTemplateEngine implements TemplateEngine {
 		ProgramMetaData data = pb.build(tree);
 		Program program = new Program();
 		program.metaData = data;
+		program.id = id;
+		program.groupTempalte = gt;
 		return program;
 	}
 

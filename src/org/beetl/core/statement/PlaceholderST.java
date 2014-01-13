@@ -7,7 +7,7 @@ import org.beetl.core.exception.TempException;
 
 public class PlaceholderST extends Statement {
 
-	Expression expression;
+	public Expression expression;
 
 	public PlaceholderST(Expression exp, Token token) {
 		super(token);
@@ -28,7 +28,7 @@ public class PlaceholderST extends Statement {
 
 	@Override
 	public void infer(Type[] types, Object temp) {
-		// do nothing
+		expression.infer(types, temp);
 	}
 
 }

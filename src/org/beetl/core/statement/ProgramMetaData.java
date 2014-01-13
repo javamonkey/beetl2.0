@@ -71,6 +71,7 @@ public class ProgramMetaData implements java.io.Serializable {
 
 	public ProgramMetaData copy() {
 		ProgramMetaData newCopy = (ProgramMetaData) ObjectUtil.copy(this);
+
 		return newCopy;
 	}
 

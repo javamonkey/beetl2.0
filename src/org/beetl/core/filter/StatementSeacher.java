@@ -28,27 +28,38 @@ public class StatementSeacher {
 		for (Field f : fields) {
 			if (f.getModifiers() == Modifier.PUBLIC) {
 				Class target = null;
-				Class c = f.getDeclaringClass();
-				boolean isArray = false;
+				Class target2 = null;
+				// Class c = f.getDeclaringClass();
+				Class c = f.getType();
 				if (c.isArray()) {
 					target = c.getComponentType();
-					isArray = true;
 				} else {
 					target = c;
 				}
+				boolean isArray = false;
+
 				// 只解析含有ASTNode的字段
 				if (ASTNode.class.isAssignableFrom(target)) {
 					Object values;
 					try {
 						values = f.get(astNode);
+
 						if (values == null)
 							continue;
+						else {
+							target2 = values.getClass();
+							if (target2.isArray()) {
+
+								isArray = true;
+							}
+						}
 					} catch (Exception e) {
 						throw new RuntimeException(e);
 					}
+
 					for (Class expected : matchClasses) {
 						// 如果匹配上
-						if (expected == target) {
+						if (expected == target2) {
 							if (isArray) {
 								Object[] targetValue = (Object[]) values;
 								for (Object o : targetValue) {

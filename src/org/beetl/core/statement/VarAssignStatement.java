@@ -5,7 +5,7 @@ import org.beetl.core.Context;
 public class VarAssignStatement extends Statement implements IVarIndex {
 
 	protected int varIndex;
-	Expression exp;
+	public Expression exp;
 
 	public VarAssignStatement(Expression exp, Token token) {
 		super(token);

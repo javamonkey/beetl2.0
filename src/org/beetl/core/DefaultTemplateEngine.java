@@ -2,6 +2,9 @@ package org.beetl.core;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -14,7 +17,8 @@ import org.beetl.core.statement.ProgramMetaData;
 public class DefaultTemplateEngine implements TemplateEngine {
 
 	@Override
-	public Program createProgram(String id, Reader reader, GroupTemplate gt) {
+	public Program createProgram(String id, Reader reader,
+			Map<String, String> textMap, GroupTemplate gt) {
 		ANTLRInputStream input;
 		try {
 			input = new ANTLRInputStream(reader);
@@ -33,6 +37,26 @@ public class DefaultTemplateEngine implements TemplateEngine {
 		program.metaData = data;
 		program.id = id;
 		program.groupTempalte = gt;
+
+		program.metaData.staticTextArray = new Object[textMap.size()];
+		int i = 0;
+
+		for (Entry<String, String> entry : textMap.entrySet()) {
+			if (gt.conf.directByteOutput) {
+				try {
+					program.metaData.staticTextArray[i++] = entry.getValue()
+							.getBytes(gt.conf.charset);
+				} catch (UnsupportedEncodingException e) {
+					throw new RuntimeException(e);
+				}
+			} else {
+
+				program.metaData.staticTextArray[i++] = entry.getValue()
+						.toCharArray();
+			}
+
+		}
+
 		return program;
 	}
 

@@ -4,10 +4,10 @@ import org.beetl.core.Context;
 import org.beetl.core.IteratorStatus;
 
 public class ForStatement extends Statement implements IGoto {
-	Expression idNode;
-	Expression exp;
-	Statement forPart;
-	Statement elseforPart;
+	public Expression idNode;
+	public Expression exp;
+	public Statement forPart;
+	public Statement elseforPart;
 	boolean hasGoto = false;
 
 	public ForStatement(VarDefineNode idNode, Expression exp,

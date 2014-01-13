@@ -4,9 +4,9 @@ import org.beetl.core.Context;
 
 public class IfStatement extends Statement {
 
-	Expression condtion;
-	Statement ifStatement;
-	Statement elseStatement;
+	public Expression condtion;
+	public Statement ifStatement;
+	public Statement elseStatement;
 
 	public IfStatement(Expression condtion, Statement ifStatement,
 			Statement elseStatement, Token token) {

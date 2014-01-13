@@ -29,7 +29,10 @@ public class TypeBindingFilter extends Filter {
 		Program copyProgram = new Program();
 		copyProgram.metaData = metaData;
 		copyProgram.id = p.id;
+		copyProgram.groupTempalte = p.groupTempalte;
 		this.program = copyProgram;
+
+		nextFilter.program = this.program;
 		this.nextFilter = nextFilter;
 		types = new Type[program.metaData.varIndexSize];
 

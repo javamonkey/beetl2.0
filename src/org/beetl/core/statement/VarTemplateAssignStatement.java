@@ -4,7 +4,7 @@ import org.beetl.core.Context;
 
 public class VarTemplateAssignStatement extends Expression {
 
-	BlockStatement block = null;
+	public BlockStatement block = null;
 
 	public VarTemplateAssignStatement(BlockStatement block, Token token) {
 		super(token);

@@ -4,7 +4,7 @@ import org.beetl.core.Context;
 
 public class BlockStatement extends Statement implements IGoto {
 
-	Statement[] nodes = null;
+	public Statement[] nodes = null;
 	boolean hasGoto = false;
 
 	public BlockStatement(Statement[] nodes, Token token) {

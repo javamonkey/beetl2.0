@@ -2,10 +2,8 @@ package org.beetl.core;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.beetl.core.cache.Cache;
 import org.beetl.core.cache.ProgramCacheFactory;
@@ -89,27 +87,8 @@ public class GroupTemplate {
 			throw new TempException(e.getMessage());
 		}
 
-		Program program = engine.createProgram(res.getId(), scriptReader, this);
-
-		program.metaData.staticTextArray = new Object[sf.textMap.size()];
-		int i = 0;
-
-		for (Entry<String, String> entry : sf.textMap.entrySet()) {
-			if (conf.directByteOutput) {
-				try {
-					program.metaData.staticTextArray[i++] = entry.getValue()
-							.getBytes(conf.charset);
-				} catch (UnsupportedEncodingException e) {
-					throw new RuntimeException(e);
-				}
-			} else {
-
-				program.metaData.staticTextArray[i++] = entry.getValue()
-						.toCharArray();
-			}
-
-		}
-
+		Program program = engine.createProgram(res.getId(), scriptReader,
+				sf.textMap, this);
 		return program;
 
 	}

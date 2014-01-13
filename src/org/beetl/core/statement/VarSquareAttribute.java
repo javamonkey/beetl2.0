@@ -8,7 +8,7 @@ package org.beetl.core.statement;
  */
 public class VarSquareAttribute extends VarAttribute {
 	protected short type = 1;
-	Expression exp;
+	public Expression exp;
 
 	public VarSquareAttribute(Expression exp, Token token) {
 		super(token);

@@ -60,10 +60,12 @@ public class VarRef extends Expression implements IVarIndex {
 	public void infer(Type[] types, Object temp) {
 		Type type = types[this.varIndex];
 		Type lastType = type;
+		Type t = null;
 		for (VarAttribute attr : attributes) {
-			attr.type = lastType;
 			attr.infer(types, lastType);
+			t = lastType;
 			lastType = attr.type;
+			attr.type = t;
 
 		}
 		this.type = lastType;

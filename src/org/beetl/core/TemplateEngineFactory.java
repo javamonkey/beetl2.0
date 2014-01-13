@@ -2,7 +2,7 @@ package org.beetl.core;
 
 public class TemplateEngineFactory {
 	// public static String ENGINE = "org.beetl.core.DefaultTemplateEngine";
-	public static String ENGINE = "org.beetl.core.FastRuntimeTemplateEngine";
+	public static String ENGINE = "org.beetl.core.FastRuntimeEngine";
 
 	public static TemplateEngine getEngine() {
 		try {

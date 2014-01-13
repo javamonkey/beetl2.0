@@ -35,7 +35,7 @@ public class VarRef extends Expression implements IVarIndex {
 		Object attrExp = null;
 		for (VarAttribute attr : attributes) {
 
-			value = attr.evaluate(ctx);
+			value = attr.evaluate(ctx, value);
 
 			if (value == null && safe != null) {
 				return safe.evaluate(ctx);

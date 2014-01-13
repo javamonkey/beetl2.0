@@ -10,10 +10,8 @@ import java.util.Map;
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Template;
-import org.beetl.core.io.ByteWriter_Char;
 import org.beetl.core.res.FileResourceLoader;
 
-import com.beetl.performance.Log;
 import com.beetl.performance.lab.User;
 
 public class GroupTemplateTest {
@@ -25,19 +23,26 @@ public class GroupTemplateTest {
 		Configuration cf = Configuration.defaultConfiguration();
 		FileResourceLoader rs = new FileResourceLoader(home, cf.getCharset());
 		GroupTemplate gt = new GroupTemplate(rs, cf);
-		Template t = gt.getTemplate("/helloworld.html");
+
 		User user = new User();
 		List list = new ArrayList();
 		list.add(user);
-		t.binding("userList", list);
+
 		Map map = new HashMap();
 		map.put("userList", list);
-		Log.key1Start();
+		// Log.key1Start();
+		Template t = gt.getTemplate("/helloworld.html");
+		t.binding("userList", list);
 		StringWriter sw = new StringWriter();
-		ByteWriter_Char bw = new ByteWriter_Char(sw, cf.getCharset());
-		t.fastRender(map, bw);
-		bw.flush();
-		Log.key1End();
+		t.renderTo(sw);
+		System.out.println(sw.toString());
+
+		// 第二次
+		t = gt.getTemplate("/helloworld.html");
+		t.binding("userList", list);
+		sw = new StringWriter();
+		t.renderTo(sw);
+
 		System.out.println(sw.toString());
 	}
 }

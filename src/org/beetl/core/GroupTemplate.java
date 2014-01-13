@@ -3,10 +3,14 @@ package org.beetl.core;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.beetl.core.cache.Cache;
 import org.beetl.core.cache.ProgramCacheFactory;
+import org.beetl.core.event.Event;
+import org.beetl.core.event.Listener;
 import org.beetl.core.exception.HTMLTagParserException;
 import org.beetl.core.exception.TempException;
 import org.beetl.core.statement.Program;
@@ -19,6 +23,7 @@ public class GroupTemplate {
 	Configuration conf = null;
 	TemplateEngine engine = null;
 	Cache programCache = ProgramCacheFactory.defaulCache();
+	List<Listener> ls = new ArrayList<Listener>();
 
 	/**
 	 * 使用loader 和 conf初始化GroupTempalte
@@ -144,14 +149,18 @@ public class GroupTemplate {
 		return classLoader;
 	}
 
-	/**
-	 * 判断是否有事件对应的监听器，用于不必要的构造事件对象
-	 * 
-	 * @param eventType
-	 * @return
-	 */
-	public boolean hasListener(int eventType) {
-		return false;
+	public void fireEvent(Event event) {
+		for (Listener l : this.ls) {
+			l.onEvent(event);
+		}
+	}
+
+	public void addListener(Listener listener) {
+		this.ls.add(listener);
+	}
+
+	public Cache getProgramCache() {
+		return programCache;
 	}
 
 }

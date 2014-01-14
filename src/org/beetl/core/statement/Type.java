@@ -18,6 +18,9 @@ public class Type implements java.io.Serializable {
 	public Class cls;
 	public Type[] types = null;
 	public static final Type ObjectType = new Type(Object.class);
+	public static final Type BooleanType = new Type(Boolean.class);
+	public static final Type StringType = new Type(String.class);
+
 	public static final Class[] StringPara = new Class[] { String.class };
 	public static final Class[] GetMethodPara = new Class[] {};
 
@@ -79,6 +82,17 @@ public class Type implements java.io.Serializable {
 			} catch (SecurityException e1) {
 
 			}
+			
+			try {
+				m = cls.getMethod(ObjectUtil.getIsMethod(attrName), GetMethodPara);
+				Class returnCls = m.getReturnType();
+				return new Type(returnCls);
+			} catch (NoSuchMethodException e1) {
+
+			} catch (SecurityException e1) {
+
+			}
+			
 
 			try {
 				m = cls.getMethod("get", StringPara);

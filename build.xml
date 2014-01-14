@@ -26,6 +26,7 @@
                 <exclude name="org/beetl/test/**" />
                 <exclude name="org/antlr/**" />
                 <exclude name="**/*.g" />
+            	<exclude name="org/beetl/coret/asm3/**" />
                 <exclude name="**/*.tokens" />   
             	<exclude name="org/beetl/performance/**" />                
                 <include name="org/beetl/core/**"/>    
@@ -33,6 +34,7 @@
             	           
             </fileset>
         	<zipfileset  src="alllib/antlr-runtime-4.1.jar"/>
+        	<zipfileset  src="alllib/asm-4.1.jar"/>
         </jar>
     </target>
 	

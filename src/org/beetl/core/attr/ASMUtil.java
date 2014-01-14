@@ -1,9 +1,7 @@
 package org.beetl.core.attr;
 
 import org.beetl.core.exception.TempException;
-import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -35,26 +33,27 @@ public class ASMUtil implements Opcodes {
 		String newClsPath = newClsName.replace('.', '/');
 		String returnTypeClass = this.getRetrunTypeDesc(returnType);
 
-		ClassWriter cw = new ClassWriter(0);
-		FieldVisitor fv;
+		ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+
 		MethodVisitor mv;
-		AnnotationVisitor av0;
 
 		cw.visit(V1_6, ACC_PUBLIC + ACC_SUPER, newClsPath, null,
-				 "org/beetl/core/attr/AA" ,null);
+				"org/beetl/core/attr/AA", null);
 
 		{
 			mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
 			mv.visitCode();
 			mv.visitVarInsn(ALOAD, 0);
-			mv.visitMethodInsn(INVOKESPECIAL, "org/beetl/core/attr/AA", "<init>",
-					"()V");
+			mv.visitMethodInsn(INVOKESPECIAL, "org/beetl/core/attr/AA",
+					"<init>", "()V");
 			mv.visitInsn(RETURN);
 			mv.visitMaxs(1, 1);
 			mv.visitEnd();
 		}
 		{
-			mv = cw.visitMethod(ACC_PUBLIC, "value", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", null, null);
+			mv = cw.visitMethod(ACC_PUBLIC, "value",
+					"(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+					null, null);
 			mv.visitCode();
 			mv.visitVarInsn(ALOAD, 1);
 			mv.visitTypeInsn(CHECKCAST, cPath);
@@ -139,9 +138,9 @@ public class ASMUtil implements Opcodes {
 
 	public static void main(String[] args) {
 		ASMUtil util = ASMUtil.instance();
-		AA aa = util.createAAClass(User.class, "id", "getId", int.class);		
+		AA aa = util.createAAClass(User.class, "id", "getId", int.class);
 		User user = new User();
-		Integer test = (Integer) aa.value(user,  "id");
+		Integer test = (Integer) aa.value(user, "id");
 		System.out.println(test);
 
 	}

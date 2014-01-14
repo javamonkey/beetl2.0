@@ -14,15 +14,19 @@ import org.beetl.core.parser.BeetlParser.AssignMentContext;
 import org.beetl.core.parser.BeetlParser.BlockStContext;
 import org.beetl.core.parser.BeetlParser.BooleanLiteralContext;
 import org.beetl.core.parser.BeetlParser.BreakStContext;
+import org.beetl.core.parser.BeetlParser.CompareExpContext;
 import org.beetl.core.parser.BeetlParser.ConstantsTextStatmentContext;
 import org.beetl.core.parser.BeetlParser.ContinueStContext;
 import org.beetl.core.parser.BeetlParser.ExpressionContext;
 import org.beetl.core.parser.BeetlParser.ForControlContext;
 import org.beetl.core.parser.BeetlParser.ForStContext;
+import org.beetl.core.parser.BeetlParser.IfStContext;
 import org.beetl.core.parser.BeetlParser.LiteralExpContext;
+import org.beetl.core.parser.BeetlParser.ParExpressionContext;
 import org.beetl.core.parser.BeetlParser.ReturnStContext;
 import org.beetl.core.parser.BeetlParser.StatementContext;
 import org.beetl.core.parser.BeetlParser.StaticOutputStContext;
+import org.beetl.core.parser.BeetlParser.TernaryExpContext;
 import org.beetl.core.parser.BeetlParser.TextOutputStContext;
 import org.beetl.core.parser.BeetlParser.TextStatmentContext;
 import org.beetl.core.parser.BeetlParser.TextVarContext;
@@ -37,10 +41,12 @@ import org.beetl.core.parser.BeetlParser.VarStContext;
 import org.beetl.core.statement.ASTNode;
 import org.beetl.core.statement.BlockStatement;
 import org.beetl.core.statement.BreakStatement;
+import org.beetl.core.statement.CompareExpression;
 import org.beetl.core.statement.ContinueStatement;
 import org.beetl.core.statement.Expression;
 import org.beetl.core.statement.ForStatement;
 import org.beetl.core.statement.IGoto;
+import org.beetl.core.statement.IfStatement;
 import org.beetl.core.statement.Literal;
 import org.beetl.core.statement.PlaceholderST;
 import org.beetl.core.statement.ProgramMetaData;
@@ -48,6 +54,7 @@ import org.beetl.core.statement.ReturnStatement;
 import org.beetl.core.statement.SafePlaceholderST;
 import org.beetl.core.statement.Statement;
 import org.beetl.core.statement.StaticTextASTNode;
+import org.beetl.core.statement.TernaryExpression;
 import org.beetl.core.statement.VarAssignStatement;
 import org.beetl.core.statement.VarAssignStatementSeq;
 import org.beetl.core.statement.VarAttribute;
@@ -88,6 +95,10 @@ public class AntlrProgramBuilder {
 
 	private Statement parseStatment(ParserRuleContext node) {
 
+		if (node == null) {
+			return null;
+		}
+
 		if (node instanceof VarStContext) {
 			return parseVarSt((VarStContext) node);
 
@@ -116,10 +127,27 @@ public class AntlrProgramBuilder {
 			int position = Integer.parseInt(str);
 			StaticTextASTNode textNode = new StaticTextASTNode(position, null);
 			return textNode;
+		} else if (node instanceof IfStContext) {
+			return parseIf((IfStContext) node);
 		} else {
 			throw new UnsupportedOperationException();
 		}
 
+	}
+
+	protected IfStatement parseIf(IfStContext ctx) {
+		ParExpressionContext pe = ctx.parExpression();
+		ExpressionContext expCtx = pe.expression();
+		Expression exp = this.parseExpress(expCtx);
+		StatementContext ifStatCtx = ctx.statement(0);
+		Statement ifStat = this.parseStatment(ifStatCtx);
+		StatementContext elseStatCtx = ctx.statement(1);
+		Statement elseStat = null;
+		if (elseStatCtx != null) {
+			elseStat = this.parseStatment(ifStatCtx);
+		}
+		return new IfStatement(exp, ifStat, elseStat, this.getBTToken(ctx.If()
+				.getSymbol()));
 	}
 
 	protected ForStatement parseForSt(ForStContext ctx) {
@@ -201,13 +229,53 @@ public class AntlrProgramBuilder {
 	}
 
 	protected Expression parseExpress(ExpressionContext ctx) {
+		if (ctx == null)
+			return null;
+
 		if (ctx instanceof LiteralExpContext) {
 			return parseLiteralExpress((LiteralExpContext) ctx);
 		} else if (ctx instanceof VarRefExpContext) {
 			return this.parseVarRefExpression((VarRefExpContext) ctx);
+		} else if (ctx instanceof CompareExpContext) {
+			return this.parseCompareExpression((CompareExpContext) ctx);
+		} else if (ctx instanceof TernaryExpContext) {
+			return this.parseTernaryExpression((TernaryExpContext) ctx);
 		} else {
-			return null;
+			throw new UnsupportedOperationException();
 		}
+	}
+
+	protected Expression parseTernaryExpression(TernaryExpContext ctx) {
+		Expression cond = this.parseExpress(ctx.expression(0));
+		Expression a = this.parseExpress(ctx.expression(1));
+		Expression b = this.parseExpress(ctx.expression(2));
+		TerminalNode tn = (TerminalNode) ctx.getChild(1);
+		return new TernaryExpression(cond, a, b,
+				this.getBTToken(tn.getSymbol()));
+
+	}
+
+	protected Expression parseCompareExpression(CompareExpContext ctx) {
+		Expression a = this.parseExpress(ctx.expression(0));
+		Expression b = this.parseExpress(ctx.expression(1));
+		TerminalNode tn = (TerminalNode) ctx.children.get(1);
+		short mode = 0;
+		if (ctx.EQUAL() != null) {
+			mode = 0;
+		} else if (ctx.NOT_EQUAL() != null) {
+			mode = 1;
+		} else if (ctx.LARGE() != null) {
+			mode = 2;
+		} else if (ctx.LARGE_EQUAL() != null) {
+			mode = 3;
+		} else if (ctx.LESS() != null) {
+			mode = 4;
+		} else if (ctx.LESS_EQUAL() != null) {
+			mode = 5;
+		}
+		return new CompareExpression(a, b, mode,
+				this.getBTToken(tn.getSymbol()));
+
 	}
 
 	protected Expression parseVarRefExpression(VarRefExpContext ctx) {
@@ -264,7 +332,7 @@ public class AntlrProgramBuilder {
 			int type = node.getType();
 			switch (type) {
 			case BeetlParser.StringLiteral:
-				value = strValue;
+				value = strValue.substring(1, strValue.length() - 1);
 				break;
 			case BeetlParser.FloatingPointLiteral:
 				value = Double.parseDouble(strValue);

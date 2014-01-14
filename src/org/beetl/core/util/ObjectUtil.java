@@ -39,6 +39,13 @@ public class ObjectUtil {
 		return mbuffer.toString();
 	}
 
+	public static String getIsMethod(String attrName) {
+		StringBuilder mbuffer = new StringBuilder("is");
+		mbuffer.append(attrName.substring(0, 1).toUpperCase()).append(
+				attrName.substring(1));
+		return mbuffer.toString();
+	}
+
 	public static void main(String[] args) {
 
 	}

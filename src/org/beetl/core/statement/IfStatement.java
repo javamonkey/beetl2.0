@@ -31,4 +31,12 @@ public class IfStatement extends Statement {
 
 	}
 
+	public void infer(Type[] types, Object temp) {
+		condtion.infer(types, temp);
+		ifStatement.infer(types, temp);
+		if (elseStatement != null) {
+			elseStatement.infer(types, temp);
+		}
+	}
+
 }

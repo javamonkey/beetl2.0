@@ -40,8 +40,11 @@ MOD:'%';
 EQUAL:'==';
 NOT_EQUAL:'!=';
 ASSIN:'=';
+LARGE_EQUAL:'>=';
 LARGE:'>';
+LESS_EQUAL:'<=';
 LESS:'<';
+
 NOT:'!';
 AND:'&&';
 OR:'||';

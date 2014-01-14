@@ -54,4 +54,96 @@ public class Configuration {
 		return new Configuration();
 	}
 
+	public String getPlaceholderStart() {
+		return placeholderStart;
+	}
+
+	public void setPlaceholderStart(String placeholderStart) {
+		this.placeholderStart = placeholderStart;
+	}
+
+	public String getPlaceholderEnd() {
+		return placeholderEnd;
+	}
+
+	public void setPlaceholderEnd(String placeholderEnd) {
+		this.placeholderEnd = placeholderEnd;
+	}
+
+	public String getStatementStart() {
+		return statementStart;
+	}
+
+	public void setStatementStart(String statementStart) {
+		this.statementStart = statementStart;
+	}
+
+	public String getStatementEnd() {
+		return statementEnd;
+	}
+
+	public void setStatementEnd(String statementEnd) {
+		this.statementEnd = statementEnd;
+	}
+
+	public String getHtmlTagFlag() {
+		return htmlTagFlag;
+	}
+
+	public void setHtmlTagFlag(String htmlTagFlag) {
+		this.htmlTagFlag = htmlTagFlag;
+	}
+
+	public boolean isHtmlTagSupport() {
+		return isHtmlTagSupport;
+	}
+
+	public void setHtmlTagSupport(boolean isHtmlTagSupport) {
+		this.isHtmlTagSupport = isHtmlTagSupport;
+	}
+
+	public boolean isNativeCall() {
+		return nativeCall;
+	}
+
+	public void setNativeCall(boolean nativeCall) {
+		this.nativeCall = nativeCall;
+	}
+
+	public boolean isDirectByteOutput() {
+		return directByteOutput;
+	}
+
+	public void setDirectByteOutput(boolean directByteOutput) {
+		this.directByteOutput = directByteOutput;
+	}
+
+	public boolean isStrict() {
+		return isStrict;
+	}
+
+	public void setStrict(boolean isStrict) {
+		this.isStrict = isStrict;
+	}
+
+	public String getHtmlTagStart() {
+		return htmlTagStart;
+	}
+
+	public void setHtmlTagStart(String htmlTagStart) {
+		this.htmlTagStart = htmlTagStart;
+	}
+
+	public String getHtmlTagEnd() {
+		return htmlTagEnd;
+	}
+
+	public void setHtmlTagEnd(String htmlTagEnd) {
+		this.htmlTagEnd = htmlTagEnd;
+	}
+
+	public void setCharset(String charset) {
+		this.charset = charset;
+	}
+
 }

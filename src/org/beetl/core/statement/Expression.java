@@ -12,8 +12,7 @@ public class Expression extends ASTNode {
 	}
 
 	public Object evaluate(Context ctx) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new RuntimeException("MUST IMPLEMENT");
 	}
 
 	public Type getType() {

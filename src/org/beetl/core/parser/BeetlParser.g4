@@ -134,8 +134,7 @@ constantExpression
     |   NOT expression      #notExp
     |   expression (MUlTIP|DIV|MOD) expression #muldivmodExp
     |   expression (ADD|MIN) expression #addminExp
-    |   expression (LESS ASSIN | LARGE ASSIN |LARGE |LESS) expression   #compareExp
-    |   expression (EQUAL | NOT_EQUAL) expression #equalExp
+    |   expression (EQUAL | NOT_EQUAL |LESS_EQUAL | LARGE_EQUAL |LARGE |LESS) expression   #compareExp
     |   expression AND expression   #andExp
     |   expression OR expression    #orExp
     |   expression QUESTOIN expression? COLON expression?  #ternaryExp

@@ -37,7 +37,7 @@ public class ASMUtil implements Opcodes {
 
 		MethodVisitor mv;
 
-		cw.visit(V1_6, ACC_PUBLIC + ACC_SUPER, newClsPath, null,
+		cw.visit(V1_5, ACC_PUBLIC + ACC_SUPER, newClsPath, null,
 				"org/beetl/core/attr/AA", null);
 
 		{
@@ -68,23 +68,23 @@ public class ASMUtil implements Opcodes {
 					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Boolean",
 							"valueOf", "(Z)Ljava/lang/Boolean;");
 
-				} else if (c == char.class) {
+				} else if (returnType == char.class) {
 					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Character",
 							"valueOf", "(C)Ljava/lang/Character;");
 
-				} else if (c == short.class) {
+				} else if (returnType == short.class) {
 					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Short",
 							"valueOf", "(S)Ljava/lang/Short;");
 
-				} else if (c == float.class) {
+				} else if (returnType == float.class) {
 					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Float",
 							"valueOf", "(F)Ljava/lang/Float;");
 
-				} else if (c == long.class) {
+				} else if (returnType == long.class) {
 					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Long",
 							"valueOf", "(J)Ljava/lang/Long;");
 
-				} else if (c == double.class) {
+				} else if (returnType == double.class) {
 					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Double",
 							"valueOf", "(D)Ljava/lang/Double;");
 
@@ -92,7 +92,7 @@ public class ASMUtil implements Opcodes {
 			}
 
 			mv.visitInsn(ARETURN);
-			mv.visitMaxs(1, 4);
+			mv.visitMaxs(2, 3);
 			mv.visitEnd();
 		}
 		cw.visitEnd();
@@ -138,9 +138,10 @@ public class ASMUtil implements Opcodes {
 
 	public static void main(String[] args) {
 		ASMUtil util = ASMUtil.instance();
-		AA aa = util.createAAClass(User.class, "id", "getId", int.class);
+		AA aa = util.createAAClass(User.class, "price", "getPrice",
+				double.class);
 		User user = new User();
-		Integer test = (Integer) aa.value(user, "id");
+		Double test = (Double) aa.value(user, "price");
 		System.out.println(test);
 
 	}

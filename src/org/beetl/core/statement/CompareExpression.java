@@ -1,5 +1,6 @@
 package org.beetl.core.statement;
 
+import org.beetl.core.ALU;
 import org.beetl.core.Context;
 import org.beetl.core.exception.TempException;
 
@@ -30,21 +31,19 @@ public class CompareExpression extends Expression {
 		int r = 0;
 		switch (compareMode) {
 		case EQUAL:
-			return equal(x, y);
+			return ALU.equals(x, y);
+
 		case NOT_EQUAL:
-			return !equal(x, y);
+			return !ALU.equals(x, y);
 		case LARGE_EQUAL:
-			r = compare(x, y);
-			return r >= 0;
+			return ALU.less(y, x);
+
 		case LARGE:
-			r = compare(x, y);
-			return r > 0;
+			return ALU.lessEquals(y, x);
 		case LESS:
-			r = compare(x, y);
-			return r < 0;
+			return ALU.less(y, x);
 		case LESS_EQUAL:
-			r = compare(x, y);
-			return r <= 0;
+			return ALU.lessEquals(y, x);
 		default:
 			throw new TempException("不可能发生");
 

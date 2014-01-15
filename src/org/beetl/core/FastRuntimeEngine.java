@@ -13,7 +13,7 @@ public class FastRuntimeEngine extends DefaultTemplateEngine {
 
 	@Override
 	public Program createProgram(String id, Reader reader,
-			Map<String, String> textMap, GroupTemplate gt) {
+			Map<Integer, String> textMap, GroupTemplate gt) {
 
 		Program program = super.createProgram(id, reader, textMap, gt);
 		Filter nextFilter = new AAFilter(program);

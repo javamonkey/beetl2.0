@@ -1,11 +1,13 @@
 package org.beetl.core;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
 
 import org.beetl.core.exception.BeetlException;
+import org.beetl.core.exception.TempException;
 import org.beetl.core.io.ByteWriter_Byte;
 import org.beetl.core.io.ByteWriter_Char;
 import org.beetl.core.statement.Program;
@@ -41,6 +43,7 @@ public class Template {
 	public void renderTo(Writer writer) throws BeetlException {
 		ByteWriter_Char byteWriter = new ByteWriter_Char(writer, cf.charset);
 		this.renderTo(byteWriter);
+
 	}
 
 	/**
@@ -59,6 +62,12 @@ public class Template {
 		ctx.byteOutputMode = cf.directByteOutput;
 		program.metaData.initContext(ctx);
 		program.execute(ctx);
+		try {
+			byteWriter.flush();
+		} catch (IOException e) {
+			throw new TempException("ioexception");
+		}
+
 	}
 
 	/**

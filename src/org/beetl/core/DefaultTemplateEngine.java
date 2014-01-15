@@ -18,7 +18,7 @@ public class DefaultTemplateEngine implements TemplateEngine {
 
 	@Override
 	public Program createProgram(String id, Reader reader,
-			Map<String, String> textMap, GroupTemplate gt) {
+			Map<Integer, String> textMap, GroupTemplate gt) {
 		ANTLRInputStream input;
 		try {
 			input = new ANTLRInputStream(reader);
@@ -41,7 +41,7 @@ public class DefaultTemplateEngine implements TemplateEngine {
 		program.metaData.staticTextArray = new Object[textMap.size()];
 		int i = 0;
 
-		for (Entry<String, String> entry : textMap.entrySet()) {
+		for (Entry<Integer, String> entry : textMap.entrySet()) {
 			if (gt.conf.directByteOutput) {
 				try {
 					program.metaData.staticTextArray[i++] = entry.getValue()
@@ -53,6 +53,7 @@ public class DefaultTemplateEngine implements TemplateEngine {
 
 				program.metaData.staticTextArray[i++] = entry.getValue()
 						.toCharArray();
+
 			}
 
 		}

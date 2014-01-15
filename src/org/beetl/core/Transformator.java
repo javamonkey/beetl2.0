@@ -62,7 +62,7 @@ public class Transformator {
 	boolean appendCR = false;
 	String vname = "";
 	int vnamesuffix = 0;
-	Map<String, String> textMap = new TreeMap<String, String>();
+	Map<Integer, String> textMap = new TreeMap<Integer, String>();
 
 	// 1 解析在文本处，2 解析在控制语句处，3 解析在占位符号里 4文件结束 5,html tag begin 6 html tag end
 	int status = 1;
@@ -89,7 +89,7 @@ public class Transformator {
 
 	}
 
-	public Map<String, String> getTextMap() {
+	public Map<Integer, String> getTextMap() {
 		return this.textMap;
 	}
 
@@ -220,7 +220,7 @@ public class Transformator {
 					}
 				}
 				lineSeparator = cr.toString();
-				this.textMap.put("__VCR", lineSeparator);
+				// this.textMap.put("__VCR", lineSeparator);
 				return;
 			}
 		}
@@ -567,7 +567,7 @@ public class Transformator {
 			int start = lineStatus.getSpaceTextStart(i);
 			int end = lineStatus.getSpaceTextEnd(i);
 			String varName = sb.substring(start + 2, end - 2);
-			String orgText = this.textMap.get(varName);
+			String orgText = this.textMap.get(Integer.parseInt(varName));
 			sb.replace(start, end, orgText);
 		}
 		lineStatus.reset();
@@ -578,7 +578,7 @@ public class Transformator {
 			return;
 		}
 		String name = this.getNewVarName();
-		this.textMap.put(name, new String(str));
+		this.textMap.put(Integer.parseInt(name), new String(str));
 		String textVarName = "<$" + name + ">>";
 
 		if (isSpace(str)) {

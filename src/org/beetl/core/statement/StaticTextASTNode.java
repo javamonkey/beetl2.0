@@ -11,6 +11,7 @@ public class StaticTextASTNode extends Statement {
 
 	public StaticTextASTNode(int textIndex, Token token) {
 		super(token);
+		this.textIndex = textIndex;
 		// TODO Auto-generated constructor stub
 	}
 

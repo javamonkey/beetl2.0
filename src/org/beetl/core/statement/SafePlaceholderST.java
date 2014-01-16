@@ -2,17 +2,19 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 
-public class SafePlaceholderST extends PlaceholderST {
+public class SafePlaceholderST extends Statement {
+
+	public Expression exp;
 
 	public SafePlaceholderST(Expression exp, Token token) {
-		super(exp, token);
-		// TODO Auto-generated constructor stub
+		super(token);
+		this.exp = exp;
 	}
 
 	@Override
 	public void execute(Context ctx) {
 		try {
-			Object value = expression.evaluate(ctx);
+			Object value = exp.evaluate(ctx);
 			ctx.byteWriter.write(value);
 		} catch (Exception ex) {
 

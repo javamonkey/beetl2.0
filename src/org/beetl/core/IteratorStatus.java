@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
-public class IteratorStatus {
+public final class IteratorStatus {
 
 	Iterator it;
 	int size = -1;
@@ -72,39 +72,39 @@ public class IteratorStatus {
 
 	}
 
-	public boolean hasNext() {
+	public final boolean hasNext() {
 		return this.it.hasNext();
 	}
 
-	public Object next() {
+	public final Object next() {
 		index++;
 		if (!hasData)
 			hasData = true;
 		return this.it.next();
 	}
 
-	public int getIndex() {
+	public final int getIndex() {
 		return this.index;
 	}
 
-	public boolean isFirst() {
+	public final boolean isFirst() {
 		return index == 1;
 	}
 
-	public boolean isLast() {
+	public final boolean isLast() {
 		return index == size;
 	}
 
-	public boolean isEven() {
+	public final boolean isEven() {
 
 		return index % 2 == 0;
 	}
 
-	public boolean isOdd() {
+	public final boolean isOdd() {
 		return index % 2 == 1;
 	}
 
-	public boolean hasSize() {
+	public final boolean hasSize() {
 		return size != -1;
 	}
 
@@ -116,7 +116,7 @@ public class IteratorStatus {
 		}
 	}
 
-	public boolean hasData() {
+	public final boolean hasData() {
 		return hasData;
 	}
 

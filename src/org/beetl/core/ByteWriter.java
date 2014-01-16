@@ -31,12 +31,26 @@ import java.io.IOException;
 
 public abstract class ByteWriter {
 
+	char[] buffer = new char[64];
+
 	public abstract void write(char[] cbuf) throws IOException;
 
-	public void write(String str) throws IOException {
+	public abstract void write(char[] cbuf, int len) throws IOException;
 
-		if (str != null)
-			this.write(str.toCharArray());
+	public final void write(String str) throws IOException {
+
+		if (str != null) {
+			int len = str.length();
+			if (len < buffer.length) {
+				str.getChars(0, len, buffer, 0);
+				this.write(buffer, len);
+
+			} else {
+				this.write(str.toCharArray());
+			}
+
+		}
+
 	}
 
 	public abstract void write(byte[] bs) throws IOException;

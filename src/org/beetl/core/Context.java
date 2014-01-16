@@ -14,26 +14,26 @@ public class Context {
 
 	public ByteWriter byteWriter;
 	/* 全局变量 */
-	public Map<String, Object> globalVar = new HashMap<String, Object>(8);
+	public Map<String, Object> globalVar;
 	/*
 	 * 内容为Object的变量，beetl要求全局变量类型总是一致，如果一个key 对应的类型不一样，则需要设置objectKeys
 	 */
-	public Set<String> objectKeys = new HashSet<String>();
+	public Set<String> objectKeys;
 
-	public boolean byteOutputMode = false;
+	public boolean byteOutputMode;
 
 	// 当前会话相关变量全局变量和临时变量都放在数组里，全局变量放在前面
-	public Object[] vars = null;
+	public Object[] vars;
 
 	// 这些变量来自于ProgrameMeta
-	public Object[] staticTextArray = null;
+	public Object[] staticTextArray;
 
-	public int tempVarStartIndex = -1;
+	public int tempVarStartIndex;
 
 	// 0 正常语句，继续执行，1 continue，2 break，3 return；
-	public short gotoFlag = IGoto.NORMAL;
+	public short gotoFlag;
 
-	public boolean isInit = false;
+	public boolean isInit;
 
 	/**
 	 * 得到临时模板变量
@@ -86,12 +86,18 @@ public class Context {
 	}
 
 	public void set(String key, Object value) {
+		if (globalVar == null)
+			globalVar = new HashMap<String, Object>();
 		globalVar.put(key, value);
 	}
 
 	public void set(String key, Object value, boolean isDynamicObject) {
+		if (globalVar == null)
+			globalVar = new HashMap<String, Object>();
 		globalVar.put(key, value);
 		if (isDynamicObject) {
+			if (objectKeys == null)
+				objectKeys = new HashSet(1);
 			objectKeys.add(key);
 		}
 	}

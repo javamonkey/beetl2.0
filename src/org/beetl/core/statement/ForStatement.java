@@ -3,7 +3,7 @@ package org.beetl.core.statement;
 import org.beetl.core.Context;
 import org.beetl.core.IteratorStatus;
 
-public class ForStatement extends Statement implements IGoto {
+public final class ForStatement extends Statement implements IGoto {
 	public Expression idNode;
 	public Expression exp;
 	public Statement forPart;
@@ -20,11 +20,11 @@ public class ForStatement extends Statement implements IGoto {
 
 	}
 
-	public void execute(Context ctx) {
+	public final void execute(Context ctx) {
 		// idNode 是其后设置的
 		int varIndex = ((IVarIndex) idNode).getVarIndex();
 		IteratorStatus it = IteratorStatus.getIteratorStatus(exp.evaluate(ctx),
-				0);
+				1);
 		ctx.vars[varIndex + 1] = it;
 		if (this.hasGoto) {
 
@@ -65,13 +65,13 @@ public class ForStatement extends Statement implements IGoto {
 	}
 
 	@Override
-	public boolean hasGoto() {
+	public final boolean hasGoto() {
 		// TODO Auto-generated method stub
 		return hasGoto;
 	}
 
 	@Override
-	public void setGoto(boolean occour) {
+	public final void setGoto(boolean occour) {
 		this.hasGoto = occour;
 
 	}

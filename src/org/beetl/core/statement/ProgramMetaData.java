@@ -33,7 +33,7 @@ public class ProgramMetaData implements java.io.Serializable {
 
 		// 将全局变量放到数组
 		putGlobaToArray(ctx);
-		ctx.isInit = true;
+
 	}
 
 	public void replaceGlobal(Context ctx) {
@@ -57,6 +57,8 @@ public class ProgramMetaData implements java.io.Serializable {
 	 */
 	protected void putGlobaToArray(Context ctx) {
 		Map<String, Object> globalVar = ctx.globalVar;
+		if (globalVar == null)
+			return;
 		for (Entry<String, Integer> entry : globalIndexMap.entrySet()) {
 			String key = entry.getKey();
 			int index = entry.getValue();
@@ -71,7 +73,6 @@ public class ProgramMetaData implements java.io.Serializable {
 
 	public ProgramMetaData copy() {
 		ProgramMetaData newCopy = (ProgramMetaData) ObjectUtil.copy(this);
-
 		return newCopy;
 	}
 

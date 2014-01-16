@@ -57,6 +57,13 @@ public class ByteWriter_Byte extends ByteWriter {
 	}
 
 	@Override
+	public void write(char[] cbuf, int len) throws IOException {
+		byte[] bs = new String(cbuf, 0, len).getBytes(cs);
+		write(bs);
+
+	}
+
+	@Override
 	public void write(byte[] bs) throws IOException {
 
 		os.write(bs);

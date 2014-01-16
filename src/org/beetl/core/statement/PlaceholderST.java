@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.beetl.core.Context;
 import org.beetl.core.exception.TempException;
 
-public class PlaceholderST extends Statement {
+public final class PlaceholderST extends Statement {
 
 	public Expression expression;
 
@@ -16,7 +16,7 @@ public class PlaceholderST extends Statement {
 	}
 
 	@Override
-	public void execute(Context ctx) {
+	public final void execute(Context ctx) {
 		Object value = expression.evaluate(ctx);
 		try {
 			ctx.byteWriter.write(value);

@@ -33,7 +33,7 @@ import java.io.Writer;
 import org.beetl.core.ByteWriter;
 import org.beetl.core.SuperVar;
 
-public class ByteWriter_Char extends ByteWriter {
+public final class ByteWriter_Char extends ByteWriter {
 
 	Writer w = null;
 	String cs = null;
@@ -50,13 +50,19 @@ public class ByteWriter_Char extends ByteWriter {
 	}
 
 	@Override
-	public void write(char[] cbuf) throws IOException {
+	public final void write(char[] cbuf) throws IOException {
 		w.write(cbuf);
 
 	}
 
 	@Override
-	public void write(byte[] bs) throws IOException {
+	public void write(char[] cbuf, int len) throws IOException {
+		w.write(cbuf, 0, len);
+
+	}
+
+	@Override
+	public final void write(byte[] bs) throws IOException {
 		this.write(new String(bs, cs));
 
 	}

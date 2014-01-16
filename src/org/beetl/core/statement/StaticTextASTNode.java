@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.beetl.core.Context;
 import org.beetl.core.exception.TempException;
 
-public class StaticTextASTNode extends Statement {
+public final class StaticTextASTNode extends Statement {
 
 	int textIndex;
 

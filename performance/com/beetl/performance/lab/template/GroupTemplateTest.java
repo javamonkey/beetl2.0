@@ -29,11 +29,12 @@ public class GroupTemplateTest {
 		t.renderTo(sw);
 		System.out.println(sw.toString());
 
-		/*
-		 * // 第二次 t = gt.getTemplate("/helloworld.html"); t.binding("userList",
-		 * list); sw = new StringWriter(); t.renderTo(sw);
-		 * 
-		 * System.out.println(sw.toString());
-		 */
+		// 第二次
+		t = gt.getTemplate("/helloworld.html");
+		t.binding("items", list);
+		sw = new StringWriter();
+		t.renderTo(sw);
+		System.out.println(sw.toString());
+
 	}
 }

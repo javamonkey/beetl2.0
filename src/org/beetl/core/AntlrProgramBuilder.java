@@ -1,5 +1,6 @@
 package org.beetl.core;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.beetl.core.attr.ObjectAA;
 import org.beetl.core.parser.BeetlParser;
+import org.beetl.core.parser.BeetlParser.AddminExpContext;
 import org.beetl.core.parser.BeetlParser.AssignGeneralContext;
 import org.beetl.core.parser.BeetlParser.AssignMentContext;
 import org.beetl.core.parser.BeetlParser.BlockStContext;
@@ -22,6 +24,8 @@ import org.beetl.core.parser.BeetlParser.ForControlContext;
 import org.beetl.core.parser.BeetlParser.ForStContext;
 import org.beetl.core.parser.BeetlParser.IfStContext;
 import org.beetl.core.parser.BeetlParser.LiteralExpContext;
+import org.beetl.core.parser.BeetlParser.MuldivmodExpContext;
+import org.beetl.core.parser.BeetlParser.ParExpContext;
 import org.beetl.core.parser.BeetlParser.ParExpressionContext;
 import org.beetl.core.parser.BeetlParser.ReturnStContext;
 import org.beetl.core.parser.BeetlParser.StatementContext;
@@ -39,6 +43,7 @@ import org.beetl.core.parser.BeetlParser.VarRefContext;
 import org.beetl.core.parser.BeetlParser.VarRefExpContext;
 import org.beetl.core.parser.BeetlParser.VarStContext;
 import org.beetl.core.statement.ASTNode;
+import org.beetl.core.statement.ArthExpression;
 import org.beetl.core.statement.BlockStatement;
 import org.beetl.core.statement.BreakStatement;
 import org.beetl.core.statement.CompareExpression;
@@ -240,9 +245,48 @@ public class AntlrProgramBuilder {
 			return this.parseCompareExpression((CompareExpContext) ctx);
 		} else if (ctx instanceof TernaryExpContext) {
 			return this.parseTernaryExpression((TernaryExpContext) ctx);
-		} else {
+		} else if (ctx instanceof MuldivmodExpContext) {
+			return this.parseMuldivmodExpression((MuldivmodExpContext) ctx);
+		} else if (ctx instanceof AddminExpContext) {
+			return this.parsePlusMins((AddminExpContext) ctx);
+		} else if (ctx instanceof ParExpContext) {
+			ParExpContext par = (ParExpContext) ctx;
+			return this.parseExpress(par.expression());
+		}
+
+		else {
 			throw new UnsupportedOperationException();
 		}
+	}
+
+	protected Expression parseMuldivmodExpression(MuldivmodExpContext ctx) {
+		Expression a = this.parseExpress(ctx.expression(0));
+		Expression b = this.parseExpress(ctx.expression(1));
+		TerminalNode tn = (TerminalNode) ctx.children.get(1);
+		short mode = 0;
+		if (ctx.MUlTIP() != null) {
+			mode = ArthExpression.MUL;
+		} else if (ctx.DIV() != null) {
+			mode = ArthExpression.DIV;
+		} else if (ctx.MOD() != null) {
+			mode = ArthExpression.MOD;
+		}
+		return new ArthExpression(a, b, mode, this.getBTToken(tn.getSymbol()));
+
+	}
+
+	protected Expression parsePlusMins(AddminExpContext ctx) {
+		Expression a = this.parseExpress(ctx.expression(0));
+		Expression b = this.parseExpress(ctx.expression(1));
+		TerminalNode tn = (TerminalNode) ctx.children.get(1);
+		short mode = 0;
+		if (ctx.ADD() != null) {
+			mode = ArthExpression.PLUS;
+		} else if (ctx.MIN() != null) {
+			mode = ArthExpression.MIN;
+		}
+		return new ArthExpression(a, b, mode, this.getBTToken(tn.getSymbol()));
+
 	}
 
 	protected Expression parseTernaryExpression(TernaryExpContext ctx) {
@@ -260,6 +304,7 @@ public class AntlrProgramBuilder {
 		Expression b = this.parseExpress(ctx.expression(1));
 		TerminalNode tn = (TerminalNode) ctx.children.get(1);
 		short mode = 0;
+
 		if (ctx.EQUAL() != null) {
 			mode = 0;
 		} else if (ctx.NOT_EQUAL() != null) {
@@ -335,10 +380,25 @@ public class AntlrProgramBuilder {
 				value = strValue.substring(1, strValue.length() - 1);
 				break;
 			case BeetlParser.FloatingPointLiteral:
-				value = Double.parseDouble(strValue);
+				char c = strValue.charAt(strValue.length() - 1);
+				if (isHighScaleNumber(strValue)) {
+					String newValue = strValue.substring(0,
+							strValue.length() - 1);
+					value = new BigDecimal(newValue);
+				} else {
+					value = Double.parseDouble(strValue);
+				}
+
 				break;
 			case BeetlParser.DecimalLiteral:
-				value = Integer.parseInt(strValue);
+				if (isHighScaleNumber(strValue)) {
+					String newValue = strValue.substring(0,
+							strValue.length() - 1);
+					value = new BigDecimal(newValue);
+				} else {
+					value = Integer.parseInt(strValue);
+				}
+
 				break;
 			case BeetlParser.NULL:
 				value = null;
@@ -355,6 +415,16 @@ public class AntlrProgramBuilder {
 		Literal literal = new Literal(value, null);
 		return literal;
 
+	}
+
+	private boolean isHighScaleNumber(String strValue) {
+
+		char c = strValue.charAt(strValue.length() - 1);
+		if (c == 'h' || c == 'H') {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	protected BlockStatement parseBlock(List list) {

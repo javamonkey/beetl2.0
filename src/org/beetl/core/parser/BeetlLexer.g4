@@ -75,7 +75,7 @@ fragment
 HexDigit : ('0'..'9'|'a'..'f'|'A'..'F') ;
 
 fragment
-IntegerTypeSuffix : ('l'|'L') ;
+IntegerTypeSuffix : ('h'|'H') ;
 
 FloatingPointLiteral
     :   ('0'..'9')+ '.' ('0'..'9')* Exponent? FloatTypeSuffix?
@@ -94,7 +94,7 @@ fragment
 Exponent : ('e'|'E') ('+'|'-')? ('0'..'9')+ ;
 
 fragment
-FloatTypeSuffix : ('f'|'F'|'d'|'D') ;
+FloatTypeSuffix : ('h'|'H') ;
 
 
 

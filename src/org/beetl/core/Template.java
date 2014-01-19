@@ -79,7 +79,8 @@ public class Template {
 	 * @param o
 	 */
 	public void binding(String varName, Object o, boolean dynamic) {
-		ctx.globalVar.put(varName, o);
+		ctx.set(varName, o, dynamic);
+		// ctx.globalVar.put(varName, o);
 		if (dynamic) {
 			ctx.objectKeys.add(varName);
 		}

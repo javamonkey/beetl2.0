@@ -41,9 +41,9 @@ public class CompareExpression extends Expression {
 		case LARGE:
 			return ALU.lessEquals(y, x);
 		case LESS:
-			return ALU.less(y, x);
+			return ALU.less(x, y);
 		case LESS_EQUAL:
-			return ALU.lessEquals(y, x);
+			return ALU.lessEquals(x, y);
 		default:
 			throw new TempException("不可能发生");
 

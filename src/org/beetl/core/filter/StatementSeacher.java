@@ -19,8 +19,8 @@ public class StatementSeacher {
 		this.exec(block, matchClasses, executor, stack);
 	}
 
-	public boolean exec(Object astNode, Class[] matchClasses,
-			Executor executor, Stack stack) {
+	public void exec(Object astNode, Class[] matchClasses, Executor executor,
+			Stack stack) {
 
 		stack.push(astNode);
 		Class astNodeClass = astNode.getClass();
@@ -36,6 +36,7 @@ public class StatementSeacher {
 				} else {
 					target = c;
 				}
+
 				boolean isArray = false;
 
 				// 只解析含有ASTNode的字段
@@ -49,6 +50,10 @@ public class StatementSeacher {
 						else {
 							target2 = values.getClass();
 							if (target2.isArray()) {
+								if (((Object[]) values).length == 0) {
+									continue;
+								}
+								target2 = target2.getComponentType();
 
 								isArray = true;
 							}
@@ -59,45 +64,43 @@ public class StatementSeacher {
 
 					for (Class expected : matchClasses) {
 						// 如果匹配上
-						if (expected == target2) {
-							if (isArray) {
-								Object[] targetValue = (Object[]) values;
-								for (Object o : targetValue) {
-									if (o == null)
-										continue;
+						if (isArray) {
+							Object[] targetValue = (Object[]) values;
+							for (Object o : targetValue) {
+								if (o == null)
+									continue;
+								if (expected.isAssignableFrom(o.getClass())) {
 									stack.push(o);
-									if (executor.on(stack)) {
-										return true;
-									}
+									executor.on(stack);
+									// 继续遍历子节点
+									this.exec(o, matchClasses, executor, stack);
 									stack.pop();
+									continue;
 								}
-							} else {
-								stack.push(values);
-								if (executor.on(stack)) {
-									return true;
-								}
-								stack.pop();
-							}
 
+							}
 						} else {
-							// 没有匹配上，继续遍历
-							if (isArray) {
-								ASTNode[] astNodes = (ASTNode[]) values;
-								for (ASTNode node : astNodes) {
-									if (this.exec(node, matchClasses, executor,
-											stack)) {
-										return true;
-									}
-								}
-							} else {
-								ASTNode node = (ASTNode) values;
-								if (this.exec(node, matchClasses, executor,
-										stack)) {
-									return true;
-								}
-							}
+							if (expected.isAssignableFrom(values.getClass())) {
+								stack.push(values);
+								executor.on(stack);
+								this.exec(values, matchClasses, executor, stack);
 
+								stack.pop();
+								continue;
+							}
 						}
+
+						// 没有匹配上，继续遍历
+						if (isArray) {
+							ASTNode[] astNodes = (ASTNode[]) values;
+							for (ASTNode node : astNodes) {
+								this.exec(node, matchClasses, executor, stack);
+							}
+						} else {
+							ASTNode node = (ASTNode) values;
+							this.exec(node, matchClasses, executor, stack);
+						}
+
 					}
 				}
 
@@ -105,7 +108,7 @@ public class StatementSeacher {
 
 		}
 		stack.pop();
-		return false;
+
 	}
 
 	public void match(Statement st, Class cls, Executor executor) {

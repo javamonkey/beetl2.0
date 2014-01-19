@@ -9,6 +9,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 
 import org.beetl.core.Resource;
+import org.beetl.core.exception.TempException;
 
 public class FileResource extends Resource {
 
@@ -31,7 +32,8 @@ public class FileResource extends Resource {
 		} catch (UnsupportedEncodingException e) {
 			return null;
 		} catch (FileNotFoundException e) {
-			return null;
+			throw new TempException(e.getMessage());
+
 		}
 		return br;
 	}

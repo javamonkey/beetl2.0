@@ -8,7 +8,8 @@ public final class ForStatement extends Statement implements IGoto {
 	public Expression exp;
 	public Statement forPart;
 	public Statement elseforPart;
-	boolean hasGoto = false;
+	public boolean hasGoto = false;
+	public short itType = 0;
 
 	public ForStatement(VarDefineNode idNode, Expression exp,
 			Statement forPart, Statement elseforPart, Token token) {
@@ -24,7 +25,7 @@ public final class ForStatement extends Statement implements IGoto {
 		// idNode 是其后设置的
 		int varIndex = ((IVarIndex) idNode).getVarIndex();
 		IteratorStatus it = IteratorStatus.getIteratorStatus(exp.evaluate(ctx),
-				1);
+				itType);
 		ctx.vars[varIndex + 1] = it;
 		if (this.hasGoto) {
 

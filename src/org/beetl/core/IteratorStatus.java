@@ -10,6 +10,11 @@ public final class IteratorStatus {
 	int size = -1;
 	int index = 0;
 	boolean hasData = false;
+	public final static short GENERAL = 0;
+	public final static short COLLECTION = 1;
+	public final static short MAP = 2;
+	public final static short ITERABLE = 3;
+	public final static short ARRAY = 4;
 
 	public static IteratorStatus getIteratorStatus(Object o) {
 		if (o instanceof Collection) {

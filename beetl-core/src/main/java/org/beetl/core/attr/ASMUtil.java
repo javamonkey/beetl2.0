@@ -5,10 +5,13 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-public class ASMUtil implements Opcodes {
+public class ASMUtil implements Opcodes
+{
 
-	class ASMClassLoader extends ClassLoader {
-		public Class defineClass(String name, byte[] b) {
+	class ASMClassLoader extends ClassLoader
+	{
+		public Class defineClass(String name, byte[] b)
+		{
 			return defineClass(name, b, 0, b.length);
 		}
 	}
@@ -16,16 +19,18 @@ public class ASMUtil implements Opcodes {
 	static ASMUtil util = new ASMUtil();
 	private ASMClassLoader loader = new ASMClassLoader();
 
-	private ASMUtil() {
+	private ASMUtil()
+	{
 		// TODO Auto-generated constructor stub
 	}
 
-	public static ASMUtil instance() {
+	public static ASMUtil instance()
+	{
 		return util;
 	}
 
-	public AA createAAClass(Class c, String name, String methodName,
-			Class returnType) {
+	public AA createAAClass(Class c, String name, String methodName, Class returnType)
+	{
 		String cPath = c.getName().replace('.', '/');
 		String newClsName = c.getName() + "$_" + name;
 		String newClsPath = newClsName.replace('.', '/');
@@ -35,56 +40,59 @@ public class ASMUtil implements Opcodes {
 
 		MethodVisitor mv;
 
-		cw.visit(V1_5, ACC_PUBLIC + ACC_SUPER, newClsPath, null,
-				"org/beetl/core/attr/AA", null);
+		cw.visit(V1_5, ACC_PUBLIC + ACC_SUPER, newClsPath, null, "org/beetl/core/attr/AA", null);
 
 		{
 			mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
 			mv.visitCode();
 			mv.visitVarInsn(ALOAD, 0);
-			mv.visitMethodInsn(INVOKESPECIAL, "org/beetl/core/attr/AA",
-					"<init>", "()V");
+			mv.visitMethodInsn(INVOKESPECIAL, "org/beetl/core/attr/AA", "<init>", "()V");
 			mv.visitInsn(RETURN);
 			mv.visitMaxs(1, 1);
 			mv.visitEnd();
 		}
 		{
-			mv = cw.visitMethod(ACC_PUBLIC, "value",
-					"(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
-					null, null);
+			mv = cw.visitMethod(ACC_PUBLIC, "value", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", null,
+					null);
 			mv.visitCode();
 			mv.visitVarInsn(ALOAD, 1);
 			mv.visitTypeInsn(CHECKCAST, cPath);
-			mv.visitMethodInsn(INVOKEVIRTUAL, cPath, methodName, "()"
-					+ returnTypeClass);
-			if (returnType.isPrimitive()) {
-				if (returnType == int.class) {
-					mv.visitMethodInsn(INVOKESTATIC,
-							"org/beetl/core/util/NumberUtil", "valueOf",
+			mv.visitMethodInsn(INVOKEVIRTUAL, cPath, methodName, "()" + returnTypeClass);
+			if (returnType.isPrimitive())
+			{
+				if (returnType == int.class)
+				{
+					mv.visitMethodInsn(INVOKESTATIC, "org/beetl/core/util/NumberUtil", "valueOf",
 							"(I)Ljava/lang/Integer;");
-				} else if (returnType == boolean.class) {
-					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Boolean",
-							"valueOf", "(Z)Ljava/lang/Boolean;");
+				}
+				else if (returnType == boolean.class)
+				{
+					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Boolean", "valueOf", "(Z)Ljava/lang/Boolean;");
 
-				} else if (returnType == char.class) {
-					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Character",
-							"valueOf", "(C)Ljava/lang/Character;");
+				}
+				else if (returnType == char.class)
+				{
+					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Character", "valueOf", "(C)Ljava/lang/Character;");
 
-				} else if (returnType == short.class) {
-					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Short",
-							"valueOf", "(S)Ljava/lang/Short;");
+				}
+				else if (returnType == short.class)
+				{
+					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Short", "valueOf", "(S)Ljava/lang/Short;");
 
-				} else if (returnType == float.class) {
-					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Float",
-							"valueOf", "(F)Ljava/lang/Float;");
+				}
+				else if (returnType == float.class)
+				{
+					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Float", "valueOf", "(F)Ljava/lang/Float;");
 
-				} else if (returnType == long.class) {
-					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Long",
-							"valueOf", "(J)Ljava/lang/Long;");
+				}
+				else if (returnType == long.class)
+				{
+					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Long", "valueOf", "(J)Ljava/lang/Long;");
 
-				} else if (returnType == double.class) {
-					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Double",
-							"valueOf", "(D)Ljava/lang/Double;");
+				}
+				else if (returnType == double.class)
+				{
+					mv.visitMethodInsn(INVOKESTATIC, "java/lang/Double", "valueOf", "(D)Ljava/lang/Double;");
 
 				}
 			}
@@ -97,38 +105,59 @@ public class ASMUtil implements Opcodes {
 
 		byte[] bs = cw.toByteArray();
 		Class cls = loader.defineClass(newClsName, bs);
-		try {
+		try
+		{
 			return (AA) cls.newInstance();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			ex.printStackTrace();
 			throw new TempException(ex.getMessage());
 		}
 
 	}
 
-	private String getRetrunTypeDesc(Class c) {
+	private String getRetrunTypeDesc(Class c)
+	{
 		StringBuilder sb = new StringBuilder();
-		if (c.isArray()) {
+		if (c.isArray())
+		{
 			sb.append("[");
-			if (c.getComponentType().isArray()) {
+			if (c.getComponentType().isArray())
+			{
 				sb.append("[");
 			}
 		}
-		if (c == int.class) {
+		if (c == int.class)
+		{
 			sb.append("I");
-		} else if (c == boolean.class) {
+		}
+		else if (c == boolean.class)
+		{
 			sb.append("Z");
-		} else if (c == char.class) {
+		}
+		else if (c == char.class)
+		{
 			sb.append("C");
-		} else if (c == short.class) {
+		}
+		else if (c == short.class)
+		{
 			sb.append("S");
-		} else if (c == float.class) {
+		}
+		else if (c == float.class)
+		{
 			sb.append("F");
-		} else if (c == long.class) {
+		}
+		else if (c == long.class)
+		{
 			sb.append("J");
-		} else if (c == double.class) {
+		}
+		else if (c == double.class)
+		{
 			sb.append("D");
-		} else {
+		}
+		else
+		{
 			sb.append("L").append(c.getName().replace(".", "/")).append(";");
 		}
 		return sb.toString();

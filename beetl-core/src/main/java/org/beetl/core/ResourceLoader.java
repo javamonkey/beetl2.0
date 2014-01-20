@@ -8,7 +8,8 @@ package org.beetl.core;
  * 
  * 
  */
-public interface ResourceLoader {
+public interface ResourceLoader
+{
 
 	/**
 	 * 根据key获取Resource

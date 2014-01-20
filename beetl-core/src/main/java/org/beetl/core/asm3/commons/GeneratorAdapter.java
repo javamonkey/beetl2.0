@@ -80,7 +80,8 @@ import org.beetl.core.asm3.Type;
  * @author Chris Nokleberg
  * @author Eric Bruneton
  */
-public class GeneratorAdapter {
+public class GeneratorAdapter
+{
 
 	private static final String CLDESC = "Ljava/lang/Class;";
 
@@ -111,8 +112,7 @@ public class GeneratorAdapter {
 	// private static final Type NUMBER_TYPE =
 	// Type.getObjectType("java/lang/Number");
 
-	private static final Type OBJECT_TYPE = Type
-			.getObjectType("java/lang/Object");
+	private static final Type OBJECT_TYPE = Type.getObjectType("java/lang/Object");
 
 	// private static final Method BOOLEAN_VALUE =
 	// Method.getMethod("boolean booleanValue()");
@@ -270,19 +270,20 @@ public class GeneratorAdapter {
 	 * @param mv
 	 *            the method visitor to which this adapter delegates calls.
 	 */
-	public GeneratorAdapter(final int access, final Method method,
-			final MethodWriter mv) {
-		this(access, method.getDescriptor(), mv, method.getReturnType(), method
-				.getArgumentTypes());
+	public GeneratorAdapter(final int access, final Method method, final MethodWriter mv)
+	{
+		this(access, method.getDescriptor(), mv, method.getReturnType(), method.getArgumentTypes());
 	}
 
-	private GeneratorAdapter(final int access, final String desc,
-			final MethodWriter mv, Type returnType, Type[] argumentTypes) {
+	private GeneratorAdapter(final int access, final String desc, final MethodWriter mv, Type returnType,
+			Type[] argumentTypes)
+	{
 		// super(mv);
 		this.mv = mv;
 		Type[] args = Type.getArgumentTypes(desc);
 		nextLocal = (Opcodes.ACC_STATIC & access) == 0 ? 1 : 0;
-		for (int i = 0; i < args.length; i++) {
+		for (int i = 0; i < args.length; i++)
+		{
 			nextLocal += args[i].getSize();
 		}
 		firstLocal = nextLocal;
@@ -307,12 +308,11 @@ public class GeneratorAdapter {
 	 * @param cv
 	 *            the class visitor to which this adapter delegates calls.
 	 */
-	public GeneratorAdapter(final int access, final Method method,
-			final String signature, final Type[] exceptions,
-			final ClassWriter cv) {
-		this(access, method, cv
-				.visitMethod(access, method.getName(), method.getDescriptor(),
-						signature, getInternalNames(exceptions)));
+	public GeneratorAdapter(final int access, final Method method, final String signature, final Type[] exceptions,
+			final ClassWriter cv)
+	{
+		this(access, method, cv.visitMethod(access, method.getName(), method.getDescriptor(), signature,
+				getInternalNames(exceptions)));
 	}
 
 	/**
@@ -322,12 +322,15 @@ public class GeneratorAdapter {
 	 *            a set of types.
 	 * @return the internal names of the given types.
 	 */
-	private static String[] getInternalNames(final Type[] types) {
-		if (types == null) {
+	private static String[] getInternalNames(final Type[] types)
+	{
+		if (types == null)
+		{
 			return null;
 		}
 		String[] names = new String[types.length];
-		for (int i = 0; i < names.length; ++i) {
+		for (int i = 0; i < names.length; ++i)
+		{
 			names[i] = types[i].getInternalName();
 		}
 		return names;
@@ -343,7 +346,8 @@ public class GeneratorAdapter {
 	 * @param value
 	 *            the value to be pushed on the stack.
 	 */
-	public void push(final boolean value) {
+	public void push(final boolean value)
+	{
 		push(value ? 1 : 0);
 	}
 
@@ -353,14 +357,22 @@ public class GeneratorAdapter {
 	 * @param value
 	 *            the value to be pushed on the stack.
 	 */
-	public void push(final int value) {
-		if (value >= -1 && value <= 5) {
+	public void push(final int value)
+	{
+		if (value >= -1 && value <= 5)
+		{
 			mv.visitInsn(Opcodes.ICONST_0 + value);
-		} else if (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE) {
+		}
+		else if (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE)
+		{
 			mv.visitIntInsn(Opcodes.BIPUSH, value);
-		} else if (value >= Short.MIN_VALUE && value <= Short.MAX_VALUE) {
+		}
+		else if (value >= Short.MIN_VALUE && value <= Short.MAX_VALUE)
+		{
 			mv.visitIntInsn(Opcodes.SIPUSH, value);
-		} else {
+		}
+		else
+		{
 			mv.visitLdcInsn(new Integer(value));
 		}
 	}
@@ -412,10 +424,14 @@ public class GeneratorAdapter {
 	 * @param value
 	 *            the value to be pushed on the stack. May be <tt>null</tt>.
 	 */
-	public void push(final String value) {
-		if (value == null) {
+	public void push(final String value)
+	{
+		if (value == null)
+		{
 			mv.visitInsn(Opcodes.ACONST_NULL);
-		} else {
+		}
+		else
+		{
 			mv.visitLdcInsn(value);
 		}
 	}
@@ -426,45 +442,42 @@ public class GeneratorAdapter {
 	 * @param value
 	 *            the value to be pushed on the stack.
 	 */
-	public void push(final Type value) {
-		if (value == null) {
+	public void push(final Type value)
+	{
+		if (value == null)
+		{
 			mv.visitInsn(Opcodes.ACONST_NULL);
-		} else {
-			switch (value.getSort()) {
-			case Type.BOOLEAN:
-				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Boolean",
-						"TYPE", CLDESC);
-				break;
-			case Type.CHAR:
-				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Character",
-						"TYPE", CLDESC);
-				break;
-			case Type.BYTE:
-				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Byte", "TYPE",
-						CLDESC);
-				break;
-			case Type.SHORT:
-				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Short", "TYPE",
-						CLDESC);
-				break;
-			case Type.INT:
-				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Integer",
-						"TYPE", CLDESC);
-				break;
-			case Type.FLOAT:
-				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Float", "TYPE",
-						CLDESC);
-				break;
-			case Type.LONG:
-				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Long", "TYPE",
-						CLDESC);
-				break;
-			case Type.DOUBLE:
-				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Double",
-						"TYPE", CLDESC);
-				break;
-			default:
-				mv.visitLdcInsn(value);
+		}
+		else
+		{
+			switch (value.getSort())
+			{
+				case Type.BOOLEAN:
+					mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Boolean", "TYPE", CLDESC);
+					break;
+				case Type.CHAR:
+					mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Character", "TYPE", CLDESC);
+					break;
+				case Type.BYTE:
+					mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Byte", "TYPE", CLDESC);
+					break;
+				case Type.SHORT:
+					mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Short", "TYPE", CLDESC);
+					break;
+				case Type.INT:
+					mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Integer", "TYPE", CLDESC);
+					break;
+				case Type.FLOAT:
+					mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Float", "TYPE", CLDESC);
+					break;
+				case Type.LONG:
+					mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Long", "TYPE", CLDESC);
+					break;
+				case Type.DOUBLE:
+					mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Double", "TYPE", CLDESC);
+					break;
+				default:
+					mv.visitLdcInsn(value);
 			}
 		}
 	}
@@ -482,9 +495,11 @@ public class GeneratorAdapter {
 	 * @return the index of the given method argument in the frame's local
 	 *         variables array.
 	 */
-	private int getArgIndex(final int arg) {
+	private int getArgIndex(final int arg)
+	{
 		int index = (access & Opcodes.ACC_STATIC) == 0 ? 1 : 0;
-		for (int i = 0; i < arg; i++) {
+		for (int i = 0; i < arg; i++)
+		{
 			index += argumentTypes[i].getSize();
 		}
 		return index;
@@ -498,7 +513,8 @@ public class GeneratorAdapter {
 	 * @param index
 	 *            an index in the frame's local variables array.
 	 */
-	private void loadInsn(final Type type, final int index) {
+	private void loadInsn(final Type type, final int index)
+	{
 		mv.visitVarInsn(type.getOpcode(Opcodes.ILOAD), index);
 	}
 
@@ -511,17 +527,19 @@ public class GeneratorAdapter {
 	 * @param index
 	 *            an index in the frame's local variables array.
 	 */
-	private void storeInsn(final Type type, final int index) {
+	private void storeInsn(final Type type, final int index)
+	{
 		mv.visitVarInsn(type.getOpcode(Opcodes.ISTORE), index);
 	}
 
 	/**
 	 * Generates the instruction to load 'this' on the stack.
 	 */
-	public void loadThis() {
-		if ((access & Opcodes.ACC_STATIC) != 0) {
-			throw new IllegalStateException(
-					"no 'this' pointer within static method");
+	public void loadThis()
+	{
+		if ((access & Opcodes.ACC_STATIC) != 0)
+		{
+			throw new IllegalStateException("no 'this' pointer within static method");
 		}
 		mv.visitVarInsn(Opcodes.ALOAD, 0);
 	}
@@ -532,7 +550,8 @@ public class GeneratorAdapter {
 	 * @param arg
 	 *            the index of a method argument.
 	 */
-	public void loadArg(final int arg) {
+	public void loadArg(final int arg)
+	{
 		loadInsn(argumentTypes[arg], getArgIndex(arg));
 	}
 
@@ -599,13 +618,16 @@ public class GeneratorAdapter {
 	 *            {@link LocalVariablesSorter#newLocal(Type) newLocal()}.
 	 * @return the type of the given local variable.
 	 */
-	public Type getLocalType(final int local) {
+	public Type getLocalType(final int local)
+	{
 		return (Type) localTypes.get(local - firstLocal);
 	}
 
-	private void setLocalType(final int local, final Type type) {
+	private void setLocalType(final int local, final Type type)
+	{
 		int index = local - firstLocal;
-		while (localTypes.size() < index + 1) {
+		while (localTypes.size() < index + 1)
+		{
 			localTypes.add(null);
 		}
 		localTypes.set(index, type);
@@ -618,7 +640,8 @@ public class GeneratorAdapter {
 	 *            a local variable identifier, as returned by
 	 *            {@link LocalVariablesSorter#newLocal(Type) newLocal()}.
 	 */
-	public void loadLocal(final int local) {
+	public void loadLocal(final int local)
+	{
 		loadInsn(getLocalType(local), local);
 	}
 
@@ -643,7 +666,8 @@ public class GeneratorAdapter {
 	 *            a local variable identifier, as returned by
 	 *            {@link LocalVariablesSorter#newLocal(Type) newLocal()}.
 	 */
-	public void storeLocal(final int local) {
+	public void storeLocal(final int local)
+	{
 		storeInsn(getLocalType(local), local);
 	}
 
@@ -667,7 +691,8 @@ public class GeneratorAdapter {
 	 * @param type
 	 *            the type of the array element to be loaded.
 	 */
-	public void arrayLoad(final Type type) {
+	public void arrayLoad(final Type type)
+	{
 		mv.visitInsn(type.getOpcode(Opcodes.IALOAD));
 	}
 
@@ -701,7 +726,8 @@ public class GeneratorAdapter {
 	/**
 	 * Generates a DUP instruction.
 	 */
-	public void dup() {
+	public void dup()
+	{
 		mv.visitInsn(Opcodes.DUP);
 	}
 
@@ -743,7 +769,8 @@ public class GeneratorAdapter {
 	/**
 	 * Generates a SWAP instruction.
 	 */
-	public void swap() {
+	public void swap()
+	{
 		mv.visitInsn(Opcodes.SWAP);
 	}
 
@@ -817,47 +844,82 @@ public class GeneratorAdapter {
 	 * @param to
 	 *            the type into which this value must be cast.
 	 */
-	public void cast(final Type from, final Type to) {
-		if (from != to) {
-			if (from == Type.DOUBLE_TYPE) {
-				if (to == Type.FLOAT_TYPE) {
+	public void cast(final Type from, final Type to)
+	{
+		if (from != to)
+		{
+			if (from == Type.DOUBLE_TYPE)
+			{
+				if (to == Type.FLOAT_TYPE)
+				{
 					mv.visitInsn(Opcodes.D2F);
-				} else if (to == Type.LONG_TYPE) {
+				}
+				else if (to == Type.LONG_TYPE)
+				{
 					mv.visitInsn(Opcodes.D2L);
-				} else {
+				}
+				else
+				{
 					mv.visitInsn(Opcodes.D2I);
 					cast(Type.INT_TYPE, to);
 				}
-			} else if (from == Type.FLOAT_TYPE) {
-				if (to == Type.DOUBLE_TYPE) {
+			}
+			else if (from == Type.FLOAT_TYPE)
+			{
+				if (to == Type.DOUBLE_TYPE)
+				{
 					mv.visitInsn(Opcodes.F2D);
-				} else if (to == Type.LONG_TYPE) {
+				}
+				else if (to == Type.LONG_TYPE)
+				{
 					mv.visitInsn(Opcodes.F2L);
-				} else {
+				}
+				else
+				{
 					mv.visitInsn(Opcodes.F2I);
 					cast(Type.INT_TYPE, to);
 				}
-			} else if (from == Type.LONG_TYPE) {
-				if (to == Type.DOUBLE_TYPE) {
+			}
+			else if (from == Type.LONG_TYPE)
+			{
+				if (to == Type.DOUBLE_TYPE)
+				{
 					mv.visitInsn(Opcodes.L2D);
-				} else if (to == Type.FLOAT_TYPE) {
+				}
+				else if (to == Type.FLOAT_TYPE)
+				{
 					mv.visitInsn(Opcodes.L2F);
-				} else {
+				}
+				else
+				{
 					mv.visitInsn(Opcodes.L2I);
 					cast(Type.INT_TYPE, to);
 				}
-			} else {
-				if (to == Type.BYTE_TYPE) {
+			}
+			else
+			{
+				if (to == Type.BYTE_TYPE)
+				{
 					mv.visitInsn(Opcodes.I2B);
-				} else if (to == Type.CHAR_TYPE) {
+				}
+				else if (to == Type.CHAR_TYPE)
+				{
 					mv.visitInsn(Opcodes.I2C);
-				} else if (to == Type.DOUBLE_TYPE) {
+				}
+				else if (to == Type.DOUBLE_TYPE)
+				{
 					mv.visitInsn(Opcodes.I2D);
-				} else if (to == Type.FLOAT_TYPE) {
+				}
+				else if (to == Type.FLOAT_TYPE)
+				{
 					mv.visitInsn(Opcodes.I2F);
-				} else if (to == Type.LONG_TYPE) {
+				}
+				else if (to == Type.LONG_TYPE)
+				{
 					mv.visitInsn(Opcodes.I2L);
-				} else if (to == Type.SHORT_TYPE) {
+				}
+				else if (to == Type.SHORT_TYPE)
+				{
 					mv.visitInsn(Opcodes.I2S);
 				}
 			}
@@ -994,7 +1056,8 @@ public class GeneratorAdapter {
 	 * 
 	 * @return a new {@link Label}.
 	 */
-	public Label newLabel() {
+	public Label newLabel()
+	{
 		return new Label();
 	}
 
@@ -1004,7 +1067,8 @@ public class GeneratorAdapter {
 	 * @param label
 	 *            a label.
 	 */
-	public void mark(final Label label) {
+	public void mark(final Label label)
+	{
 		mv.visitLabel(label);
 	}
 
@@ -1031,55 +1095,56 @@ public class GeneratorAdapter {
 	 * @param label
 	 *            where to jump if the comparison result is <tt>true</tt>.
 	 */
-	public void ifCmp(final Type type, final int mode, final Label label) {
-		switch (type.getSort()) {
-		case Type.LONG:
-			mv.visitInsn(Opcodes.LCMP);
-			break;
-		case Type.DOUBLE:
-			mv.visitInsn(mode == GE || mode == GT ? Opcodes.DCMPG
-					: Opcodes.DCMPL);
-			break;
-		case Type.FLOAT:
-			mv.visitInsn(mode == GE || mode == GT ? Opcodes.FCMPG
-					: Opcodes.FCMPL);
-			break;
-		case Type.ARRAY:
-		case Type.OBJECT:
-			switch (mode) {
-			case EQ:
-				mv.visitJumpInsn(Opcodes.IF_ACMPEQ, label);
+	public void ifCmp(final Type type, final int mode, final Label label)
+	{
+		switch (type.getSort())
+		{
+			case Type.LONG:
+				mv.visitInsn(Opcodes.LCMP);
+				break;
+			case Type.DOUBLE:
+				mv.visitInsn(mode == GE || mode == GT ? Opcodes.DCMPG : Opcodes.DCMPL);
+				break;
+			case Type.FLOAT:
+				mv.visitInsn(mode == GE || mode == GT ? Opcodes.FCMPG : Opcodes.FCMPL);
+				break;
+			case Type.ARRAY:
+			case Type.OBJECT:
+				switch (mode)
+				{
+					case EQ:
+						mv.visitJumpInsn(Opcodes.IF_ACMPEQ, label);
+						return;
+					case NE:
+						mv.visitJumpInsn(Opcodes.IF_ACMPNE, label);
+						return;
+				}
+				throw new IllegalArgumentException("Bad comparison for type " + type);
+			default:
+				int intOp = -1;
+				switch (mode)
+				{
+					case EQ:
+						intOp = Opcodes.IF_ICMPEQ;
+						break;
+					case NE:
+						intOp = Opcodes.IF_ICMPNE;
+						break;
+					case GE:
+						intOp = Opcodes.IF_ICMPGE;
+						break;
+					case LT:
+						intOp = Opcodes.IF_ICMPLT;
+						break;
+					case LE:
+						intOp = Opcodes.IF_ICMPLE;
+						break;
+					case GT:
+						intOp = Opcodes.IF_ICMPGT;
+						break;
+				}
+				mv.visitJumpInsn(intOp, label);
 				return;
-			case NE:
-				mv.visitJumpInsn(Opcodes.IF_ACMPNE, label);
-				return;
-			}
-			throw new IllegalArgumentException("Bad comparison for type "
-					+ type);
-		default:
-			int intOp = -1;
-			switch (mode) {
-			case EQ:
-				intOp = Opcodes.IF_ICMPEQ;
-				break;
-			case NE:
-				intOp = Opcodes.IF_ICMPNE;
-				break;
-			case GE:
-				intOp = Opcodes.IF_ICMPGE;
-				break;
-			case LT:
-				intOp = Opcodes.IF_ICMPLT;
-				break;
-			case LE:
-				intOp = Opcodes.IF_ICMPLE;
-				break;
-			case GT:
-				intOp = Opcodes.IF_ICMPGT;
-				break;
-			}
-			mv.visitJumpInsn(intOp, label);
-			return;
 		}
 		mv.visitJumpInsn(mode, label);
 	}
@@ -1094,7 +1159,8 @@ public class GeneratorAdapter {
 	 * @param label
 	 *            where to jump if the comparison result is <tt>true</tt>.
 	 */
-	public void ifICmp(final int mode, final Label label) {
+	public void ifICmp(final int mode, final Label label)
+	{
 		ifCmp(Type.INT_TYPE, mode, label);
 	}
 
@@ -1108,7 +1174,8 @@ public class GeneratorAdapter {
 	 * @param label
 	 *            where to jump if the comparison result is <tt>true</tt>.
 	 */
-	public void ifZCmp(final int mode, final Label label) {
+	public void ifZCmp(final int mode, final Label label)
+	{
 		mv.visitJumpInsn(mode, label);
 	}
 
@@ -1119,7 +1186,8 @@ public class GeneratorAdapter {
 	 * @param label
 	 *            where to jump if the condition is <tt>true</tt>.
 	 */
-	public void ifNull(final Label label) {
+	public void ifNull(final Label label)
+	{
 		mv.visitJumpInsn(Opcodes.IFNULL, label);
 	}
 
@@ -1130,7 +1198,8 @@ public class GeneratorAdapter {
 	 * @param label
 	 *            where to jump if the condition is <tt>true</tt>.
 	 */
-	public void ifNonNull(final Label label) {
+	public void ifNonNull(final Label label)
+	{
 		mv.visitJumpInsn(Opcodes.IFNONNULL, label);
 	}
 
@@ -1140,7 +1209,8 @@ public class GeneratorAdapter {
 	 * @param label
 	 *            where to jump if the condition is <tt>true</tt>.
 	 */
-	public void goTo(final Label label) {
+	public void goTo(final Label label)
+	{
 		mv.visitJumpInsn(Opcodes.GOTO, label);
 	}
 
@@ -1162,14 +1232,16 @@ public class GeneratorAdapter {
 	 * @param generator
 	 *            a generator to generate the code for the switch cases.
 	 */
-	public void tableSwitch(final int[] keys,
-			final TableSwitchGenerator generator) {
+	public void tableSwitch(final int[] keys, final TableSwitchGenerator generator)
+	{
 		float density;
-		if (keys.length == 0) {
+		if (keys.length == 0)
+		{
 			density = 0;
-		} else {
-			density = (float) keys.length
-					/ (keys[keys.length - 1] - keys[0] + 1);
+		}
+		else
+		{
+			density = (float) keys.length / (keys[keys.length - 1] - keys[0] + 1);
 		}
 		tableSwitch(keys, generator, density >= 0.5f);
 	}
@@ -1185,42 +1257,52 @@ public class GeneratorAdapter {
 	 *            <tt>true</tt> to use a TABLESWITCH instruction, or
 	 *            <tt>false</tt> to use a LOOKUPSWITCH instruction.
 	 */
-	public void tableSwitch(final int[] keys,
-			final TableSwitchGenerator generator, final boolean useTable) {
-		for (int i = 1; i < keys.length; ++i) {
-			if (keys[i] < keys[i - 1]) {
-				throw new IllegalArgumentException(
-						"keys must be sorted ascending");
+	public void tableSwitch(final int[] keys, final TableSwitchGenerator generator, final boolean useTable)
+	{
+		for (int i = 1; i < keys.length; ++i)
+		{
+			if (keys[i] < keys[i - 1])
+			{
+				throw new IllegalArgumentException("keys must be sorted ascending");
 			}
 		}
 		Label def = newLabel();
 		Label end = newLabel();
-		if (keys.length > 0) {
+		if (keys.length > 0)
+		{
 			int len = keys.length;
 			int min = keys[0];
 			int max = keys[len - 1];
 			int range = max - min + 1;
-			if (useTable) {
+			if (useTable)
+			{
 				Label[] labels = new Label[range];
 				Arrays.fill(labels, def);
-				for (int i = 0; i < len; ++i) {
+				for (int i = 0; i < len; ++i)
+				{
 					labels[keys[i] - min] = newLabel();
 				}
 				mv.visitTableSwitchInsn(min, max, def, labels);
-				for (int i = 0; i < range; ++i) {
+				for (int i = 0; i < range; ++i)
+				{
 					Label label = labels[i];
-					if (label != def) {
+					if (label != def)
+					{
 						mark(label);
 						generator.generateCase(i + min, end);
 					}
 				}
-			} else {
+			}
+			else
+			{
 				Label[] labels = new Label[len];
-				for (int i = 0; i < len; ++i) {
+				for (int i = 0; i < len; ++i)
+				{
 					labels[i] = newLabel();
 				}
 				mv.visitLookupSwitchInsn(def, keys, labels);
-				for (int i = 0; i < len; ++i) {
+				for (int i = 0; i < len; ++i)
+				{
 					mark(labels[i]);
 					generator.generateCase(keys[i], end);
 				}
@@ -1234,7 +1316,8 @@ public class GeneratorAdapter {
 	/**
 	 * Generates the instruction to return the top stack value to the caller.
 	 */
-	public void returnValue() {
+	public void returnValue()
+	{
 		mv.visitInsn(returnType.getOpcode(Opcodes.IRETURN));
 	}
 
@@ -1254,10 +1337,9 @@ public class GeneratorAdapter {
 	 * @param fieldType
 	 *            the type of the field.
 	 */
-	private void fieldInsn(final int opcode, final Type ownerType,
-			final String name, final Type fieldType) {
-		mv.visitFieldInsn(opcode, ownerType.getInternalName(), name,
-				fieldType.getDescriptor());
+	private void fieldInsn(final int opcode, final Type ownerType, final String name, final Type fieldType)
+	{
+		mv.visitFieldInsn(opcode, ownerType.getInternalName(), name, fieldType.getDescriptor());
 	}
 
 	/**
@@ -1271,7 +1353,8 @@ public class GeneratorAdapter {
 	 * @param type
 	 *            the type of the field.
 	 */
-	public void getStatic(final Type owner, final String name, final Type type) {
+	public void getStatic(final Type owner, final String name, final Type type)
+	{
 		fieldInsn(Opcodes.GETSTATIC, owner, name, type);
 	}
 
@@ -1300,7 +1383,8 @@ public class GeneratorAdapter {
 	 * @param type
 	 *            the type of the field.
 	 */
-	public void getField(final Type owner, final String name, final Type type) {
+	public void getField(final Type owner, final String name, final Type type)
+	{
 		fieldInsn(Opcodes.GETFIELD, owner, name, type);
 	}
 
@@ -1315,7 +1399,8 @@ public class GeneratorAdapter {
 	 * @param type
 	 *            the type of the field.
 	 */
-	public void putField(final Type owner, final String name, final Type type) {
+	public void putField(final Type owner, final String name, final Type type)
+	{
 		fieldInsn(Opcodes.PUTFIELD, owner, name, type);
 	}
 
@@ -1333,12 +1418,10 @@ public class GeneratorAdapter {
 	 * @param method
 	 *            the method to be invoked.
 	 */
-	private void invokeInsn(final int opcode, final Type type,
-			final Method method) {
-		String owner = type.getSort() == Type.ARRAY ? type.getDescriptor()
-				: type.getInternalName();
-		mv.visitMethodInsn(opcode, owner, method.getName(),
-				method.getDescriptor());
+	private void invokeInsn(final int opcode, final Type type, final Method method)
+	{
+		String owner = type.getSort() == Type.ARRAY ? type.getDescriptor() : type.getInternalName();
+		mv.visitMethodInsn(opcode, owner, method.getName(), method.getDescriptor());
 	}
 
 	/**
@@ -1349,7 +1432,8 @@ public class GeneratorAdapter {
 	 * @param method
 	 *            the method to be invoked.
 	 */
-	public void invokeVirtual(final Type owner, final Method method) {
+	public void invokeVirtual(final Type owner, final Method method)
+	{
 		invokeInsn(Opcodes.INVOKEVIRTUAL, owner, method);
 	}
 
@@ -1361,7 +1445,8 @@ public class GeneratorAdapter {
 	 * @param method
 	 *            the constructor to be invoked.
 	 */
-	public void invokeConstructor(final Type type, final Method method) {
+	public void invokeConstructor(final Type type, final Method method)
+	{
 		invokeInsn(Opcodes.INVOKESPECIAL, type, method);
 	}
 
@@ -1373,7 +1458,8 @@ public class GeneratorAdapter {
 	 * @param method
 	 *            the method to be invoked.
 	 */
-	public void invokeStatic(final Type owner, final Method method) {
+	public void invokeStatic(final Type owner, final Method method)
+	{
 		invokeInsn(Opcodes.INVOKESTATIC, owner, method);
 	}
 
@@ -1385,7 +1471,8 @@ public class GeneratorAdapter {
 	 * @param method
 	 *            the method to be invoked.
 	 */
-	public void invokeInterface(final Type owner, final Method method) {
+	public void invokeInterface(final Type owner, final Method method)
+	{
 		invokeInsn(Opcodes.INVOKEINTERFACE, owner, method);
 	}
 
@@ -1412,7 +1499,8 @@ public class GeneratorAdapter {
 	 * @param type
 	 *            the instruction's operand.
 	 */
-	private void typeInsn(final int opcode, final Type type) {
+	private void typeInsn(final int opcode, final Type type)
+	{
 		mv.visitTypeInsn(opcode, type.getInternalName());
 	}
 
@@ -1422,7 +1510,8 @@ public class GeneratorAdapter {
 	 * @param type
 	 *            the class of the object to be created.
 	 */
-	public void newInstance(final Type type) {
+	public void newInstance(final Type type)
+	{
 		typeInsn(Opcodes.NEW, type);
 	}
 
@@ -1432,36 +1521,38 @@ public class GeneratorAdapter {
 	 * @param type
 	 *            the type of the array elements.
 	 */
-	public void newArray(final Type type) {
+	public void newArray(final Type type)
+	{
 		int typ;
-		switch (type.getSort()) {
-		case Type.BOOLEAN:
-			typ = Opcodes.T_BOOLEAN;
-			break;
-		case Type.CHAR:
-			typ = Opcodes.T_CHAR;
-			break;
-		case Type.BYTE:
-			typ = Opcodes.T_BYTE;
-			break;
-		case Type.SHORT:
-			typ = Opcodes.T_SHORT;
-			break;
-		case Type.INT:
-			typ = Opcodes.T_INT;
-			break;
-		case Type.FLOAT:
-			typ = Opcodes.T_FLOAT;
-			break;
-		case Type.LONG:
-			typ = Opcodes.T_LONG;
-			break;
-		case Type.DOUBLE:
-			typ = Opcodes.T_DOUBLE;
-			break;
-		default:
-			typeInsn(Opcodes.ANEWARRAY, type);
-			return;
+		switch (type.getSort())
+		{
+			case Type.BOOLEAN:
+				typ = Opcodes.T_BOOLEAN;
+				break;
+			case Type.CHAR:
+				typ = Opcodes.T_CHAR;
+				break;
+			case Type.BYTE:
+				typ = Opcodes.T_BYTE;
+				break;
+			case Type.SHORT:
+				typ = Opcodes.T_SHORT;
+				break;
+			case Type.INT:
+				typ = Opcodes.T_INT;
+				break;
+			case Type.FLOAT:
+				typ = Opcodes.T_FLOAT;
+				break;
+			case Type.LONG:
+				typ = Opcodes.T_LONG;
+				break;
+			case Type.DOUBLE:
+				typ = Opcodes.T_DOUBLE;
+				break;
+			default:
+				typeInsn(Opcodes.ANEWARRAY, type);
+				return;
 		}
 		mv.visitIntInsn(Opcodes.NEWARRAY, typ);
 	}
@@ -1473,14 +1564,16 @@ public class GeneratorAdapter {
 	/**
 	 * Generates the instruction to compute the length of an array.
 	 */
-	public void arrayLength() {
+	public void arrayLength()
+	{
 		mv.visitInsn(Opcodes.ARRAYLENGTH);
 	}
 
 	/**
 	 * Generates the instruction to throw an exception.
 	 */
-	public void throwException() {
+	public void throwException()
+	{
 		mv.visitInsn(Opcodes.ATHROW);
 	}
 
@@ -1506,8 +1599,10 @@ public class GeneratorAdapter {
 	 * @param type
 	 *            a class or interface type.
 	 */
-	public void checkCast(final Type type) {
-		if (!type.equals(OBJECT_TYPE)) {
+	public void checkCast(final Type type)
+	{
+		if (!type.equals(OBJECT_TYPE))
+		{
 			typeInsn(Opcodes.CHECKCAST, type);
 		}
 	}
@@ -1545,8 +1640,10 @@ public class GeneratorAdapter {
 	/**
 	 * Marks the end of the visited method.
 	 */
-	public void endMethod() {
-		if ((access & Opcodes.ACC_ABSTRACT) == 0) {
+	public void endMethod()
+	{
+		if ((access & Opcodes.ACC_ABSTRACT) == 0)
+		{
 			mv.visitMaxs(0, 0);
 		}
 		mv.visitEnd();
@@ -1734,32 +1831,34 @@ public class GeneratorAdapter {
 	 *            the type of the local variable to be created.
 	 * @return the identifier of the newly created local variable.
 	 */
-	public int newLocal(final Type type) {
+	public int newLocal(final Type type)
+	{
 		Object t;
-		switch (type.getSort()) {
-		case Type.BOOLEAN:
-		case Type.CHAR:
-		case Type.BYTE:
-		case Type.SHORT:
-		case Type.INT:
-			t = Opcodes.INTEGER;
-			break;
-		case Type.FLOAT:
-			t = Opcodes.FLOAT;
-			break;
-		case Type.LONG:
-			t = Opcodes.LONG;
-			break;
-		case Type.DOUBLE:
-			t = Opcodes.DOUBLE;
-			break;
-		case Type.ARRAY:
-			t = type.getDescriptor();
-			break;
-		// case Type.OBJECT:
-		default:
-			t = type.getInternalName();
-			break;
+		switch (type.getSort())
+		{
+			case Type.BOOLEAN:
+			case Type.CHAR:
+			case Type.BYTE:
+			case Type.SHORT:
+			case Type.INT:
+				t = Opcodes.INTEGER;
+				break;
+			case Type.FLOAT:
+				t = Opcodes.FLOAT;
+				break;
+			case Type.LONG:
+				t = Opcodes.LONG;
+				break;
+			case Type.DOUBLE:
+				t = Opcodes.DOUBLE;
+				break;
+			case Type.ARRAY:
+				t = type.getDescriptor();
+				break;
+			// case Type.OBJECT:
+			default:
+				t = type.getInternalName();
+				break;
 		}
 		int local = nextLocal;
 		nextLocal += type.getSize();
@@ -1768,9 +1867,11 @@ public class GeneratorAdapter {
 		return local;
 	}
 
-	private void setFrameLocal(final int local, final Object type) {
+	private void setFrameLocal(final int local, final Object type)
+	{
 		int l = newLocals.length;
-		if (local >= l) {
+		if (local >= l)
+		{
 			Object[] a = new Object[Math.max(2 * l, local + 1)];
 			System.arraycopy(newLocals, 0, a, 0, l);
 			newLocals = a;

@@ -47,7 +47,8 @@ import org.beetl.core.statement.Token;
  * @author jeolli
  * @create 2011-6-19
  */
-public class Transformator {
+public class Transformator
+{
 
 	String htmlTagStart = "<#";
 	String htmlTagEnd = "</#";
@@ -85,16 +86,18 @@ public class Transformator {
 	// 转义符号
 	static char ESCAPE = '\\';
 
-	public Transformator() {
+	public Transformator()
+	{
 
 	}
 
-	public Map<Integer, String> getTextMap() {
+	public Map<Integer, String> getTextMap()
+	{
 		return this.textMap;
 	}
 
-	public Transformator(String placeholderStart, String placeholderEnd,
-			String startStatement, String endStatement) {
+	public Transformator(String placeholderStart, String placeholderEnd, String startStatement, String endStatement)
+	{
 		this.placeholderStart = placeholderStart;
 		this.placeholderEnd = placeholderEnd;
 		this.startStatement = startStatement;
@@ -102,54 +105,64 @@ public class Transformator {
 
 	}
 
-	public String getPlaceholderStart() {
+	public String getPlaceholderStart()
+	{
 		return placeholderStart;
 	}
 
-	public void setPlaceholderStart(String placeholderStart) {
+	public void setPlaceholderStart(String placeholderStart)
+	{
 		this.placeholderStart = placeholderStart;
 	}
 
-	public String getPlaceholderEnd() {
+	public String getPlaceholderEnd()
+	{
 		return placeholderEnd;
 	}
 
-	public void setPlaceholderEnd(String placeholderEnd) {
+	public void setPlaceholderEnd(String placeholderEnd)
+	{
 		this.placeholderEnd = placeholderEnd;
 	}
 
-	public String getStartStatement() {
+	public String getStartStatement()
+	{
 		return startStatement;
 	}
 
-	public void setStartStatement(String startStatement) {
+	public void setStartStatement(String startStatement)
+	{
 		this.startStatement = startStatement;
 	}
 
-	public String getEndStatement() {
+	public String getEndStatement()
+	{
 		return endStatement;
 	}
 
-	public void setEndStatement(String endStatement) {
+	public void setEndStatement(String endStatement)
+	{
 		this.endStatement = endStatement;
 
 	}
 
-	public void enableHtmlTagSupport(String tagStart, String tagEnd) {
+	public void enableHtmlTagSupport(String tagStart, String tagEnd)
+	{
 		this.htmlTagStart = tagStart;
 		this.htmlTagEnd = tagEnd;
 		this.isSupportHtmlTag = true;
 	}
 
-	public Reader transform(Reader orginal) throws IOException,
-			HTMLTagParserException {
+	public Reader transform(Reader orginal) throws IOException, HTMLTagParserException
+	{
 
 		StringBuilder temp = new StringBuilder();
 		int bufSzie = 1024;
 		cs = new char[bufSzie];
 		int len = -1;
 
-		while ((len = orginal.read(cs)) != -1) {
+		while ((len = orginal.read(cs)) != -1)
+		{
 			temp.append(cs, 0, len);
 
 		}
@@ -157,19 +170,19 @@ public class Transformator {
 		cs = temp.toString().toCharArray();
 		// 找到回车换行符号
 		findCR();
-		if (this.endStatement == null) {
+		if (this.endStatement == null)
+		{
 			this.endStatement = lineSeparator;
 		}
 		checkAppendCR();
 		parser();
-		if (this.isSupportHtmlTag && this.htmlTagStack.size() != 0) {
+		if (this.isSupportHtmlTag && this.htmlTagStack.size() != 0)
+		{
 
 			String tagName = (String) htmlTagStack.peek();
-			Token token = Token.createErrorToken(tagName,
-					this.totalLineCount + 1);
+			Token token = Token.createErrorToken(tagName, this.totalLineCount + 1);
 
-			HTMLTagParserException ex = new HTMLTagParserException(
-					"解析html tag 标签出错,未找到匹配结束标签 " + tagName);
+			HTMLTagParserException ex = new HTMLTagParserException("解析html tag 标签出错,未找到匹配结束标签 " + tagName);
 			ex.token = token;
 			ex.line = totalLineCount + 1;
 			this.clear();
@@ -181,23 +194,23 @@ public class Transformator {
 		return new StringReader(sb.toString());
 	}
 
-	public Reader transform(String str) throws IOException,
-			HTMLTagParserException {
+	public Reader transform(String str) throws IOException, HTMLTagParserException
+	{
 		cs = str.toCharArray();
 		// 找到回车换行符号
 		findCR();
-		if (this.endStatement == null) {
+		if (this.endStatement == null)
+		{
 			this.endStatement = this.lineSeparator;
 		}
 		checkAppendCR();
 		parser();
-		if (this.isSupportHtmlTag && this.htmlTagStack.size() != 0) {
+		if (this.isSupportHtmlTag && this.htmlTagStack.size() != 0)
+		{
 			String tagName = (String) htmlTagStack.peek();
-			Token token = Token.createErrorToken(tagName,
-					this.totalLineCount + 1);
+			Token token = Token.createErrorToken(tagName, this.totalLineCount + 1);
 
-			HTMLTagParserException ex = new HTMLTagParserException(
-					"解析html tag 标签出错,未找到匹配结束标签 " + tagName);
+			HTMLTagParserException ex = new HTMLTagParserException("解析html tag 标签出错,未找到匹配结束标签 " + tagName);
 			ex.token = token;
 			ex.line = totalLineCount + 1;
 			this.clear();
@@ -206,16 +219,21 @@ public class Transformator {
 		return new StringReader(sb.toString());
 	}
 
-	private void findCR() {
+	private void findCR()
+	{
 
 		// 是回车换行,
 		StringBuilder cr = new StringBuilder(2);
-		for (int i = 0; i < cs.length; i++) {
-			if (cs[i] == '\n' || cs[i] == '\r') {
+		for (int i = 0; i < cs.length; i++)
+		{
+			if (cs[i] == '\n' || cs[i] == '\r')
+			{
 				cr.append(cs[i]);
-				if (cs.length != (i + 1)) {
+				if (cs.length != (i + 1))
+				{
 					char next = cs[i] == '\r' ? '\n' : '\r';
-					if (cs[i + 1] == next) {
+					if (cs[i + 1] == next)
+					{
 						cr.append(next);
 					}
 				}
@@ -228,41 +246,50 @@ public class Transformator {
 
 	}
 
-	public void parser() throws HTMLTagParserException {
+	public void parser() throws HTMLTagParserException
+	{
 
-		while (true) {
-			switch (status) {
-			case 1: {
-				readCommonString();
-				break;
-			}
-			case 2: {
-				readStatement();
-				break;
-			}
-			case 3: {
-				readPlaceHolder();
-				break;
-			}
-			case 5:
-				readHTMLTagBegin();
-				break;
-			case 6:
-				readHTMLTagEnd();
-				break;
-			case 4: {
+		while (true)
+		{
+			switch (status)
+			{
+				case 1:
+				{
+					readCommonString();
+					break;
+				}
+				case 2:
+				{
+					readStatement();
+					break;
+				}
+				case 3:
+				{
+					readPlaceHolder();
+					break;
+				}
+				case 5:
+					readHTMLTagBegin();
+					break;
+				case 6:
+					readHTMLTagEnd();
+					break;
+				case 4:
+				{
 
-				return;
-			}
+					return;
+				}
 
 			}
 		}
 
 	}
 
-	public void readHTMLTagBegin() throws HTMLTagParserException {
+	public void readHTMLTagBegin() throws HTMLTagParserException
+	{
 		String tagName = null;
-		try {
+		try
+		{
 			StringBuilder script = new StringBuilder();
 			script.append("htmltag");
 			HTMLTagParser html = new HTMLTagParser(cs, index, true);
@@ -272,53 +299,61 @@ public class Transformator {
 
 			Map<String, String> map = html.getExpMap();
 			Map<String, Character> quat = html.getQuatMap();
-			if (map.size() != 0) {
+			if (map.size() != 0)
+			{
 				script.append("{");
 			}
-			for (Entry<String, String> entry : map.entrySet()) {
+			for (Entry<String, String> entry : map.entrySet())
+			{
 
 				String key = entry.getKey();
 				String value = entry.getValue();
 				script.append(key).append(":");
-				if (!value.startsWith(this.placeholderStart)) {
+				if (!value.startsWith(this.placeholderStart))
+				{
 					// value是一个正常字符串,还原
 					char c = quat.get(key);
 					script.append(c).append(value).append(c);
 
-				} else {
-					value = new String(value.toCharArray(),
-							this.placeholderStart.length(), value.length()
-									- this.placeholderStart.length()
-									- this.placeholderEnd.length());
+				}
+				else
+				{
+					value = new String(value.toCharArray(), this.placeholderStart.length(), value.length()
+							- this.placeholderStart.length() - this.placeholderEnd.length());
 					script.append(value);
 				}
 				script.append(",");
 			}
 
 			script.setLength(script.length() - 1);
-			if (map.size() != 0) {
+			if (map.size() != 0)
+			{
 				script.append("}");
 			}
 
 			script.append("){");
-			if (html.isEmptyTag()) {
+			if (html.isEmptyTag())
+			{
 				script.append("}");
-			} else {
+			}
+			else
+			{
 				htmlTagStack.push(tagName);
 			}
 
 			sb.append(script);
 			this.index = html.getIndex();
 			status = 1;
-		} catch (RuntimeException re) {
+		}
+		catch (RuntimeException re)
+		{
 
-			if (tagName == null) {
+			if (tagName == null)
+			{
 				tagName = "未知标签";
 			}
-			Token token = Token.createErrorToken(tagName,
-					this.totalLineCount + 1);
-			HTMLTagParserException ex = new HTMLTagParserException(
-					re.getMessage());
+			Token token = Token.createErrorToken(tagName, this.totalLineCount + 1);
+			HTMLTagParserException ex = new HTMLTagParserException(re.getMessage());
 			ex.token = token;
 			ex.line = totalLineCount + 1;
 			throw ex;
@@ -327,34 +362,41 @@ public class Transformator {
 
 	}
 
-	public void readHTMLTagEnd() throws HTMLTagParserException {
+	public void readHTMLTagEnd() throws HTMLTagParserException
+	{
 		String tagName = null;
-		try {
+		try
+		{
 			HTMLTagParser html = new HTMLTagParser(cs, index, false);
 
 			html.parser();
 			tagName = html.getTagName();
-			if (htmlTagStack.empty()) {
+			if (htmlTagStack.empty())
+			{
 				throw new RuntimeException("解析html tag出错");
 			}
 			String lastTag = (String) this.htmlTagStack.peek();
-			if (tagName.equals(lastTag)) {
+			if (tagName.equals(lastTag))
+			{
 				this.htmlTagStack.pop();
 				sb.append("}");
-			} else {
+			}
+			else
+			{
 				throw new RuntimeException("解析html tag出错,期望匹配标签" + lastTag);
 			}
 			this.index = html.getIndex();
 			status = 1;
-		} catch (RuntimeException re) {
+		}
+		catch (RuntimeException re)
+		{
 
-			if (tagName == null) {
+			if (tagName == null)
+			{
 				tagName = "未知标签";
 			}
-			Token token = Token.createErrorToken(tagName,
-					this.totalLineCount + 1);
-			HTMLTagParserException ex = new HTMLTagParserException(
-					re.getMessage());
+			Token token = Token.createErrorToken(tagName, this.totalLineCount + 1);
+			HTMLTagParserException ex = new HTMLTagParserException(re.getMessage());
 			ex.token = token;
 			ex.line = totalLineCount + 1;
 			throw ex;
@@ -362,15 +404,19 @@ public class Transformator {
 
 	}
 
-	public void readPlaceHolder() {
+	public void readPlaceHolder()
+	{
 		index = index + this.placeholderStart.length();
 		lineStatus.addHolderCount();
 		sb.append("<<");
 
-		while (index <= cs.length) {
-			if (match(this.placeholderEnd)) {
+		while (index <= cs.length)
+		{
+			if (match(this.placeholderEnd))
+			{
 				// 如果前面一个是转义符
-				if (this.isEscape(sb, index)) {
+				if (this.isEscape(sb, index))
+				{
 					sb.append(cs[index++]);
 					continue;
 				}
@@ -379,106 +425,144 @@ public class Transformator {
 				sb.append(">>");
 				status = 1;
 				return;
-			} else if (status != 4) {
+			}
+			else if (status != 4)
+			{
 				sb.append(cs[index]);
 				index++;
 
-			} else {
+			}
+			else
+			{
 				break;
 			}
 		}
 		status = 4;
 	}
 
-	public void readStatement() {
+	public void readStatement()
+	{
 		index = index + this.startStatement.length();
 		lineStatus.setStatment();
-		while (index <= cs.length) {
-			if (match(this.endStatement)) {
+		while (index <= cs.length)
+		{
+			if (match(this.endStatement))
+			{
 
 				// 如果前面一个是转义符
-				if (this.isEscape(sb, index)) {
+				if (this.isEscape(sb, index))
+				{
 					sb.append(cs[index++]);
 					continue;
 				}
 				index = index + this.endStatement.length();
 				status = 1;
 				// 如果是以回车符作为控制语句结束符号
-				if (appendCR) {
+				if (appendCR)
+				{
 
 					sb.append(endStatement);
 
 				}
 				lineStatus.setStatment();
 				return;
-			} else if (status != 4) {
+			}
+			else if (status != 4)
+			{
 				char ch = cs[index++];
-				if (ch == '\r' || ch == '\n') {
+				if (ch == '\r' || ch == '\n')
+				{
 
 					totalLineCount++;
 					sb.append(this.lineSeparator);
-					if (this.lineSeparator.length() == 2) {
+					if (this.lineSeparator.length() == 2)
+					{
 						index++;
 					}
 					this.lineStatus.reset();
 
-				} else {
+				}
+				else
+				{
 					// 正常路径
 					sb.append(ch);
 				}
 
-			} else {
+			}
+			else
+			{
 				break;
 			}
 		}
 		status = 4;
 	}
 
-	public void readCommonString() {
+	public void readCommonString()
+	{
 		StringBuilder temp = new StringBuilder();
 		boolean hasLetter = false;
 		boolean hasCheck = false;
-		while (index <= cs.length) {
-			if (match(this.placeholderStart)) {
-				if (this.isEscape(temp, index)) {
+		while (index <= cs.length)
+		{
+			if (match(this.placeholderStart))
+			{
+				if (this.isEscape(temp, index))
+				{
 
 					temp.append(cs[index++]);
 					continue;
 				}
-				if (temp.length() != 0) {
-					if (lineCount >= 1) {
+				if (temp.length() != 0)
+				{
+					if (lineCount >= 1)
+					{
 						createMutipleLineTextNode(temp);
 						lineCount = 0;
-					} else {
+					}
+					else
+					{
 						createTextNode(temp);
 					}
 				}
 
 				status = 3;
 				return;
-			} else if (match(this.startStatement)) {
-				if (this.isEscape(temp, index)) {
+			}
+			else if (match(this.startStatement))
+			{
+				if (this.isEscape(temp, index))
+				{
 					temp.append(cs[index++]);
 					continue;
 				}
-				if (temp.length() != 0) {
-					if (lineCount >= 1) {
+				if (temp.length() != 0)
+				{
+					if (lineCount >= 1)
+					{
 						createMutipleLineTextNode(temp);
 						lineCount = 0;
-					} else {
+					}
+					else
+					{
 						createTextNode(temp);
 					}
 				}
 
 				status = 2;
 				return;
-			} else if (isSupportHtmlTag && match(htmlTagEnd)) {
+			}
+			else if (isSupportHtmlTag && match(htmlTagEnd))
+			{
 
-				if (temp.length() != 0) {
-					if (lineCount >= 1) {
+				if (temp.length() != 0)
+				{
+					if (lineCount >= 1)
+					{
 						createMutipleLineTextNode(temp);
 						lineCount = 0;
-					} else {
+					}
+					else
+					{
 						createTextNode(temp);
 					}
 				}
@@ -486,13 +570,19 @@ public class Transformator {
 				status = 6;
 				return;
 
-			} else if (isSupportHtmlTag && match(htmlTagStart)) {
+			}
+			else if (isSupportHtmlTag && match(htmlTagStart))
+			{
 
-				if (temp.length() != 0) {
-					if (lineCount >= 1) {
+				if (temp.length() != 0)
+				{
+					if (lineCount >= 1)
+					{
 						createMutipleLineTextNode(temp);
 						lineCount = 0;
-					} else {
+					}
+					else
+					{
 						createTextNode(temp);
 					}
 				}
@@ -500,15 +590,20 @@ public class Transformator {
 				index = index + 2;
 				return;
 
-			} else if (status != 4) {
+			}
+			else if (status != 4)
+			{
 				char ch = cs[index++];
-				if (ch == '\r' || ch == '\n') {
+				if (ch == '\r' || ch == '\n')
+				{
 					totalLineCount++;
-					if (this.lineSeparator.length() == 2) {
+					if (this.lineSeparator.length() == 2)
+					{
 						index++;
 					}
 
-					if (!hasLetter && this.lineStatus.onlyText()) {
+					if (!hasLetter && this.lineStatus.onlyText())
+					{
 						// 多行，直到碰到占位符号才停止
 						temp.append(this.lineSeparator);
 						lineCount++;
@@ -516,13 +611,16 @@ public class Transformator {
 						continue;
 
 					}
-					if (this.lineStatus.onlyStatment()) {
+					if (this.lineStatus.onlyStatment())
+					{
 						// 只有控制语句，则如果文本变量都是空格，这些文本变量则认为是格式化的，非输出语句
 						// 需要更改输出
 						reforamtStatmentLine();
 						lineStatus.reset();
 						sb.append(lineSeparator);
-					} else {
+					}
+					else
+					{
 
 						// createTextNode(temp.append(lineSeparator));
 						// // 总是需要回车换行
@@ -535,9 +633,12 @@ public class Transformator {
 						continue;
 					}
 
-				} else {
+				}
+				else
+				{
 
-					if (!hasCheck && ch != ' ' && ch != '\t') {
+					if (!hasCheck && ch != ' ' && ch != '\t')
+					{
 						hasLetter = true;
 						hasCheck = true;
 					}
@@ -545,7 +646,9 @@ public class Transformator {
 					temp.append(ch);
 				}
 
-			} else {
+			}
+			else
+			{
 				break;
 			}
 		}
@@ -556,14 +659,16 @@ public class Transformator {
 
 	}
 
-	private void reforamtStatmentLine() {
+	private void reforamtStatmentLine()
+	{
 
 		/*
 		 * 是否需要删除控制语句俩边的空格，约定，如果一行只有控制语句以及空格或者tab，那么空格或者tab 将不是输出内容，而是格式化字符串，比如：
 		 * 空格... <%for (item in userList!){ 空格+回车 %>
 		 */
 		int count = lineStatus.getSpaceCount();
-		for (int i = count - 1; i >= 0; i--) {
+		for (int i = count - 1; i >= 0; i--)
+		{
 			int start = lineStatus.getSpaceTextStart(i);
 			int end = lineStatus.getSpaceTextEnd(i);
 			String varName = sb.substring(start + 2, end - 2);
@@ -573,18 +678,22 @@ public class Transformator {
 		lineStatus.reset();
 	}
 
-	private void createTextNode(StringBuilder str) {
-		if (str.length() == 0) {
+	private void createTextNode(StringBuilder str)
+	{
+		if (str.length() == 0)
+		{
 			return;
 		}
 		String name = this.getNewVarName();
 		this.textMap.put(Integer.parseInt(name), new String(str));
 		String textVarName = "<$" + name + ">>";
 
-		if (isSpace(str)) {
-			lineStatus.addSpaceText(this.sb.length(), this.sb.length()
-					+ textVarName.length());
-		} else {
+		if (isSpace(str))
+		{
+			lineStatus.addSpaceText(this.sb.length(), this.sb.length() + textVarName.length());
+		}
+		else
+		{
 			lineStatus.addTextCount();
 		}
 
@@ -592,23 +701,29 @@ public class Transformator {
 
 	}
 
-	private void createMutipleLineTextNode(StringBuilder str) {
+	private void createMutipleLineTextNode(StringBuilder str)
+	{
 		int index = str.lastIndexOf(lineSeparator);
 		String firstPart = str.substring(0, index);
 		String secondPart = str.substring(index + lineSeparator.length());
-		if (isSpace(new StringBuilder(secondPart))) {
+		if (isSpace(new StringBuilder(secondPart)))
+		{
 			// 有可能是格式化字符串，单独计算
 			createTextNode(new StringBuilder(firstPart + lineSeparator));
 			// 压缩多行，但补充回车
-			for (int i = 0; i < lineCount; i++) {
+			for (int i = 0; i < lineCount; i++)
+			{
 				sb.append(lineSeparator);
 			}
 			// 最后一行是文本和占位符混合，因此，单独算一个文本变量
 			createTextNode(new StringBuilder(secondPart));
-		} else {
+		}
+		else
+		{
 
 			createTextNode(str);
-			for (int i = 0; i < lineCount; i++) {
+			for (int i = 0; i < lineCount; i++)
+			{
 				sb.append(lineSeparator);
 			}
 
@@ -616,25 +731,32 @@ public class Transformator {
 
 	}
 
-	private boolean isSpace(StringBuilder str) {
-		for (char c : str.toString().toCharArray()) {
-			if (c != ' ' && c != '\t') {
+	private boolean isSpace(StringBuilder str)
+	{
+		for (char c : str.toString().toCharArray())
+		{
+			if (c != ' ' && c != '\t')
+			{
 				return false;
 			}
 		}
 		return true;
 	}
 
-	public boolean match(String expectedStr) {
+	public boolean match(String expectedStr)
+	{
 
 		int i = 0;
-		while (i < expectedStr.length()) {
-			if (cs.length == (index + i)) {
+		while (i < expectedStr.length())
+		{
+			if (cs.length == (index + i))
+			{
 				// 行尾
 				status = 4;
 				return false;
 			}
-			if (cs[index + i] != expectedStr.charAt(i)) {
+			if (cs[index + i] != expectedStr.charAt(i))
+			{
 				return false;
 			}
 			i++;
@@ -651,20 +773,27 @@ public class Transformator {
 	/**
 	 * 在match情况下，判断前面一符号是否是转义符号，如果是，则删除转义符号 2012-2-5 李bear
 	 */
-	public boolean isEscape(StringBuilder temp, int index) {
-		if (index != 0 && cs[index - 1] == this.ESCAPE) {
-			if (index >= 2 && cs[index - 2] == this.ESCAPE) {
+	public boolean isEscape(StringBuilder temp, int index)
+	{
+		if (index != 0 && cs[index - 1] == this.ESCAPE)
+		{
+			if (index >= 2 && cs[index - 2] == this.ESCAPE)
+			{
 				// 俩个转义符号，删除一个
 				if (temp.length() != 0)
 					temp.setLength(temp.length() - 1);
 				return false;
-			} else {
+			}
+			else
+			{
 				// 将已经添加的转义符号删除
 				if (temp.length() != 0)
 					temp.setLength(temp.length() - 1);
 				return true;
 			}
-		} else {
+		}
+		else
+		{
 			return false;
 		}
 
@@ -673,26 +802,35 @@ public class Transformator {
 		// return true ;
 	}
 
-	public String getNewVarName() {
+	public String getNewVarName()
+	{
 		return this.vname + this.vnamesuffix++;
 	}
 
-	private void checkAppendCR() {
+	private void checkAppendCR()
+	{
 
-		if (this.endStatement.indexOf("\n") != -1) {
+		if (this.endStatement.indexOf("\n") != -1)
+		{
 			this.appendCR = true;
-		} else if (this.endStatement.indexOf("\r") != -1) {
+		}
+		else if (this.endStatement.indexOf("\r") != -1)
+		{
 			this.appendCR = true;
-		} else {
+		}
+		else
+		{
 			this.appendCR = false;
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args)
+	{
 		char c = '\\';
 		Transformator p = new Transformator("${", "}", "<%", "%>");
 		p.enableHtmlTagSupport("<#", "</#");
-		try {
+		try
+		{
 
 			// String str = "   #:var u='hello';:#  \n  $u$";
 			String str = "<#a id='123'/>";
@@ -701,16 +839,20 @@ public class Transformator {
 			String line = null;
 			System.out.println(p.getTextMap());
 			System.out.println("==============================");
-			while ((line = reader.readLine()) != null) {
+			while ((line = reader.readLine()) != null)
+			{
 				System.out.println(line);
 			}
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			ex.printStackTrace();
 		}
 
 	}
 
-	public void clear() {
+	public void clear()
+	{
 		this.cs = null;
 
 		this.sb = null;
@@ -719,7 +861,8 @@ public class Transformator {
 }
 
 // 记录一行出现的控制语句，占位符号，以及用于格式化的空格，tab符号
-class LineStatus {
+class LineStatus
+{
 	// 当前行非空格（包括tab）符号 个数
 	private int textCount = 0;
 	// 当前行控制语句个数
@@ -731,7 +874,8 @@ class LineStatus {
 	private List<Integer> endTextIndexList = new ArrayList<Integer>();
 	private int lineCount;
 
-	public boolean onlyStatment() {
+	public boolean onlyStatment()
+	{
 		// //如果包含普通文本，占位符
 		// if ((textCount > 0 && startTextIndexList.size() != textCount) ||
 		// holderCount > 0)
@@ -754,52 +898,65 @@ class LineStatus {
 	}
 
 	/* 本行是否只有文本 */
-	public boolean onlyText() {
-		if (holderCount == 0 && this.statementCount == 0) {
+	public boolean onlyText()
+	{
+		if (holderCount == 0 && this.statementCount == 0)
+		{
 			return true;
-		} else {
+		}
+		else
+		{
 			return false;
 		}
 	}
 
-	public void addTextCount() {
+	public void addTextCount()
+	{
 
 		this.textCount++;
 	}
 
-	public void addHolderCount() {
+	public void addHolderCount()
+	{
 
 		this.holderCount++;
 
 	}
 
 	// 表示改行有statment
-	public void setStatment() {
+	public void setStatment()
+	{
 		this.statementCount = 1;
 	}
 
-	public void addSpaceText(int start, int end) {
+	public void addSpaceText(int start, int end)
+	{
 		startTextIndexList.add(start);
 		endTextIndexList.add(end);
 	}
 
-	public int getSpaceTextStart(int i) {
+	public int getSpaceTextStart(int i)
+	{
 		return startTextIndexList.get(i);
 	}
 
-	public int getSpaceTextEnd(int i) {
+	public int getSpaceTextEnd(int i)
+	{
 		return this.endTextIndexList.get(i);
 	}
 
-	public int getSpaceCount() {
+	public int getSpaceCount()
+	{
 		return this.startTextIndexList.size();
 	}
 
-	public int getTextCount() {
+	public int getTextCount()
+	{
 		return textCount;
 	}
 
-	public void reset() {
+	public void reset()
+	{
 
 		textCount = 0;
 		statementCount = 0;

@@ -38,7 +38,8 @@ package org.beetl.core.asm3;
  * 
  * @author Eric Bruneton
  */
-public class ClassWriter {
+public class ClassWriter
+{
 
 	/**
 	 * Flag to automatically compute the maximum stack size and the maximum
@@ -414,14 +415,16 @@ public class ClassWriter {
 	/**
 	 * Computes the instruction types of JVM opcodes.
 	 */
-	static {
+	static
+	{
 		int i;
 		byte[] b = new byte[220];
 		String s = "AAAAAAAAAAAAAAAABCKLLDDDDDEEEEEEEEEEEEEEEEEEEEAAAAAAAADD"
 				+ "DDDEEEEEEEEEEEEEEEEEEEEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 				+ "AAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAIIIIIIIIIIIIIIIIDNOAA"
 				+ "AAAAGGGGGGGHHFBFAAFFAAQPIIJJIIIIIIIIIIIIIIIIII";
-		for (i = 0; i < b.length; ++i) {
+		for (i = 0; i < b.length; ++i)
+		{
 			b[i] = (byte) (s.charAt(i) - 'A');
 		}
 		TYPE = b;
@@ -507,7 +510,8 @@ public class ClassWriter {
 	 *            of this class. See {@link #COMPUTE_MAXS},
 	 *            {@link #COMPUTE_FRAMES}.
 	 */
-	public ClassWriter(final int flags) {
+	public ClassWriter(final int flags)
+	{
 		index = 1;
 		pool = new ByteVector();
 		items = new Item[256];
@@ -523,21 +527,24 @@ public class ClassWriter {
 	// Implementation of the ClassVisitor interface
 	// ------------------------------------------------------------------------
 
-	public void visit(final int version, final int access, final String name,
-			final String signature, final String superName,
-			final String[] interfaces) {
+	public void visit(final int version, final int access, final String name, final String signature,
+			final String superName, final String[] interfaces)
+	{
 		this.version = version;
 		this.access = access;
 		this.name = newClass(name);
 		thisName = name;
-		if (signature != null) {
+		if (signature != null)
+		{
 			this.signature = newUTF8(signature);
 		}
 		this.superName = superName == null ? 0 : newClass(superName);
-		if (interfaces != null && interfaces.length > 0) {
+		if (interfaces != null && interfaces.length > 0)
+		{
 			interfaceCount = interfaces.length;
 			this.interfaces = new int[interfaceCount];
-			for (int i = 0; i < interfaceCount; ++i) {
+			for (int i = 0; i < interfaceCount; ++i)
+			{
 				this.interfaces[i] = newClass(interfaces[i]);
 			}
 		}
@@ -579,13 +586,14 @@ public class ClassWriter {
 	// innerClasses.putShort(access);
 	// }
 
-	public MethodWriter visitMethod(final int access, final String name,
-			final String desc, final String signature, final String[] exceptions) {
-		return new MethodWriter(this, access, name, desc, signature,
-				exceptions, computeMaxs, false/* computeFrames */);
+	public MethodWriter visitMethod(final int access, final String name, final String desc, final String signature,
+			final String[] exceptions)
+	{
+		return new MethodWriter(this, access, name, desc, signature, exceptions, computeMaxs, false/* computeFrames */);
 	}
 
-	public void visitEnd() {
+	public void visitEnd()
+	{
 	}
 
 	// ------------------------------------------------------------------------
@@ -597,50 +605,59 @@ public class ClassWriter {
 	 * 
 	 * @return the bytecode of the class that was build with this class writer.
 	 */
-	public byte[] toByteArray() {
+	public byte[] toByteArray()
+	{
 		// computes the real size of the bytecode of this class
 		int size = 24 + 2 * interfaceCount;
 		int nbFields = 0;
 		int nbMethods = 0;
 		MethodWriter mb = firstMethod;
-		while (mb != null) {
+		while (mb != null)
+		{
 			++nbMethods;
 			size += mb.getSize();
 			mb = mb.next;
 		}
 		int attributeCount = 0;
-		if (signature != 0) {
+		if (signature != 0)
+		{
 			++attributeCount;
 			size += 8;
 			newUTF8("Signature");
 		}
-		if (sourceFile != 0) {
+		if (sourceFile != 0)
+		{
 			++attributeCount;
 			size += 8;
 			newUTF8("SourceFile");
 		}
-		if (sourceDebug != null) {
+		if (sourceDebug != null)
+		{
 			++attributeCount;
 			size += sourceDebug.length + 4;
 			newUTF8("SourceDebugExtension");
 		}
-		if (enclosingMethodOwner != 0) {
+		if (enclosingMethodOwner != 0)
+		{
 			++attributeCount;
 			size += 10;
 			newUTF8("EnclosingMethod");
 		}
-		if ((access & Opcodes.ACC_DEPRECATED) != 0) {
+		if ((access & Opcodes.ACC_DEPRECATED) != 0)
+		{
 			++attributeCount;
 			size += 6;
 			newUTF8("Deprecated");
 		}
 		if ((access & Opcodes.ACC_SYNTHETIC) != 0
-				&& ((version & 0xFFFF) < Opcodes.V1_5 || (access & ACC_SYNTHETIC_ATTRIBUTE) != 0)) {
+				&& ((version & 0xFFFF) < Opcodes.V1_5 || (access & ACC_SYNTHETIC_ATTRIBUTE) != 0))
+		{
 			++attributeCount;
 			size += 6;
 			newUTF8("Synthetic");
 		}
-		if (innerClasses != null) {
+		if (innerClasses != null)
+		{
 			++attributeCount;
 			size += 8 + innerClasses.length;
 			newUTF8("InnerClasses");
@@ -656,40 +673,49 @@ public class ClassWriter {
 				| ((access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) / (ClassWriter.ACC_SYNTHETIC_ATTRIBUTE / Opcodes.ACC_SYNTHETIC));
 		out.putShort(access & ~mask).putShort(name).putShort(superName);
 		out.putShort(interfaceCount);
-		for (int i = 0; i < interfaceCount; ++i) {
+		for (int i = 0; i < interfaceCount; ++i)
+		{
 			out.putShort(interfaces[i]);
 		}
 		out.putShort(nbFields);
 		out.putShort(nbMethods);
 		mb = firstMethod;
-		while (mb != null) {
+		while (mb != null)
+		{
 			mb.put(out);
 			mb = mb.next;
 		}
 		out.putShort(attributeCount);
-		if (signature != 0) {
+		if (signature != 0)
+		{
 			out.putShort(newUTF8("Signature")).putInt(2).putShort(signature);
 		}
-		if (sourceFile != 0) {
+		if (sourceFile != 0)
+		{
 			out.putShort(newUTF8("SourceFile")).putInt(2).putShort(sourceFile);
 		}
-		if (sourceDebug != null) {
+		if (sourceDebug != null)
+		{
 			int len = sourceDebug.length - 2;
 			out.putShort(newUTF8("SourceDebugExtension")).putInt(len);
 			out.putByteArray(sourceDebug.data, 2, len);
 		}
-		if (enclosingMethodOwner != 0) {
+		if (enclosingMethodOwner != 0)
+		{
 			out.putShort(newUTF8("EnclosingMethod")).putInt(4);
 			out.putShort(enclosingMethodOwner).putShort(enclosingMethod);
 		}
-		if ((access & Opcodes.ACC_DEPRECATED) != 0) {
+		if ((access & Opcodes.ACC_DEPRECATED) != 0)
+		{
 			out.putShort(newUTF8("Deprecated")).putInt(0);
 		}
 		if ((access & Opcodes.ACC_SYNTHETIC) != 0
-				&& ((version & 0xFFFF) < Opcodes.V1_5 || (access & ACC_SYNTHETIC_ATTRIBUTE) != 0)) {
+				&& ((version & 0xFFFF) < Opcodes.V1_5 || (access & ACC_SYNTHETIC_ATTRIBUTE) != 0))
+		{
 			out.putShort(newUTF8("Synthetic")).putInt(0);
 		}
-		if (innerClasses != null) {
+		if (innerClasses != null)
+		{
 			out.putShort(newUTF8("InnerClasses"));
 			out.putInt(innerClasses.length + 2).putShort(innerClassesCount);
 			out.putByteArray(innerClasses.data, 0, innerClasses.length);
@@ -718,38 +744,59 @@ public class ClassWriter {
 	 *            {@link Type}.
 	 * @return a new or already existing constant item with the given value.
 	 */
-	Item newConstItem(final Object cst) {
-		if (cst instanceof Integer) {
+	Item newConstItem(final Object cst)
+	{
+		if (cst instanceof Integer)
+		{
 			int val = ((Integer) cst).intValue();
 			return newInteger(val);
-		} else if (cst instanceof Byte) {
+		}
+		else if (cst instanceof Byte)
+		{
 			int val = ((Byte) cst).intValue();
 			return newInteger(val);
-		} else if (cst instanceof Character) {
+		}
+		else if (cst instanceof Character)
+		{
 			int val = ((Character) cst).charValue();
 			return newInteger(val);
-		} else if (cst instanceof Short) {
+		}
+		else if (cst instanceof Short)
+		{
 			int val = ((Short) cst).intValue();
 			return newInteger(val);
-		} else if (cst instanceof Boolean) {
+		}
+		else if (cst instanceof Boolean)
+		{
 			int val = ((Boolean) cst).booleanValue() ? 1 : 0;
 			return newInteger(val);
-		} else if (cst instanceof Float) {
+		}
+		else if (cst instanceof Float)
+		{
 			float val = ((Float) cst).floatValue();
 			return newFloat(val);
-		} else if (cst instanceof Long) {
+		}
+		else if (cst instanceof Long)
+		{
 			long val = ((Long) cst).longValue();
 			return newLong(val);
-		} else if (cst instanceof Double) {
+		}
+		else if (cst instanceof Double)
+		{
 			double val = ((Double) cst).doubleValue();
 			return newDouble(val);
-		} else if (cst instanceof String) {
+		}
+		else if (cst instanceof String)
+		{
 			return newString((String) cst);
-		} else if (cst instanceof Type) {
+		}
+		else if (cst instanceof Type)
+		{
 			Type t = (Type) cst;
-			return newClassItem(t.getSort() == Type.OBJECT ? t
-					.getInternalName() : t.getDescriptor());
-		} else {
+			return newClassItem(t.getSort() == Type.OBJECT ? t.getInternalName() : t.getDescriptor());
+		}
+		else
+		{
 			throw new IllegalArgumentException("value " + cst);
 		}
 	}
@@ -782,10 +829,12 @@ public class ClassWriter {
 	 *            the String value.
 	 * @return the index of a new or already existing UTF8 item.
 	 */
-	public int newUTF8(final String value) {
+	public int newUTF8(final String value)
+	{
 		key.set(UTF8, value, null, null);
 		Item result = get(key);
-		if (result == null) {
+		if (result == null)
+		{
 			pool.putByte(UTF8).putUTF8(value);
 			result = new Item(index++, key);
 			put(result);
@@ -803,10 +852,12 @@ public class ClassWriter {
 	 *            the internal name of the class.
 	 * @return a new or already existing class reference item.
 	 */
-	Item newClassItem(final String value) {
+	Item newClassItem(final String value)
+	{
 		key2.set(CLASS, value, null, null);
 		Item result = get(key2);
-		if (result == null) {
+		if (result == null)
+		{
 			pool.put12(CLASS, newUTF8(value));
 			result = new Item(index++, key2);
 			put(result);
@@ -824,7 +875,8 @@ public class ClassWriter {
 	 *            the internal name of the class.
 	 * @return the index of a new or already existing class reference item.
 	 */
-	public int newClass(final String value) {
+	public int newClass(final String value)
+	{
 		return newClassItem(value).index;
 	}
 
@@ -840,10 +892,12 @@ public class ClassWriter {
 	 *            the field's descriptor.
 	 * @return a new or already existing field reference item.
 	 */
-	Item newFieldItem(final String owner, final String name, final String desc) {
+	Item newFieldItem(final String owner, final String name, final String desc)
+	{
 		key3.set(FIELD, owner, name, desc);
 		Item result = get(key3);
-		if (result == null) {
+		if (result == null)
+		{
 			put122(FIELD, newClass(owner), newNameType(name, desc));
 			result = new Item(index++, key3);
 			put(result);
@@ -882,12 +936,13 @@ public class ClassWriter {
 	 *            <tt>true</tt> if <tt>owner</tt> is an interface.
 	 * @return a new or already existing method reference item.
 	 */
-	Item newMethodItem(final String owner, final String name,
-			final String desc, final boolean itf) {
+	Item newMethodItem(final String owner, final String name, final String desc, final boolean itf)
+	{
 		int type = itf ? IMETH : METH;
 		key3.set(type, owner, name, desc);
 		Item result = get(key3);
-		if (result == null) {
+		if (result == null)
+		{
 			put122(type, newClass(owner), newNameType(name, desc));
 			result = new Item(index++, key3);
 			put(result);
@@ -924,10 +979,12 @@ public class ClassWriter {
 	 *            the int value.
 	 * @return a new or already existing int item.
 	 */
-	Item newInteger(final int value) {
+	Item newInteger(final int value)
+	{
 		key.set(value);
 		Item result = get(key);
-		if (result == null) {
+		if (result == null)
+		{
 			pool.putByte(INT).putInt(value);
 			result = new Item(index++, key);
 			put(result);
@@ -943,10 +1000,12 @@ public class ClassWriter {
 	 *            the float value.
 	 * @return a new or already existing float item.
 	 */
-	Item newFloat(final float value) {
+	Item newFloat(final float value)
+	{
 		key.set(value);
 		Item result = get(key);
-		if (result == null) {
+		if (result == null)
+		{
 			pool.putByte(FLOAT).putInt(key.intVal);
 			result = new Item(index++, key);
 			put(result);
@@ -962,10 +1021,12 @@ public class ClassWriter {
 	 *            the long value.
 	 * @return a new or already existing long item.
 	 */
-	Item newLong(final long value) {
+	Item newLong(final long value)
+	{
 		key.set(value);
 		Item result = get(key);
-		if (result == null) {
+		if (result == null)
+		{
 			pool.putByte(LONG).putLong(value);
 			result = new Item(index, key);
 			put(result);
@@ -982,10 +1043,12 @@ public class ClassWriter {
 	 *            the double value.
 	 * @return a new or already existing double item.
 	 */
-	Item newDouble(final double value) {
+	Item newDouble(final double value)
+	{
 		key.set(value);
 		Item result = get(key);
-		if (result == null) {
+		if (result == null)
+		{
 			pool.putByte(DOUBLE).putLong(key.longVal);
 			result = new Item(index, key);
 			put(result);
@@ -1002,10 +1065,12 @@ public class ClassWriter {
 	 *            the String value.
 	 * @return a new or already existing string item.
 	 */
-	private Item newString(final String value) {
+	private Item newString(final String value)
+	{
 		key2.set(STR, value, null, null);
 		Item result = get(key2);
-		if (result == null) {
+		if (result == null)
+		{
 			pool.put12(STR, newUTF8(value));
 			result = new Item(index++, key2);
 			put(result);
@@ -1025,7 +1090,8 @@ public class ClassWriter {
 	 *            a type descriptor.
 	 * @return the index of a new or already existing name and type item.
 	 */
-	public int newNameType(final String name, final String desc) {
+	public int newNameType(final String name, final String desc)
+	{
 		return newNameTypeItem(name, desc).index;
 	}
 
@@ -1039,10 +1105,12 @@ public class ClassWriter {
 	 *            a type descriptor.
 	 * @return a new or already existing name and type item.
 	 */
-	Item newNameTypeItem(final String name, final String desc) {
+	Item newNameTypeItem(final String name, final String desc)
+	{
 		key2.set(NAME_TYPE, name, desc, null);
 		Item result = get(key2);
-		if (result == null) {
+		if (result == null)
+		{
 			put122(NAME_TYPE, newUTF8(name), newUTF8(desc));
 			result = new Item(index++, key2);
 			put(result);
@@ -1058,10 +1126,12 @@ public class ClassWriter {
 	 *            the internal name to be added to the type table.
 	 * @return the index of this internal name in the type table.
 	 */
-	int addType(final String type) {
+	int addType(final String type)
+	{
 		key.set(TYPE_NORMAL, type, null, null);
 		Item result = get(key);
-		if (result == null) {
+		if (result == null)
+		{
 			result = addType(key);
 		}
 		return result.index;
@@ -1079,13 +1149,15 @@ public class ClassWriter {
 	 *            UNINITIALIZED type value.
 	 * @return the index of this internal name in the type table.
 	 */
-	int addUninitializedType(final String type, final int offset) {
+	int addUninitializedType(final String type, final int offset)
+	{
 		key.type = TYPE_UNINIT;
 		key.intVal = offset;
 		key.strVal1 = type;
 		key.hashCode = 0x7FFFFFFF & (TYPE_UNINIT + type.hashCode() + offset);
 		Item result = get(key);
-		if (result == null) {
+		if (result == null)
+		{
 			result = addType(key);
 		}
 		return result.index;
@@ -1099,14 +1171,17 @@ public class ClassWriter {
 	 * @return the added Item, which a new Item instance with the same value as
 	 *         the given Item.
 	 */
-	private Item addType(final Item item) {
+	private Item addType(final Item item)
+	{
 		++typeCount;
 		Item result = new Item(typeCount, key);
 		put(result);
-		if (typeTable == null) {
+		if (typeTable == null)
+		{
 			typeTable = new Item[16];
 		}
-		if (typeCount == typeTable.length) {
+		if (typeCount == typeTable.length)
+		{
 			Item[] newTable = new Item[2 * typeTable.length];
 			System.arraycopy(typeTable, 0, newTable, 0, typeTable.length);
 			typeTable = newTable;
@@ -1127,12 +1202,14 @@ public class ClassWriter {
 	 *            index of an internal name in {@link #typeTable}.
 	 * @return the index of the common super type of the two given types.
 	 */
-	int getMergedType(final int type1, final int type2) {
+	int getMergedType(final int type1, final int type2)
+	{
 		key2.type = TYPE_MERGED;
 		key2.longVal = type1 | (((long) type2) << 32);
 		key2.hashCode = 0x7FFFFFFF & (TYPE_MERGED + type1 + type2);
 		Item result = get(key2);
-		if (result == null) {
+		if (result == null)
+		{
 			String t = typeTable[type1].strVal1;
 			String u = typeTable[type2].strVal1;
 			key2.intVal = addType(getCommonSuperClass(t, u));
@@ -1159,26 +1236,37 @@ public class ClassWriter {
 	 *         classes.
 	 */
 	@SuppressWarnings("unchecked")
-	protected String getCommonSuperClass(final String type1, final String type2) {
+	protected String getCommonSuperClass(final String type1, final String type2)
+	{
 		Class c, d;
-		try {
+		try
+		{
 			c = Class.forName(type1.replace('/', '.'));
 			d = Class.forName(type2.replace('/', '.'));
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			throw new RuntimeException(e.toString());
 		}
-		if (c.isAssignableFrom(d)) {
+		if (c.isAssignableFrom(d))
+		{
 			return type1;
 		}
-		if (d.isAssignableFrom(c)) {
+		if (d.isAssignableFrom(c))
+		{
 			return type2;
 		}
-		if (c.isInterface() || d.isInterface()) {
+		if (c.isInterface() || d.isInterface())
+		{
 			return "java/lang/Object";
-		} else {
-			do {
+		}
+		else
+		{
+			do
+			{
 				c = c.getSuperclass();
-			} while (!c.isAssignableFrom(d));
+			}
+			while (!c.isAssignableFrom(d));
 			return c.getName().replace('.', '/');
 		}
 	}
@@ -1192,9 +1280,11 @@ public class ClassWriter {
 	 * @return the constant pool's hash table item which is equal to the given
 	 *         item, or <tt>null</tt> if there is no such item.
 	 */
-	private Item get(final Item key) {
+	private Item get(final Item key)
+	{
 		Item i = items[key.hashCode % items.length];
-		while (i != null && (i.type != key.type || !key.isEqualTo(i))) {
+		while (i != null && (i.type != key.type || !key.isEqualTo(i)))
+		{
 			i = i.next;
 		}
 		return i;
@@ -1207,14 +1297,18 @@ public class ClassWriter {
 	 * @param i
 	 *            the item to be added to the constant pool's hash table.
 	 */
-	private void put(final Item i) {
-		if (index > threshold) {
+	private void put(final Item i)
+	{
+		if (index > threshold)
+		{
 			int ll = items.length;
 			int nl = ll * 2 + 1;
 			Item[] newItems = new Item[nl];
-			for (int l = ll - 1; l >= 0; --l) {
+			for (int l = ll - 1; l >= 0; --l)
+			{
 				Item j = items[l];
-				while (j != null) {
+				while (j != null)
+				{
 					int index = j.hashCode % newItems.length;
 					Item k = j.next;
 					j.next = newItems[index];
@@ -1240,7 +1334,8 @@ public class ClassWriter {
 	 * @param s2
 	 *            another short.
 	 */
-	private void put122(final int b, final int s1, final int s2) {
+	private void put122(final int b, final int s1, final int s2)
+	{
 		pool.put12(b, s1).putShort(s2);
 	}
 }

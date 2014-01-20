@@ -33,77 +33,91 @@ import java.io.Writer;
 import org.beetl.core.ByteWriter;
 import org.beetl.core.SuperVar;
 
-public final class ByteWriter_Char extends ByteWriter {
+public final class ByteWriter_Char extends ByteWriter
+{
 
 	Writer w = null;
 	String cs = null;
 	ByteWriter parent = null;
 
-	public ByteWriter_Char(Writer w, String cs) {
+	public ByteWriter_Char(Writer w, String cs)
+	{
 		this.w = w;
 		this.cs = cs;
 	}
 
-	public ByteWriter_Char(Writer w, String cs, ByteWriter parent) {
+	public ByteWriter_Char(Writer w, String cs, ByteWriter parent)
+	{
 		this(w, cs);
 		this.parent = parent;
 	}
 
 	@Override
-	public final void write(char[] cbuf) throws IOException {
+	public final void write(char[] cbuf) throws IOException
+	{
 		w.write(cbuf);
 
 	}
 
 	@Override
-	public void write(char[] cbuf, int len) throws IOException {
+	public void write(char[] cbuf, int len) throws IOException
+	{
 		w.write(cbuf, 0, len);
 
 	}
 
 	@Override
-	public final void write(byte[] bs) throws IOException {
+	public final void write(byte[] bs) throws IOException
+	{
 		this.write(new String(bs, cs));
 
 	}
 
 	@Override
-	public ByteWriter getTempWriter() {
+	public ByteWriter getTempWriter()
+	{
 		return new ByteWriter_Char(new NoLockStringWriter(), cs, this);
 	}
 
 	@Override
-	public Object getTempContent() {
+	public Object getTempContent()
+	{
 		// 检查是否是Temp?
 		return w.toString();
 	}
 
 	@Override
-	public void flush() throws IOException {
+	public void flush() throws IOException
+	{
 		this.w.flush();
 
 	}
 
 	@Override
-	public ByteWriter getParent() {
+	public ByteWriter getParent()
+	{
 		// TODO Auto-generated method stub
 		return parent;
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return w.toString();
 	}
 
 	@Override
-	public void write(SuperVar sv) throws IOException {
+	public void write(SuperVar sv) throws IOException
+	{
 		this.w.write(sv.toString());
 
 	}
 
 	@Override
-	public void flushToParent() throws IOException {
+	public void flushToParent() throws IOException
+	{
 		// TODO Auto-generated method stub
-		if (this.parent == null) {
+		if (this.parent == null)
+		{
 			throw new NullPointerException("Parent is null");
 		}
 		w.flush();

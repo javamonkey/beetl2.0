@@ -10,197 +10,204 @@ import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.misc.*;
 
-@SuppressWarnings({ "all", "warnings", "unchecked", "unused", "cast" })
-public class BeetlLexer extends Lexer {
+@SuppressWarnings(
+{ "all", "warnings", "unchecked", "unused", "cast" })
+public class BeetlLexer extends Lexer
+{
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache = new PredictionContextCache();
-	public static final int If = 1, For = 2, Elsefor = 3, Else = 4, While = 5,
-			Switch = 6, Select = 7, Return = 8, Break = 9, Continue = 10,
-			Var = 11, Directive = 12, Case = 13, Default = 14, Try = 15,
-			Catch = 16, LEFT_BRACE = 17, RIGHT_BRACE = 18, LEFT_PAR = 19,
-			RIGHT_PAR = 20, LEFT_SQBR = 21, RIGHT_SQBR = 22, INCREASE = 23,
-			DECREASE = 24, VIRTUAL = 25, ADD = 26, MIN = 27, MUlTIP = 28,
-			DIV = 29, MOD = 30, EQUAL = 31, NOT_EQUAL = 32, ASSIN = 33,
-			LARGE_EQUAL = 34, LARGE = 35, LESS_EQUAL = 36, LESS = 37, NOT = 38,
-			AND = 39, OR = 40, QUESTOIN = 41, AT = 42, NULL = 43, TRUE = 44,
-			FALSE = 45, END = 46, COMMA = 47, COLON = 48, PERIOD = 49,
-			FOR_IN = 50, LEFT_TOKEN = 51, RIGHT_TOKEN = 52,
-			LEFT_TEXT_TOKEN = 53, HexLiteral = 54, DecimalLiteral = 55,
-			OctalLiteral = 56, FloatingPointLiteral = 57, StringLiteral = 58,
-			Identifier = 59, WS = 60, LINE_COMMENT = 61, COMMENT_OPEN = 62,
-			COMMENT_TAG = 63, COMMENT_END = 64, ALL_COMMENT_CHAR = 65,
-			Identifier1 = 66, PERIOD1 = 67, LEFT_PAR1 = 68, RIGHT_PAR1 = 69,
-			COMMA1 = 70, LEFT_ANGULAR = 71, RIGHT_ANGULAR = 72, WS1 = 73,
-			TYPE_END = 74;
+	public static final int If = 1, For = 2, Elsefor = 3, Else = 4, While = 5, Switch = 6, Select = 7, Return = 8,
+			Break = 9, Continue = 10, Var = 11, Directive = 12, Case = 13, Default = 14, Try = 15, Catch = 16,
+			LEFT_BRACE = 17, RIGHT_BRACE = 18, LEFT_PAR = 19, RIGHT_PAR = 20, LEFT_SQBR = 21, RIGHT_SQBR = 22,
+			INCREASE = 23, DECREASE = 24, VIRTUAL = 25, ADD = 26, MIN = 27, MUlTIP = 28, DIV = 29, MOD = 30,
+			EQUAL = 31, NOT_EQUAL = 32, ASSIN = 33, LARGE_EQUAL = 34, LARGE = 35, LESS_EQUAL = 36, LESS = 37, NOT = 38,
+			AND = 39, OR = 40, QUESTOIN = 41, AT = 42, NULL = 43, TRUE = 44, FALSE = 45, END = 46, COMMA = 47,
+			COLON = 48, PERIOD = 49, FOR_IN = 50, LEFT_TOKEN = 51, RIGHT_TOKEN = 52, LEFT_TEXT_TOKEN = 53,
+			HexLiteral = 54, DecimalLiteral = 55, OctalLiteral = 56, FloatingPointLiteral = 57, StringLiteral = 58,
+			Identifier = 59, WS = 60, LINE_COMMENT = 61, COMMENT_OPEN = 62, COMMENT_TAG = 63, COMMENT_END = 64,
+			ALL_COMMENT_CHAR = 65, Identifier1 = 66, PERIOD1 = 67, LEFT_PAR1 = 68, RIGHT_PAR1 = 69, COMMA1 = 70,
+			LEFT_ANGULAR = 71, RIGHT_ANGULAR = 72, WS1 = 73, TYPE_END = 74;
 	public static final int MODE_COMMENT = 1;
 	public static final int MODE_COMMENT_TYPE = 2;
-	public static String[] modeNames = { "DEFAULT_MODE", "MODE_COMMENT",
-			"MODE_COMMENT_TYPE" };
+	public static String[] modeNames =
+	{ "DEFAULT_MODE", "MODE_COMMENT", "MODE_COMMENT_TYPE" };
 
-	public static final String[] tokenNames = { "<INVALID>", "'if'", "'for'",
-			"'elsefor'", "'else'", "'while'", "'switch'", "'select'",
-			"'return'", "'break'", "'continue'", "'var'", "Directive",
-			"'case'", "'default'", "'try'", "'catch'", "'{'", "'}'",
-			"LEFT_PAR", "RIGHT_PAR", "'['", "']'", "'++'", "'--'", "'.~'",
-			"'+'", "'-'", "'*'", "'/'", "'%'", "'=='", "'!='", "'='", "'>='",
-			"LARGE", "'<='", "LESS", "'!'", "'&&'", "'||'", "'?'", "'@'",
-			"'null'", "'true'", "'false'", "';'", "COMMA", "':'", "PERIOD",
-			"'in'", "'<<'", "'>>'", "'<$'", "HexLiteral", "DecimalLiteral",
-			"OctalLiteral", "FloatingPointLiteral", "StringLiteral",
-			"Identifier", "WS", "LINE_COMMENT", "COMMENT_OPEN", "COMMENT_TAG",
-			"COMMENT_END", "ALL_COMMENT_CHAR", "Identifier1", "PERIOD1",
-			"LEFT_PAR1", "RIGHT_PAR1", "COMMA1", "LEFT_ANGULAR",
-			"RIGHT_ANGULAR", "WS1", "TYPE_END" };
-	public static final String[] ruleNames = { "If", "For", "Elsefor", "Else",
-			"While", "Switch", "Select", "Return", "Break", "Continue", "Var",
-			"Directive", "Case", "Default", "Try", "Catch", "LEFT_BRACE",
-			"RIGHT_BRACE", "LEFT_PAR", "RIGHT_PAR", "LEFT_SQBR", "RIGHT_SQBR",
-			"INCREASE", "DECREASE", "VIRTUAL", "ADD", "MIN", "MUlTIP", "DIV",
-			"MOD", "EQUAL", "NOT_EQUAL", "ASSIN", "LARGE_EQUAL", "LARGE",
-			"LESS_EQUAL", "LESS", "NOT", "AND", "OR", "QUESTOIN", "AT", "NULL",
-			"TRUE", "FALSE", "END", "COMMA", "COLON", "PERIOD", "FOR_IN",
-			"LEFT_TOKEN", "RIGHT_TOKEN", "LEFT_TEXT_TOKEN", "HexLiteral",
-			"DecimalLiteral", "OctalLiteral", "HexDigit", "IntegerTypeSuffix",
-			"FloatingPointLiteral", "Exponent", "FloatTypeSuffix",
-			"StringLiteral", "EscapeSequence", "OctalEscape", "UnicodeEscape",
-			"Identifier", "Letter", "JavaIDDigit", "WS", "LINE_COMMENT",
-			"COMMENT_OPEN", "COMMENT_TAG", "COMMENT_END", "COMMENT_END_CHAR",
-			"TYPE_CHAR", "ALL_COMMENT_CHAR", "Identifier1", "PERIOD1",
-			"LEFT_PAR1", "RIGHT_PAR1", "COMMA1", "LEFT_ANGULAR",
-			"RIGHT_ANGULAR", "WS1", "TYPE_END" };
+	public static final String[] tokenNames =
+	{ "<INVALID>", "'if'", "'for'", "'elsefor'", "'else'", "'while'", "'switch'", "'select'", "'return'", "'break'",
+			"'continue'", "'var'", "Directive", "'case'", "'default'", "'try'", "'catch'", "'{'", "'}'", "LEFT_PAR",
+			"RIGHT_PAR", "'['", "']'", "'++'", "'--'", "'.~'", "'+'", "'-'", "'*'", "'/'", "'%'", "'=='", "'!='",
+			"'='", "'>='", "LARGE", "'<='", "LESS", "'!'", "'&&'", "'||'", "'?'", "'@'", "'null'", "'true'", "'false'",
+			"';'", "COMMA", "':'", "PERIOD", "'in'", "'<<'", "'>>'", "'<$'", "HexLiteral", "DecimalLiteral",
+			"OctalLiteral", "FloatingPointLiteral", "StringLiteral", "Identifier", "WS", "LINE_COMMENT",
+			"COMMENT_OPEN", "COMMENT_TAG", "COMMENT_END", "ALL_COMMENT_CHAR", "Identifier1", "PERIOD1", "LEFT_PAR1",
+			"RIGHT_PAR1", "COMMA1", "LEFT_ANGULAR", "RIGHT_ANGULAR", "WS1", "TYPE_END" };
+	public static final String[] ruleNames =
+	{ "If", "For", "Elsefor", "Else", "While", "Switch", "Select", "Return", "Break", "Continue", "Var", "Directive",
+			"Case", "Default", "Try", "Catch", "LEFT_BRACE", "RIGHT_BRACE", "LEFT_PAR", "RIGHT_PAR", "LEFT_SQBR",
+			"RIGHT_SQBR", "INCREASE", "DECREASE", "VIRTUAL", "ADD", "MIN", "MUlTIP", "DIV", "MOD", "EQUAL",
+			"NOT_EQUAL", "ASSIN", "LARGE_EQUAL", "LARGE", "LESS_EQUAL", "LESS", "NOT", "AND", "OR", "QUESTOIN", "AT",
+			"NULL", "TRUE", "FALSE", "END", "COMMA", "COLON", "PERIOD", "FOR_IN", "LEFT_TOKEN", "RIGHT_TOKEN",
+			"LEFT_TEXT_TOKEN", "HexLiteral", "DecimalLiteral", "OctalLiteral", "HexDigit", "IntegerTypeSuffix",
+			"FloatingPointLiteral", "Exponent", "FloatTypeSuffix", "StringLiteral", "EscapeSequence", "OctalEscape",
+			"UnicodeEscape", "Identifier", "Letter", "JavaIDDigit", "WS", "LINE_COMMENT", "COMMENT_OPEN",
+			"COMMENT_TAG", "COMMENT_END", "COMMENT_END_CHAR", "TYPE_CHAR", "ALL_COMMENT_CHAR", "Identifier1",
+			"PERIOD1", "LEFT_PAR1", "RIGHT_PAR1", "COMMA1", "LEFT_ANGULAR", "RIGHT_ANGULAR", "WS1", "TYPE_END" };
 
-	public BeetlLexer(CharStream input) {
+	public BeetlLexer(CharStream input)
+	{
 		super(input);
-		_interp = new LexerATNSimulator(this, _ATN, _decisionToDFA,
-				_sharedContextCache);
+		_interp = new LexerATNSimulator(this, _ATN, _decisionToDFA, _sharedContextCache);
 	}
 
 	@Override
-	public String getGrammarFileName() {
+	public String getGrammarFileName()
+	{
 		return "BeetlLexer.g4";
 	}
 
 	@Override
-	public String[] getTokenNames() {
+	public String[] getTokenNames()
+	{
 		return tokenNames;
 	}
 
 	@Override
-	public String[] getRuleNames() {
+	public String[] getRuleNames()
+	{
 		return ruleNames;
 	}
 
 	@Override
-	public String[] getModeNames() {
+	public String[] getModeNames()
+	{
 		return modeNames;
 	}
 
 	@Override
-	public ATN getATN() {
+	public ATN getATN()
+	{
 		return _ATN;
 	}
 
 	@Override
-	public void action(RuleContext _localctx, int ruleIndex, int actionIndex) {
-		switch (ruleIndex) {
-		case 68:
-			WS_action((RuleContext) _localctx, actionIndex);
-			break;
+	public void action(RuleContext _localctx, int ruleIndex, int actionIndex)
+	{
+		switch (ruleIndex)
+		{
+			case 68:
+				WS_action((RuleContext) _localctx, actionIndex);
+				break;
 
-		case 69:
-			LINE_COMMENT_action((RuleContext) _localctx, actionIndex);
-			break;
+			case 69:
+				LINE_COMMENT_action((RuleContext) _localctx, actionIndex);
+				break;
 
-		case 70:
-			COMMENT_OPEN_action((RuleContext) _localctx, actionIndex);
-			break;
+			case 70:
+				COMMENT_OPEN_action((RuleContext) _localctx, actionIndex);
+				break;
 
-		case 71:
-			COMMENT_TAG_action((RuleContext) _localctx, actionIndex);
-			break;
+			case 71:
+				COMMENT_TAG_action((RuleContext) _localctx, actionIndex);
+				break;
 
-		case 72:
-			COMMENT_END_action((RuleContext) _localctx, actionIndex);
-			break;
+			case 72:
+				COMMENT_END_action((RuleContext) _localctx, actionIndex);
+				break;
 
-		case 75:
-			ALL_COMMENT_CHAR_action((RuleContext) _localctx, actionIndex);
-			break;
+			case 75:
+				ALL_COMMENT_CHAR_action((RuleContext) _localctx, actionIndex);
+				break;
 
-		case 83:
-			WS1_action((RuleContext) _localctx, actionIndex);
-			break;
+			case 83:
+				WS1_action((RuleContext) _localctx, actionIndex);
+				break;
 
-		case 84:
-			TYPE_END_action((RuleContext) _localctx, actionIndex);
-			break;
+			case 84:
+				TYPE_END_action((RuleContext) _localctx, actionIndex);
+				break;
 		}
 	}
 
-	private void COMMENT_OPEN_action(RuleContext _localctx, int actionIndex) {
-		switch (actionIndex) {
-		case 2:
-			pushMode(MODE_COMMENT);
-			_channel = HIDDEN;
-			break;
+	private void COMMENT_OPEN_action(RuleContext _localctx, int actionIndex)
+	{
+		switch (actionIndex)
+		{
+			case 2:
+				pushMode(MODE_COMMENT);
+				_channel = HIDDEN;
+				break;
 		}
 	}
 
-	private void COMMENT_TAG_action(RuleContext _localctx, int actionIndex) {
-		switch (actionIndex) {
-		case 3:
-			pushMode(MODE_COMMENT_TYPE);
-			break;
+	private void COMMENT_TAG_action(RuleContext _localctx, int actionIndex)
+	{
+		switch (actionIndex)
+		{
+			case 3:
+				pushMode(MODE_COMMENT_TYPE);
+				break;
 		}
 	}
 
-	private void TYPE_END_action(RuleContext _localctx, int actionIndex) {
-		switch (actionIndex) {
-		case 7:
-			popMode();
-			_channel = HIDDEN;
-			break;
+	private void TYPE_END_action(RuleContext _localctx, int actionIndex)
+	{
+		switch (actionIndex)
+		{
+			case 7:
+				popMode();
+				_channel = HIDDEN;
+				break;
 		}
 	}
 
-	private void WS_action(RuleContext _localctx, int actionIndex) {
-		switch (actionIndex) {
-		case 0:
-			_channel = HIDDEN;
-			break;
+	private void WS_action(RuleContext _localctx, int actionIndex)
+	{
+		switch (actionIndex)
+		{
+			case 0:
+				_channel = HIDDEN;
+				break;
 		}
 	}
 
-	private void COMMENT_END_action(RuleContext _localctx, int actionIndex) {
-		switch (actionIndex) {
-		case 4:
-			popMode();
-			_channel = HIDDEN;
-			break;
+	private void COMMENT_END_action(RuleContext _localctx, int actionIndex)
+	{
+		switch (actionIndex)
+		{
+			case 4:
+				popMode();
+				_channel = HIDDEN;
+				break;
 		}
 	}
 
-	private void ALL_COMMENT_CHAR_action(RuleContext _localctx, int actionIndex) {
-		switch (actionIndex) {
-		case 5:
-			_channel = HIDDEN;
-			break;
+	private void ALL_COMMENT_CHAR_action(RuleContext _localctx, int actionIndex)
+	{
+		switch (actionIndex)
+		{
+			case 5:
+				_channel = HIDDEN;
+				break;
 		}
 	}
 
-	private void LINE_COMMENT_action(RuleContext _localctx, int actionIndex) {
-		switch (actionIndex) {
-		case 1:
-			_channel = HIDDEN;
-			break;
+	private void LINE_COMMENT_action(RuleContext _localctx, int actionIndex)
+	{
+		switch (actionIndex)
+		{
+			case 1:
+				_channel = HIDDEN;
+				break;
 		}
 	}
 
-	private void WS1_action(RuleContext _localctx, int actionIndex) {
-		switch (actionIndex) {
-		case 6:
-			_channel = HIDDEN;
-			break;
+	private void WS1_action(RuleContext _localctx, int actionIndex)
+	{
+		switch (actionIndex)
+		{
+			case 6:
+				_channel = HIDDEN;
+				break;
 		}
 	}
 
@@ -432,11 +439,12 @@ public class BeetlLexer extends Lexer {
 			+ "\u0192\u0198\u019b\u01a4\u01aa\u01ae\u01b1\u01b7\u01ba\u01bd\u01c2\u01c6"
 			+ "\u01cb\u01d2\u01d7\u01de\u01e1\u01e5\u01ea\u01ed\u01ef\u01f3\u01f8\u01ff"
 			+ "\u0201\u0208\u020a\u020e\u0214\u021f\u022b\u022d\u0237\u0241\u0245\u0276";
-	public static final ATN _ATN = ATNSimulator.deserialize(_serializedATN
-			.toCharArray());
-	static {
+	public static final ATN _ATN = ATNSimulator.deserialize(_serializedATN.toCharArray());
+	static
+	{
 		_decisionToDFA = new DFA[_ATN.getNumberOfDecisions()];
-		for (int i = 0; i < _ATN.getNumberOfDecisions(); i++) {
+		for (int i = 0; i < _ATN.getNumberOfDecisions(); i++)
+		{
 			_decisionToDFA[i] = new DFA(_ATN.getDecisionState(i), i);
 		}
 	}

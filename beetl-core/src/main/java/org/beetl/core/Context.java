@@ -8,7 +8,8 @@ import java.util.Set;
 import org.beetl.core.exception.TempException;
 import org.beetl.core.statement.IGoto;
 
-public class Context {
+public class Context
+{
 
 	public static Object NOT_EXIST_OBJECT = new Object();
 
@@ -41,14 +42,19 @@ public class Context {
 	 * @param i
 	 * @return
 	 */
-	protected Object getVar(int i) {
+	protected Object getVar(int i)
+	{
 		if (i >= this.tempVarStartIndex)
 			return vars[i];
-		else {
+		else
+		{
 			Object object = vars[i];
-			if (object == NOT_EXIST_OBJECT) {
+			if (object == NOT_EXIST_OBJECT)
+			{
 				throw new TempException("变量不存在");
-			} else {
+			}
+			else
+			{
 				return object;
 			}
 		}
@@ -61,10 +67,12 @@ public class Context {
 	 * @param i
 	 * @param object
 	 */
-	protected void setVar(int i, Object value) {
+	protected void setVar(int i, Object value)
+	{
 		if (i >= this.tempVarStartIndex)
 			vars[i] = value;
-		else {
+		else
+		{
 			// 可以赋值么？既然没有改变模型和controller
 			throw new TempException("全局变量，不能赋值");
 		}
@@ -76,37 +84,46 @@ public class Context {
 	 * @param i
 	 * @return
 	 */
-	protected boolean exist(int i) {
-		if (i >= this.tempVarStartIndex) {
+	protected boolean exist(int i)
+	{
+		if (i >= this.tempVarStartIndex)
+		{
 			return true;
-		} else {
+		}
+		else
+		{
 			Object object = vars[i];
 			return object != NOT_EXIST_OBJECT;
 		}
 	}
 
-	public void set(String key, Object value) {
+	public void set(String key, Object value)
+	{
 		if (globalVar == null)
 			globalVar = new HashMap<String, Object>();
 		globalVar.put(key, value);
 	}
 
-	public void set(String key, Object value, boolean isDynamicObject) {
+	public void set(String key, Object value, boolean isDynamicObject)
+	{
 		if (globalVar == null)
 			globalVar = new HashMap<String, Object>();
 		globalVar.put(key, value);
-		if (isDynamicObject) {
+		if (isDynamicObject)
+		{
 			if (objectKeys == null)
 				objectKeys = new HashSet(1);
 			objectKeys.add(key);
 		}
 	}
 
-	public Object getGlobal(String key) {
+	public Object getGlobal(String key)
+	{
 		return globalVar.get(key);
 	}
 
-	public void resetGotoFlag() {
+	public void resetGotoFlag()
+	{
 		this.gotoFlag = IGoto.NORMAL;
 	}
 

@@ -16,13 +16,15 @@ import org.beetl.core.statement.Type;
  * @author joelli
  * 
  */
-public class TypeBindingFilter extends Filter {
+public class TypeBindingFilter extends Filter
+{
 	boolean isCompleted = false;
 	Type[] types = null;
 	ProgramMetaData copyProgramMetaData = null;
 	Filter nextFilter = null;
 
-	public TypeBindingFilter(Program p, Filter nextFilter) {
+	public TypeBindingFilter(Program p, Filter nextFilter)
+	{
 		super(p);
 		// 一个新的copy，用于分析
 		ProgramMetaData metaData = p.metaData.copy();
@@ -39,32 +41,42 @@ public class TypeBindingFilter extends Filter {
 	}
 
 	@Override
-	public void check(Context ctx) {
+	public void check(Context ctx)
+	{
 		if (isCompleted)
 			return;
 
 		int y = 0;
-		for (int i = 0; i < program.metaData.tempVarStartIndex; i++) {
-			if (types[i] == null) {
-				if (ctx.vars[i] != ctx.NOT_EXIST_OBJECT) {
+		for (int i = 0; i < program.metaData.tempVarStartIndex; i++)
+		{
+			if (types[i] == null)
+			{
+				if (ctx.vars[i] != ctx.NOT_EXIST_OBJECT)
+				{
 					Object o = ctx.vars[i];
 					Type c = getType(o);
 					if (c == null)
 						continue;
-					else {
+					else
+					{
 						types[i] = c;
 						y++;
 					}
-				} else {
+				}
+				else
+				{
 					continue;
 				}
 
-			} else {
+			}
+			else
+			{
 				y++;
 			}
 		}
 		// 推测完毕
-		if (y == program.metaData.tempVarStartIndex) {
+		if (y == program.metaData.tempVarStartIndex)
+		{
 			infer();
 			isCompleted = true;
 			// 调用下一个filter
@@ -76,36 +88,45 @@ public class TypeBindingFilter extends Filter {
 	/**
 	 * 确定表达式的类型
 	 */
-	protected void infer() {
+	protected void infer()
+	{
 
-		for (Statement st : this.program.metaData.statements) {
+		for (Statement st : this.program.metaData.statements)
+		{
 			st.infer(types, null);
 		}
 
 	}
 
-	private Type getType(Object c) {
+	private Type getType(Object c)
+	{
 		Type type = null;
 		;
-		if (c instanceof Map) {
+		if (c instanceof Map)
+		{
 			Map<Object, Object> map = (Map<Object, Object>) c;
-			for (Entry<Object, Object> entry : map.entrySet()) {
+			for (Entry<Object, Object> entry : map.entrySet())
+			{
 
 				Object key = entry.getKey();
 				Object value = entry.getValue();
-				if (value != null) {
-					type = new Type(Map.class, new Type(Map.Entry.class,
-							key.getClass(), value.getClass()));
+				if (value != null)
+				{
+					type = new Type(Map.class, new Type(Map.Entry.class, key.getClass(), value.getClass()));
 					return type;
 				}
 
 			}
 			// 没有足够信息，还需要推测
 			return null;
-		} else if (c instanceof List) {
+		}
+		else if (c instanceof List)
+		{
 			List<Object> list = (List<Object>) c;
-			for (Object o : list) {
-				if (o != null) {
+			for (Object o : list)
+			{
+				if (o != null)
+				{
 
 					type = new Type(List.class, o.getClass());
 					return type;
@@ -113,11 +134,15 @@ public class TypeBindingFilter extends Filter {
 			}
 			// 没有足够信息
 			return null;
-		} else if (c.getClass().isArray()) {
+		}
+		else if (c.getClass().isArray())
+		{
 			// Class probableType = c.getClass()
 			type = new Type(c.getClass(), c.getClass().getComponentType());
 			return type;
-		} else {
+		}
+		else
+		{
 			return new Type(c.getClass());
 		}
 	}

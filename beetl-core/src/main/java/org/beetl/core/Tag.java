@@ -45,13 +45,15 @@ package org.beetl.core;
  * @author joeli
  * @create 2011-5-31
  */
-public abstract class Tag {
+public abstract class Tag
+{
 	protected Object[] args = null;
 	protected ByteWriter tagBody;
 	protected GroupTemplate group;
 	protected Context ctx;
 
-	public void setParas(Object[] args) {
+	public void setParas(Object[] args)
+	{
 		this.args = args;
 	}
 
@@ -60,7 +62,8 @@ public abstract class Tag {
 	 * includeFileTemplate}标签， 有些情况下是要用，如{@link org.bee.tl.ext.LayoutTag layout}
 	 * 标签
 	 */
-	public boolean requriedInput() {
+	public boolean requriedInput()
+	{
 		return true;
 	}
 
@@ -68,7 +71,8 @@ public abstract class Tag {
 	 * @param input
 	 *            标签体的内容
 	 */
-	public void setInput(ByteWriter tagBody) {
+	public void setInput(ByteWriter tagBody)
+	{
 		this.tagBody = tagBody;
 	}
 
@@ -77,7 +81,8 @@ public abstract class Tag {
 	 *            上下文，可以通过__this获取template，通过__pw获取Writer， __group
 	 *            获取GroupTemplate
 	 */
-	public void setContext(Context ctx) {
+	public void setContext(Context ctx)
+	{
 
 		this.ctx = ctx;
 

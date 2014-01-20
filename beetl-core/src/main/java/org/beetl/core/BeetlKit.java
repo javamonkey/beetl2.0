@@ -10,49 +10,55 @@ import java.util.Map;
  * joelli
  * 
  */
-public class BeetlKit {
+public class BeetlKit
+{
 
 	/**
 	 * 使用默认配置，调用此方法可以改变模板配置
 	 * 
 	 * @param conf
 	 */
-	public static void setConfiguration(Configuration conf) {
+	public static void setConfiguration(Configuration conf)
+	{
 
 	}
 
 	/* 模板部分 */
 
-	public static String render(String template, Map<String, Object> paras) {
+	public static String render(String template, Map<String, Object> paras)
+	{
 		return null;
 	}
 
-	public static String render(Reader reader, Map<String, Object> paras) {
+	public static String render(Reader reader, Map<String, Object> paras)
+	{
 		return null;
 	}
 
-	public static void renderTo(Reader reader, Writer writer,
-			Map<String, Object> paras) {
+	public static void renderTo(Reader reader, Writer writer, Map<String, Object> paras)
+	{
 
 	}
 
-	public static void renderTo(String template, Writer writer,
-			Map<String, Object> paras) {
+	public static void renderTo(String template, Writer writer, Map<String, Object> paras)
+	{
 
 	}
 
 	/* 脚本部分 */
 
-	public static Map execute(String script, Map<String, Object> paras) {
+	public static Map execute(String script, Map<String, Object> paras)
+	{
 		return null;
 	}
 
-	public static Map execute(Reader script, Map<String, Object> paras) {
+	public static Map execute(Reader script, Map<String, Object> paras)
+	{
 		return null;
 	}
 
-	public static Map execute(Reader script, Map<String, Object> paras,
-			StringBuilder console) {
+	public static Map execute(Reader script, Map<String, Object> paras, StringBuilder console)
+	{
 		return null;
 	}
 
@@ -67,8 +73,8 @@ public class BeetlKit {
 	 *            模板的输出
 	 * @return 模板渲染结果
 	 */
-	public static String testTemplate(String template, String initValue,
-			StringWriter console) {
+	public static String testTemplate(String template, String initValue, StringWriter console)
+	{
 		return null;
 	}
 

@@ -1,13 +1,16 @@
 package org.beetl.core.event;
 
-public class Event {
+public class Event
+{
 	Object event = null;
 
-	public Event(Object eventTarget) {
+	public Event(Object eventTarget)
+	{
 		this.event = eventTarget;
 	}
 
-	public Object getEventTaget() {
+	public Object getEventTaget()
+	{
 		return event;
 	}
 }

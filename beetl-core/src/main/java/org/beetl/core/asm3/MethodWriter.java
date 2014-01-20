@@ -37,7 +37,8 @@ package org.beetl.core.asm3;
  * @author Eric Bruneton
  * @author Eugene Kuleshov
  */
-public class MethodWriter {
+public class MethodWriter
+{
 
 	/**
 	 * Pseudo access flag used to denote constructors.
@@ -364,13 +365,15 @@ public class MethodWriter {
 	 *            <tt>true</tt> if the stack map tables must be recomputed from
 	 *            scratch.
 	 */
-	MethodWriter(final ClassWriter cw, final int access, final String name,
-			final String desc, final String signature,
-			final String[] exceptions, final boolean computeMaxs,
-			final boolean computeFrames) {
-		if (cw.firstMethod == null) {
+	MethodWriter(final ClassWriter cw, final int access, final String name, final String desc, final String signature,
+			final String[] exceptions, final boolean computeMaxs, final boolean computeFrames)
+	{
+		if (cw.firstMethod == null)
+		{
 			cw.firstMethod = this;
-		} else {
+		}
+		else
+		{
 			cw.lastMethod.next = this;
 		}
 		cw.lastMethod = this;
@@ -380,23 +383,28 @@ public class MethodWriter {
 		this.desc = cw.newUTF8(desc);
 		this.descriptor = desc;
 		this.signature = signature;
-		if (exceptions != null && exceptions.length > 0) {
+		if (exceptions != null && exceptions.length > 0)
+		{
 			exceptionCount = exceptions.length;
 			this.exceptions = new int[exceptionCount];
-			for (int i = 0; i < exceptionCount; ++i) {
+			for (int i = 0; i < exceptionCount; ++i)
+			{
 				this.exceptions[i] = cw.newClass(exceptions[i]);
 			}
 		}
 		// this.compute = computeFrames ? FRAMES : (computeMaxs ? MAXS :
 		// NOTHING);
 		this.compute = computeMaxs ? MAXS : NOTHING;
-		if (computeMaxs || computeFrames) {
-			if (computeFrames && "<init>".equals(name)) {
+		if (computeMaxs || computeFrames)
+		{
+			if (computeFrames && "<init>".equals(name))
+			{
 				this.access |= ACC_CONSTRUCTOR;
 			}
 			// updates maxLocals
 			int size = Type.getArgumentsAndReturnSizes(descriptor) >> 2;
-			if ((access & Opcodes.ACC_STATIC) != 0) {
+			if ((access & Opcodes.ACC_STATIC) != 0)
+			{
 				--size;
 			}
 			maxLocals = size;
@@ -512,106 +520,135 @@ public class MethodWriter {
 	// }
 	// }
 
-	public void visitInsn(final int opcode) {
+	public void visitInsn(final int opcode)
+	{
 		// adds the instruction to the bytecode of the method
 		code.putByte(opcode);
 		// update currentBlock
 		// Label currentBlock = this.currentBlock;
-		if (currentBlock != null) {
+		if (currentBlock != null)
+		{
 			// if (compute == FRAMES) {
 			// currentBlock.frame.execute(opcode, 0, null, null);
 			// } else
 			{
 				// updates current and max stack sizes
 				int size = stackSize + Frame.SIZE[opcode];
-				if (size > maxStackSize) {
+				if (size > maxStackSize)
+				{
 					maxStackSize = size;
 				}
 				stackSize = size;
 			}
 			// if opcode == ATHROW or xRETURN, ends current block (no successor)
-			if ((opcode >= Opcodes.IRETURN && opcode <= Opcodes.RETURN)
-					|| opcode == Opcodes.ATHROW) {
+			if ((opcode >= Opcodes.IRETURN && opcode <= Opcodes.RETURN) || opcode == Opcodes.ATHROW)
+			{
 				noSuccessor();
 			}
 		}
 	}
 
-	public void visitIntInsn(final int opcode, final int operand) {
+	public void visitIntInsn(final int opcode, final int operand)
+	{
 		// Label currentBlock = this.currentBlock;
-		if (currentBlock != null) {
+		if (currentBlock != null)
+		{
 			// if (compute == FRAMES) {
 			// currentBlock.frame.execute(opcode, operand, null, null);
 			// } else
-			if (opcode != Opcodes.NEWARRAY) {
+			if (opcode != Opcodes.NEWARRAY)
+			{
 				// updates current and max stack sizes only for NEWARRAY
 				// (stack size variation = 0 for BIPUSH or SIPUSH)
 				int size = stackSize + 1;
-				if (size > maxStackSize) {
+				if (size > maxStackSize)
+				{
 					maxStackSize = size;
 				}
 				stackSize = size;
 			}
 		}
 		// adds the instruction to the bytecode of the method
-		if (opcode == Opcodes.SIPUSH) {
+		if (opcode == Opcodes.SIPUSH)
+		{
 			code.put12(opcode, operand);
-		} else { // BIPUSH or NEWARRAY
+		}
+		else
+		{ // BIPUSH or NEWARRAY
 			code.put11(opcode, operand);
 		}
 	}
 
-	public void visitVarInsn(final int opcode, final int var) {
+	public void visitVarInsn(final int opcode, final int var)
+	{
 		// Label currentBlock = this.currentBlock;
-		if (currentBlock != null) {
+		if (currentBlock != null)
+		{
 			// if (compute == FRAMES) {
 			// currentBlock.frame.execute(opcode, var, null, null);
 			// } else
 			{
 				// updates current and max stack sizes
-				if (opcode == Opcodes.RET) {
+				if (opcode == Opcodes.RET)
+				{
 					// no stack change, but end of current block (no successor)
 					currentBlock.status |= Label.RET;
 					// save 'stackSize' here for future use
 					// (see {@link #findSubroutineSuccessors})
 					currentBlock.inputStackTop = stackSize;
 					noSuccessor();
-				} else { // xLOAD or xSTORE
+				}
+				else
+				{ // xLOAD or xSTORE
 					int size = stackSize + Frame.SIZE[opcode];
-					if (size > maxStackSize) {
+					if (size > maxStackSize)
+					{
 						maxStackSize = size;
 					}
 					stackSize = size;
 				}
 			}
 		}
-		if (compute != NOTHING) {
+		if (compute != NOTHING)
+		{
 			// updates max locals
 			int n;
-			if (opcode == Opcodes.LLOAD || opcode == Opcodes.DLOAD
-					|| opcode == Opcodes.LSTORE || opcode == Opcodes.DSTORE) {
+			if (opcode == Opcodes.LLOAD || opcode == Opcodes.DLOAD || opcode == Opcodes.LSTORE
+					|| opcode == Opcodes.DSTORE)
+			{
 				n = var + 2;
-			} else {
+			}
+			else
+			{
 				n = var + 1;
 			}
-			if (n > maxLocals) {
+			if (n > maxLocals)
+			{
 				maxLocals = n;
 			}
 		}
 		// adds the instruction to the bytecode of the method
-		if (var < 4 && opcode != Opcodes.RET) {
+		if (var < 4 && opcode != Opcodes.RET)
+		{
 			int opt;
-			if (opcode < Opcodes.ISTORE) {
+			if (opcode < Opcodes.ISTORE)
+			{
 				/* ILOAD_0 */
 				opt = 26 + ((opcode - Opcodes.ILOAD) << 2) + var;
-			} else {
+			}
+			else
+			{
 				/* ISTORE_0 */
 				opt = 59 + ((opcode - Opcodes.ISTORE) << 2) + var;
 			}
 			code.putByte(opt);
-		} else if (var >= 256) {
+		}
+		else if (var >= 256)
+		{
 			code.putByte(196 /* WIDE */).put12(opcode, var);
-		} else {
+		}
+		else
+		{
 			code.put11(opcode, var);
 		}
 		// if (opcode >= Opcodes.ISTORE && compute == FRAMES && handlerCount >
@@ -620,18 +657,22 @@ public class MethodWriter {
 		// }
 	}
 
-	public void visitTypeInsn(final int opcode, final String type) {
+	public void visitTypeInsn(final int opcode, final String type)
+	{
 		Item i = cw.newClassItem(type);
 		// Label currentBlock = this.currentBlock;
-		if (currentBlock != null) {
+		if (currentBlock != null)
+		{
 			// if (compute == FRAMES) {
 			// currentBlock.frame.execute(opcode, code.length, cw, i);
 			// } else
-			if (opcode == Opcodes.NEW) {
+			if (opcode == Opcodes.NEW)
+			{
 				// updates current and max stack sizes only if opcode == NEW
 				// (no stack change for ANEWARRAY, CHECKCAST, INSTANCEOF)
 				int size = stackSize + 1;
-				if (size > maxStackSize) {
+				if (size > maxStackSize)
+				{
 					maxStackSize = size;
 				}
 				stackSize = size;
@@ -641,11 +682,12 @@ public class MethodWriter {
 		code.put12(opcode, i.index);
 	}
 
-	public void visitFieldInsn(final int opcode, final String owner,
-			final String name, final String desc) {
+	public void visitFieldInsn(final int opcode, final String owner, final String name, final String desc)
+	{
 		Item i = cw.newFieldItem(owner, name, desc);
 		// Label currentBlock = this.currentBlock;
-		if (currentBlock != null) {
+		if (currentBlock != null)
+		{
 			// if (compute == FRAMES) {
 			// currentBlock.frame.execute(opcode, 0, cw, i);
 			// } else
@@ -653,23 +695,25 @@ public class MethodWriter {
 				int size;
 				// computes the stack size variation
 				char c = desc.charAt(0);
-				switch (opcode) {
-				case Opcodes.GETSTATIC:
-					size = stackSize + (c == 'D' || c == 'J' ? 2 : 1);
-					break;
-				case Opcodes.PUTSTATIC:
-					size = stackSize + (c == 'D' || c == 'J' ? -2 : -1);
-					break;
-				case Opcodes.GETFIELD:
-					size = stackSize + (c == 'D' || c == 'J' ? 1 : 0);
-					break;
-				// case Constants.PUTFIELD:
-				default:
-					size = stackSize + (c == 'D' || c == 'J' ? -3 : -2);
-					break;
+				switch (opcode)
+				{
+					case Opcodes.GETSTATIC:
+						size = stackSize + (c == 'D' || c == 'J' ? 2 : 1);
+						break;
+					case Opcodes.PUTSTATIC:
+						size = stackSize + (c == 'D' || c == 'J' ? -2 : -1);
+						break;
+					case Opcodes.GETFIELD:
+						size = stackSize + (c == 'D' || c == 'J' ? 1 : 0);
+						break;
+					// case Constants.PUTFIELD:
+					default:
+						size = stackSize + (c == 'D' || c == 'J' ? -3 : -2);
+						break;
 				}
 				// updates current and max stack sizes
-				if (size > maxStackSize) {
+				if (size > maxStackSize)
+				{
 					maxStackSize = size;
 				}
 				stackSize = size;
@@ -679,14 +723,15 @@ public class MethodWriter {
 		code.put12(opcode, i.index);
 	}
 
-	public void visitMethodInsn(final int opcode, final String owner,
-			final String name, final String desc) {
+	public void visitMethodInsn(final int opcode, final String owner, final String name, final String desc)
+	{
 		boolean itf = opcode == Opcodes.INVOKEINTERFACE;
-		Item i = (opcode == Opcodes.INVOKEDYNAMIC) ? cw.newNameTypeItem(name,
-				desc) : cw.newMethodItem(owner, name, desc, itf);
+		Item i = (opcode == Opcodes.INVOKEDYNAMIC) ? cw.newNameTypeItem(name, desc) : cw.newMethodItem(owner, name,
+				desc, itf);
 		int argSize = i.intVal;
 		// Label currentBlock = this.currentBlock;
-		if (currentBlock != null) {
+		if (currentBlock != null)
+		{
 			// if (compute == FRAMES) {
 			// currentBlock.frame.execute(opcode, 0, cw, i);
 			// } else
@@ -699,7 +744,8 @@ public class MethodWriter {
 				 * the sizes of the arguments and of the return value
 				 * corresponding to desc.
 				 */
-				if (argSize == 0) {
+				if (argSize == 0)
+				{
 					// the above sizes have not been computed yet,
 					// so we compute them...
 					argSize = Type.getArgumentsAndReturnSizes(desc);
@@ -708,38 +754,48 @@ public class MethodWriter {
 					i.intVal = argSize;
 				}
 				int size;
-				if (opcode == Opcodes.INVOKESTATIC
-						|| opcode == Opcodes.INVOKEDYNAMIC) {
+				if (opcode == Opcodes.INVOKESTATIC || opcode == Opcodes.INVOKEDYNAMIC)
+				{
 					size = stackSize - (argSize >> 2) + (argSize & 0x03) + 1;
-				} else {
+				}
+				else
+				{
 					size = stackSize - (argSize >> 2) + (argSize & 0x03);
 				}
 				// updates current and max stack sizes
-				if (size > maxStackSize) {
+				if (size > maxStackSize)
+				{
 					maxStackSize = size;
 				}
 				stackSize = size;
 			}
 		}
 		// adds the instruction to the bytecode of the method
-		if (itf) {
-			if (argSize == 0) {
+		if (itf)
+		{
+			if (argSize == 0)
+			{
 				argSize = Type.getArgumentsAndReturnSizes(desc);
 				i.intVal = argSize;
 			}
 			code.put12(Opcodes.INVOKEINTERFACE, i.index).put11(argSize >> 2, 0);
-		} else {
+		}
+		else
+		{
 			code.put12(opcode, i.index);
-			if (opcode == Opcodes.INVOKEDYNAMIC) {
+			if (opcode == Opcodes.INVOKEDYNAMIC)
+			{
 				code.putShort(0);
 			}
 		}
 	}
 
-	public void visitJumpInsn(final int opcode, final Label label) {
+	public void visitJumpInsn(final int opcode, final Label label)
+	{
 		Label nextInsn = null;
 		// Label currentBlock = this.currentBlock;
-		if (currentBlock != null) {
+		if (currentBlock != null)
+		{
 			// if (compute == FRAMES) {
 			// currentBlock.frame.execute(opcode, 0, null, null);
 			// // 'label' is the target of a jump instruction
@@ -752,8 +808,10 @@ public class MethodWriter {
 			// }
 			// } else
 			{
-				if (opcode == Opcodes.JSR) {
-					if ((label.status & Label.SUBROUTINE) == 0) {
+				if (opcode == Opcodes.JSR)
+				{
+					if ((label.status & Label.SUBROUTINE) == 0)
+					{
 						label.status |= Label.SUBROUTINE;
 						++subroutines;
 					}
@@ -767,7 +825,9 @@ public class MethodWriter {
 					 * the first one leads the next instruction after the JSR,
 					 * while the second one leads to the JSR target.
 					 */
-				} else {
+				}
+				else
+				{
 					// updates current stack size (max stack size unchanged
 					// because stack size variation always negative in this
 					// case)
@@ -777,8 +837,8 @@ public class MethodWriter {
 			}
 		}
 		// adds the instruction to the bytecode of the method
-		if ((label.status & Label.RESOLVED) != 0
-				&& label.position - code.length < Short.MIN_VALUE) {
+		if ((label.status & Label.RESOLVED) != 0 && label.position - code.length < Short.MIN_VALUE)
+		{
 			/*
 			 * case of a backward jump with an offset < -32768. In this case we
 			 * automatically replace GOTO with GOTO_W, JSR with JSR_W and IFxxx
@@ -786,23 +846,30 @@ public class MethodWriter {
 			 * "opposite" opcode of IFxxx (i.e., IFNE for IFEQ) and where <l'>
 			 * designates the instruction just after the GOTO_W.
 			 */
-			if (opcode == Opcodes.GOTO) {
+			if (opcode == Opcodes.GOTO)
+			{
 				code.putByte(200); // GOTO_W
-			} else if (opcode == Opcodes.JSR) {
+			}
+			else if (opcode == Opcodes.JSR)
+			{
 				code.putByte(201); // JSR_W
-			} else {
+			}
+			else
+			{
 				// if the IF instruction is transformed into IFNOT GOTO_W the
 				// next instruction becomes the target of the IFNOT instruction
-				if (nextInsn != null) {
+				if (nextInsn != null)
+				{
 					nextInsn.status |= Label.TARGET;
 				}
-				code.putByte(opcode <= 166 ? ((opcode + 1) ^ 1) - 1
-						: opcode ^ 1);
+				code.putByte(opcode <= 166 ? ((opcode + 1) ^ 1) - 1 : opcode ^ 1);
 				code.putShort(8); // jump offset
 				code.putByte(200); // GOTO_W
 			}
 			label.put(this, code, code.length - 1, true);
-		} else {
+		}
+		else
+		{
 			/*
 			 * case of a backward jump with an offset >= -32768, or of a forward
 			 * jump with, of course, an unknown offset. In these cases we store
@@ -812,25 +879,30 @@ public class MethodWriter {
 			code.putByte(opcode);
 			label.put(this, code, code.length - 1, false);
 		}
-		if (currentBlock != null) {
-			if (nextInsn != null) {
+		if (currentBlock != null)
+		{
+			if (nextInsn != null)
+			{
 				// if the jump instruction is not a GOTO, the next instruction
 				// is also a successor of this instruction. Calling visitLabel
 				// adds the label of this next instruction as a successor of the
 				// current block, and starts a new basic block
 				visitLabel(nextInsn);
 			}
-			if (opcode == Opcodes.GOTO) {
+			if (opcode == Opcodes.GOTO)
+			{
 				noSuccessor();
 			}
 		}
 	}
 
-	public void visitLabel(final Label label) {
+	public void visitLabel(final Label label)
+	{
 		// resolves previous forward references to label, if any
 		resize |= label.resolve(this, code.length, code.data);
 		// updates currentBlock
-		if ((label.status & Label.DEBUG) != 0) {
+		if ((label.status & Label.DEBUG) != 0)
+		{
 			return;
 		}
 		// if (compute == FRAMES) {
@@ -862,8 +934,10 @@ public class MethodWriter {
 		// }
 		// previousBlock = label;
 		// } else
-		if (compute == MAXS) {
-			if (currentBlock != null) {
+		if (compute == MAXS)
+		{
+			if (currentBlock != null)
+			{
 				// ends current block (with one new successor)
 				currentBlock.outputStackMax = maxStackSize;
 				addSuccessor(stackSize, label);
@@ -874,30 +948,37 @@ public class MethodWriter {
 			stackSize = 0;
 			maxStackSize = 0;
 			// updates the basic block list
-			if (previousBlock != null) {
+			if (previousBlock != null)
+			{
 				previousBlock.successor = label;
 			}
 			previousBlock = label;
 		}
 	}
 
-	public void visitLdcInsn(final Object cst) {
+	public void visitLdcInsn(final Object cst)
+	{
 		Item i = cw.newConstItem(cst);
 		// Label currentBlock = this.currentBlock;
-		if (currentBlock != null) {
+		if (currentBlock != null)
+		{
 			// if (compute == FRAMES) {
 			// currentBlock.frame.execute(Opcodes.LDC, 0, cw, i);
 			// } else
 			{
 				int size;
 				// computes the stack size variation
-				if (i.type == ClassWriter.LONG || i.type == ClassWriter.DOUBLE) {
+				if (i.type == ClassWriter.LONG || i.type == ClassWriter.DOUBLE)
+				{
 					size = stackSize + 2;
-				} else {
+				}
+				else
+				{
 					size = stackSize + 1;
 				}
 				// updates current and max stack sizes
-				if (size > maxStackSize) {
+				if (size > maxStackSize)
+				{
 					maxStackSize = size;
 				}
 				stackSize = size;
@@ -905,11 +986,16 @@ public class MethodWriter {
 		}
 		// adds the instruction to the bytecode of the method
 		int index = i.index;
-		if (i.type == ClassWriter.LONG || i.type == ClassWriter.DOUBLE) {
+		if (i.type == ClassWriter.LONG || i.type == ClassWriter.DOUBLE)
+		{
 			code.put12(20 /* LDC2_W */, index);
-		} else if (index >= 256) {
+		}
+		else if (index >= 256)
+		{
 			code.put12(19 /* LDC_W */, index);
-		} else {
+		}
+		else
+		{
 			code.put11(Opcodes.LDC, index);
 		}
 	}
@@ -937,30 +1023,32 @@ public class MethodWriter {
 	// }
 	// }
 
-	public void visitTableSwitchInsn(final int min, final int max,
-			final Label dflt, final Label[] labels) {
+	public void visitTableSwitchInsn(final int min, final int max, final Label dflt, final Label[] labels)
+	{
 		// adds the instruction to the bytecode of the method
 		int source = code.length;
 		code.putByte(Opcodes.TABLESWITCH);
 		code.putByteArray(null, 0, (4 - code.length % 4) % 4);
 		dflt.put(this, code, source, true);
 		code.putInt(min).putInt(max);
-		for (int i = 0; i < labels.length; ++i) {
+		for (int i = 0; i < labels.length; ++i)
+		{
 			labels[i].put(this, code, source, true);
 		}
 		// updates currentBlock
 		visitSwitchInsn(dflt, labels);
 	}
 
-	public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
-			final Label[] labels) {
+	public void visitLookupSwitchInsn(final Label dflt, final int[] keys, final Label[] labels)
+	{
 		// adds the instruction to the bytecode of the method
 		int source = code.length;
 		code.putByte(Opcodes.LOOKUPSWITCH);
 		code.putByteArray(null, 0, (4 - code.length % 4) % 4);
 		dflt.put(this, code, source, true);
 		code.putInt(labels.length);
-		for (int i = 0; i < labels.length; ++i) {
+		for (int i = 0; i < labels.length; ++i)
+		{
 			code.putInt(keys[i]);
 			labels[i].put(this, code, source, true);
 		}
@@ -968,9 +1056,11 @@ public class MethodWriter {
 		visitSwitchInsn(dflt, labels);
 	}
 
-	private void visitSwitchInsn(final Label dflt, final Label[] labels) {
+	private void visitSwitchInsn(final Label dflt, final Label[] labels)
+	{
 		// Label currentBlock = this.currentBlock;
-		if (currentBlock != null) {
+		if (currentBlock != null)
+		{
 			// if (compute == FRAMES) {
 			// currentBlock.frame.execute(Opcodes.LOOKUPSWITCH, 0, null, null);
 			// // adds current block successors
@@ -986,7 +1076,8 @@ public class MethodWriter {
 				--stackSize;
 				// adds current block successors
 				addSuccessor(stackSize, dflt);
-				for (int i = 0; i < labels.length; ++i) {
+				for (int i = 0; i < labels.length; ++i)
+				{
 					addSuccessor(stackSize, labels[i]);
 				}
 			}
@@ -1079,7 +1170,8 @@ public class MethodWriter {
 	// lineNumber.putShort(line);
 	// }
 
-	public void visitMaxs(final int maxStack, final int maxLocals) {
+	public void visitMaxs(final int maxStack, final int maxLocals)
+	{
 		// if (compute == FRAMES) {
 		// // completes the control flow graph with exception handler blocks
 		// // Handler handler = firstHandler;
@@ -1187,7 +1279,8 @@ public class MethodWriter {
 		//
 		// this.maxStack = max;
 		// } else
-		if (compute == MAXS) {
+		if (compute == MAXS)
+		{
 			// completes the control flow graph with exception handler blocks
 			// Handler handler = firstHandler;
 			// while (handler != null) {
@@ -1217,7 +1310,8 @@ public class MethodWriter {
 			// handler = handler.next;
 			// }
 
-			if (subroutines > 0) {
+			if (subroutines > 0)
+			{
 				// completes the control flow graph with the RET successors
 				/*
 				 * first step: finds the subroutines. This step determines, for
@@ -1228,26 +1322,31 @@ public class MethodWriter {
 				labels.visitSubroutine(null, 1, subroutines);
 				// finds the basic blocks that belong to the real subroutines
 				Label l = labels;
-				while (l != null) {
-					if ((l.status & Label.JSR) != 0) {
+				while (l != null)
+				{
+					if ((l.status & Label.JSR) != 0)
+					{
 						// the subroutine is defined by l's TARGET, not by l
 						Label subroutine = l.successors.next.successor;
 						// if this subroutine has not been visited yet...
-						if ((subroutine.status & Label.VISITED) == 0) {
+						if ((subroutine.status & Label.VISITED) == 0)
+						{
 							// ...assigns it a new id and finds its basic blocks
 							id += 1;
-							subroutine.visitSubroutine(null, (id / 32L) << 32
-									| (1L << (id % 32)), subroutines);
+							subroutine.visitSubroutine(null, (id / 32L) << 32 | (1L << (id % 32)), subroutines);
 						}
 					}
 					l = l.successor;
 				}
 				// second step: finds the successors of RET blocks
 				l = labels;
-				while (l != null) {
-					if ((l.status & Label.JSR) != 0) {
+				while (l != null)
+				{
+					if ((l.status & Label.JSR) != 0)
+					{
 						Label L = labels;
-						while (L != null) {
+						while (L != null)
+						{
 							L.status &= ~Label.VISITED2;
 							L = L.successor;
 						}
@@ -1271,7 +1370,8 @@ public class MethodWriter {
 			 */
 			int max = 0;
 			Label stack = labels;
-			while (stack != null) {
+			while (stack != null)
+			{
 				// pops a block from the stack
 				Label l = stack;
 				stack = stack.next;
@@ -1279,22 +1379,25 @@ public class MethodWriter {
 				int start = l.inputStackTop;
 				int blockMax = start + l.outputStackMax;
 				// updates the global max stack size
-				if (blockMax > max) {
+				if (blockMax > max)
+				{
 					max = blockMax;
 				}
 				// analyzes the successors of the block
 				Edge b = l.successors;
-				if ((l.status & Label.JSR) != 0) {
+				if ((l.status & Label.JSR) != 0)
+				{
 					// ignores the first edge of JSR blocks (virtual successor)
 					b = b.next;
 				}
-				while (b != null) {
+				while (b != null)
+				{
 					l = b.successor;
 					// if this successor has not already been pushed...
-					if ((l.status & Label.PUSHED) == 0) {
+					if ((l.status & Label.PUSHED) == 0)
+					{
 						// computes its true beginning stack size...
-						l.inputStackTop = b.info == Edge.EXCEPTION ? 1 : start
-								+ b.info;
+						l.inputStackTop = b.info == Edge.EXCEPTION ? 1 : start + b.info;
 						// ...and pushes it onto the stack
 						l.status |= Label.PUSHED;
 						l.next = stack;
@@ -1304,13 +1407,16 @@ public class MethodWriter {
 				}
 			}
 			this.maxStack = max;
-		} else {
+		}
+		else
+		{
 			this.maxStack = maxStack;
 			this.maxLocals = maxLocals;
 		}
 	}
 
-	public void visitEnd() {
+	public void visitEnd()
+	{
 	}
 
 	// ------------------------------------------------------------------------
@@ -1325,7 +1431,8 @@ public class MethodWriter {
 	 * @param successor
 	 *            the successor block to be added to the current block.
 	 */
-	private void addSuccessor(final int info, final Label successor) {
+	private void addSuccessor(final int info, final Label successor)
+	{
 		// creates and initializes an Edge object...
 		Edge b = new Edge();
 		b.info = info;
@@ -1339,7 +1446,8 @@ public class MethodWriter {
 	 * Ends the current basic block. This method must be used in the case where
 	 * the current basic block does not have any successor.
 	 */
-	private void noSuccessor() {
+	private void noSuccessor()
+	{
 		// if (compute == FRAMES) {
 		// Label l = new Label();
 		// l.frame = new Frame();
@@ -1629,48 +1737,59 @@ public class MethodWriter {
 	 * 
 	 * @return the size of the bytecode of this method.
 	 */
-	final int getSize() {
+	final int getSize()
+	{
 
-		if (resize) {
+		if (resize)
+		{
 			// replaces the temporary jump opcodes introduced by Label.resolve.
 			resizeInstructions();
 		}
 		int size = 8;
-		if (code.length > 0) {
+		if (code.length > 0)
+		{
 			cw.newUTF8("Code");
 			size += 18 + code.length + 8 * handlerCount;
-			if (localVar != null) {
+			if (localVar != null)
+			{
 				cw.newUTF8("LocalVariableTable");
 				size += 8 + localVar.length;
 			}
-			if (localVarType != null) {
+			if (localVarType != null)
+			{
 				cw.newUTF8("LocalVariableTypeTable");
 				size += 8 + localVarType.length;
 			}
-			if (lineNumber != null) {
+			if (lineNumber != null)
+			{
 				cw.newUTF8("LineNumberTable");
 				size += 8 + lineNumber.length;
 			}
-			if (stackMap != null) {
+			if (stackMap != null)
+			{
 				boolean zip = (cw.version & 0xFFFF) >= Opcodes.V1_6;
 				cw.newUTF8(zip ? "StackMapTable" : "StackMap");
 				size += 8 + stackMap.length;
 			}
 		}
-		if (exceptionCount > 0) {
+		if (exceptionCount > 0)
+		{
 			cw.newUTF8("Exceptions");
 			size += 8 + 2 * exceptionCount;
 		}
 		if ((access & Opcodes.ACC_SYNTHETIC) != 0
-				&& ((cw.version & 0xFFFF) < Opcodes.V1_5 || (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) != 0)) {
+				&& ((cw.version & 0xFFFF) < Opcodes.V1_5 || (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) != 0))
+		{
 			cw.newUTF8("Synthetic");
 			size += 6;
 		}
-		if ((access & Opcodes.ACC_DEPRECATED) != 0) {
+		if ((access & Opcodes.ACC_DEPRECATED) != 0)
+		{
 			cw.newUTF8("Deprecated");
 			size += 6;
 		}
-		if (signature != null) {
+		if (signature != null)
+		{
 			cw.newUTF8("Signature");
 			cw.newUTF8(signature);
 			size += 8;
@@ -1685,41 +1804,52 @@ public class MethodWriter {
 	 *            the byte vector into which the bytecode of this method must be
 	 *            copied.
 	 */
-	final void put(final ByteVector out) {
+	final void put(final ByteVector out)
+	{
 		int mask = Opcodes.ACC_DEPRECATED
 				| ClassWriter.ACC_SYNTHETIC_ATTRIBUTE
 				| ((access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) / (ClassWriter.ACC_SYNTHETIC_ATTRIBUTE / Opcodes.ACC_SYNTHETIC));
 		out.putShort(access & ~mask).putShort(name).putShort(desc);
 		int attributeCount = 0;
-		if (code.length > 0) {
+		if (code.length > 0)
+		{
 			++attributeCount;
 		}
-		if (exceptionCount > 0) {
+		if (exceptionCount > 0)
+		{
 			++attributeCount;
 		}
 		if ((access & Opcodes.ACC_SYNTHETIC) != 0
-				&& ((cw.version & 0xFFFF) < Opcodes.V1_5 || (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) != 0)) {
+				&& ((cw.version & 0xFFFF) < Opcodes.V1_5 || (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) != 0))
+		{
 			++attributeCount;
 		}
-		if ((access & Opcodes.ACC_DEPRECATED) != 0) {
+		if ((access & Opcodes.ACC_DEPRECATED) != 0)
+		{
 			++attributeCount;
 		}
-		if (signature != null) {
+		if (signature != null)
+		{
 			++attributeCount;
 		}
 		out.putShort(attributeCount);
-		if (code.length > 0) {
+		if (code.length > 0)
+		{
 			int size = 12 + code.length + 8 * handlerCount;
-			if (localVar != null) {
+			if (localVar != null)
+			{
 				size += 8 + localVar.length;
 			}
-			if (localVarType != null) {
+			if (localVarType != null)
+			{
 				size += 8 + localVarType.length;
 			}
-			if (lineNumber != null) {
+			if (lineNumber != null)
+			{
 				size += 8 + lineNumber.length;
 			}
-			if (stackMap != null) {
+			if (stackMap != null)
+			{
 				size += 8 + stackMap.length;
 			}
 			out.putShort(cw.newUTF8("Code")).putInt(size);
@@ -1737,59 +1867,70 @@ public class MethodWriter {
 			// }
 			// }
 			attributeCount = 0;
-			if (localVar != null) {
+			if (localVar != null)
+			{
 				++attributeCount;
 			}
-			if (localVarType != null) {
+			if (localVarType != null)
+			{
 				++attributeCount;
 			}
-			if (lineNumber != null) {
+			if (lineNumber != null)
+			{
 				++attributeCount;
 			}
-			if (stackMap != null) {
+			if (stackMap != null)
+			{
 				++attributeCount;
 			}
 			out.putShort(attributeCount);
-			if (localVar != null) {
+			if (localVar != null)
+			{
 				out.putShort(cw.newUTF8("LocalVariableTable"));
 				out.putInt(localVar.length + 2).putShort(localVarCount);
 				out.putByteArray(localVar.data, 0, localVar.length);
 			}
-			if (localVarType != null) {
+			if (localVarType != null)
+			{
 				out.putShort(cw.newUTF8("LocalVariableTypeTable"));
 				out.putInt(localVarType.length + 2).putShort(localVarTypeCount);
 				out.putByteArray(localVarType.data, 0, localVarType.length);
 			}
-			if (lineNumber != null) {
+			if (lineNumber != null)
+			{
 				out.putShort(cw.newUTF8("LineNumberTable"));
 				out.putInt(lineNumber.length + 2).putShort(lineNumberCount);
 				out.putByteArray(lineNumber.data, 0, lineNumber.length);
 			}
-			if (stackMap != null) {
+			if (stackMap != null)
+			{
 				boolean zip = (cw.version & 0xFFFF) >= Opcodes.V1_6;
 				out.putShort(cw.newUTF8(zip ? "StackMapTable" : "StackMap"));
 				out.putInt(stackMap.length + 2).putShort(frameCount);
 				out.putByteArray(stackMap.data, 0, stackMap.length);
 			}
 		}
-		if (exceptionCount > 0) {
-			out.putShort(cw.newUTF8("Exceptions")).putInt(
-					2 * exceptionCount + 2);
+		if (exceptionCount > 0)
+		{
+			out.putShort(cw.newUTF8("Exceptions")).putInt(2 * exceptionCount + 2);
 			out.putShort(exceptionCount);
-			for (int i = 0; i < exceptionCount; ++i) {
+			for (int i = 0; i < exceptionCount; ++i)
+			{
 				out.putShort(exceptions[i]);
 			}
 		}
 		if ((access & Opcodes.ACC_SYNTHETIC) != 0
-				&& ((cw.version & 0xFFFF) < Opcodes.V1_5 || (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) != 0)) {
+				&& ((cw.version & 0xFFFF) < Opcodes.V1_5 || (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) != 0))
+		{
 			out.putShort(cw.newUTF8("Synthetic")).putInt(0);
 		}
-		if ((access & Opcodes.ACC_DEPRECATED) != 0) {
+		if ((access & Opcodes.ACC_DEPRECATED) != 0)
+		{
 			out.putShort(cw.newUTF8("Deprecated")).putInt(0);
 		}
-		if (signature != null) {
-			out.putShort(cw.newUTF8("Signature")).putInt(2)
-					.putShort(cw.newUTF8(signature));
+		if (signature != null)
+		{
+			out.putShort(cw.newUTF8("Signature")).putInt(2).putShort(cw.newUTF8(signature));
 		}
 	}
 
@@ -1814,7 +1955,8 @@ public class MethodWriter {
 	 * to construct the method are no longer valid after this method has been
 	 * called.
 	 */
-	private void resizeInstructions() {
+	private void resizeInstructions()
+	{
 		byte[] b = code.data; // bytecode of the method
 		int u, v, label; // indexes in b
 		int i, j; // loop indexes
@@ -1852,141 +1994,164 @@ public class MethodWriter {
 
 		// 3 = loop again, 2 = loop ended, 1 = last pass, 0 = done
 		int state = 3;
-		do {
-			if (state == 3) {
+		do
+		{
+			if (state == 3)
+			{
 				state = 2;
 			}
 			u = 0;
-			while (u < b.length) {
+			while (u < b.length)
+			{
 				int opcode = b[u] & 0xFF; // opcode of current instruction
 				int insert = 0; // bytes to be added after this instruction
 
-				switch (ClassWriter.TYPE[opcode]) {
-				case ClassWriter.NOARG_INSN:
-				case ClassWriter.IMPLVAR_INSN:
-					u += 1;
-					break;
-				case ClassWriter.LABEL_INSN:
-					if (opcode > 201) {
-						// converts temporary opcodes 202 to 217, 218 and
-						// 219 to IFEQ ... JSR (inclusive), IFNULL and
-						// IFNONNULL
-						opcode = opcode < 218 ? opcode - 49 : opcode - 20;
-						label = u + readUnsignedShort(b, u + 1);
-					} else {
-						label = u + readShort(b, u + 1);
-					}
-					newOffset = getNewOffset(allIndexes, allSizes, u, label);
-					if (newOffset < Short.MIN_VALUE
-							|| newOffset > Short.MAX_VALUE) {
-						if (!resize[u]) {
-							if (opcode == Opcodes.GOTO || opcode == Opcodes.JSR) {
-								// two additional bytes will be required to
-								// replace this GOTO or JSR instruction with
-								// a GOTO_W or a JSR_W
-								insert = 2;
-							} else {
-								// five additional bytes will be required to
-								// replace this IFxxx <l> instruction with
-								// IFNOTxxx <l'> GOTO_W <l>, where IFNOTxxx
-								// is the "opposite" opcode of IFxxx (i.e.,
-								// IFNE for IFEQ) and where <l'> designates
-								// the instruction just after the GOTO_W.
-								insert = 5;
+				switch (ClassWriter.TYPE[opcode])
+				{
+					case ClassWriter.NOARG_INSN:
+					case ClassWriter.IMPLVAR_INSN:
+						u += 1;
+						break;
+					case ClassWriter.LABEL_INSN:
+						if (opcode > 201)
+						{
+							// converts temporary opcodes 202 to 217, 218 and
+							// 219 to IFEQ ... JSR (inclusive), IFNULL and
+							// IFNONNULL
+							opcode = opcode < 218 ? opcode - 49 : opcode - 20;
+							label = u + readUnsignedShort(b, u + 1);
+						}
+						else
+						{
+							label = u + readShort(b, u + 1);
+						}
+						newOffset = getNewOffset(allIndexes, allSizes, u, label);
+						if (newOffset < Short.MIN_VALUE || newOffset > Short.MAX_VALUE)
+						{
+							if (!resize[u])
+							{
+								if (opcode == Opcodes.GOTO || opcode == Opcodes.JSR)
+								{
+									// two additional bytes will be required to
+									// replace this GOTO or JSR instruction with
+									// a GOTO_W or a JSR_W
+									insert = 2;
+								}
+								else
+								{
+									// five additional bytes will be required to
+									// replace this IFxxx <l> instruction with
+									// IFNOTxxx <l'> GOTO_W <l>, where IFNOTxxx
+									// is the "opposite" opcode of IFxxx (i.e.,
+									// IFNE for IFEQ) and where <l'> designates
+									// the instruction just after the GOTO_W.
+									insert = 5;
+								}
+								resize[u] = true;
 							}
+						}
+						u += 3;
+						break;
+					case ClassWriter.LABELW_INSN:
+						u += 5;
+						break;
+					case ClassWriter.TABL_INSN:
+						if (state == 1)
+						{
+							// true number of bytes to be added (or removed)
+							// from this instruction = (future number of padding
+							// bytes - current number of padding byte) -
+							// previously over estimated variation =
+							// = ((3 - newOffset%4) - (3 - u%4)) - u%4
+							// = (-newOffset%4 + u%4) - u%4
+							// = -(newOffset & 3)
+							newOffset = getNewOffset(allIndexes, allSizes, 0, u);
+							insert = -(newOffset & 3);
+						}
+						else if (!resize[u])
+						{
+							// over estimation of the number of bytes to be
+							// added to this instruction = 3 - current number
+							// of padding bytes = 3 - (3 - u%4) = u%4 = u & 3
+							insert = u & 3;
 							resize[u] = true;
 						}
-					}
-					u += 3;
-					break;
-				case ClassWriter.LABELW_INSN:
-					u += 5;
-					break;
-				case ClassWriter.TABL_INSN:
-					if (state == 1) {
-						// true number of bytes to be added (or removed)
-						// from this instruction = (future number of padding
-						// bytes - current number of padding byte) -
-						// previously over estimated variation =
-						// = ((3 - newOffset%4) - (3 - u%4)) - u%4
-						// = (-newOffset%4 + u%4) - u%4
-						// = -(newOffset & 3)
-						newOffset = getNewOffset(allIndexes, allSizes, 0, u);
-						insert = -(newOffset & 3);
-					} else if (!resize[u]) {
-						// over estimation of the number of bytes to be
-						// added to this instruction = 3 - current number
-						// of padding bytes = 3 - (3 - u%4) = u%4 = u & 3
-						insert = u & 3;
-						resize[u] = true;
-					}
-					// skips instruction
-					u = u + 4 - (u & 3);
-					u += 4 * (readInt(b, u + 8) - readInt(b, u + 4) + 1) + 12;
-					break;
-				case ClassWriter.LOOK_INSN:
-					if (state == 1) {
-						// like TABL_INSN
-						newOffset = getNewOffset(allIndexes, allSizes, 0, u);
-						insert = -(newOffset & 3);
-					} else if (!resize[u]) {
-						// like TABL_INSN
-						insert = u & 3;
-						resize[u] = true;
-					}
-					// skips instruction
-					u = u + 4 - (u & 3);
-					u += 8 * readInt(b, u + 4) + 8;
-					break;
-				case ClassWriter.WIDE_INSN:
-					opcode = b[u + 1] & 0xFF;
-					if (opcode == Opcodes.IINC) {
-						u += 6;
-					} else {
+						// skips instruction
+						u = u + 4 - (u & 3);
+						u += 4 * (readInt(b, u + 8) - readInt(b, u + 4) + 1) + 12;
+						break;
+					case ClassWriter.LOOK_INSN:
+						if (state == 1)
+						{
+							// like TABL_INSN
+							newOffset = getNewOffset(allIndexes, allSizes, 0, u);
+							insert = -(newOffset & 3);
+						}
+						else if (!resize[u])
+						{
+							// like TABL_INSN
+							insert = u & 3;
+							resize[u] = true;
+						}
+						// skips instruction
+						u = u + 4 - (u & 3);
+						u += 8 * readInt(b, u + 4) + 8;
+						break;
+					case ClassWriter.WIDE_INSN:
+						opcode = b[u + 1] & 0xFF;
+						if (opcode == Opcodes.IINC)
+						{
+							u += 6;
+						}
+						else
+						{
+							u += 4;
+						}
+						break;
+					case ClassWriter.VAR_INSN:
+					case ClassWriter.SBYTE_INSN:
+					case ClassWriter.LDC_INSN:
+						u += 2;
+						break;
+					case ClassWriter.SHORT_INSN:
+					case ClassWriter.LDCW_INSN:
+					case ClassWriter.FIELDORMETH_INSN:
+					case ClassWriter.TYPE_INSN:
+					case ClassWriter.IINC_INSN:
+						u += 3;
+						break;
+					case ClassWriter.ITFDYNMETH_INSN:
+						u += 5;
+						break;
+					// case ClassWriter.MANA_INSN:
+					default:
 						u += 4;
-					}
-					break;
-				case ClassWriter.VAR_INSN:
-				case ClassWriter.SBYTE_INSN:
-				case ClassWriter.LDC_INSN:
-					u += 2;
-					break;
-				case ClassWriter.SHORT_INSN:
-				case ClassWriter.LDCW_INSN:
-				case ClassWriter.FIELDORMETH_INSN:
-				case ClassWriter.TYPE_INSN:
-				case ClassWriter.IINC_INSN:
-					u += 3;
-					break;
-				case ClassWriter.ITFDYNMETH_INSN:
-					u += 5;
-					break;
-				// case ClassWriter.MANA_INSN:
-				default:
-					u += 4;
-					break;
+						break;
 				}
-				if (insert != 0) {
+				if (insert != 0)
+				{
 					// adds a new (u, insert) entry in the allIndexes and
 					// allSizes arrays
 					int[] newIndexes = new int[allIndexes.length + 1];
 					int[] newSizes = new int[allSizes.length + 1];
-					System.arraycopy(allIndexes, 0, newIndexes, 0,
-							allIndexes.length);
+					System.arraycopy(allIndexes, 0, newIndexes, 0, allIndexes.length);
 					System.arraycopy(allSizes, 0, newSizes, 0, allSizes.length);
 					newIndexes[allIndexes.length] = u;
 					newSizes[allSizes.length] = insert;
 					allIndexes = newIndexes;
 					allSizes = newSizes;
-					if (insert > 0) {
+					if (insert > 0)
+					{
 						state = 3;
 					}
 				}
 			}
-			if (state < 3) {
+			if (state < 3)
+			{
 				--state;
 			}
-		} while (state != 0);
+		}
+		while (state != 0);
 
 		// 2nd step:
 		// copies the bytecode of the method into a new bytevector, updates the
@@ -1995,137 +2160,154 @@ public class MethodWriter {
 		ByteVector newCode = new ByteVector(code.length);
 
 		u = 0;
-		while (u < code.length) {
+		while (u < code.length)
+		{
 			int opcode = b[u] & 0xFF;
-			switch (ClassWriter.TYPE[opcode]) {
-			case ClassWriter.NOARG_INSN:
-			case ClassWriter.IMPLVAR_INSN:
-				newCode.putByte(opcode);
-				u += 1;
-				break;
-			case ClassWriter.LABEL_INSN:
-				if (opcode > 201) {
-					// changes temporary opcodes 202 to 217 (inclusive), 218
-					// and 219 to IFEQ ... JSR (inclusive), IFNULL and
-					// IFNONNULL
-					opcode = opcode < 218 ? opcode - 49 : opcode - 20;
-					label = u + readUnsignedShort(b, u + 1);
-				} else {
-					label = u + readShort(b, u + 1);
-				}
-				newOffset = getNewOffset(allIndexes, allSizes, u, label);
-				if (resize[u]) {
-					// replaces GOTO with GOTO_W, JSR with JSR_W and IFxxx
-					// <l> with IFNOTxxx <l'> GOTO_W <l>, where IFNOTxxx is
-					// the "opposite" opcode of IFxxx (i.e., IFNE for IFEQ)
-					// and where <l'> designates the instruction just after
-					// the GOTO_W.
-					if (opcode == Opcodes.GOTO) {
-						newCode.putByte(200); // GOTO_W
-					} else if (opcode == Opcodes.JSR) {
-						newCode.putByte(201); // JSR_W
-					} else {
-						newCode.putByte(opcode <= 166 ? ((opcode + 1) ^ 1) - 1
-								: opcode ^ 1);
-						newCode.putShort(8); // jump offset
-						newCode.putByte(200); // GOTO_W
-						// newOffset now computed from start of GOTO_W
-						newOffset -= 3;
-					}
-					newCode.putInt(newOffset);
-				} else {
+			switch (ClassWriter.TYPE[opcode])
+			{
+				case ClassWriter.NOARG_INSN:
+				case ClassWriter.IMPLVAR_INSN:
 					newCode.putByte(opcode);
-					newCode.putShort(newOffset);
-				}
-				u += 3;
-				break;
-			case ClassWriter.LABELW_INSN:
-				label = u + readInt(b, u + 1);
-				newOffset = getNewOffset(allIndexes, allSizes, u, label);
-				newCode.putByte(opcode);
-				newCode.putInt(newOffset);
-				u += 5;
-				break;
-			case ClassWriter.TABL_INSN:
-				// skips 0 to 3 padding bytes
-				v = u;
-				u = u + 4 - (v & 3);
-				// reads and copies instruction
-				newCode.putByte(Opcodes.TABLESWITCH);
-				newCode.putByteArray(null, 0, (4 - newCode.length % 4) % 4);
-				label = v + readInt(b, u);
-				u += 4;
-				newOffset = getNewOffset(allIndexes, allSizes, v, label);
-				newCode.putInt(newOffset);
-				j = readInt(b, u);
-				u += 4;
-				newCode.putInt(j);
-				j = readInt(b, u) - j + 1;
-				u += 4;
-				newCode.putInt(readInt(b, u - 4));
-				for (; j > 0; --j) {
+					u += 1;
+					break;
+				case ClassWriter.LABEL_INSN:
+					if (opcode > 201)
+					{
+						// changes temporary opcodes 202 to 217 (inclusive), 218
+						// and 219 to IFEQ ... JSR (inclusive), IFNULL and
+						// IFNONNULL
+						opcode = opcode < 218 ? opcode - 49 : opcode - 20;
+						label = u + readUnsignedShort(b, u + 1);
+					}
+					else
+					{
+						label = u + readShort(b, u + 1);
+					}
+					newOffset = getNewOffset(allIndexes, allSizes, u, label);
+					if (resize[u])
+					{
+						// replaces GOTO with GOTO_W, JSR with JSR_W and IFxxx
+						// <l> with IFNOTxxx <l'> GOTO_W <l>, where IFNOTxxx is
+						// the "opposite" opcode of IFxxx (i.e., IFNE for IFEQ)
+						// and where <l'> designates the instruction just after
+						// the GOTO_W.
+						if (opcode == Opcodes.GOTO)
+						{
+							newCode.putByte(200); // GOTO_W
+						}
+						else if (opcode == Opcodes.JSR)
+						{
+							newCode.putByte(201); // JSR_W
+						}
+						else
+						{
+							newCode.putByte(opcode <= 166 ? ((opcode + 1) ^ 1) - 1 : opcode ^ 1);
+							newCode.putShort(8); // jump offset
+							newCode.putByte(200); // GOTO_W
+							// newOffset now computed from start of GOTO_W
+							newOffset -= 3;
+						}
+						newCode.putInt(newOffset);
+					}
+					else
+					{
+						newCode.putByte(opcode);
+						newCode.putShort(newOffset);
+					}
+					u += 3;
+					break;
+				case ClassWriter.LABELW_INSN:
+					label = u + readInt(b, u + 1);
+					newOffset = getNewOffset(allIndexes, allSizes, u, label);
+					newCode.putByte(opcode);
+					newCode.putInt(newOffset);
+					u += 5;
+					break;
+				case ClassWriter.TABL_INSN:
+					// skips 0 to 3 padding bytes
+					v = u;
+					u = u + 4 - (v & 3);
+					// reads and copies instruction
+					newCode.putByte(Opcodes.TABLESWITCH);
+					newCode.putByteArray(null, 0, (4 - newCode.length % 4) % 4);
 					label = v + readInt(b, u);
 					u += 4;
 					newOffset = getNewOffset(allIndexes, allSizes, v, label);
 					newCode.putInt(newOffset);
-				}
-				break;
-			case ClassWriter.LOOK_INSN:
-				// skips 0 to 3 padding bytes
-				v = u;
-				u = u + 4 - (v & 3);
-				// reads and copies instruction
-				newCode.putByte(Opcodes.LOOKUPSWITCH);
-				newCode.putByteArray(null, 0, (4 - newCode.length % 4) % 4);
-				label = v + readInt(b, u);
-				u += 4;
-				newOffset = getNewOffset(allIndexes, allSizes, v, label);
-				newCode.putInt(newOffset);
-				j = readInt(b, u);
-				u += 4;
-				newCode.putInt(j);
-				for (; j > 0; --j) {
-					newCode.putInt(readInt(b, u));
+					j = readInt(b, u);
 					u += 4;
+					newCode.putInt(j);
+					j = readInt(b, u) - j + 1;
+					u += 4;
+					newCode.putInt(readInt(b, u - 4));
+					for (; j > 0; --j)
+					{
+						label = v + readInt(b, u);
+						u += 4;
+						newOffset = getNewOffset(allIndexes, allSizes, v, label);
+						newCode.putInt(newOffset);
+					}
+					break;
+				case ClassWriter.LOOK_INSN:
+					// skips 0 to 3 padding bytes
+					v = u;
+					u = u + 4 - (v & 3);
+					// reads and copies instruction
+					newCode.putByte(Opcodes.LOOKUPSWITCH);
+					newCode.putByteArray(null, 0, (4 - newCode.length % 4) % 4);
 					label = v + readInt(b, u);
 					u += 4;
 					newOffset = getNewOffset(allIndexes, allSizes, v, label);
 					newCode.putInt(newOffset);
-				}
-				break;
-			case ClassWriter.WIDE_INSN:
-				opcode = b[u + 1] & 0xFF;
-				if (opcode == Opcodes.IINC) {
-					newCode.putByteArray(b, u, 6);
-					u += 6;
-				} else {
+					j = readInt(b, u);
+					u += 4;
+					newCode.putInt(j);
+					for (; j > 0; --j)
+					{
+						newCode.putInt(readInt(b, u));
+						u += 4;
+						label = v + readInt(b, u);
+						u += 4;
+						newOffset = getNewOffset(allIndexes, allSizes, v, label);
+						newCode.putInt(newOffset);
+					}
+					break;
+				case ClassWriter.WIDE_INSN:
+					opcode = b[u + 1] & 0xFF;
+					if (opcode == Opcodes.IINC)
+					{
+						newCode.putByteArray(b, u, 6);
+						u += 6;
+					}
+					else
+					{
+						newCode.putByteArray(b, u, 4);
+						u += 4;
+					}
+					break;
+				case ClassWriter.VAR_INSN:
+				case ClassWriter.SBYTE_INSN:
+				case ClassWriter.LDC_INSN:
+					newCode.putByteArray(b, u, 2);
+					u += 2;
+					break;
+				case ClassWriter.SHORT_INSN:
+				case ClassWriter.LDCW_INSN:
+				case ClassWriter.FIELDORMETH_INSN:
+				case ClassWriter.TYPE_INSN:
+				case ClassWriter.IINC_INSN:
+					newCode.putByteArray(b, u, 3);
+					u += 3;
+					break;
+				case ClassWriter.ITFDYNMETH_INSN:
+					newCode.putByteArray(b, u, 5);
+					u += 5;
+					break;
+				// case MANA_INSN:
+				default:
 					newCode.putByteArray(b, u, 4);
 					u += 4;
-				}
-				break;
-			case ClassWriter.VAR_INSN:
-			case ClassWriter.SBYTE_INSN:
-			case ClassWriter.LDC_INSN:
-				newCode.putByteArray(b, u, 2);
-				u += 2;
-				break;
-			case ClassWriter.SHORT_INSN:
-			case ClassWriter.LDCW_INSN:
-			case ClassWriter.FIELDORMETH_INSN:
-			case ClassWriter.TYPE_INSN:
-			case ClassWriter.IINC_INSN:
-				newCode.putByteArray(b, u, 3);
-				u += 3;
-				break;
-			case ClassWriter.ITFDYNMETH_INSN:
-				newCode.putByteArray(b, u, 5);
-				u += 5;
-				break;
-			// case MANA_INSN:
-			default:
-				newCode.putByteArray(b, u, 4);
-				u += 4;
-				break;
+					break;
 			}
 		}
 
@@ -2185,32 +2367,32 @@ public class MethodWriter {
 		// }
 		// updates the instructions addresses in the
 		// local var and line number tables
-		for (i = 0; i < 2; ++i) {
+		for (i = 0; i < 2; ++i)
+		{
 			ByteVector bv = i == 0 ? localVar : localVarType;
-			if (bv != null) {
+			if (bv != null)
+			{
 				b = bv.data;
 				u = 0;
-				while (u < bv.length) {
+				while (u < bv.length)
+				{
 					label = readUnsignedShort(b, u);
 					newOffset = getNewOffset(allIndexes, allSizes, 0, label);
 					writeShort(b, u, newOffset);
 					label += readUnsignedShort(b, u + 2);
-					newOffset = getNewOffset(allIndexes, allSizes, 0, label)
-							- newOffset;
+					newOffset = getNewOffset(allIndexes, allSizes, 0, label) - newOffset;
 					writeShort(b, u + 2, newOffset);
 					u += 10;
 				}
 			}
 		}
-		if (lineNumber != null) {
+		if (lineNumber != null)
+		{
 			b = lineNumber.data;
 			u = 0;
-			while (u < lineNumber.length) {
-				writeShort(
-						b,
-						u,
-						getNewOffset(allIndexes, allSizes, 0,
-								readUnsignedShort(b, u)));
+			while (u < lineNumber.length)
+			{
+				writeShort(b, u, getNewOffset(allIndexes, allSizes, 0, readUnsignedShort(b, u)));
 				u += 4;
 			}
 		}
@@ -2228,7 +2410,8 @@ public class MethodWriter {
 	 *            the start index of the value to be read.
 	 * @return the read value.
 	 */
-	static int readUnsignedShort(final byte[] b, final int index) {
+	static int readUnsignedShort(final byte[] b, final int index)
+	{
 		return ((b[index] & 0xFF) << 8) | (b[index + 1] & 0xFF);
 	}
 
@@ -2241,7 +2424,8 @@ public class MethodWriter {
 	 *            the start index of the value to be read.
 	 * @return the read value.
 	 */
-	static short readShort(final byte[] b, final int index) {
+	static short readShort(final byte[] b, final int index)
+	{
 		return (short) (((b[index] & 0xFF) << 8) | (b[index + 1] & 0xFF));
 	}
 
@@ -2254,9 +2438,10 @@ public class MethodWriter {
 	 *            the start index of the value to be read.
 	 * @return the read value.
 	 */
-	static int readInt(final byte[] b, final int index) {
-		return ((b[index] & 0xFF) << 24) | ((b[index + 1] & 0xFF) << 16)
-				| ((b[index + 2] & 0xFF) << 8) | (b[index + 3] & 0xFF);
+	static int readInt(final byte[] b, final int index)
+	{
+		return ((b[index] & 0xFF) << 24) | ((b[index + 1] & 0xFF) << 16) | ((b[index + 2] & 0xFF) << 8)
+				| (b[index + 3] & 0xFF);
 	}
 
 	/**
@@ -2269,7 +2454,8 @@ public class MethodWriter {
 	 * @param s
 	 *            the value to be written in the given byte array.
 	 */
-	static void writeShort(final byte[] b, final int index, final int s) {
+	static void writeShort(final byte[] b, final int index, final int s)
+	{
 		b[index] = (byte) (s >>> 8);
 		b[index + 1] = (byte) s;
 	}
@@ -2301,14 +2487,18 @@ public class MethodWriter {
 	 *            index of the first byte of the target instruction.
 	 * @return the future value of the given bytecode offset.
 	 */
-	static int getNewOffset(final int[] indexes, final int[] sizes,
-			final int begin, final int end) {
+	static int getNewOffset(final int[] indexes, final int[] sizes, final int begin, final int end)
+	{
 		int offset = end - begin;
-		for (int i = 0; i < indexes.length; ++i) {
-			if (begin < indexes[i] && indexes[i] <= end) {
+		for (int i = 0; i < indexes.length; ++i)
+		{
+			if (begin < indexes[i] && indexes[i] <= end)
+			{
 				// forward jump
 				offset += sizes[i];
-			} else if (end < indexes[i] && indexes[i] <= begin) {
+			}
+			else if (end < indexes[i] && indexes[i] <= begin)
+			{
 				// backward jump
 				offset -= sizes[i];
 			}
@@ -2336,9 +2526,10 @@ public class MethodWriter {
 	 * @param label
 	 *            the label whose offset must be updated.
 	 */
-	static void getNewOffset(final int[] indexes, final int[] sizes,
-			final Label label) {
-		if ((label.status & Label.RESIZED) == 0) {
+	static void getNewOffset(final int[] indexes, final int[] sizes, final Label label)
+	{
+		if ((label.status & Label.RESIZED) == 0)
+		{
 			label.position = getNewOffset(indexes, sizes, 0, label.position);
 			label.status |= Label.RESIZED;
 		}

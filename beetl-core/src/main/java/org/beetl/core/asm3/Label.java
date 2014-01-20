@@ -38,7 +38,8 @@ package org.beetl.core.asm3;
  * 
  * @author Eric Bruneton
  */
-public class Label {
+public class Label
+{
 
 	/**
 	 * Indicates if this label is only used for debug attributes. Such a label
@@ -252,7 +253,8 @@ public class Label {
 	/**
 	 * Constructs a new label.
 	 */
-	public Label() {
+	public Label()
+	{
 	}
 
 	// ------------------------------------------------------------------------
@@ -269,10 +271,11 @@ public class Label {
 	 * @throws IllegalStateException
 	 *             if this label is not resolved yet.
 	 */
-	public int getOffset() {
-		if ((status & RESOLVED) == 0) {
-			throw new IllegalStateException(
-					"Label offset position has not been resolved yet");
+	public int getOffset()
+	{
+		if ((status & RESOLVED) == 0)
+		{
+			throw new IllegalStateException("Label offset position has not been resolved yet");
 		}
 		return position;
 	}
@@ -296,20 +299,29 @@ public class Label {
 	 * @throws IllegalArgumentException
 	 *             if this label has not been created by the given code writer.
 	 */
-	void put(final MethodWriter owner, final ByteVector out, final int source,
-			final boolean wideOffset) {
-		if ((status & RESOLVED) == 0) {
-			if (wideOffset) {
+	void put(final MethodWriter owner, final ByteVector out, final int source, final boolean wideOffset)
+	{
+		if ((status & RESOLVED) == 0)
+		{
+			if (wideOffset)
+			{
 				addReference(-1 - source, out.length);
 				out.putInt(-1);
-			} else {
+			}
+			else
+			{
 				addReference(source, out.length);
 				out.putShort(-1);
 			}
-		} else {
-			if (wideOffset) {
+		}
+		else
+		{
+			if (wideOffset)
+			{
 				out.putInt(position - source);
-			} else {
+			}
+			else
+			{
 				out.putShort(position - source);
 			}
 		}
@@ -328,15 +340,16 @@ public class Label {
 	 *            the position where the offset for this forward reference must
 	 *            be stored.
 	 */
-	private void addReference(final int sourcePosition,
-			final int referencePosition) {
-		if (srcAndRefPositions == null) {
+	private void addReference(final int sourcePosition, final int referencePosition)
+	{
+		if (srcAndRefPositions == null)
+		{
 			srcAndRefPositions = new int[6];
 		}
-		if (referenceCount >= srcAndRefPositions.length) {
+		if (referenceCount >= srcAndRefPositions.length)
+		{
 			int[] a = new int[srcAndRefPositions.length + 6];
-			System.arraycopy(srcAndRefPositions, 0, a, 0,
-					srcAndRefPositions.length);
+			System.arraycopy(srcAndRefPositions, 0, a, 0, srcAndRefPositions.length);
 			srcAndRefPositions = a;
 		}
 		srcAndRefPositions[referenceCount++] = sourcePosition;
@@ -366,19 +379,22 @@ public class Label {
 	 *             if this label has already been resolved, or if it has not
 	 *             been created by the given code writer.
 	 */
-	boolean resolve(final MethodWriter owner, final int position,
-			final byte[] data) {
+	boolean resolve(final MethodWriter owner, final int position, final byte[] data)
+	{
 		boolean needUpdate = false;
 		this.status |= RESOLVED;
 		this.position = position;
 		int i = 0;
-		while (i < referenceCount) {
+		while (i < referenceCount)
+		{
 			int source = srcAndRefPositions[i++];
 			int reference = srcAndRefPositions[i++];
 			int offset;
-			if (source >= 0) {
+			if (source >= 0)
+			{
 				offset = position - source;
-				if (offset < Short.MIN_VALUE || offset > Short.MAX_VALUE) {
+				if (offset < Short.MIN_VALUE || offset > Short.MAX_VALUE)
+				{
 					/*
 					 * changes the opcode of the jump instruction, in order to
 					 * be able to find it later (see resizeInstructions in
@@ -389,10 +405,13 @@ public class Label {
 					 * limited to 65535 bytes).
 					 */
 					int opcode = data[reference - 1] & 0xFF;
-					if (opcode <= Opcodes.JSR) {
+					if (opcode <= Opcodes.JSR)
+					{
 						// changes IFEQ ... JSR to opcodes 202 to 217
 						data[reference - 1] = (byte) (opcode + 49);
-					} else {
+					}
+					else
+					{
 						// changes IFNULL and IFNONNULL to opcodes 218 and 219
 						data[reference - 1] = (byte) (opcode + 20);
 					}
@@ -400,7 +419,9 @@ public class Label {
 				}
 				data[reference++] = (byte) (offset >>> 8);
 				data[reference] = (byte) offset;
-			} else {
+			}
+			else
+			{
 				offset = position + source + 1;
 				data[reference++] = (byte) (offset >>> 24);
 				data[reference++] = (byte) (offset >>> 16);
@@ -435,8 +456,10 @@ public class Label {
 	 *            a subroutine id.
 	 * @return true is this basic block belongs to the given subroutine.
 	 */
-	boolean inSubroutine(final long id) {
-		if ((status & Label.VISITED) != 0) {
+	boolean inSubroutine(final long id)
+	{
+		if ((status & Label.VISITED) != 0)
+		{
 			return (srcAndRefPositions[(int) (id >>> 32)] & (int) id) != 0;
 		}
 		return false;
@@ -451,12 +474,16 @@ public class Label {
 	 * @return true if this basic block and the given one belong to a common
 	 *         subroutine.
 	 */
-	boolean inSameSubroutine(final Label block) {
-		if ((status & VISITED) == 0 || (block.status & VISITED) == 0) {
+	boolean inSameSubroutine(final Label block)
+	{
+		if ((status & VISITED) == 0 || (block.status & VISITED) == 0)
+		{
 			return false;
 		}
-		for (int i = 0; i < srcAndRefPositions.length; ++i) {
-			if ((srcAndRefPositions[i] & block.srcAndRefPositions[i]) != 0) {
+		for (int i = 0; i < srcAndRefPositions.length; ++i)
+		{
+			if ((srcAndRefPositions[i] & block.srcAndRefPositions[i]) != 0)
+			{
 				return true;
 			}
 		}
@@ -471,8 +498,10 @@ public class Label {
 	 * @param nbSubroutines
 	 *            the total number of subroutines in the method.
 	 */
-	void addToSubroutine(final long id, final int nbSubroutines) {
-		if ((status & VISITED) == 0) {
+	void addToSubroutine(final long id, final int nbSubroutines)
+	{
+		if ((status & VISITED) == 0)
+		{
 			status |= VISITED;
 			srcAndRefPositions = new int[(nbSubroutines - 1) / 32 + 1];
 		}
@@ -494,24 +523,30 @@ public class Label {
 	 * @param nbSubroutines
 	 *            the total number of subroutines in the method.
 	 */
-	void visitSubroutine(final Label JSR, final long id, final int nbSubroutines) {
+	void visitSubroutine(final Label JSR, final long id, final int nbSubroutines)
+	{
 		// user managed stack of labels, to avoid using a recursive method
 		// (recursivity can lead to stack overflow with very large methods)
 		Label stack = this;
-		while (stack != null) {
+		while (stack != null)
+		{
 			// removes a label l from the stack
 			Label l = stack;
 			stack = l.next;
 			l.next = null;
 
-			if (JSR != null) {
-				if ((l.status & VISITED2) != 0) {
+			if (JSR != null)
+			{
+				if ((l.status & VISITED2) != 0)
+				{
 					continue;
 				}
 				l.status |= VISITED2;
 				// adds JSR to the successors of l, if it is a RET block
-				if ((l.status & RET) != 0) {
-					if (!l.inSameSubroutine(JSR)) {
+				if ((l.status & RET) != 0)
+				{
+					if (!l.inSameSubroutine(JSR))
+					{
 						Edge e = new Edge();
 						e.info = l.inputStackTop;
 						e.successor = JSR.successors.successor;
@@ -519,9 +554,12 @@ public class Label {
 						l.successors = e;
 					}
 				}
-			} else {
+			}
+			else
+			{
 				// if the l block already belongs to subroutine 'id', continue
-				if (l.inSubroutine(id)) {
+				if (l.inSubroutine(id))
+				{
 					continue;
 				}
 				// marks the l block as belonging to subroutine 'id'
@@ -529,13 +567,16 @@ public class Label {
 			}
 			// pushes each successor of l on the stack, except JSR targets
 			Edge e = l.successors;
-			while (e != null) {
+			while (e != null)
+			{
 				// if the l block is a JSR block, then 'l.successors.next' leads
 				// to the JSR target (see {@link #visitJumpInsn}) and must
 				// therefore not be followed
-				if ((l.status & Label.JSR) == 0 || e != l.successors.next) {
+				if ((l.status & Label.JSR) == 0 || e != l.successors.next)
+				{
 					// pushes e.successor on the stack if it not already added
-					if (e.successor.next == null) {
+					if (e.successor.next == null)
+					{
 						e.successor.next = stack;
 						stack = e.successor;
 					}
@@ -554,7 +595,8 @@ public class Label {
 	 * 
 	 * @return a string representation of this label.
 	 */
-	public String toString() {
+	public String toString()
+	{
 		return "L" + System.identityHashCode(this);
 	}
 }

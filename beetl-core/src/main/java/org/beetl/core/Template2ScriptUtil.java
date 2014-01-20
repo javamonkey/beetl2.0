@@ -8,9 +8,11 @@ import java.io.Reader;
  * @author joelli
  * 
  */
-public class Template2ScriptUtil {
+public class Template2ScriptUtil
+{
 
-	public Template2ScriptUtil(GroupTemplate gt, Reader templateReader) {
+	public Template2ScriptUtil(GroupTemplate gt, Reader templateReader)
+	{
 
 	}
 
@@ -19,14 +21,16 @@ public class Template2ScriptUtil {
 	 * 
 	 * @return
 	 */
-	public Reader getBeetlScript() {
+	public Reader getBeetlScript()
+	{
 		return null;
 	}
 
 	/**
 	 * 关闭资源
 	 */
-	public void clear() {
+	public void clear()
+	{
 
 	}
 

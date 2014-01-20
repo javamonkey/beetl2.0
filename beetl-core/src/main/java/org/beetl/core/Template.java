@@ -12,12 +12,14 @@ import org.beetl.core.io.ByteWriter_Byte;
 import org.beetl.core.io.ByteWriter_Char;
 import org.beetl.core.statement.Program;
 
-public class Template {
+public class Template
+{
 	protected Program program = null;
 	protected Configuration cf = null;
 	Context ctx = new Context();
 
-	protected Template(Program program, Configuration cf) {
+	protected Template(Program program, Configuration cf)
+	{
 		this.program = program;
 		this.cf = cf;
 	}
@@ -28,7 +30,8 @@ public class Template {
 	 * @return
 	 * @throws BeetlException
 	 */
-	public String render() throws BeetlException {
+	public String render() throws BeetlException
+	{
 		StringWriter sw = new StringWriter();
 		renderTo(sw);
 		return sw.toString();
@@ -40,7 +43,8 @@ public class Template {
 	 * @param w
 	 * @throws BeetlException
 	 */
-	public void renderTo(Writer writer) throws BeetlException {
+	public void renderTo(Writer writer) throws BeetlException
+	{
 		ByteWriter_Char byteWriter = new ByteWriter_Char(writer, cf.charset);
 		this.renderTo(byteWriter);
 
@@ -52,19 +56,24 @@ public class Template {
 	 * @param os
 	 * @throws BeetlException
 	 */
-	public void renderTo(OutputStream os) throws BeetlException {
+	public void renderTo(OutputStream os) throws BeetlException
+	{
 		ByteWriter_Byte byteWriter = new ByteWriter_Byte(os, cf.charset);
 		this.renderTo(byteWriter);
 	}
 
-	private void renderTo(ByteWriter byteWriter) {
+	private void renderTo(ByteWriter byteWriter)
+	{
 		ctx.byteWriter = byteWriter;
 		ctx.byteOutputMode = cf.directByteOutput;
 		program.metaData.initContext(ctx);
 		program.execute(ctx);
-		try {
+		try
+		{
 			byteWriter.flush();
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			throw new TempException("ioexception");
 		}
 
@@ -78,10 +87,12 @@ public class Template {
 	 * @param varName
 	 * @param o
 	 */
-	public void binding(String varName, Object o, boolean dynamic) {
+	public void binding(String varName, Object o, boolean dynamic)
+	{
 		ctx.set(varName, o, dynamic);
 		// ctx.globalVar.put(varName, o);
-		if (dynamic) {
+		if (dynamic)
+		{
 			ctx.objectKeys.add(varName);
 		}
 	}
@@ -94,7 +105,8 @@ public class Template {
 	 * @param o
 	 *            模板变量
 	 */
-	public void binding(String varName, Object o) {
+	public void binding(String varName, Object o)
+	{
 		this.binding(varName, o, false);
 	}
 
@@ -103,21 +115,27 @@ public class Template {
 	 * 
 	 * @param map
 	 */
-	public void binding(Map map) {
+	public void binding(Map map)
+	{
 		ctx.globalVar = map;
 	}
 
-	public void fastRender(Map map, ByteWriter byteWriter) {
-		if (ctx.isInit) {
+	public void fastRender(Map map, ByteWriter byteWriter)
+	{
+		if (ctx.isInit)
+		{
 			ctx.globalVar = map;
 			// 重用
-			for (int i = ctx.tempVarStartIndex; i < ctx.vars.length; i++) {
+			for (int i = ctx.tempVarStartIndex; i < ctx.vars.length; i++)
+			{
 				ctx.vars[i] = null;
 			}
 			ctx.byteWriter = byteWriter;
 			program.metaData.replaceGlobal(ctx);
 			program.execute(ctx);
-		} else {
+		}
+		else
+		{
 			ctx.globalVar = map;
 			renderTo(byteWriter);
 		}

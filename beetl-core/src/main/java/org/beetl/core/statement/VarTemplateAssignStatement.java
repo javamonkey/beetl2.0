@@ -2,17 +2,20 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 
-public class VarTemplateAssignStatement extends Expression {
+public class VarTemplateAssignStatement extends Expression
+{
 
 	public BlockStatement block = null;
 
-	public VarTemplateAssignStatement(BlockStatement block, Token token) {
+	public VarTemplateAssignStatement(BlockStatement block, Token token)
+	{
 		super(token);
 		this.block = block;
 	}
 
 	@Override
-	public Object evaluate(Context ctx) {
+	public Object evaluate(Context ctx)
+	{
 		// 初始化一个临时的bytewrite
 		throw new UnsupportedOperationException();
 	}

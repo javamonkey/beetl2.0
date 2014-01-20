@@ -38,7 +38,8 @@ import org.beetl.core.asm3.Label;
  * @author Chris Nokleberg
  * @author Eric Bruneton
  */
-public interface TableSwitchGenerator {
+public interface TableSwitchGenerator
+{
 
 	/**
 	 * Generates the code for a switch case.

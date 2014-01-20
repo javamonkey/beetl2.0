@@ -41,7 +41,8 @@ package org.beetl.core.asm3;
  * @author Eric Bruneton
  * @author Eugene Kuleshov
  */
-public interface Opcodes {
+public interface Opcodes
+{
 
 	// versions
 

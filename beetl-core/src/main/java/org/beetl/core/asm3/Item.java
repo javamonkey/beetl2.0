@@ -6,7 +6,8 @@ package org.beetl.core.asm3;
  * 
  * @author Eric Bruneton
  */
-final class Item {
+final class Item
+{
 
 	/**
 	 * Index of this item in the constant pool.
@@ -74,7 +75,8 @@ final class Item {
 	/**
 	 * Constructs an uninitialized {@link Item}.
 	 */
-	Item() {
+	Item()
+	{
 	}
 
 	/**
@@ -84,7 +86,8 @@ final class Item {
 	 * @param index
 	 *            index of the item to be constructed.
 	 */
-	Item(final int index) {
+	Item(final int index)
+	{
 		this.index = index;
 	}
 
@@ -96,7 +99,8 @@ final class Item {
 	 * @param i
 	 *            the item that must be copied into the item to be constructed.
 	 */
-	Item(final int index, final Item i) {
+	Item(final int index, final Item i)
+	{
 		this.index = index;
 		type = i.type;
 		intVal = i.intVal;
@@ -113,7 +117,8 @@ final class Item {
 	 * @param intVal
 	 *            the value of this item.
 	 */
-	void set(final int intVal) {
+	void set(final int intVal)
+	{
 		this.type = ClassWriter.INT;
 		this.intVal = intVal;
 		this.hashCode = 0x7FFFFFFF & (type + intVal);
@@ -125,7 +130,8 @@ final class Item {
 	 * @param longVal
 	 *            the value of this item.
 	 */
-	void set(final long longVal) {
+	void set(final long longVal)
+	{
 		this.type = ClassWriter.LONG;
 		this.longVal = longVal;
 		this.hashCode = 0x7FFFFFFF & (type + (int) longVal);
@@ -137,7 +143,8 @@ final class Item {
 	 * @param floatVal
 	 *            the value of this item.
 	 */
-	void set(final float floatVal) {
+	void set(final float floatVal)
+	{
 		this.type = ClassWriter.FLOAT;
 		this.intVal = Float.floatToRawIntBits(floatVal);
 		this.hashCode = 0x7FFFFFFF & (type + (int) floatVal);
@@ -149,7 +156,8 @@ final class Item {
 	 * @param doubleVal
 	 *            the value of this item.
 	 */
-	void set(final double doubleVal) {
+	void set(final double doubleVal)
+	{
 		this.type = ClassWriter.DOUBLE;
 		this.longVal = Double.doubleToRawLongBits(doubleVal);
 		this.hashCode = 0x7FFFFFFF & (type + (int) doubleVal);
@@ -167,29 +175,28 @@ final class Item {
 	 * @param strVal3
 	 *            third part of the value of this item.
 	 */
-	void set(final int type, final String strVal1, final String strVal2,
-			final String strVal3) {
+	void set(final int type, final String strVal1, final String strVal2, final String strVal3)
+	{
 		this.type = type;
 		this.strVal1 = strVal1;
 		this.strVal2 = strVal2;
 		this.strVal3 = strVal3;
-		switch (type) {
-		case ClassWriter.UTF8:
-		case ClassWriter.STR:
-		case ClassWriter.CLASS:
-		case ClassWriter.TYPE_NORMAL:
-			hashCode = 0x7FFFFFFF & (type + strVal1.hashCode());
-			return;
-		case ClassWriter.NAME_TYPE:
-			hashCode = 0x7FFFFFFF & (type + strVal1.hashCode()
-					* strVal2.hashCode());
-			return;
-			// ClassWriter.FIELD:
-			// ClassWriter.METH:
-			// ClassWriter.IMETH:
-		default:
-			hashCode = 0x7FFFFFFF & (type + strVal1.hashCode()
-					* strVal2.hashCode() * strVal3.hashCode());
+		switch (type)
+		{
+			case ClassWriter.UTF8:
+			case ClassWriter.STR:
+			case ClassWriter.CLASS:
+			case ClassWriter.TYPE_NORMAL:
+				hashCode = 0x7FFFFFFF & (type + strVal1.hashCode());
+				return;
+			case ClassWriter.NAME_TYPE:
+				hashCode = 0x7FFFFFFF & (type + strVal1.hashCode() * strVal2.hashCode());
+				return;
+				// ClassWriter.FIELD:
+				// ClassWriter.METH:
+				// ClassWriter.IMETH:
+			default:
+				hashCode = 0x7FFFFFFF & (type + strVal1.hashCode() * strVal2.hashCode() * strVal3.hashCode());
 		}
 	}
 
@@ -203,30 +210,31 @@ final class Item {
 	 * @return <tt>true</tt> if the given item if equal to this one,
 	 *         <tt>false</tt> otherwise.
 	 */
-	boolean isEqualTo(final Item i) {
-		switch (type) {
-		case ClassWriter.UTF8:
-		case ClassWriter.STR:
-		case ClassWriter.CLASS:
-		case ClassWriter.TYPE_NORMAL:
-			return i.strVal1.equals(strVal1);
-		case ClassWriter.TYPE_MERGED:
-		case ClassWriter.LONG:
-		case ClassWriter.DOUBLE:
-			return i.longVal == longVal;
-		case ClassWriter.INT:
-		case ClassWriter.FLOAT:
-			return i.intVal == intVal;
-		case ClassWriter.TYPE_UNINIT:
-			return i.intVal == intVal && i.strVal1.equals(strVal1);
-		case ClassWriter.NAME_TYPE:
-			return i.strVal1.equals(strVal1) && i.strVal2.equals(strVal2);
-			// case ClassWriter.FIELD:
-			// case ClassWriter.METH:
-			// case ClassWriter.IMETH:
-		default:
-			return i.strVal1.equals(strVal1) && i.strVal2.equals(strVal2)
-					&& i.strVal3.equals(strVal3);
+	boolean isEqualTo(final Item i)
+	{
+		switch (type)
+		{
+			case ClassWriter.UTF8:
+			case ClassWriter.STR:
+			case ClassWriter.CLASS:
+			case ClassWriter.TYPE_NORMAL:
+				return i.strVal1.equals(strVal1);
+			case ClassWriter.TYPE_MERGED:
+			case ClassWriter.LONG:
+			case ClassWriter.DOUBLE:
+				return i.longVal == longVal;
+			case ClassWriter.INT:
+			case ClassWriter.FLOAT:
+				return i.intVal == intVal;
+			case ClassWriter.TYPE_UNINIT:
+				return i.intVal == intVal && i.strVal1.equals(strVal1);
+			case ClassWriter.NAME_TYPE:
+				return i.strVal1.equals(strVal1) && i.strVal2.equals(strVal2);
+				// case ClassWriter.FIELD:
+				// case ClassWriter.METH:
+				// case ClassWriter.IMETH:
+			default:
+				return i.strVal1.equals(strVal1) && i.strVal2.equals(strVal2) && i.strVal3.equals(strVal3);
 		}
 	}
 

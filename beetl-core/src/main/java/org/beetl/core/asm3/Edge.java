@@ -34,7 +34,8 @@ package org.beetl.core.asm3;
  * 
  * @author Eric Bruneton
  */
-class Edge {
+class Edge
+{
 
 	/**
 	 * Denotes a normal control flow graph edge.

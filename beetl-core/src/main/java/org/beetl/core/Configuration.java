@@ -6,7 +6,8 @@ package org.beetl.core;
  * @author joelli
  * 
  */
-public class Configuration {
+public class Configuration
+{
 
 	// 关于模板的设置
 
@@ -38,111 +39,138 @@ public class Configuration {
 
 	String engine = "org.beetl.core.DefaultTemplateEngine";
 
-	public GroupTemplate make() {
+	public GroupTemplate make()
+	{
 		return null;
 	}
 
-	public Configuration() {
+	public Configuration()
+	{
 
 	}
 
-	public String getCharset() {
+	public String getCharset()
+	{
 		return charset;
 	}
 
-	public static Configuration defaultConfiguration() {
+	public static Configuration defaultConfiguration()
+	{
 		return new Configuration();
 	}
 
-	public String getPlaceholderStart() {
+	public String getPlaceholderStart()
+	{
 		return placeholderStart;
 	}
 
-	public void setPlaceholderStart(String placeholderStart) {
+	public void setPlaceholderStart(String placeholderStart)
+	{
 		this.placeholderStart = placeholderStart;
 	}
 
-	public String getPlaceholderEnd() {
+	public String getPlaceholderEnd()
+	{
 		return placeholderEnd;
 	}
 
-	public void setPlaceholderEnd(String placeholderEnd) {
+	public void setPlaceholderEnd(String placeholderEnd)
+	{
 		this.placeholderEnd = placeholderEnd;
 	}
 
-	public String getStatementStart() {
+	public String getStatementStart()
+	{
 		return statementStart;
 	}
 
-	public void setStatementStart(String statementStart) {
+	public void setStatementStart(String statementStart)
+	{
 		this.statementStart = statementStart;
 	}
 
-	public String getStatementEnd() {
+	public String getStatementEnd()
+	{
 		return statementEnd;
 	}
 
-	public void setStatementEnd(String statementEnd) {
+	public void setStatementEnd(String statementEnd)
+	{
 		this.statementEnd = statementEnd;
 	}
 
-	public String getHtmlTagFlag() {
+	public String getHtmlTagFlag()
+	{
 		return htmlTagFlag;
 	}
 
-	public void setHtmlTagFlag(String htmlTagFlag) {
+	public void setHtmlTagFlag(String htmlTagFlag)
+	{
 		this.htmlTagFlag = htmlTagFlag;
 	}
 
-	public boolean isHtmlTagSupport() {
+	public boolean isHtmlTagSupport()
+	{
 		return isHtmlTagSupport;
 	}
 
-	public void setHtmlTagSupport(boolean isHtmlTagSupport) {
+	public void setHtmlTagSupport(boolean isHtmlTagSupport)
+	{
 		this.isHtmlTagSupport = isHtmlTagSupport;
 	}
 
-	public boolean isNativeCall() {
+	public boolean isNativeCall()
+	{
 		return nativeCall;
 	}
 
-	public void setNativeCall(boolean nativeCall) {
+	public void setNativeCall(boolean nativeCall)
+	{
 		this.nativeCall = nativeCall;
 	}
 
-	public boolean isDirectByteOutput() {
+	public boolean isDirectByteOutput()
+	{
 		return directByteOutput;
 	}
 
-	public void setDirectByteOutput(boolean directByteOutput) {
+	public void setDirectByteOutput(boolean directByteOutput)
+	{
 		this.directByteOutput = directByteOutput;
 	}
 
-	public boolean isStrict() {
+	public boolean isStrict()
+	{
 		return isStrict;
 	}
 
-	public void setStrict(boolean isStrict) {
+	public void setStrict(boolean isStrict)
+	{
 		this.isStrict = isStrict;
 	}
 
-	public String getHtmlTagStart() {
+	public String getHtmlTagStart()
+	{
 		return htmlTagStart;
 	}
 
-	public void setHtmlTagStart(String htmlTagStart) {
+	public void setHtmlTagStart(String htmlTagStart)
+	{
 		this.htmlTagStart = htmlTagStart;
 	}
 
-	public String getHtmlTagEnd() {
+	public String getHtmlTagEnd()
+	{
 		return htmlTagEnd;
 	}
 
-	public void setHtmlTagEnd(String htmlTagEnd) {
+	public void setHtmlTagEnd(String htmlTagEnd)
+	{
 		this.htmlTagEnd = htmlTagEnd;
 	}
 
-	public void setCharset(String charset) {
+	public void setCharset(String charset)
+	{
 		this.charset = charset;
 	}
 

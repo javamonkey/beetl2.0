@@ -10,134 +10,126 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
 
-@SuppressWarnings({ "all", "warnings", "unchecked", "unused", "cast" })
-public class BeetlParser extends Parser {
+@SuppressWarnings(
+{ "all", "warnings", "unchecked", "unused", "cast" })
+public class BeetlParser extends Parser
+{
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache = new PredictionContextCache();
-	public static final int Elsefor = 3, Switch = 6, COMMENT_TAG = 63,
-			Try = 15, LEFT_TEXT_TOKEN = 53, LARGE_EQUAL = 34,
-			OctalLiteral = 56, MOD = 30, LEFT_ANGULAR = 71, INCREASE = 23,
-			While = 5, NOT = 38, ALL_COMMENT_CHAR = 65, Case = 13, AND = 39,
-			RIGHT_TOKEN = 52, RIGHT_SQBR = 22, DECREASE = 24, Identifier = 59,
-			Default = 14, AT = 42, TYPE_END = 74, LEFT_TOKEN = 51,
-			NOT_EQUAL = 32, COMMA = 47, EQUAL = 31, LESS = 37, LEFT_PAR1 = 68,
-			LEFT_PAR = 19, Select = 7, PERIOD1 = 67, MUlTIP = 28, Return = 8,
-			VIRTUAL = 25, If = 1, LEFT_SQBR = 21, ADD = 26, RIGHT_BRACE = 18,
-			HexLiteral = 54, QUESTOIN = 41, Continue = 10, LINE_COMMENT = 61,
-			Catch = 16, PERIOD = 49, Identifier1 = 66, NULL = 43, ASSIN = 33,
-			COMMENT_OPEN = 62, RIGHT_PAR1 = 69, MIN = 27, Directive = 12,
-			COMMA1 = 70, DecimalLiteral = 55, For = 2, TRUE = 44,
-			StringLiteral = 58, COLON = 48, WS = 60, COMMENT_END = 64,
-			Break = 9, FOR_IN = 50, LEFT_BRACE = 17, WS1 = 73,
-			FloatingPointLiteral = 57, RIGHT_PAR = 20, OR = 40, LARGE = 35,
-			LESS_EQUAL = 36, DIV = 29, END = 46, RIGHT_ANGULAR = 72, Else = 4,
-			FALSE = 45, Var = 11;
-	public static final String[] tokenNames = { "<INVALID>", "'if'", "'for'",
-			"'elsefor'", "'else'", "'while'", "'switch'", "'select'",
-			"'return'", "'break'", "'continue'", "'var'", "Directive",
-			"'case'", "'default'", "'try'", "'catch'", "'{'", "'}'",
-			"LEFT_PAR", "RIGHT_PAR", "'['", "']'", "'++'", "'--'", "'.~'",
-			"'+'", "'-'", "'*'", "'/'", "'%'", "'=='", "'!='", "'='", "'>='",
-			"LARGE", "'<='", "LESS", "'!'", "'&&'", "'||'", "'?'", "'@'",
-			"'null'", "'true'", "'false'", "';'", "COMMA", "':'", "PERIOD",
-			"'in'", "'<<'", "'>>'", "'<$'", "HexLiteral", "DecimalLiteral",
-			"OctalLiteral", "FloatingPointLiteral", "StringLiteral",
-			"Identifier", "WS", "LINE_COMMENT", "COMMENT_OPEN", "COMMENT_TAG",
-			"COMMENT_END", "ALL_COMMENT_CHAR", "Identifier1", "PERIOD1",
-			"LEFT_PAR1", "RIGHT_PAR1", "COMMA1", "LEFT_ANGULAR",
-			"RIGHT_ANGULAR", "WS1", "TYPE_END" };
-	public static final int RULE_prog = 0, RULE_block = 1, RULE_statement = 2,
-			RULE_commentTypeTag = 3, RULE_commentTypeItemTag = 4,
-			RULE_classOrInterfaceType = 5, RULE_typeArguments = 6,
-			RULE_typeArgument = 7, RULE_directiveExp = 8,
-			RULE_g_switchStatment = 9, RULE_g_caseStatment = 10,
-			RULE_g_defaultStatment = 11, RULE_varDeclareList = 12,
-			RULE_assignMent = 13, RULE_switchBlock = 14,
-			RULE_switchBlockStatementGroup = 15, RULE_switchLabel = 16,
-			RULE_forControl = 17, RULE_parExpression = 18,
-			RULE_expressionList = 19, RULE_statementExpression = 20,
-			RULE_textStatment = 21, RULE_textVar = 22, RULE_textformat = 23,
-			RULE_constantsTextStatment = 24, RULE_constantExpression = 25,
-			RULE_expression = 26, RULE_varRef = 27, RULE_varAttribute = 28,
-			RULE_functionCall = 29, RULE_functionTagCall = 30,
-			RULE_functionNs = 31, RULE_nativeCall = 32, RULE_nativeMethod = 33,
-			RULE_nativeArray = 34, RULE_nativeVarRefChain = 35, RULE_json = 36,
-			RULE_jsonKeyValue = 37, RULE_literal = 38,
-			RULE_booleanLiteral = 39, RULE_arguments = 40;
-	public static final String[] ruleNames = { "prog", "block", "statement",
-			"commentTypeTag", "commentTypeItemTag", "classOrInterfaceType",
-			"typeArguments", "typeArgument", "directiveExp",
-			"g_switchStatment", "g_caseStatment", "g_defaultStatment",
-			"varDeclareList", "assignMent", "switchBlock",
-			"switchBlockStatementGroup", "switchLabel", "forControl",
-			"parExpression", "expressionList", "statementExpression",
-			"textStatment", "textVar", "textformat", "constantsTextStatment",
-			"constantExpression", "expression", "varRef", "varAttribute",
-			"functionCall", "functionTagCall", "functionNs", "nativeCall",
-			"nativeMethod", "nativeArray", "nativeVarRefChain", "json",
+	public static final int Elsefor = 3, Switch = 6, COMMENT_TAG = 63, Try = 15, LEFT_TEXT_TOKEN = 53,
+			LARGE_EQUAL = 34, OctalLiteral = 56, MOD = 30, LEFT_ANGULAR = 71, INCREASE = 23, While = 5, NOT = 38,
+			ALL_COMMENT_CHAR = 65, Case = 13, AND = 39, RIGHT_TOKEN = 52, RIGHT_SQBR = 22, DECREASE = 24,
+			Identifier = 59, Default = 14, AT = 42, TYPE_END = 74, LEFT_TOKEN = 51, NOT_EQUAL = 32, COMMA = 47,
+			EQUAL = 31, LESS = 37, LEFT_PAR1 = 68, LEFT_PAR = 19, Select = 7, PERIOD1 = 67, MUlTIP = 28, Return = 8,
+			VIRTUAL = 25, If = 1, LEFT_SQBR = 21, ADD = 26, RIGHT_BRACE = 18, HexLiteral = 54, QUESTOIN = 41,
+			Continue = 10, LINE_COMMENT = 61, Catch = 16, PERIOD = 49, Identifier1 = 66, NULL = 43, ASSIN = 33,
+			COMMENT_OPEN = 62, RIGHT_PAR1 = 69, MIN = 27, Directive = 12, COMMA1 = 70, DecimalLiteral = 55, For = 2,
+			TRUE = 44, StringLiteral = 58, COLON = 48, WS = 60, COMMENT_END = 64, Break = 9, FOR_IN = 50,
+			LEFT_BRACE = 17, WS1 = 73, FloatingPointLiteral = 57, RIGHT_PAR = 20, OR = 40, LARGE = 35, LESS_EQUAL = 36,
+			DIV = 29, END = 46, RIGHT_ANGULAR = 72, Else = 4, FALSE = 45, Var = 11;
+	public static final String[] tokenNames =
+	{ "<INVALID>", "'if'", "'for'", "'elsefor'", "'else'", "'while'", "'switch'", "'select'", "'return'", "'break'",
+			"'continue'", "'var'", "Directive", "'case'", "'default'", "'try'", "'catch'", "'{'", "'}'", "LEFT_PAR",
+			"RIGHT_PAR", "'['", "']'", "'++'", "'--'", "'.~'", "'+'", "'-'", "'*'", "'/'", "'%'", "'=='", "'!='",
+			"'='", "'>='", "LARGE", "'<='", "LESS", "'!'", "'&&'", "'||'", "'?'", "'@'", "'null'", "'true'", "'false'",
+			"';'", "COMMA", "':'", "PERIOD", "'in'", "'<<'", "'>>'", "'<$'", "HexLiteral", "DecimalLiteral",
+			"OctalLiteral", "FloatingPointLiteral", "StringLiteral", "Identifier", "WS", "LINE_COMMENT",
+			"COMMENT_OPEN", "COMMENT_TAG", "COMMENT_END", "ALL_COMMENT_CHAR", "Identifier1", "PERIOD1", "LEFT_PAR1",
+			"RIGHT_PAR1", "COMMA1", "LEFT_ANGULAR", "RIGHT_ANGULAR", "WS1", "TYPE_END" };
+	public static final int RULE_prog = 0, RULE_block = 1, RULE_statement = 2, RULE_commentTypeTag = 3,
+			RULE_commentTypeItemTag = 4, RULE_classOrInterfaceType = 5, RULE_typeArguments = 6, RULE_typeArgument = 7,
+			RULE_directiveExp = 8, RULE_g_switchStatment = 9, RULE_g_caseStatment = 10, RULE_g_defaultStatment = 11,
+			RULE_varDeclareList = 12, RULE_assignMent = 13, RULE_switchBlock = 14, RULE_switchBlockStatementGroup = 15,
+			RULE_switchLabel = 16, RULE_forControl = 17, RULE_parExpression = 18, RULE_expressionList = 19,
+			RULE_statementExpression = 20, RULE_textStatment = 21, RULE_textVar = 22, RULE_textformat = 23,
+			RULE_constantsTextStatment = 24, RULE_constantExpression = 25, RULE_expression = 26, RULE_varRef = 27,
+			RULE_varAttribute = 28, RULE_functionCall = 29, RULE_functionTagCall = 30, RULE_functionNs = 31,
+			RULE_nativeCall = 32, RULE_nativeMethod = 33, RULE_nativeArray = 34, RULE_nativeVarRefChain = 35,
+			RULE_json = 36, RULE_jsonKeyValue = 37, RULE_literal = 38, RULE_booleanLiteral = 39, RULE_arguments = 40;
+	public static final String[] ruleNames =
+	{ "prog", "block", "statement", "commentTypeTag", "commentTypeItemTag", "classOrInterfaceType", "typeArguments",
+			"typeArgument", "directiveExp", "g_switchStatment", "g_caseStatment", "g_defaultStatment",
+			"varDeclareList", "assignMent", "switchBlock", "switchBlockStatementGroup", "switchLabel", "forControl",
+			"parExpression", "expressionList", "statementExpression", "textStatment", "textVar", "textformat",
+			"constantsTextStatment", "constantExpression", "expression", "varRef", "varAttribute", "functionCall",
+			"functionTagCall", "functionNs", "nativeCall", "nativeMethod", "nativeArray", "nativeVarRefChain", "json",
 			"jsonKeyValue", "literal", "booleanLiteral", "arguments" };
 
 	@Override
-	public String getGrammarFileName() {
+	public String getGrammarFileName()
+	{
 		return "BeetlParser.g4";
 	}
 
 	@Override
-	public String[] getTokenNames() {
+	public String[] getTokenNames()
+	{
 		return tokenNames;
 	}
 
 	@Override
-	public String[] getRuleNames() {
+	public String[] getRuleNames()
+	{
 		return ruleNames;
 	}
 
 	@Override
-	public ATN getATN() {
+	public ATN getATN()
+	{
 		return _ATN;
 	}
 
-	public BeetlParser(TokenStream input) {
+	public BeetlParser(TokenStream input)
+	{
 		super(input);
-		_interp = new ParserATNSimulator(this, _ATN, _decisionToDFA,
-				_sharedContextCache);
+		_interp = new ParserATNSimulator(this, _ATN, _decisionToDFA, _sharedContextCache);
 	}
 
-	public static class ProgContext extends ParserRuleContext {
-		public List<StatementContext> statement() {
+	public static class ProgContext extends ParserRuleContext
+	{
+		public List<StatementContext> statement()
+		{
 			return getRuleContexts(StatementContext.class);
 		}
 
-		public TerminalNode EOF() {
+		public TerminalNode EOF()
+		{
 			return getToken(BeetlParser.EOF, 0);
 		}
 
-		public StatementContext statement(int i) {
+		public StatementContext statement(int i)
+		{
 			return getRuleContext(StatementContext.class, i);
 		}
 
-		public ProgContext(ParserRuleContext parent, int invokingState) {
+		public ProgContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_prog;
 		}
 	}
 
-	public final ProgContext prog() throws RecognitionException {
+	public final ProgContext prog() throws RecognitionException
+	{
 		ProgContext _localctx = new ProgContext(_ctx, getState());
 		enterRule(_localctx, 0, RULE_prog);
-		try {
+		try
+		{
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
 				setState(85);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input, 0, _ctx);
-				while (_alt != 2 && _alt != -1) {
-					if (_alt == 1) {
+				while (_alt != 2 && _alt != -1)
+				{
+					if (_alt == 1)
+					{
 						{
 							{
 								setState(82);
@@ -152,47 +144,60 @@ public class BeetlParser extends Parser {
 				setState(88);
 				match(EOF);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class BlockContext extends ParserRuleContext {
-		public List<StatementContext> statement() {
+	public static class BlockContext extends ParserRuleContext
+	{
+		public List<StatementContext> statement()
+		{
 			return getRuleContexts(StatementContext.class);
 		}
 
-		public TerminalNode RIGHT_BRACE() {
+		public TerminalNode RIGHT_BRACE()
+		{
 			return getToken(BeetlParser.RIGHT_BRACE, 0);
 		}
 
-		public TerminalNode LEFT_BRACE() {
+		public TerminalNode LEFT_BRACE()
+		{
 			return getToken(BeetlParser.LEFT_BRACE, 0);
 		}
 
-		public StatementContext statement(int i) {
+		public StatementContext statement(int i)
+		{
 			return getRuleContext(StatementContext.class, i);
 		}
 
-		public BlockContext(ParserRuleContext parent, int invokingState) {
+		public BlockContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_block;
 		}
 	}
 
-	public final BlockContext block() throws RecognitionException {
+	public final BlockContext block() throws RecognitionException
+	{
 		BlockContext _localctx = new BlockContext(_ctx, getState());
 		enterRule(_localctx, 2, RULE_block);
-		try {
+		try
+		{
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
@@ -201,8 +206,10 @@ public class BeetlParser extends Parser {
 				setState(94);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input, 1, _ctx);
-				while (_alt != 2 && _alt != -1) {
-					if (_alt == 1) {
+				while (_alt != 2 && _alt != -1)
+				{
+					if (_alt == 1)
+					{
 						{
 							{
 								setState(91);
@@ -217,643 +224,761 @@ public class BeetlParser extends Parser {
 				setState(97);
 				match(RIGHT_BRACE);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class StatementContext extends ParserRuleContext {
-		public StatementContext(ParserRuleContext parent, int invokingState) {
+	public static class StatementContext extends ParserRuleContext
+	{
+		public StatementContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_statement;
 		}
 
-		public StatementContext() {
+		public StatementContext()
+		{
 		}
 
-		public void copyFrom(StatementContext ctx) {
+		public void copyFrom(StatementContext ctx)
+		{
 			super.copyFrom(ctx);
 		}
 	}
 
-	public static class ForStContext extends StatementContext {
-		public List<StatementContext> statement() {
+	public static class ForStContext extends StatementContext
+	{
+		public List<StatementContext> statement()
+		{
 			return getRuleContexts(StatementContext.class);
 		}
 
-		public TerminalNode For() {
+		public TerminalNode For()
+		{
 			return getToken(BeetlParser.For, 0);
 		}
 
-		public TerminalNode RIGHT_PAR() {
+		public TerminalNode RIGHT_PAR()
+		{
 			return getToken(BeetlParser.RIGHT_PAR, 0);
 		}
 
-		public TerminalNode LEFT_PAR() {
+		public TerminalNode LEFT_PAR()
+		{
 			return getToken(BeetlParser.LEFT_PAR, 0);
 		}
 
-		public ForControlContext forControl() {
+		public ForControlContext forControl()
+		{
 			return getRuleContext(ForControlContext.class, 0);
 		}
 
-		public TerminalNode Elsefor() {
+		public TerminalNode Elsefor()
+		{
 			return getToken(BeetlParser.Elsefor, 0);
 		}
 
-		public StatementContext statement(int i) {
+		public StatementContext statement(int i)
+		{
 			return getRuleContext(StatementContext.class, i);
 		}
 
-		public ForStContext(StatementContext ctx) {
+		public ForStContext(StatementContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class CommentTagStContext extends StatementContext {
-		public TerminalNode COMMENT_TAG() {
+	public static class CommentTagStContext extends StatementContext
+	{
+		public TerminalNode COMMENT_TAG()
+		{
 			return getToken(BeetlParser.COMMENT_TAG, 0);
 		}
 
-		public CommentTypeTagContext commentTypeTag() {
+		public CommentTypeTagContext commentTypeTag()
+		{
 			return getRuleContext(CommentTypeTagContext.class, 0);
 		}
 
-		public CommentTagStContext(StatementContext ctx) {
+		public CommentTagStContext(StatementContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class BlockStContext extends StatementContext {
-		public BlockContext block() {
+	public static class BlockStContext extends StatementContext
+	{
+		public BlockContext block()
+		{
 			return getRuleContext(BlockContext.class, 0);
 		}
 
-		public BlockStContext(StatementContext ctx) {
+		public BlockStContext(StatementContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class StatmentExpStContext extends StatementContext {
-		public StatementExpressionContext statementExpression() {
+	public static class StatmentExpStContext extends StatementContext
+	{
+		public StatementExpressionContext statementExpression()
+		{
 			return getRuleContext(StatementExpressionContext.class, 0);
 		}
 
-		public TerminalNode END() {
+		public TerminalNode END()
+		{
 			return getToken(BeetlParser.END, 0);
 		}
 
-		public StatmentExpStContext(StatementContext ctx) {
+		public StatmentExpStContext(StatementContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class ReturnStContext extends StatementContext {
-		public ExpressionContext expression() {
+	public static class ReturnStContext extends StatementContext
+	{
+		public ExpressionContext expression()
+		{
 			return getRuleContext(ExpressionContext.class, 0);
 		}
 
-		public TerminalNode Return() {
+		public TerminalNode Return()
+		{
 			return getToken(BeetlParser.Return, 0);
 		}
 
-		public TerminalNode END() {
+		public TerminalNode END()
+		{
 			return getToken(BeetlParser.END, 0);
 		}
 
-		public ReturnStContext(StatementContext ctx) {
+		public ReturnStContext(StatementContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class BreakStContext extends StatementContext {
-		public TerminalNode Break() {
+	public static class BreakStContext extends StatementContext
+	{
+		public TerminalNode Break()
+		{
 			return getToken(BeetlParser.Break, 0);
 		}
 
-		public TerminalNode END() {
+		public TerminalNode END()
+		{
 			return getToken(BeetlParser.END, 0);
 		}
 
-		public BreakStContext(StatementContext ctx) {
+		public BreakStContext(StatementContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class DirectiveStContext extends StatementContext {
-		public DirectiveExpContext directiveExp() {
+	public static class DirectiveStContext extends StatementContext
+	{
+		public DirectiveExpContext directiveExp()
+		{
 			return getRuleContext(DirectiveExpContext.class, 0);
 		}
 
-		public TerminalNode Directive() {
+		public TerminalNode Directive()
+		{
 			return getToken(BeetlParser.Directive, 0);
 		}
 
-		public DirectiveStContext(StatementContext ctx) {
+		public DirectiveStContext(StatementContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class TextOutputStContext extends StatementContext {
-		public TextStatmentContext textStatment() {
+	public static class TextOutputStContext extends StatementContext
+	{
+		public TextStatmentContext textStatment()
+		{
 			return getRuleContext(TextStatmentContext.class, 0);
 		}
 
-		public TextOutputStContext(StatementContext ctx) {
+		public TextOutputStContext(StatementContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class VarStContext extends StatementContext {
-		public TerminalNode Var() {
+	public static class VarStContext extends StatementContext
+	{
+		public TerminalNode Var()
+		{
 			return getToken(BeetlParser.Var, 0);
 		}
 
-		public TerminalNode END() {
+		public TerminalNode END()
+		{
 			return getToken(BeetlParser.END, 0);
 		}
 
-		public VarDeclareListContext varDeclareList() {
+		public VarDeclareListContext varDeclareList()
+		{
 			return getRuleContext(VarDeclareListContext.class, 0);
 		}
 
-		public VarStContext(StatementContext ctx) {
+		public VarStContext(StatementContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class StaticOutputStContext extends StatementContext {
-		public ConstantsTextStatmentContext constantsTextStatment() {
+	public static class StaticOutputStContext extends StatementContext
+	{
+		public ConstantsTextStatmentContext constantsTextStatment()
+		{
 			return getRuleContext(ConstantsTextStatmentContext.class, 0);
 		}
 
-		public StaticOutputStContext(StatementContext ctx) {
+		public StaticOutputStContext(StatementContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class ContinueStContext extends StatementContext {
-		public TerminalNode Continue() {
+	public static class ContinueStContext extends StatementContext
+	{
+		public TerminalNode Continue()
+		{
 			return getToken(BeetlParser.Continue, 0);
 		}
 
-		public TerminalNode END() {
+		public TerminalNode END()
+		{
 			return getToken(BeetlParser.END, 0);
 		}
 
-		public ContinueStContext(StatementContext ctx) {
+		public ContinueStContext(StatementContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class IfStContext extends StatementContext {
-		public List<StatementContext> statement() {
+	public static class IfStContext extends StatementContext
+	{
+		public List<StatementContext> statement()
+		{
 			return getRuleContexts(StatementContext.class);
 		}
 
-		public ParExpressionContext parExpression() {
+		public ParExpressionContext parExpression()
+		{
 			return getRuleContext(ParExpressionContext.class, 0);
 		}
 
-		public TerminalNode Else() {
+		public TerminalNode Else()
+		{
 			return getToken(BeetlParser.Else, 0);
 		}
 
-		public TerminalNode If() {
+		public TerminalNode If()
+		{
 			return getToken(BeetlParser.If, 0);
 		}
 
-		public StatementContext statement(int i) {
+		public StatementContext statement(int i)
+		{
 			return getRuleContext(StatementContext.class, i);
 		}
 
-		public IfStContext(StatementContext ctx) {
+		public IfStContext(StatementContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class TryStContext extends StatementContext {
-		public TerminalNode Catch() {
+	public static class TryStContext extends StatementContext
+	{
+		public TerminalNode Catch()
+		{
 			return getToken(BeetlParser.Catch, 0);
 		}
 
-		public TerminalNode RIGHT_PAR() {
+		public TerminalNode RIGHT_PAR()
+		{
 			return getToken(BeetlParser.RIGHT_PAR, 0);
 		}
 
-		public TerminalNode LEFT_PAR() {
+		public TerminalNode LEFT_PAR()
+		{
 			return getToken(BeetlParser.LEFT_PAR, 0);
 		}
 
-		public TerminalNode Try() {
+		public TerminalNode Try()
+		{
 			return getToken(BeetlParser.Try, 0);
 		}
 
-		public BlockContext block(int i) {
+		public BlockContext block(int i)
+		{
 			return getRuleContext(BlockContext.class, i);
 		}
 
-		public TerminalNode Identifier() {
+		public TerminalNode Identifier()
+		{
 			return getToken(BeetlParser.Identifier, 0);
 		}
 
-		public TerminalNode NOT() {
+		public TerminalNode NOT()
+		{
 			return getToken(BeetlParser.NOT, 0);
 		}
 
-		public List<BlockContext> block() {
+		public List<BlockContext> block()
+		{
 			return getRuleContexts(BlockContext.class);
 		}
 
-		public TryStContext(StatementContext ctx) {
+		public TryStContext(StatementContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class WhileStContext extends StatementContext {
-		public StatementContext statement() {
+	public static class WhileStContext extends StatementContext
+	{
+		public StatementContext statement()
+		{
 			return getRuleContext(StatementContext.class, 0);
 		}
 
-		public TerminalNode While() {
+		public TerminalNode While()
+		{
 			return getToken(BeetlParser.While, 0);
 		}
 
-		public ParExpressionContext parExpression() {
+		public ParExpressionContext parExpression()
+		{
 			return getRuleContext(ParExpressionContext.class, 0);
 		}
 
-		public WhileStContext(StatementContext ctx) {
+		public WhileStContext(StatementContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class FunctionStContext extends StatementContext {
-		public FunctionTagCallContext functionTagCall() {
+	public static class FunctionStContext extends StatementContext
+	{
+		public FunctionTagCallContext functionTagCall()
+		{
 			return getRuleContext(FunctionTagCallContext.class, 0);
 		}
 
-		public FunctionStContext(StatementContext ctx) {
+		public FunctionStContext(StatementContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class SiwchStContext extends StatementContext {
-		public ParExpressionContext parExpression() {
+	public static class SiwchStContext extends StatementContext
+	{
+		public ParExpressionContext parExpression()
+		{
 			return getRuleContext(ParExpressionContext.class, 0);
 		}
 
-		public SwitchBlockContext switchBlock() {
+		public SwitchBlockContext switchBlock()
+		{
 			return getRuleContext(SwitchBlockContext.class, 0);
 		}
 
-		public TerminalNode Switch() {
+		public TerminalNode Switch()
+		{
 			return getToken(BeetlParser.Switch, 0);
 		}
 
-		public SiwchStContext(StatementContext ctx) {
+		public SiwchStContext(StatementContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class AssignStContext extends StatementContext {
-		public AssignMentContext assignMent() {
+	public static class AssignStContext extends StatementContext
+	{
+		public AssignMentContext assignMent()
+		{
 			return getRuleContext(AssignMentContext.class, 0);
 		}
 
-		public TerminalNode END() {
+		public TerminalNode END()
+		{
 			return getToken(BeetlParser.END, 0);
 		}
 
-		public AssignStContext(StatementContext ctx) {
+		public AssignStContext(StatementContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class SelectStContext extends StatementContext {
-		public G_switchStatmentContext g_switchStatment() {
+	public static class SelectStContext extends StatementContext
+	{
+		public G_switchStatmentContext g_switchStatment()
+		{
 			return getRuleContext(G_switchStatmentContext.class, 0);
 		}
 
-		public TerminalNode Select() {
+		public TerminalNode Select()
+		{
 			return getToken(BeetlParser.Select, 0);
 		}
 
-		public SelectStContext(StatementContext ctx) {
+		public SelectStContext(StatementContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public final StatementContext statement() throws RecognitionException {
+	public final StatementContext statement() throws RecognitionException
+	{
 		StatementContext _localctx = new StatementContext(_ctx, getState());
 		enterRule(_localctx, 4, RULE_statement);
-		try {
+		try
+		{
 			setState(164);
-			switch (getInterpreter().adaptivePredict(_input, 7, _ctx)) {
-			case 1:
-				_localctx = new BlockStContext(_localctx);
-				enterOuterAlt(_localctx, 1);
-				{
-					setState(99);
-					block();
-				}
-				break;
-
-			case 2:
-				_localctx = new TextOutputStContext(_localctx);
-				enterOuterAlt(_localctx, 2);
-				{
-					setState(100);
-					textStatment();
-				}
-				break;
-
-			case 3:
-				_localctx = new StaticOutputStContext(_localctx);
-				enterOuterAlt(_localctx, 3);
-				{
-					setState(101);
-					constantsTextStatment();
-				}
-				break;
-
-			case 4:
-				_localctx = new CommentTagStContext(_localctx);
-				enterOuterAlt(_localctx, 4);
-				{
-					setState(102);
-					match(COMMENT_TAG);
-					setState(103);
-					commentTypeTag();
-				}
-				break;
-
-			case 5:
-				_localctx = new IfStContext(_localctx);
-				enterOuterAlt(_localctx, 5);
-				{
-					setState(104);
-					match(If);
-					setState(105);
-					parExpression();
-					setState(106);
-					statement();
-					setState(109);
-					switch (getInterpreter().adaptivePredict(_input, 2, _ctx)) {
-					case 1: {
-						setState(107);
-						match(Else);
-						setState(108);
-						statement();
-					}
-						break;
-					}
-				}
-				break;
-
-			case 6:
-				_localctx = new ForStContext(_localctx);
-				enterOuterAlt(_localctx, 6);
-				{
-					setState(111);
-					match(For);
-					setState(112);
-					match(LEFT_PAR);
-					setState(113);
-					forControl();
-					setState(114);
-					match(RIGHT_PAR);
-					setState(115);
-					statement();
-					setState(118);
-					switch (getInterpreter().adaptivePredict(_input, 3, _ctx)) {
-					case 1: {
-						setState(116);
-						match(Elsefor);
-						setState(117);
-						statement();
-					}
-						break;
-					}
-				}
-				break;
-
-			case 7:
-				_localctx = new WhileStContext(_localctx);
-				enterOuterAlt(_localctx, 7);
-				{
-					setState(120);
-					match(While);
-					setState(121);
-					parExpression();
-					setState(122);
-					statement();
-				}
-				break;
-
-			case 8:
-				_localctx = new SiwchStContext(_localctx);
-				enterOuterAlt(_localctx, 8);
-				{
-					setState(124);
-					match(Switch);
-					setState(125);
-					parExpression();
-					setState(126);
-					switchBlock();
-				}
-				break;
-
-			case 9:
-				_localctx = new SelectStContext(_localctx);
-				enterOuterAlt(_localctx, 9);
-				{
-					setState(128);
-					match(Select);
-					setState(129);
-					g_switchStatment();
-				}
-				break;
-
-			case 10:
-				_localctx = new TryStContext(_localctx);
-				enterOuterAlt(_localctx, 10);
-				{
-					setState(130);
-					match(Try);
-					setState(132);
-					switch (getInterpreter().adaptivePredict(_input, 4, _ctx)) {
-					case 1: {
-						setState(131);
-						match(NOT);
-					}
-						break;
-					}
-					setState(134);
-					block();
-					setState(140);
-					switch (getInterpreter().adaptivePredict(_input, 5, _ctx)) {
-					case 1: {
-						setState(135);
-						match(Catch);
-						setState(136);
-						match(LEFT_PAR);
-						setState(137);
-						match(Identifier);
-						setState(138);
-						match(RIGHT_PAR);
-						setState(139);
+			switch (getInterpreter().adaptivePredict(_input, 7, _ctx))
+			{
+				case 1:
+					_localctx = new BlockStContext(_localctx);
+					enterOuterAlt(_localctx, 1);
+					{
+						setState(99);
 						block();
 					}
-						break;
+					break;
+
+				case 2:
+					_localctx = new TextOutputStContext(_localctx);
+					enterOuterAlt(_localctx, 2);
+					{
+						setState(100);
+						textStatment();
 					}
-				}
-				break;
+					break;
 
-			case 11:
-				_localctx = new ReturnStContext(_localctx);
-				enterOuterAlt(_localctx, 11);
-				{
-					setState(142);
-					match(Return);
-					setState(144);
-					switch (getInterpreter().adaptivePredict(_input, 6, _ctx)) {
-					case 1: {
-						setState(143);
-						expression(0);
+				case 3:
+					_localctx = new StaticOutputStContext(_localctx);
+					enterOuterAlt(_localctx, 3);
+					{
+						setState(101);
+						constantsTextStatment();
 					}
-						break;
+					break;
+
+				case 4:
+					_localctx = new CommentTagStContext(_localctx);
+					enterOuterAlt(_localctx, 4);
+					{
+						setState(102);
+						match(COMMENT_TAG);
+						setState(103);
+						commentTypeTag();
 					}
-					setState(146);
-					match(END);
-				}
-				break;
+					break;
 
-			case 12:
-				_localctx = new BreakStContext(_localctx);
-				enterOuterAlt(_localctx, 12);
-				{
-					setState(147);
-					match(Break);
-					setState(148);
-					match(END);
-				}
-				break;
+				case 5:
+					_localctx = new IfStContext(_localctx);
+					enterOuterAlt(_localctx, 5);
+					{
+						setState(104);
+						match(If);
+						setState(105);
+						parExpression();
+						setState(106);
+						statement();
+						setState(109);
+						switch (getInterpreter().adaptivePredict(_input, 2, _ctx))
+						{
+							case 1:
+							{
+								setState(107);
+								match(Else);
+								setState(108);
+								statement();
+							}
+								break;
+						}
+					}
+					break;
 
-			case 13:
-				_localctx = new ContinueStContext(_localctx);
-				enterOuterAlt(_localctx, 13);
-				{
-					setState(149);
-					match(Continue);
-					setState(150);
-					match(END);
-				}
-				break;
+				case 6:
+					_localctx = new ForStContext(_localctx);
+					enterOuterAlt(_localctx, 6);
+					{
+						setState(111);
+						match(For);
+						setState(112);
+						match(LEFT_PAR);
+						setState(113);
+						forControl();
+						setState(114);
+						match(RIGHT_PAR);
+						setState(115);
+						statement();
+						setState(118);
+						switch (getInterpreter().adaptivePredict(_input, 3, _ctx))
+						{
+							case 1:
+							{
+								setState(116);
+								match(Elsefor);
+								setState(117);
+								statement();
+							}
+								break;
+						}
+					}
+					break;
 
-			case 14:
-				_localctx = new VarStContext(_localctx);
-				enterOuterAlt(_localctx, 14);
-				{
-					setState(151);
-					match(Var);
-					setState(152);
-					varDeclareList();
-					setState(153);
-					match(END);
-				}
-				break;
+				case 7:
+					_localctx = new WhileStContext(_localctx);
+					enterOuterAlt(_localctx, 7);
+					{
+						setState(120);
+						match(While);
+						setState(121);
+						parExpression();
+						setState(122);
+						statement();
+					}
+					break;
 
-			case 15:
-				_localctx = new DirectiveStContext(_localctx);
-				enterOuterAlt(_localctx, 15);
-				{
-					setState(155);
-					match(Directive);
-					setState(156);
-					directiveExp();
-				}
-				break;
+				case 8:
+					_localctx = new SiwchStContext(_localctx);
+					enterOuterAlt(_localctx, 8);
+					{
+						setState(124);
+						match(Switch);
+						setState(125);
+						parExpression();
+						setState(126);
+						switchBlock();
+					}
+					break;
 
-			case 16:
-				_localctx = new AssignStContext(_localctx);
-				enterOuterAlt(_localctx, 16);
-				{
-					setState(157);
-					assignMent();
-					setState(158);
-					match(END);
-				}
-				break;
+				case 9:
+					_localctx = new SelectStContext(_localctx);
+					enterOuterAlt(_localctx, 9);
+					{
+						setState(128);
+						match(Select);
+						setState(129);
+						g_switchStatment();
+					}
+					break;
 
-			case 17:
-				_localctx = new FunctionStContext(_localctx);
-				enterOuterAlt(_localctx, 17);
-				{
-					setState(160);
-					functionTagCall();
-				}
-				break;
+				case 10:
+					_localctx = new TryStContext(_localctx);
+					enterOuterAlt(_localctx, 10);
+					{
+						setState(130);
+						match(Try);
+						setState(132);
+						switch (getInterpreter().adaptivePredict(_input, 4, _ctx))
+						{
+							case 1:
+							{
+								setState(131);
+								match(NOT);
+							}
+								break;
+						}
+						setState(134);
+						block();
+						setState(140);
+						switch (getInterpreter().adaptivePredict(_input, 5, _ctx))
+						{
+							case 1:
+							{
+								setState(135);
+								match(Catch);
+								setState(136);
+								match(LEFT_PAR);
+								setState(137);
+								match(Identifier);
+								setState(138);
+								match(RIGHT_PAR);
+								setState(139);
+								block();
+							}
+								break;
+						}
+					}
+					break;
 
-			case 18:
-				_localctx = new StatmentExpStContext(_localctx);
-				enterOuterAlt(_localctx, 18);
-				{
-					setState(161);
-					statementExpression();
-					setState(162);
-					match(END);
-				}
-				break;
+				case 11:
+					_localctx = new ReturnStContext(_localctx);
+					enterOuterAlt(_localctx, 11);
+					{
+						setState(142);
+						match(Return);
+						setState(144);
+						switch (getInterpreter().adaptivePredict(_input, 6, _ctx))
+						{
+							case 1:
+							{
+								setState(143);
+								expression(0);
+							}
+								break;
+						}
+						setState(146);
+						match(END);
+					}
+					break;
+
+				case 12:
+					_localctx = new BreakStContext(_localctx);
+					enterOuterAlt(_localctx, 12);
+					{
+						setState(147);
+						match(Break);
+						setState(148);
+						match(END);
+					}
+					break;
+
+				case 13:
+					_localctx = new ContinueStContext(_localctx);
+					enterOuterAlt(_localctx, 13);
+					{
+						setState(149);
+						match(Continue);
+						setState(150);
+						match(END);
+					}
+					break;
+
+				case 14:
+					_localctx = new VarStContext(_localctx);
+					enterOuterAlt(_localctx, 14);
+					{
+						setState(151);
+						match(Var);
+						setState(152);
+						varDeclareList();
+						setState(153);
+						match(END);
+					}
+					break;
+
+				case 15:
+					_localctx = new DirectiveStContext(_localctx);
+					enterOuterAlt(_localctx, 15);
+					{
+						setState(155);
+						match(Directive);
+						setState(156);
+						directiveExp();
+					}
+					break;
+
+				case 16:
+					_localctx = new AssignStContext(_localctx);
+					enterOuterAlt(_localctx, 16);
+					{
+						setState(157);
+						assignMent();
+						setState(158);
+						match(END);
+					}
+					break;
+
+				case 17:
+					_localctx = new FunctionStContext(_localctx);
+					enterOuterAlt(_localctx, 17);
+					{
+						setState(160);
+						functionTagCall();
+					}
+					break;
+
+				case 18:
+					_localctx = new StatmentExpStContext(_localctx);
+					enterOuterAlt(_localctx, 18);
+					{
+						setState(161);
+						statementExpression();
+						setState(162);
+						match(END);
+					}
+					break;
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class CommentTypeTagContext extends ParserRuleContext {
-		public TerminalNode COMMA1() {
+	public static class CommentTypeTagContext extends ParserRuleContext
+	{
+		public TerminalNode COMMA1()
+		{
 			return getToken(BeetlParser.COMMA1, 0);
 		}
 
-		public CommentTypeItemTagContext commentTypeItemTag(int i) {
+		public CommentTypeItemTagContext commentTypeItemTag(int i)
+		{
 			return getRuleContext(CommentTypeItemTagContext.class, i);
 		}
 
-		public List<CommentTypeItemTagContext> commentTypeItemTag() {
+		public List<CommentTypeItemTagContext> commentTypeItemTag()
+		{
 			return getRuleContexts(CommentTypeItemTagContext.class);
 		}
 
-		public CommentTypeTagContext(ParserRuleContext parent, int invokingState) {
+		public CommentTypeTagContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_commentTypeTag;
 		}
 	}
 
-	public final CommentTypeTagContext commentTypeTag()
-			throws RecognitionException {
-		CommentTypeTagContext _localctx = new CommentTypeTagContext(_ctx,
-				getState());
+	public final CommentTypeTagContext commentTypeTag() throws RecognitionException
+	{
+		CommentTypeTagContext _localctx = new CommentTypeTagContext(_ctx, getState());
 		enterRule(_localctx, 6, RULE_commentTypeTag);
-		try {
+		try
+		{
 			enterOuterAlt(_localctx, 1);
 			{
 				setState(166);
@@ -865,50 +990,60 @@ public class BeetlParser extends Parser {
 					commentTypeItemTag();
 				}
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class CommentTypeItemTagContext extends ParserRuleContext {
-		public TerminalNode LEFT_PAR1() {
+	public static class CommentTypeItemTagContext extends ParserRuleContext
+	{
+		public TerminalNode LEFT_PAR1()
+		{
 			return getToken(BeetlParser.LEFT_PAR1, 0);
 		}
 
-		public TerminalNode RIGHT_PAR1() {
+		public TerminalNode RIGHT_PAR1()
+		{
 			return getToken(BeetlParser.RIGHT_PAR1, 0);
 		}
 
-		public TerminalNode Identifier1() {
+		public TerminalNode Identifier1()
+		{
 			return getToken(BeetlParser.Identifier1, 0);
 		}
 
-		public ClassOrInterfaceTypeContext classOrInterfaceType() {
+		public ClassOrInterfaceTypeContext classOrInterfaceType()
+		{
 			return getRuleContext(ClassOrInterfaceTypeContext.class, 0);
 		}
 
-		public CommentTypeItemTagContext(ParserRuleContext parent,
-				int invokingState) {
+		public CommentTypeItemTagContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_commentTypeItemTag;
 		}
 	}
 
-	public final CommentTypeItemTagContext commentTypeItemTag()
-			throws RecognitionException {
-		CommentTypeItemTagContext _localctx = new CommentTypeItemTagContext(
-				_ctx, getState());
+	public final CommentTypeItemTagContext commentTypeItemTag() throws RecognitionException
+	{
+		CommentTypeItemTagContext _localctx = new CommentTypeItemTagContext(_ctx, getState());
 		enterRule(_localctx, 8, RULE_commentTypeItemTag);
-		try {
+		try
+		{
 			enterOuterAlt(_localctx, 1);
 			{
 				setState(170);
@@ -920,54 +1055,65 @@ public class BeetlParser extends Parser {
 				setState(173);
 				match(Identifier1);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class ClassOrInterfaceTypeContext extends ParserRuleContext {
-		public TerminalNode PERIOD1(int i) {
+	public static class ClassOrInterfaceTypeContext extends ParserRuleContext
+	{
+		public TerminalNode PERIOD1(int i)
+		{
 			return getToken(BeetlParser.PERIOD1, i);
 		}
 
-		public TerminalNode Identifier1(int i) {
+		public TerminalNode Identifier1(int i)
+		{
 			return getToken(BeetlParser.Identifier1, i);
 		}
 
-		public List<TerminalNode> PERIOD1() {
+		public List<TerminalNode> PERIOD1()
+		{
 			return getTokens(BeetlParser.PERIOD1);
 		}
 
-		public TypeArgumentsContext typeArguments() {
+		public TypeArgumentsContext typeArguments()
+		{
 			return getRuleContext(TypeArgumentsContext.class, 0);
 		}
 
-		public List<TerminalNode> Identifier1() {
+		public List<TerminalNode> Identifier1()
+		{
 			return getTokens(BeetlParser.Identifier1);
 		}
 
-		public ClassOrInterfaceTypeContext(ParserRuleContext parent,
-				int invokingState) {
+		public ClassOrInterfaceTypeContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_classOrInterfaceType;
 		}
 	}
 
-	public final ClassOrInterfaceTypeContext classOrInterfaceType()
-			throws RecognitionException {
-		ClassOrInterfaceTypeContext _localctx = new ClassOrInterfaceTypeContext(
-				_ctx, getState());
+	public final ClassOrInterfaceTypeContext classOrInterfaceType() throws RecognitionException
+	{
+		ClassOrInterfaceTypeContext _localctx = new ClassOrInterfaceTypeContext(_ctx, getState());
 		enterRule(_localctx, 10, RULE_classOrInterfaceType);
-		try {
+		try
+		{
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
@@ -976,8 +1122,10 @@ public class BeetlParser extends Parser {
 				setState(180);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input, 8, _ctx);
-				while (_alt != 2 && _alt != -1) {
-					if (_alt == 1) {
+				while (_alt != 2 && _alt != -1)
+				{
+					if (_alt == 1)
+					{
 						{
 							{
 								setState(176);
@@ -992,65 +1140,80 @@ public class BeetlParser extends Parser {
 					_alt = getInterpreter().adaptivePredict(_input, 8, _ctx);
 				}
 				setState(184);
-				switch (getInterpreter().adaptivePredict(_input, 9, _ctx)) {
-				case 1: {
-					setState(183);
-					typeArguments();
-				}
-					break;
+				switch (getInterpreter().adaptivePredict(_input, 9, _ctx))
+				{
+					case 1:
+					{
+						setState(183);
+						typeArguments();
+					}
+						break;
 				}
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class TypeArgumentsContext extends ParserRuleContext {
-		public List<TerminalNode> COMMA1() {
+	public static class TypeArgumentsContext extends ParserRuleContext
+	{
+		public List<TerminalNode> COMMA1()
+		{
 			return getTokens(BeetlParser.COMMA1);
 		}
 
-		public List<TypeArgumentContext> typeArgument() {
+		public List<TypeArgumentContext> typeArgument()
+		{
 			return getRuleContexts(TypeArgumentContext.class);
 		}
 
-		public TerminalNode RIGHT_ANGULAR() {
+		public TerminalNode RIGHT_ANGULAR()
+		{
 			return getToken(BeetlParser.RIGHT_ANGULAR, 0);
 		}
 
-		public TypeArgumentContext typeArgument(int i) {
+		public TypeArgumentContext typeArgument(int i)
+		{
 			return getRuleContext(TypeArgumentContext.class, i);
 		}
 
-		public TerminalNode COMMA1(int i) {
+		public TerminalNode COMMA1(int i)
+		{
 			return getToken(BeetlParser.COMMA1, i);
 		}
 
-		public TerminalNode LEFT_ANGULAR() {
+		public TerminalNode LEFT_ANGULAR()
+		{
 			return getToken(BeetlParser.LEFT_ANGULAR, 0);
 		}
 
-		public TypeArgumentsContext(ParserRuleContext parent, int invokingState) {
+		public TypeArgumentsContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_typeArguments;
 		}
 	}
 
-	public final TypeArgumentsContext typeArguments()
-			throws RecognitionException {
-		TypeArgumentsContext _localctx = new TypeArgumentsContext(_ctx,
-				getState());
+	public final TypeArgumentsContext typeArguments() throws RecognitionException
+	{
+		TypeArgumentsContext _localctx = new TypeArgumentsContext(_ctx, getState());
 		enterRule(_localctx, 12, RULE_typeArguments);
-		try {
+		try
+		{
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
@@ -1061,8 +1224,10 @@ public class BeetlParser extends Parser {
 				setState(192);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input, 10, _ctx);
-				while (_alt != 2 && _alt != -1) {
-					if (_alt == 1) {
+				while (_alt != 2 && _alt != -1)
+				{
+					if (_alt == 1)
+					{
 						{
 							{
 								setState(188);
@@ -1079,178 +1244,218 @@ public class BeetlParser extends Parser {
 				setState(195);
 				match(RIGHT_ANGULAR);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class TypeArgumentContext extends ParserRuleContext {
-		public ClassOrInterfaceTypeContext classOrInterfaceType() {
+	public static class TypeArgumentContext extends ParserRuleContext
+	{
+		public ClassOrInterfaceTypeContext classOrInterfaceType()
+		{
 			return getRuleContext(ClassOrInterfaceTypeContext.class, 0);
 		}
 
-		public TypeArgumentContext(ParserRuleContext parent, int invokingState) {
+		public TypeArgumentContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_typeArgument;
 		}
 	}
 
-	public final TypeArgumentContext typeArgument() throws RecognitionException {
-		TypeArgumentContext _localctx = new TypeArgumentContext(_ctx,
-				getState());
+	public final TypeArgumentContext typeArgument() throws RecognitionException
+	{
+		TypeArgumentContext _localctx = new TypeArgumentContext(_ctx, getState());
 		enterRule(_localctx, 14, RULE_typeArgument);
-		try {
+		try
+		{
 			enterOuterAlt(_localctx, 1);
 			{
 				setState(197);
 				classOrInterfaceType();
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class DirectiveExpContext extends ParserRuleContext {
-		public TerminalNode Identifier() {
+	public static class DirectiveExpContext extends ParserRuleContext
+	{
+		public TerminalNode Identifier()
+		{
 			return getToken(BeetlParser.Identifier, 0);
 		}
 
-		public TerminalNode StringLiteral() {
+		public TerminalNode StringLiteral()
+		{
 			return getToken(BeetlParser.StringLiteral, 0);
 		}
 
-		public TerminalNode END() {
+		public TerminalNode END()
+		{
 			return getToken(BeetlParser.END, 0);
 		}
 
-		public DirectiveExpContext(ParserRuleContext parent, int invokingState) {
+		public DirectiveExpContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_directiveExp;
 		}
 	}
 
-	public final DirectiveExpContext directiveExp() throws RecognitionException {
-		DirectiveExpContext _localctx = new DirectiveExpContext(_ctx,
-				getState());
+	public final DirectiveExpContext directiveExp() throws RecognitionException
+	{
+		DirectiveExpContext _localctx = new DirectiveExpContext(_ctx, getState());
 		enterRule(_localctx, 16, RULE_directiveExp);
-		try {
+		try
+		{
 			enterOuterAlt(_localctx, 1);
 			{
 				setState(199);
 				match(Identifier);
 				setState(201);
-				switch (getInterpreter().adaptivePredict(_input, 11, _ctx)) {
-				case 1: {
-					setState(200);
-					match(StringLiteral);
-				}
-					break;
+				switch (getInterpreter().adaptivePredict(_input, 11, _ctx))
+				{
+					case 1:
+					{
+						setState(200);
+						match(StringLiteral);
+					}
+						break;
 				}
 				setState(203);
 				match(END);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class G_switchStatmentContext extends ParserRuleContext {
+	public static class G_switchStatmentContext extends ParserRuleContext
+	{
 		public ExpressionContext base;
 
-		public TerminalNode RIGHT_PAR() {
+		public TerminalNode RIGHT_PAR()
+		{
 			return getToken(BeetlParser.RIGHT_PAR, 0);
 		}
 
-		public TerminalNode LEFT_PAR() {
+		public TerminalNode LEFT_PAR()
+		{
 			return getToken(BeetlParser.LEFT_PAR, 0);
 		}
 
-		public TerminalNode RIGHT_BRACE() {
+		public TerminalNode RIGHT_BRACE()
+		{
 			return getToken(BeetlParser.RIGHT_BRACE, 0);
 		}
 
-		public G_caseStatmentContext g_caseStatment(int i) {
+		public G_caseStatmentContext g_caseStatment(int i)
+		{
 			return getRuleContext(G_caseStatmentContext.class, i);
 		}
 
-		public List<G_caseStatmentContext> g_caseStatment() {
+		public List<G_caseStatmentContext> g_caseStatment()
+		{
 			return getRuleContexts(G_caseStatmentContext.class);
 		}
 
-		public G_defaultStatmentContext g_defaultStatment() {
+		public G_defaultStatmentContext g_defaultStatment()
+		{
 			return getRuleContext(G_defaultStatmentContext.class, 0);
 		}
 
-		public ExpressionContext expression() {
+		public ExpressionContext expression()
+		{
 			return getRuleContext(ExpressionContext.class, 0);
 		}
 
-		public TerminalNode LEFT_BRACE() {
+		public TerminalNode LEFT_BRACE()
+		{
 			return getToken(BeetlParser.LEFT_BRACE, 0);
 		}
 
-		public G_switchStatmentContext(ParserRuleContext parent,
-				int invokingState) {
+		public G_switchStatmentContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_g_switchStatment;
 		}
 	}
 
-	public final G_switchStatmentContext g_switchStatment()
-			throws RecognitionException {
-		G_switchStatmentContext _localctx = new G_switchStatmentContext(_ctx,
-				getState());
+	public final G_switchStatmentContext g_switchStatment() throws RecognitionException
+	{
+		G_switchStatmentContext _localctx = new G_switchStatmentContext(_ctx, getState());
 		enterRule(_localctx, 18, RULE_g_switchStatment);
-		try {
+		try
+		{
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
 				setState(209);
-				switch (getInterpreter().adaptivePredict(_input, 12, _ctx)) {
-				case 1: {
-					setState(205);
-					match(LEFT_PAR);
-					setState(206);
-					((G_switchStatmentContext) _localctx).base = expression(0);
-					setState(207);
-					match(RIGHT_PAR);
-				}
-					break;
+				switch (getInterpreter().adaptivePredict(_input, 12, _ctx))
+				{
+					case 1:
+					{
+						setState(205);
+						match(LEFT_PAR);
+						setState(206);
+						((G_switchStatmentContext) _localctx).base = expression(0);
+						setState(207);
+						match(RIGHT_PAR);
+					}
+						break;
 				}
 				setState(211);
 				match(LEFT_BRACE);
 				setState(215);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input, 13, _ctx);
-				while (_alt != 2 && _alt != -1) {
-					if (_alt == 1) {
+				while (_alt != 2 && _alt != -1)
+				{
+					if (_alt == 1)
+					{
 						{
 							{
 								setState(212);
@@ -1263,75 +1468,92 @@ public class BeetlParser extends Parser {
 					_alt = getInterpreter().adaptivePredict(_input, 13, _ctx);
 				}
 				setState(219);
-				switch (getInterpreter().adaptivePredict(_input, 14, _ctx)) {
-				case 1: {
-					setState(218);
-					g_defaultStatment();
-				}
-					break;
+				switch (getInterpreter().adaptivePredict(_input, 14, _ctx))
+				{
+					case 1:
+					{
+						setState(218);
+						g_defaultStatment();
+					}
+						break;
 				}
 				setState(221);
 				match(RIGHT_BRACE);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class G_caseStatmentContext extends ParserRuleContext {
-		public List<StatementContext> statement() {
+	public static class G_caseStatmentContext extends ParserRuleContext
+	{
+		public List<StatementContext> statement()
+		{
 			return getRuleContexts(StatementContext.class);
 		}
 
-		public ExpressionContext expression(int i) {
+		public ExpressionContext expression(int i)
+		{
 			return getRuleContext(ExpressionContext.class, i);
 		}
 
-		public TerminalNode Case() {
+		public TerminalNode Case()
+		{
 			return getToken(BeetlParser.Case, 0);
 		}
 
-		public List<TerminalNode> COMMA() {
+		public List<TerminalNode> COMMA()
+		{
 			return getTokens(BeetlParser.COMMA);
 		}
 
-		public List<ExpressionContext> expression() {
+		public List<ExpressionContext> expression()
+		{
 			return getRuleContexts(ExpressionContext.class);
 		}
 
-		public StatementContext statement(int i) {
+		public StatementContext statement(int i)
+		{
 			return getRuleContext(StatementContext.class, i);
 		}
 
-		public TerminalNode COLON() {
+		public TerminalNode COLON()
+		{
 			return getToken(BeetlParser.COLON, 0);
 		}
 
-		public TerminalNode COMMA(int i) {
+		public TerminalNode COMMA(int i)
+		{
 			return getToken(BeetlParser.COMMA, i);
 		}
 
-		public G_caseStatmentContext(ParserRuleContext parent, int invokingState) {
+		public G_caseStatmentContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_g_caseStatment;
 		}
 	}
 
-	public final G_caseStatmentContext g_caseStatment()
-			throws RecognitionException {
-		G_caseStatmentContext _localctx = new G_caseStatmentContext(_ctx,
-				getState());
+	public final G_caseStatmentContext g_caseStatment() throws RecognitionException
+	{
+		G_caseStatmentContext _localctx = new G_caseStatmentContext(_ctx, getState());
 		enterRule(_localctx, 20, RULE_g_caseStatment);
-		try {
+		try
+		{
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
@@ -1342,8 +1564,10 @@ public class BeetlParser extends Parser {
 				setState(229);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input, 15, _ctx);
-				while (_alt != 2 && _alt != -1) {
-					if (_alt == 1) {
+				while (_alt != 2 && _alt != -1)
+				{
+					if (_alt == 1)
+					{
 						{
 							{
 								setState(225);
@@ -1362,8 +1586,10 @@ public class BeetlParser extends Parser {
 				setState(236);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input, 16, _ctx);
-				while (_alt != 2 && _alt != -1) {
-					if (_alt == 1) {
+				while (_alt != 2 && _alt != -1)
+				{
+					if (_alt == 1)
+					{
 						{
 							{
 								setState(233);
@@ -1376,50 +1602,60 @@ public class BeetlParser extends Parser {
 					_alt = getInterpreter().adaptivePredict(_input, 16, _ctx);
 				}
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class G_defaultStatmentContext extends ParserRuleContext {
-		public List<StatementContext> statement() {
+	public static class G_defaultStatmentContext extends ParserRuleContext
+	{
+		public List<StatementContext> statement()
+		{
 			return getRuleContexts(StatementContext.class);
 		}
 
-		public TerminalNode Default() {
+		public TerminalNode Default()
+		{
 			return getToken(BeetlParser.Default, 0);
 		}
 
-		public StatementContext statement(int i) {
+		public StatementContext statement(int i)
+		{
 			return getRuleContext(StatementContext.class, i);
 		}
 
-		public TerminalNode COLON() {
+		public TerminalNode COLON()
+		{
 			return getToken(BeetlParser.COLON, 0);
 		}
 
-		public G_defaultStatmentContext(ParserRuleContext parent,
-				int invokingState) {
+		public G_defaultStatmentContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_g_defaultStatment;
 		}
 	}
 
-	public final G_defaultStatmentContext g_defaultStatment()
-			throws RecognitionException {
-		G_defaultStatmentContext _localctx = new G_defaultStatmentContext(_ctx,
-				getState());
+	public final G_defaultStatmentContext g_defaultStatment() throws RecognitionException
+	{
+		G_defaultStatmentContext _localctx = new G_defaultStatmentContext(_ctx, getState());
 		enterRule(_localctx, 22, RULE_g_defaultStatment);
-		try {
+		try
+		{
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
@@ -1430,8 +1666,10 @@ public class BeetlParser extends Parser {
 				setState(244);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input, 17, _ctx);
-				while (_alt != 2 && _alt != -1) {
-					if (_alt == 1) {
+				while (_alt != 2 && _alt != -1)
+				{
+					if (_alt == 1)
+					{
 						{
 							{
 								setState(241);
@@ -1444,49 +1682,60 @@ public class BeetlParser extends Parser {
 					_alt = getInterpreter().adaptivePredict(_input, 17, _ctx);
 				}
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class VarDeclareListContext extends ParserRuleContext {
-		public List<TerminalNode> COMMA() {
+	public static class VarDeclareListContext extends ParserRuleContext
+	{
+		public List<TerminalNode> COMMA()
+		{
 			return getTokens(BeetlParser.COMMA);
 		}
 
-		public AssignMentContext assignMent(int i) {
+		public AssignMentContext assignMent(int i)
+		{
 			return getRuleContext(AssignMentContext.class, i);
 		}
 
-		public List<AssignMentContext> assignMent() {
+		public List<AssignMentContext> assignMent()
+		{
 			return getRuleContexts(AssignMentContext.class);
 		}
 
-		public TerminalNode COMMA(int i) {
+		public TerminalNode COMMA(int i)
+		{
 			return getToken(BeetlParser.COMMA, i);
 		}
 
-		public VarDeclareListContext(ParserRuleContext parent, int invokingState) {
+		public VarDeclareListContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_varDeclareList;
 		}
 	}
 
-	public final VarDeclareListContext varDeclareList()
-			throws RecognitionException {
-		VarDeclareListContext _localctx = new VarDeclareListContext(_ctx,
-				getState());
+	public final VarDeclareListContext varDeclareList() throws RecognitionException
+	{
+		VarDeclareListContext _localctx = new VarDeclareListContext(_ctx, getState());
 		enterRule(_localctx, 24, RULE_varDeclareList);
-		try {
+		try
+		{
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
@@ -1495,8 +1744,10 @@ public class BeetlParser extends Parser {
 				setState(252);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input, 18, _ctx);
-				while (_alt != 2 && _alt != -1) {
-					if (_alt == 1) {
+				while (_alt != 2 && _alt != -1)
+				{
+					if (_alt == 1)
+					{
 						{
 							{
 								setState(248);
@@ -1511,170 +1762,210 @@ public class BeetlParser extends Parser {
 					_alt = getInterpreter().adaptivePredict(_input, 18, _ctx);
 				}
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class AssignMentContext extends ParserRuleContext {
-		public AssignMentContext(ParserRuleContext parent, int invokingState) {
+	public static class AssignMentContext extends ParserRuleContext
+	{
+		public AssignMentContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_assignMent;
 		}
 
-		public AssignMentContext() {
+		public AssignMentContext()
+		{
 		}
 
-		public void copyFrom(AssignMentContext ctx) {
+		public void copyFrom(AssignMentContext ctx)
+		{
 			super.copyFrom(ctx);
 		}
 	}
 
-	public static class AssignTemplateVarContext extends AssignMentContext {
-		public TerminalNode ASSIN() {
+	public static class AssignTemplateVarContext extends AssignMentContext
+	{
+		public TerminalNode ASSIN()
+		{
 			return getToken(BeetlParser.ASSIN, 0);
 		}
 
-		public TerminalNode Identifier() {
+		public TerminalNode Identifier()
+		{
 			return getToken(BeetlParser.Identifier, 0);
 		}
 
-		public BlockContext block() {
+		public BlockContext block()
+		{
 			return getRuleContext(BlockContext.class, 0);
 		}
 
-		public AssignTemplateVarContext(AssignMentContext ctx) {
+		public AssignTemplateVarContext(AssignMentContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class AssignGeneralContext extends AssignMentContext {
-		public TerminalNode ASSIN() {
+	public static class AssignGeneralContext extends AssignMentContext
+	{
+		public TerminalNode ASSIN()
+		{
 			return getToken(BeetlParser.ASSIN, 0);
 		}
 
-		public TerminalNode Identifier() {
+		public TerminalNode Identifier()
+		{
 			return getToken(BeetlParser.Identifier, 0);
 		}
 
-		public ExpressionContext expression() {
+		public ExpressionContext expression()
+		{
 			return getRuleContext(ExpressionContext.class, 0);
 		}
 
-		public AssignGeneralContext(AssignMentContext ctx) {
+		public AssignGeneralContext(AssignMentContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class AssignIdContext extends AssignMentContext {
-		public TerminalNode Identifier() {
+	public static class AssignIdContext extends AssignMentContext
+	{
+		public TerminalNode Identifier()
+		{
 			return getToken(BeetlParser.Identifier, 0);
 		}
 
-		public AssignIdContext(AssignMentContext ctx) {
+		public AssignIdContext(AssignMentContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public final AssignMentContext assignMent() throws RecognitionException {
+	public final AssignMentContext assignMent() throws RecognitionException
+	{
 		AssignMentContext _localctx = new AssignMentContext(_ctx, getState());
 		enterRule(_localctx, 26, RULE_assignMent);
-		try {
+		try
+		{
 			setState(262);
-			switch (getInterpreter().adaptivePredict(_input, 19, _ctx)) {
-			case 1:
-				_localctx = new AssignIdContext(_localctx);
-				enterOuterAlt(_localctx, 1);
-				{
-					setState(255);
-					match(Identifier);
-				}
-				break;
+			switch (getInterpreter().adaptivePredict(_input, 19, _ctx))
+			{
+				case 1:
+					_localctx = new AssignIdContext(_localctx);
+					enterOuterAlt(_localctx, 1);
+					{
+						setState(255);
+						match(Identifier);
+					}
+					break;
 
-			case 2:
-				_localctx = new AssignGeneralContext(_localctx);
-				enterOuterAlt(_localctx, 2);
-				{
-					setState(256);
-					match(Identifier);
-					setState(257);
-					match(ASSIN);
-					setState(258);
-					expression(0);
-				}
-				break;
+				case 2:
+					_localctx = new AssignGeneralContext(_localctx);
+					enterOuterAlt(_localctx, 2);
+					{
+						setState(256);
+						match(Identifier);
+						setState(257);
+						match(ASSIN);
+						setState(258);
+						expression(0);
+					}
+					break;
 
-			case 3:
-				_localctx = new AssignTemplateVarContext(_localctx);
-				enterOuterAlt(_localctx, 3);
-				{
-					setState(259);
-					match(Identifier);
-					setState(260);
-					match(ASSIN);
-					setState(261);
-					block();
-				}
-				break;
+				case 3:
+					_localctx = new AssignTemplateVarContext(_localctx);
+					enterOuterAlt(_localctx, 3);
+					{
+						setState(259);
+						match(Identifier);
+						setState(260);
+						match(ASSIN);
+						setState(261);
+						block();
+					}
+					break;
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class SwitchBlockContext extends ParserRuleContext {
-		public SwitchLabelContext switchLabel(int i) {
+	public static class SwitchBlockContext extends ParserRuleContext
+	{
+		public SwitchLabelContext switchLabel(int i)
+		{
 			return getRuleContext(SwitchLabelContext.class, i);
 		}
 
-		public SwitchBlockStatementGroupContext switchBlockStatementGroup(int i) {
+		public SwitchBlockStatementGroupContext switchBlockStatementGroup(int i)
+		{
 			return getRuleContext(SwitchBlockStatementGroupContext.class, i);
 		}
 
-		public TerminalNode RIGHT_BRACE() {
+		public TerminalNode RIGHT_BRACE()
+		{
 			return getToken(BeetlParser.RIGHT_BRACE, 0);
 		}
 
-		public List<SwitchLabelContext> switchLabel() {
+		public List<SwitchLabelContext> switchLabel()
+		{
 			return getRuleContexts(SwitchLabelContext.class);
 		}
 
-		public TerminalNode LEFT_BRACE() {
+		public TerminalNode LEFT_BRACE()
+		{
 			return getToken(BeetlParser.LEFT_BRACE, 0);
 		}
 
-		public List<SwitchBlockStatementGroupContext> switchBlockStatementGroup() {
+		public List<SwitchBlockStatementGroupContext> switchBlockStatementGroup()
+		{
 			return getRuleContexts(SwitchBlockStatementGroupContext.class);
 		}
 
-		public SwitchBlockContext(ParserRuleContext parent, int invokingState) {
+		public SwitchBlockContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_switchBlock;
 		}
 	}
 
-	public final SwitchBlockContext switchBlock() throws RecognitionException {
+	public final SwitchBlockContext switchBlock() throws RecognitionException
+	{
 		SwitchBlockContext _localctx = new SwitchBlockContext(_ctx, getState());
 		enterRule(_localctx, 28, RULE_switchBlock);
-		try {
+		try
+		{
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
@@ -1683,8 +1974,10 @@ public class BeetlParser extends Parser {
 				setState(268);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input, 20, _ctx);
-				while (_alt != 2 && _alt != -1) {
-					if (_alt == 1) {
+				while (_alt != 2 && _alt != -1)
+				{
+					if (_alt == 1)
+					{
 						{
 							{
 								setState(265);
@@ -1699,8 +1992,10 @@ public class BeetlParser extends Parser {
 				setState(274);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input, 21, _ctx);
-				while (_alt != 2 && _alt != -1) {
-					if (_alt == 1) {
+				while (_alt != 2 && _alt != -1)
+				{
+					if (_alt == 1)
+					{
 						{
 							{
 								setState(271);
@@ -1715,78 +2010,93 @@ public class BeetlParser extends Parser {
 				setState(277);
 				match(RIGHT_BRACE);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class SwitchBlockStatementGroupContext extends
-			ParserRuleContext {
-		public List<StatementContext> statement() {
+	public static class SwitchBlockStatementGroupContext extends ParserRuleContext
+	{
+		public List<StatementContext> statement()
+		{
 			return getRuleContexts(StatementContext.class);
 		}
 
-		public SwitchLabelContext switchLabel(int i) {
+		public SwitchLabelContext switchLabel(int i)
+		{
 			return getRuleContext(SwitchLabelContext.class, i);
 		}
 
-		public List<SwitchLabelContext> switchLabel() {
+		public List<SwitchLabelContext> switchLabel()
+		{
 			return getRuleContexts(SwitchLabelContext.class);
 		}
 
-		public StatementContext statement(int i) {
+		public StatementContext statement(int i)
+		{
 			return getRuleContext(StatementContext.class, i);
 		}
 
-		public SwitchBlockStatementGroupContext(ParserRuleContext parent,
-				int invokingState) {
+		public SwitchBlockStatementGroupContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_switchBlockStatementGroup;
 		}
 	}
 
-	public final SwitchBlockStatementGroupContext switchBlockStatementGroup()
-			throws RecognitionException {
-		SwitchBlockStatementGroupContext _localctx = new SwitchBlockStatementGroupContext(
-				_ctx, getState());
+	public final SwitchBlockStatementGroupContext switchBlockStatementGroup() throws RecognitionException
+	{
+		SwitchBlockStatementGroupContext _localctx = new SwitchBlockStatementGroupContext(_ctx, getState());
 		enterRule(_localctx, 30, RULE_switchBlockStatementGroup);
-		try {
+		try
+		{
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
 				setState(280);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input, 22, _ctx);
-				do {
-					switch (_alt) {
-					case 1: {
+				do
+				{
+					switch (_alt)
+					{
+						case 1:
 						{
-							setState(279);
-							switchLabel();
+							{
+								setState(279);
+								switchLabel();
+							}
 						}
-					}
-						break;
-					default:
-						throw new NoViableAltException(this);
+							break;
+						default:
+							throw new NoViableAltException(this);
 					}
 					setState(282);
 					_errHandler.sync(this);
 					_alt = getInterpreter().adaptivePredict(_input, 22, _ctx);
-				} while (_alt != 2 && _alt != -1);
+				}
+				while (_alt != 2 && _alt != -1);
 				setState(287);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input, 23, _ctx);
-				while (_alt != 2 && _alt != -1) {
-					if (_alt == 1) {
+				while (_alt != 2 && _alt != -1)
+				{
+					if (_alt == 1)
+					{
 						{
 							{
 								setState(284);
@@ -1799,121 +2109,150 @@ public class BeetlParser extends Parser {
 					_alt = getInterpreter().adaptivePredict(_input, 23, _ctx);
 				}
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class SwitchLabelContext extends ParserRuleContext {
-		public TerminalNode Default() {
+	public static class SwitchLabelContext extends ParserRuleContext
+	{
+		public TerminalNode Default()
+		{
 			return getToken(BeetlParser.Default, 0);
 		}
 
-		public TerminalNode Case() {
+		public TerminalNode Case()
+		{
 			return getToken(BeetlParser.Case, 0);
 		}
 
-		public ExpressionContext expression() {
+		public ExpressionContext expression()
+		{
 			return getRuleContext(ExpressionContext.class, 0);
 		}
 
-		public TerminalNode COLON() {
+		public TerminalNode COLON()
+		{
 			return getToken(BeetlParser.COLON, 0);
 		}
 
-		public SwitchLabelContext(ParserRuleContext parent, int invokingState) {
+		public SwitchLabelContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_switchLabel;
 		}
 	}
 
-	public final SwitchLabelContext switchLabel() throws RecognitionException {
+	public final SwitchLabelContext switchLabel() throws RecognitionException
+	{
 		SwitchLabelContext _localctx = new SwitchLabelContext(_ctx, getState());
 		enterRule(_localctx, 32, RULE_switchLabel);
-		try {
+		try
+		{
 			setState(296);
-			switch (getInterpreter().adaptivePredict(_input, 24, _ctx)) {
-			case 1:
-				enterOuterAlt(_localctx, 1);
-				{
-					setState(290);
-					match(Case);
-					setState(291);
-					expression(0);
-					setState(292);
-					match(COLON);
-				}
-				break;
+			switch (getInterpreter().adaptivePredict(_input, 24, _ctx))
+			{
+				case 1:
+					enterOuterAlt(_localctx, 1);
+					{
+						setState(290);
+						match(Case);
+						setState(291);
+						expression(0);
+						setState(292);
+						match(COLON);
+					}
+					break;
 
-			case 2:
-				enterOuterAlt(_localctx, 2);
-				{
-					setState(294);
-					match(Default);
-					setState(295);
-					match(COLON);
-				}
-				break;
+				case 2:
+					enterOuterAlt(_localctx, 2);
+					{
+						setState(294);
+						match(Default);
+						setState(295);
+						match(COLON);
+					}
+					break;
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class ForControlContext extends ParserRuleContext {
-		public TerminalNode FOR_IN() {
+	public static class ForControlContext extends ParserRuleContext
+	{
+		public TerminalNode FOR_IN()
+		{
 			return getToken(BeetlParser.FOR_IN, 0);
 		}
 
-		public TerminalNode Identifier() {
+		public TerminalNode Identifier()
+		{
 			return getToken(BeetlParser.Identifier, 0);
 		}
 
-		public TerminalNode Var() {
+		public TerminalNode Var()
+		{
 			return getToken(BeetlParser.Var, 0);
 		}
 
-		public ExpressionContext expression() {
+		public ExpressionContext expression()
+		{
 			return getRuleContext(ExpressionContext.class, 0);
 		}
 
-		public ForControlContext(ParserRuleContext parent, int invokingState) {
+		public ForControlContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_forControl;
 		}
 	}
 
-	public final ForControlContext forControl() throws RecognitionException {
+	public final ForControlContext forControl() throws RecognitionException
+	{
 		ForControlContext _localctx = new ForControlContext(_ctx, getState());
 		enterRule(_localctx, 34, RULE_forControl);
-		try {
+		try
+		{
 			enterOuterAlt(_localctx, 1);
 			{
 				setState(299);
-				switch (getInterpreter().adaptivePredict(_input, 25, _ctx)) {
-				case 1: {
-					setState(298);
-					match(Var);
-				}
-					break;
+				switch (getInterpreter().adaptivePredict(_input, 25, _ctx))
+				{
+					case 1:
+					{
+						setState(298);
+						match(Var);
+					}
+						break;
 				}
 				setState(301);
 				match(Identifier);
@@ -1922,45 +2261,55 @@ public class BeetlParser extends Parser {
 				setState(303);
 				expression(0);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class ParExpressionContext extends ParserRuleContext {
-		public TerminalNode RIGHT_PAR() {
+	public static class ParExpressionContext extends ParserRuleContext
+	{
+		public TerminalNode RIGHT_PAR()
+		{
 			return getToken(BeetlParser.RIGHT_PAR, 0);
 		}
 
-		public TerminalNode LEFT_PAR() {
+		public TerminalNode LEFT_PAR()
+		{
 			return getToken(BeetlParser.LEFT_PAR, 0);
 		}
 
-		public ExpressionContext expression() {
+		public ExpressionContext expression()
+		{
 			return getRuleContext(ExpressionContext.class, 0);
 		}
 
-		public ParExpressionContext(ParserRuleContext parent, int invokingState) {
+		public ParExpressionContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_parExpression;
 		}
 	}
 
-	public final ParExpressionContext parExpression()
-			throws RecognitionException {
-		ParExpressionContext _localctx = new ParExpressionContext(_ctx,
-				getState());
+	public final ParExpressionContext parExpression() throws RecognitionException
+	{
+		ParExpressionContext _localctx = new ParExpressionContext(_ctx, getState());
 		enterRule(_localctx, 36, RULE_parExpression);
-		try {
+		try
+		{
 			enterOuterAlt(_localctx, 1);
 			{
 				setState(305);
@@ -1970,49 +2319,60 @@ public class BeetlParser extends Parser {
 				setState(307);
 				match(RIGHT_PAR);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class ExpressionListContext extends ParserRuleContext {
-		public ExpressionContext expression(int i) {
+	public static class ExpressionListContext extends ParserRuleContext
+	{
+		public ExpressionContext expression(int i)
+		{
 			return getRuleContext(ExpressionContext.class, i);
 		}
 
-		public List<TerminalNode> COMMA() {
+		public List<TerminalNode> COMMA()
+		{
 			return getTokens(BeetlParser.COMMA);
 		}
 
-		public List<ExpressionContext> expression() {
+		public List<ExpressionContext> expression()
+		{
 			return getRuleContexts(ExpressionContext.class);
 		}
 
-		public TerminalNode COMMA(int i) {
+		public TerminalNode COMMA(int i)
+		{
 			return getToken(BeetlParser.COMMA, i);
 		}
 
-		public ExpressionListContext(ParserRuleContext parent, int invokingState) {
+		public ExpressionListContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_expressionList;
 		}
 	}
 
-	public final ExpressionListContext expressionList()
-			throws RecognitionException {
-		ExpressionListContext _localctx = new ExpressionListContext(_ctx,
-				getState());
+	public final ExpressionListContext expressionList() throws RecognitionException
+	{
+		ExpressionListContext _localctx = new ExpressionListContext(_ctx, getState());
 		enterRule(_localctx, 38, RULE_expressionList);
-		try {
+		try
+		{
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
@@ -2021,8 +2381,10 @@ public class BeetlParser extends Parser {
 				setState(314);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input, 26, _ctx);
-				while (_alt != 2 && _alt != -1) {
-					if (_alt == 1) {
+				while (_alt != 2 && _alt != -1)
+				{
+					if (_alt == 1)
+					{
 						{
 							{
 								setState(310);
@@ -2037,282 +2399,340 @@ public class BeetlParser extends Parser {
 					_alt = getInterpreter().adaptivePredict(_input, 26, _ctx);
 				}
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class StatementExpressionContext extends ParserRuleContext {
-		public ExpressionContext expression() {
+	public static class StatementExpressionContext extends ParserRuleContext
+	{
+		public ExpressionContext expression()
+		{
 			return getRuleContext(ExpressionContext.class, 0);
 		}
 
-		public StatementExpressionContext(ParserRuleContext parent,
-				int invokingState) {
+		public StatementExpressionContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_statementExpression;
 		}
 	}
 
-	public final StatementExpressionContext statementExpression()
-			throws RecognitionException {
-		StatementExpressionContext _localctx = new StatementExpressionContext(
-				_ctx, getState());
+	public final StatementExpressionContext statementExpression() throws RecognitionException
+	{
+		StatementExpressionContext _localctx = new StatementExpressionContext(_ctx, getState());
 		enterRule(_localctx, 40, RULE_statementExpression);
-		try {
+		try
+		{
 			enterOuterAlt(_localctx, 1);
 			{
 				setState(317);
 				expression(0);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class TextStatmentContext extends ParserRuleContext {
-		public TerminalNode RIGHT_PAR() {
+	public static class TextStatmentContext extends ParserRuleContext
+	{
+		public TerminalNode RIGHT_PAR()
+		{
 			return getToken(BeetlParser.RIGHT_PAR, 0);
 		}
 
-		public TerminalNode LEFT_PAR() {
+		public TerminalNode LEFT_PAR()
+		{
 			return getToken(BeetlParser.LEFT_PAR, 0);
 		}
 
-		public TextVarContext textVar() {
+		public TextVarContext textVar()
+		{
 			return getRuleContext(TextVarContext.class, 0);
 		}
 
-		public TerminalNode NOT() {
+		public TerminalNode NOT()
+		{
 			return getToken(BeetlParser.NOT, 0);
 		}
 
-		public TerminalNode RIGHT_TOKEN() {
+		public TerminalNode RIGHT_TOKEN()
+		{
 			return getToken(BeetlParser.RIGHT_TOKEN, 0);
 		}
 
-		public TerminalNode LEFT_TOKEN() {
+		public TerminalNode LEFT_TOKEN()
+		{
 			return getToken(BeetlParser.LEFT_TOKEN, 0);
 		}
 
-		public TextStatmentContext(ParserRuleContext parent, int invokingState) {
+		public TextStatmentContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_textStatment;
 		}
 	}
 
-	public final TextStatmentContext textStatment() throws RecognitionException {
-		TextStatmentContext _localctx = new TextStatmentContext(_ctx,
-				getState());
+	public final TextStatmentContext textStatment() throws RecognitionException
+	{
+		TextStatmentContext _localctx = new TextStatmentContext(_ctx, getState());
 		enterRule(_localctx, 42, RULE_textStatment);
-		try {
+		try
+		{
 			setState(330);
-			switch (getInterpreter().adaptivePredict(_input, 27, _ctx)) {
-			case 1:
-				enterOuterAlt(_localctx, 1);
-				{
-					setState(319);
-					match(LEFT_TOKEN);
-					setState(320);
-					textVar();
-					setState(321);
-					match(RIGHT_TOKEN);
-				}
-				break;
+			switch (getInterpreter().adaptivePredict(_input, 27, _ctx))
+			{
+				case 1:
+					enterOuterAlt(_localctx, 1);
+					{
+						setState(319);
+						match(LEFT_TOKEN);
+						setState(320);
+						textVar();
+						setState(321);
+						match(RIGHT_TOKEN);
+					}
+					break;
 
-			case 2:
-				enterOuterAlt(_localctx, 2);
-				{
-					setState(323);
-					match(LEFT_TOKEN);
-					setState(324);
-					match(NOT);
-					setState(325);
-					match(LEFT_PAR);
-					setState(326);
-					textVar();
-					setState(327);
-					match(RIGHT_PAR);
-					setState(328);
-					match(RIGHT_TOKEN);
-				}
-				break;
+				case 2:
+					enterOuterAlt(_localctx, 2);
+					{
+						setState(323);
+						match(LEFT_TOKEN);
+						setState(324);
+						match(NOT);
+						setState(325);
+						match(LEFT_PAR);
+						setState(326);
+						textVar();
+						setState(327);
+						match(RIGHT_PAR);
+						setState(328);
+						match(RIGHT_TOKEN);
+					}
+					break;
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class TextVarContext extends ParserRuleContext {
+	public static class TextVarContext extends ParserRuleContext
+	{
 		public ExpressionContext b;
 
-		public TerminalNode COMMA() {
+		public TerminalNode COMMA()
+		{
 			return getToken(BeetlParser.COMMA, 0);
 		}
 
-		public ExpressionContext expression() {
+		public ExpressionContext expression()
+		{
 			return getRuleContext(ExpressionContext.class, 0);
 		}
 
-		public TextformatContext textformat() {
+		public TextformatContext textformat()
+		{
 			return getRuleContext(TextformatContext.class, 0);
 		}
 
-		public TextVarContext(ParserRuleContext parent, int invokingState) {
+		public TextVarContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_textVar;
 		}
 	}
 
-	public final TextVarContext textVar() throws RecognitionException {
+	public final TextVarContext textVar() throws RecognitionException
+	{
 		TextVarContext _localctx = new TextVarContext(_ctx, getState());
 		enterRule(_localctx, 44, RULE_textVar);
-		try {
+		try
+		{
 			enterOuterAlt(_localctx, 1);
 			{
 				setState(332);
 				((TextVarContext) _localctx).b = expression(0);
 				setState(335);
-				switch (getInterpreter().adaptivePredict(_input, 28, _ctx)) {
-				case 1: {
-					setState(333);
-					match(COMMA);
-					setState(334);
-					textformat();
-				}
-					break;
+				switch (getInterpreter().adaptivePredict(_input, 28, _ctx))
+				{
+					case 1:
+					{
+						setState(333);
+						match(COMMA);
+						setState(334);
+						textformat();
+					}
+						break;
 				}
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class TextformatContext extends ParserRuleContext {
+	public static class TextformatContext extends ParserRuleContext
+	{
 		public FunctionNsContext fm;
 
-		public TerminalNode ASSIN() {
+		public TerminalNode ASSIN()
+		{
 			return getToken(BeetlParser.ASSIN, 0);
 		}
 
-		public TerminalNode StringLiteral() {
+		public TerminalNode StringLiteral()
+		{
 			return getToken(BeetlParser.StringLiteral, 0);
 		}
 
-		public FunctionNsContext functionNs() {
+		public FunctionNsContext functionNs()
+		{
 			return getRuleContext(FunctionNsContext.class, 0);
 		}
 
-		public TextformatContext(ParserRuleContext parent, int invokingState) {
+		public TextformatContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_textformat;
 		}
 	}
 
-	public final TextformatContext textformat() throws RecognitionException {
+	public final TextformatContext textformat() throws RecognitionException
+	{
 		TextformatContext _localctx = new TextformatContext(_ctx, getState());
 		enterRule(_localctx, 46, RULE_textformat);
-		try {
+		try
+		{
 			setState(342);
-			switch (getInterpreter().adaptivePredict(_input, 29, _ctx)) {
-			case 1:
-				enterOuterAlt(_localctx, 1);
-				{
-					setState(337);
-					((TextformatContext) _localctx).fm = functionNs();
+			switch (getInterpreter().adaptivePredict(_input, 29, _ctx))
+			{
+				case 1:
+					enterOuterAlt(_localctx, 1);
 					{
-						setState(338);
-						match(ASSIN);
-						setState(339);
+						setState(337);
+						((TextformatContext) _localctx).fm = functionNs();
+						{
+							setState(338);
+							match(ASSIN);
+							setState(339);
+							match(StringLiteral);
+						}
+					}
+					break;
+
+				case 2:
+					enterOuterAlt(_localctx, 2);
+					{
+						setState(341);
 						match(StringLiteral);
 					}
-				}
-				break;
-
-			case 2:
-				enterOuterAlt(_localctx, 2);
-				{
-					setState(341);
-					match(StringLiteral);
-				}
-				break;
+					break;
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class ConstantsTextStatmentContext extends ParserRuleContext {
-		public TerminalNode RIGHT_TOKEN() {
+	public static class ConstantsTextStatmentContext extends ParserRuleContext
+	{
+		public TerminalNode RIGHT_TOKEN()
+		{
 			return getToken(BeetlParser.RIGHT_TOKEN, 0);
 		}
 
-		public TerminalNode DecimalLiteral() {
+		public TerminalNode DecimalLiteral()
+		{
 			return getToken(BeetlParser.DecimalLiteral, 0);
 		}
 
-		public TerminalNode LEFT_TEXT_TOKEN() {
+		public TerminalNode LEFT_TEXT_TOKEN()
+		{
 			return getToken(BeetlParser.LEFT_TEXT_TOKEN, 0);
 		}
 
-		public ConstantsTextStatmentContext(ParserRuleContext parent,
-				int invokingState) {
+		public ConstantsTextStatmentContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_constantsTextStatment;
 		}
 	}
 
-	public final ConstantsTextStatmentContext constantsTextStatment()
-			throws RecognitionException {
-		ConstantsTextStatmentContext _localctx = new ConstantsTextStatmentContext(
-				_ctx, getState());
+	public final ConstantsTextStatmentContext constantsTextStatment() throws RecognitionException
+	{
+		ConstantsTextStatmentContext _localctx = new ConstantsTextStatmentContext(_ctx, getState());
 		enterRule(_localctx, 48, RULE_constantsTextStatment);
-		try {
+		try
+		{
 			enterOuterAlt(_localctx, 1);
 			{
 				setState(344);
@@ -2322,598 +2742,686 @@ public class BeetlParser extends Parser {
 				setState(346);
 				match(RIGHT_TOKEN);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class ConstantExpressionContext extends ParserRuleContext {
-		public ExpressionContext expression() {
+	public static class ConstantExpressionContext extends ParserRuleContext
+	{
+		public ExpressionContext expression()
+		{
 			return getRuleContext(ExpressionContext.class, 0);
 		}
 
-		public ConstantExpressionContext(ParserRuleContext parent,
-				int invokingState) {
+		public ConstantExpressionContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_constantExpression;
 		}
 	}
 
-	public final ConstantExpressionContext constantExpression()
-			throws RecognitionException {
-		ConstantExpressionContext _localctx = new ConstantExpressionContext(
-				_ctx, getState());
+	public final ConstantExpressionContext constantExpression() throws RecognitionException
+	{
+		ConstantExpressionContext _localctx = new ConstantExpressionContext(_ctx, getState());
 		enterRule(_localctx, 50, RULE_constantExpression);
-		try {
+		try
+		{
 			enterOuterAlt(_localctx, 1);
 			{
 				setState(348);
 				expression(0);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class ExpressionContext extends ParserRuleContext {
+	public static class ExpressionContext extends ParserRuleContext
+	{
 		public int _p;
 
-		public ExpressionContext(ParserRuleContext parent, int invokingState) {
+		public ExpressionContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
-		public ExpressionContext(ParserRuleContext parent, int invokingState,
-				int _p) {
+		public ExpressionContext(ParserRuleContext parent, int invokingState, int _p)
+		{
 			super(parent, invokingState);
 			this._p = _p;
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_expression;
 		}
 
-		public ExpressionContext() {
+		public ExpressionContext()
+		{
 		}
 
-		public void copyFrom(ExpressionContext ctx) {
+		public void copyFrom(ExpressionContext ctx)
+		{
 			super.copyFrom(ctx);
 			this._p = ctx._p;
 		}
 	}
 
-	public static class NegExpContext extends ExpressionContext {
-		public TerminalNode MIN() {
+	public static class NegExpContext extends ExpressionContext
+	{
+		public TerminalNode MIN()
+		{
 			return getToken(BeetlParser.MIN, 0);
 		}
 
-		public ExpressionContext expression() {
+		public ExpressionContext expression()
+		{
 			return getRuleContext(ExpressionContext.class, 0);
 		}
 
-		public TerminalNode ADD() {
+		public TerminalNode ADD()
+		{
 			return getToken(BeetlParser.ADD, 0);
 		}
 
-		public NegExpContext(ExpressionContext ctx) {
+		public NegExpContext(ExpressionContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class LiteralExpContext extends ExpressionContext {
-		public LiteralContext literal() {
+	public static class LiteralExpContext extends ExpressionContext
+	{
+		public LiteralContext literal()
+		{
 			return getRuleContext(LiteralContext.class, 0);
 		}
 
-		public LiteralExpContext(ExpressionContext ctx) {
+		public LiteralExpContext(ExpressionContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class ParExpContext extends ExpressionContext {
-		public TerminalNode RIGHT_PAR() {
+	public static class ParExpContext extends ExpressionContext
+	{
+		public TerminalNode RIGHT_PAR()
+		{
 			return getToken(BeetlParser.RIGHT_PAR, 0);
 		}
 
-		public TerminalNode LEFT_PAR() {
+		public TerminalNode LEFT_PAR()
+		{
 			return getToken(BeetlParser.LEFT_PAR, 0);
 		}
 
-		public ExpressionContext expression() {
+		public ExpressionContext expression()
+		{
 			return getRuleContext(ExpressionContext.class, 0);
 		}
 
-		public ParExpContext(ExpressionContext ctx) {
+		public ParExpContext(ExpressionContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class NotExpContext extends ExpressionContext {
-		public TerminalNode NOT() {
+	public static class NotExpContext extends ExpressionContext
+	{
+		public TerminalNode NOT()
+		{
 			return getToken(BeetlParser.NOT, 0);
 		}
 
-		public ExpressionContext expression() {
+		public ExpressionContext expression()
+		{
 			return getRuleContext(ExpressionContext.class, 0);
 		}
 
-		public NotExpContext(ExpressionContext ctx) {
+		public NotExpContext(ExpressionContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class AddminExpContext extends ExpressionContext {
-		public ExpressionContext expression(int i) {
+	public static class AddminExpContext extends ExpressionContext
+	{
+		public ExpressionContext expression(int i)
+		{
 			return getRuleContext(ExpressionContext.class, i);
 		}
 
-		public TerminalNode MIN() {
+		public TerminalNode MIN()
+		{
 			return getToken(BeetlParser.MIN, 0);
 		}
 
-		public List<ExpressionContext> expression() {
+		public List<ExpressionContext> expression()
+		{
 			return getRuleContexts(ExpressionContext.class);
 		}
 
-		public TerminalNode ADD() {
+		public TerminalNode ADD()
+		{
 			return getToken(BeetlParser.ADD, 0);
 		}
 
-		public AddminExpContext(ExpressionContext ctx) {
+		public AddminExpContext(ExpressionContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class OrExpContext extends ExpressionContext {
-		public ExpressionContext expression(int i) {
+	public static class OrExpContext extends ExpressionContext
+	{
+		public ExpressionContext expression(int i)
+		{
 			return getRuleContext(ExpressionContext.class, i);
 		}
 
-		public TerminalNode OR() {
+		public TerminalNode OR()
+		{
 			return getToken(BeetlParser.OR, 0);
 		}
 
-		public List<ExpressionContext> expression() {
+		public List<ExpressionContext> expression()
+		{
 			return getRuleContexts(ExpressionContext.class);
 		}
 
-		public OrExpContext(ExpressionContext ctx) {
+		public OrExpContext(ExpressionContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class VarRefExpContext extends ExpressionContext {
-		public VarRefContext varRef() {
+	public static class VarRefExpContext extends ExpressionContext
+	{
+		public VarRefContext varRef()
+		{
 			return getRuleContext(VarRefContext.class, 0);
 		}
 
-		public TerminalNode NOT() {
+		public TerminalNode NOT()
+		{
 			return getToken(BeetlParser.NOT, 0);
 		}
 
-		public ExpressionContext expression() {
+		public ExpressionContext expression()
+		{
 			return getRuleContext(ExpressionContext.class, 0);
 		}
 
-		public VarRefExpContext(ExpressionContext ctx) {
+		public VarRefExpContext(ExpressionContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class FunctionCallExpContext extends ExpressionContext {
-		public FunctionCallContext functionCall() {
+	public static class FunctionCallExpContext extends ExpressionContext
+	{
+		public FunctionCallContext functionCall()
+		{
 			return getRuleContext(FunctionCallContext.class, 0);
 		}
 
-		public FunctionCallExpContext(ExpressionContext ctx) {
+		public FunctionCallExpContext(ExpressionContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class AndExpContext extends ExpressionContext {
-		public ExpressionContext expression(int i) {
+	public static class AndExpContext extends ExpressionContext
+	{
+		public ExpressionContext expression(int i)
+		{
 			return getRuleContext(ExpressionContext.class, i);
 		}
 
-		public TerminalNode AND() {
+		public TerminalNode AND()
+		{
 			return getToken(BeetlParser.AND, 0);
 		}
 
-		public List<ExpressionContext> expression() {
+		public List<ExpressionContext> expression()
+		{
 			return getRuleContexts(ExpressionContext.class);
 		}
 
-		public AndExpContext(ExpressionContext ctx) {
+		public AndExpContext(ExpressionContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class TernaryExpContext extends ExpressionContext {
-		public ExpressionContext expression(int i) {
+	public static class TernaryExpContext extends ExpressionContext
+	{
+		public ExpressionContext expression(int i)
+		{
 			return getRuleContext(ExpressionContext.class, i);
 		}
 
-		public TerminalNode QUESTOIN() {
+		public TerminalNode QUESTOIN()
+		{
 			return getToken(BeetlParser.QUESTOIN, 0);
 		}
 
-		public List<ExpressionContext> expression() {
+		public List<ExpressionContext> expression()
+		{
 			return getRuleContexts(ExpressionContext.class);
 		}
 
-		public TerminalNode COLON() {
+		public TerminalNode COLON()
+		{
 			return getToken(BeetlParser.COLON, 0);
 		}
 
-		public TernaryExpContext(ExpressionContext ctx) {
+		public TernaryExpContext(ExpressionContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class MuldivmodExpContext extends ExpressionContext {
-		public ExpressionContext expression(int i) {
+	public static class MuldivmodExpContext extends ExpressionContext
+	{
+		public ExpressionContext expression(int i)
+		{
 			return getRuleContext(ExpressionContext.class, i);
 		}
 
-		public TerminalNode MUlTIP() {
+		public TerminalNode MUlTIP()
+		{
 			return getToken(BeetlParser.MUlTIP, 0);
 		}
 
-		public TerminalNode DIV() {
+		public TerminalNode DIV()
+		{
 			return getToken(BeetlParser.DIV, 0);
 		}
 
-		public List<ExpressionContext> expression() {
+		public List<ExpressionContext> expression()
+		{
 			return getRuleContexts(ExpressionContext.class);
 		}
 
-		public TerminalNode MOD() {
+		public TerminalNode MOD()
+		{
 			return getToken(BeetlParser.MOD, 0);
 		}
 
-		public MuldivmodExpContext(ExpressionContext ctx) {
+		public MuldivmodExpContext(ExpressionContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class NativeCallExpContext extends ExpressionContext {
-		public NativeCallContext nativeCall() {
+	public static class NativeCallExpContext extends ExpressionContext
+	{
+		public NativeCallContext nativeCall()
+		{
 			return getRuleContext(NativeCallContext.class, 0);
 		}
 
-		public TerminalNode AT() {
+		public TerminalNode AT()
+		{
 			return getToken(BeetlParser.AT, 0);
 		}
 
-		public NativeCallExpContext(ExpressionContext ctx) {
+		public NativeCallExpContext(ExpressionContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class JsonExpContext extends ExpressionContext {
-		public JsonContext json() {
+	public static class JsonExpContext extends ExpressionContext
+	{
+		public JsonContext json()
+		{
 			return getRuleContext(JsonContext.class, 0);
 		}
 
-		public JsonExpContext(ExpressionContext ctx) {
+		public JsonExpContext(ExpressionContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class CompareExpContext extends ExpressionContext {
-		public ExpressionContext expression(int i) {
+	public static class CompareExpContext extends ExpressionContext
+	{
+		public ExpressionContext expression(int i)
+		{
 			return getRuleContext(ExpressionContext.class, i);
 		}
 
-		public TerminalNode LARGE() {
+		public TerminalNode LARGE()
+		{
 			return getToken(BeetlParser.LARGE, 0);
 		}
 
-		public TerminalNode LESS() {
+		public TerminalNode LESS()
+		{
 			return getToken(BeetlParser.LESS, 0);
 		}
 
-		public TerminalNode LARGE_EQUAL() {
+		public TerminalNode LARGE_EQUAL()
+		{
 			return getToken(BeetlParser.LARGE_EQUAL, 0);
 		}
 
-		public TerminalNode LESS_EQUAL() {
+		public TerminalNode LESS_EQUAL()
+		{
 			return getToken(BeetlParser.LESS_EQUAL, 0);
 		}
 
-		public List<ExpressionContext> expression() {
+		public List<ExpressionContext> expression()
+		{
 			return getRuleContexts(ExpressionContext.class);
 		}
 
-		public TerminalNode EQUAL() {
+		public TerminalNode EQUAL()
+		{
 			return getToken(BeetlParser.EQUAL, 0);
 		}
 
-		public TerminalNode NOT_EQUAL() {
+		public TerminalNode NOT_EQUAL()
+		{
 			return getToken(BeetlParser.NOT_EQUAL, 0);
 		}
 
-		public CompareExpContext(ExpressionContext ctx) {
+		public CompareExpContext(ExpressionContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public final ExpressionContext expression(int _p)
-			throws RecognitionException {
+	public final ExpressionContext expression(int _p) throws RecognitionException
+	{
 		ParserRuleContext _parentctx = _ctx;
 		int _parentState = getState();
-		ExpressionContext _localctx = new ExpressionContext(_ctx, _parentState,
-				_p);
+		ExpressionContext _localctx = new ExpressionContext(_ctx, _parentState, _p);
 		ExpressionContext _prevctx = _localctx;
 		int _startState = 52;
 		enterRecursionRule(_localctx, RULE_expression);
 		int _la;
-		try {
+		try
+		{
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
 				setState(369);
-				switch (getInterpreter().adaptivePredict(_input, 31, _ctx)) {
-				case 1: {
-					_localctx = new NegExpContext(_localctx);
-					_ctx = _localctx;
-					_prevctx = _localctx;
+				switch (getInterpreter().adaptivePredict(_input, 31, _ctx))
+				{
+					case 1:
+					{
+						_localctx = new NegExpContext(_localctx);
+						_ctx = _localctx;
+						_prevctx = _localctx;
 
-					setState(351);
-					_la = _input.LA(1);
-					if (!(_la == ADD || _la == MIN)) {
-						_errHandler.recoverInline(this);
-					}
-					consume();
-					setState(352);
-					expression(9);
-				}
-					break;
-
-				case 2: {
-					_localctx = new NotExpContext(_localctx);
-					_ctx = _localctx;
-					_prevctx = _localctx;
-					setState(353);
-					match(NOT);
-					setState(354);
-					expression(8);
-				}
-					break;
-
-				case 3: {
-					_localctx = new LiteralExpContext(_localctx);
-					_ctx = _localctx;
-					_prevctx = _localctx;
-					setState(355);
-					literal();
-				}
-					break;
-
-				case 4: {
-					_localctx = new NativeCallExpContext(_localctx);
-					_ctx = _localctx;
-					_prevctx = _localctx;
-					setState(356);
-					match(AT);
-					setState(357);
-					nativeCall();
-				}
-					break;
-
-				case 5: {
-					_localctx = new FunctionCallExpContext(_localctx);
-					_ctx = _localctx;
-					_prevctx = _localctx;
-					setState(358);
-					functionCall();
-				}
-					break;
-
-				case 6: {
-					_localctx = new VarRefExpContext(_localctx);
-					_ctx = _localctx;
-					_prevctx = _localctx;
-					setState(359);
-					varRef();
-					setState(362);
-					switch (getInterpreter().adaptivePredict(_input, 30, _ctx)) {
-					case 1: {
-						setState(360);
-						match(NOT);
-						setState(361);
-						expression(0);
+						setState(351);
+						_la = _input.LA(1);
+						if (!(_la == ADD || _la == MIN))
+						{
+							_errHandler.recoverInline(this);
+						}
+						consume();
+						setState(352);
+						expression(9);
 					}
 						break;
+
+					case 2:
+					{
+						_localctx = new NotExpContext(_localctx);
+						_ctx = _localctx;
+						_prevctx = _localctx;
+						setState(353);
+						match(NOT);
+						setState(354);
+						expression(8);
 					}
-				}
-					break;
+						break;
 
-				case 7: {
-					_localctx = new JsonExpContext(_localctx);
-					_ctx = _localctx;
-					_prevctx = _localctx;
-					setState(364);
-					json();
-				}
-					break;
+					case 3:
+					{
+						_localctx = new LiteralExpContext(_localctx);
+						_ctx = _localctx;
+						_prevctx = _localctx;
+						setState(355);
+						literal();
+					}
+						break;
 
-				case 8: {
-					_localctx = new ParExpContext(_localctx);
-					_ctx = _localctx;
-					_prevctx = _localctx;
-					setState(365);
-					match(LEFT_PAR);
-					setState(366);
-					expression(0);
-					setState(367);
-					match(RIGHT_PAR);
-				}
-					break;
+					case 4:
+					{
+						_localctx = new NativeCallExpContext(_localctx);
+						_ctx = _localctx;
+						_prevctx = _localctx;
+						setState(356);
+						match(AT);
+						setState(357);
+						nativeCall();
+					}
+						break;
+
+					case 5:
+					{
+						_localctx = new FunctionCallExpContext(_localctx);
+						_ctx = _localctx;
+						_prevctx = _localctx;
+						setState(358);
+						functionCall();
+					}
+						break;
+
+					case 6:
+					{
+						_localctx = new VarRefExpContext(_localctx);
+						_ctx = _localctx;
+						_prevctx = _localctx;
+						setState(359);
+						varRef();
+						setState(362);
+						switch (getInterpreter().adaptivePredict(_input, 30, _ctx))
+						{
+							case 1:
+							{
+								setState(360);
+								match(NOT);
+								setState(361);
+								expression(0);
+							}
+								break;
+						}
+					}
+						break;
+
+					case 7:
+					{
+						_localctx = new JsonExpContext(_localctx);
+						_ctx = _localctx;
+						_prevctx = _localctx;
+						setState(364);
+						json();
+					}
+						break;
+
+					case 8:
+					{
+						_localctx = new ParExpContext(_localctx);
+						_ctx = _localctx;
+						_prevctx = _localctx;
+						setState(365);
+						match(LEFT_PAR);
+						setState(366);
+						expression(0);
+						setState(367);
+						match(RIGHT_PAR);
+					}
+						break;
 				}
 				_ctx.stop = _input.LT(-1);
 				setState(397);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input, 35, _ctx);
-				while (_alt != 2 && _alt != -1) {
-					if (_alt == 1) {
+				while (_alt != 2 && _alt != -1)
+				{
+					if (_alt == 1)
+					{
 						if (_parseListeners != null)
 							triggerExitRuleEvent();
 						_prevctx = _localctx;
 						{
 							setState(395);
-							switch (getInterpreter().adaptivePredict(_input,
-									34, _ctx)) {
-							case 1: {
-								_localctx = new MuldivmodExpContext(
-										new ExpressionContext(_parentctx,
-												_parentState, _p));
-								pushNewRecursionContext(_localctx, _startState,
-										RULE_expression);
-								setState(371);
-								if (!(7 >= _localctx._p))
-									throw new FailedPredicateException(this,
-											"7 >= $_p");
-								setState(372);
-								_la = _input.LA(1);
-								if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << MUlTIP)
-										| (1L << DIV) | (1L << MOD))) != 0))) {
-									_errHandler.recoverInline(this);
-								}
-								consume();
-								setState(373);
-								expression(8);
-							}
-								break;
-
-							case 2: {
-								_localctx = new AddminExpContext(
-										new ExpressionContext(_parentctx,
-												_parentState, _p));
-								pushNewRecursionContext(_localctx, _startState,
-										RULE_expression);
-								setState(374);
-								if (!(6 >= _localctx._p))
-									throw new FailedPredicateException(this,
-											"6 >= $_p");
-								setState(375);
-								_la = _input.LA(1);
-								if (!(_la == ADD || _la == MIN)) {
-									_errHandler.recoverInline(this);
-								}
-								consume();
-								setState(376);
-								expression(7);
-							}
-								break;
-
-							case 3: {
-								_localctx = new CompareExpContext(
-										new ExpressionContext(_parentctx,
-												_parentState, _p));
-								pushNewRecursionContext(_localctx, _startState,
-										RULE_expression);
-								setState(377);
-								if (!(5 >= _localctx._p))
-									throw new FailedPredicateException(this,
-											"5 >= $_p");
-								setState(378);
-								_la = _input.LA(1);
-								if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << EQUAL)
-										| (1L << NOT_EQUAL)
-										| (1L << LARGE_EQUAL)
-										| (1L << LARGE)
-										| (1L << LESS_EQUAL) | (1L << LESS))) != 0))) {
-									_errHandler.recoverInline(this);
-								}
-								consume();
-								setState(379);
-								expression(6);
-							}
-								break;
-
-							case 4: {
-								_localctx = new AndExpContext(
-										new ExpressionContext(_parentctx,
-												_parentState, _p));
-								pushNewRecursionContext(_localctx, _startState,
-										RULE_expression);
-								setState(380);
-								if (!(4 >= _localctx._p))
-									throw new FailedPredicateException(this,
-											"4 >= $_p");
-								setState(381);
-								match(AND);
-								setState(382);
-								expression(5);
-							}
-								break;
-
-							case 5: {
-								_localctx = new OrExpContext(
-										new ExpressionContext(_parentctx,
-												_parentState, _p));
-								pushNewRecursionContext(_localctx, _startState,
-										RULE_expression);
-								setState(383);
-								if (!(3 >= _localctx._p))
-									throw new FailedPredicateException(this,
-											"3 >= $_p");
-								setState(384);
-								match(OR);
-								setState(385);
-								expression(4);
-							}
-								break;
-
-							case 6: {
-								_localctx = new TernaryExpContext(
-										new ExpressionContext(_parentctx,
-												_parentState, _p));
-								pushNewRecursionContext(_localctx, _startState,
-										RULE_expression);
-								setState(386);
-								if (!(2 >= _localctx._p))
-									throw new FailedPredicateException(this,
-											"2 >= $_p");
-								setState(387);
-								match(QUESTOIN);
-								setState(389);
-								switch (getInterpreter().adaptivePredict(
-										_input, 32, _ctx)) {
-								case 1: {
-									setState(388);
-									expression(0);
+							switch (getInterpreter().adaptivePredict(_input, 34, _ctx))
+							{
+								case 1:
+								{
+									_localctx = new MuldivmodExpContext(new ExpressionContext(_parentctx, _parentState,
+											_p));
+									pushNewRecursionContext(_localctx, _startState, RULE_expression);
+									setState(371);
+									if (!(7 >= _localctx._p))
+										throw new FailedPredicateException(this, "7 >= $_p");
+									setState(372);
+									_la = _input.LA(1);
+									if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << MUlTIP) | (1L << DIV) | (1L << MOD))) != 0)))
+									{
+										_errHandler.recoverInline(this);
+									}
+									consume();
+									setState(373);
+									expression(8);
 								}
 									break;
-								}
-								setState(391);
-								match(COLON);
-								setState(393);
-								switch (getInterpreter().adaptivePredict(
-										_input, 33, _ctx)) {
-								case 1: {
-									setState(392);
-									expression(0);
+
+								case 2:
+								{
+									_localctx = new AddminExpContext(
+											new ExpressionContext(_parentctx, _parentState, _p));
+									pushNewRecursionContext(_localctx, _startState, RULE_expression);
+									setState(374);
+									if (!(6 >= _localctx._p))
+										throw new FailedPredicateException(this, "6 >= $_p");
+									setState(375);
+									_la = _input.LA(1);
+									if (!(_la == ADD || _la == MIN))
+									{
+										_errHandler.recoverInline(this);
+									}
+									consume();
+									setState(376);
+									expression(7);
 								}
 									break;
+
+								case 3:
+								{
+									_localctx = new CompareExpContext(new ExpressionContext(_parentctx, _parentState,
+											_p));
+									pushNewRecursionContext(_localctx, _startState, RULE_expression);
+									setState(377);
+									if (!(5 >= _localctx._p))
+										throw new FailedPredicateException(this, "5 >= $_p");
+									setState(378);
+									_la = _input.LA(1);
+									if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << EQUAL) | (1L << NOT_EQUAL)
+											| (1L << LARGE_EQUAL) | (1L << LARGE) | (1L << LESS_EQUAL) | (1L << LESS))) != 0)))
+									{
+										_errHandler.recoverInline(this);
+									}
+									consume();
+									setState(379);
+									expression(6);
 								}
-							}
-								break;
+									break;
+
+								case 4:
+								{
+									_localctx = new AndExpContext(new ExpressionContext(_parentctx, _parentState, _p));
+									pushNewRecursionContext(_localctx, _startState, RULE_expression);
+									setState(380);
+									if (!(4 >= _localctx._p))
+										throw new FailedPredicateException(this, "4 >= $_p");
+									setState(381);
+									match(AND);
+									setState(382);
+									expression(5);
+								}
+									break;
+
+								case 5:
+								{
+									_localctx = new OrExpContext(new ExpressionContext(_parentctx, _parentState, _p));
+									pushNewRecursionContext(_localctx, _startState, RULE_expression);
+									setState(383);
+									if (!(3 >= _localctx._p))
+										throw new FailedPredicateException(this, "3 >= $_p");
+									setState(384);
+									match(OR);
+									setState(385);
+									expression(4);
+								}
+									break;
+
+								case 6:
+								{
+									_localctx = new TernaryExpContext(new ExpressionContext(_parentctx, _parentState,
+											_p));
+									pushNewRecursionContext(_localctx, _startState, RULE_expression);
+									setState(386);
+									if (!(2 >= _localctx._p))
+										throw new FailedPredicateException(this, "2 >= $_p");
+									setState(387);
+									match(QUESTOIN);
+									setState(389);
+									switch (getInterpreter().adaptivePredict(_input, 32, _ctx))
+									{
+										case 1:
+										{
+											setState(388);
+											expression(0);
+										}
+											break;
+									}
+									setState(391);
+									match(COLON);
+									setState(393);
+									switch (getInterpreter().adaptivePredict(_input, 33, _ctx))
+									{
+										case 1:
+										{
+											setState(392);
+											expression(0);
+										}
+											break;
+									}
+								}
+									break;
 							}
 						}
 					}
@@ -2922,43 +3430,55 @@ public class BeetlParser extends Parser {
 					_alt = getInterpreter().adaptivePredict(_input, 35, _ctx);
 				}
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			unrollRecursionContexts(_parentctx);
 		}
 		return _localctx;
 	}
 
-	public static class VarRefContext extends ParserRuleContext {
-		public TerminalNode Identifier() {
+	public static class VarRefContext extends ParserRuleContext
+	{
+		public TerminalNode Identifier()
+		{
 			return getToken(BeetlParser.Identifier, 0);
 		}
 
-		public List<VarAttributeContext> varAttribute() {
+		public List<VarAttributeContext> varAttribute()
+		{
 			return getRuleContexts(VarAttributeContext.class);
 		}
 
-		public VarAttributeContext varAttribute(int i) {
+		public VarAttributeContext varAttribute(int i)
+		{
 			return getRuleContext(VarAttributeContext.class, i);
 		}
 
-		public VarRefContext(ParserRuleContext parent, int invokingState) {
+		public VarRefContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_varRef;
 		}
 	}
 
-	public final VarRefContext varRef() throws RecognitionException {
+	public final VarRefContext varRef() throws RecognitionException
+	{
 		VarRefContext _localctx = new VarRefContext(_ctx, getState());
 		enterRule(_localctx, 54, RULE_varRef);
-		try {
+		try
+		{
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
@@ -2967,8 +3487,10 @@ public class BeetlParser extends Parser {
 				setState(404);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input, 36, _ctx);
-				while (_alt != 2 && _alt != -1) {
-					if (_alt == 1) {
+				while (_alt != 2 && _alt != -1)
+				{
+					if (_alt == 1)
+					{
 						{
 							{
 								setState(401);
@@ -2981,173 +3503,210 @@ public class BeetlParser extends Parser {
 					_alt = getInterpreter().adaptivePredict(_input, 36, _ctx);
 				}
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class VarAttributeContext extends ParserRuleContext {
-		public VarAttributeContext(ParserRuleContext parent, int invokingState) {
+	public static class VarAttributeContext extends ParserRuleContext
+	{
+		public VarAttributeContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_varAttribute;
 		}
 
-		public VarAttributeContext() {
+		public VarAttributeContext()
+		{
 		}
 
-		public void copyFrom(VarAttributeContext ctx) {
+		public void copyFrom(VarAttributeContext ctx)
+		{
 			super.copyFrom(ctx);
 		}
 	}
 
-	public static class VarAttributeGeneralContext extends VarAttributeContext {
-		public TerminalNode Identifier() {
+	public static class VarAttributeGeneralContext extends VarAttributeContext
+	{
+		public TerminalNode Identifier()
+		{
 			return getToken(BeetlParser.Identifier, 0);
 		}
 
-		public TerminalNode PERIOD() {
+		public TerminalNode PERIOD()
+		{
 			return getToken(BeetlParser.PERIOD, 0);
 		}
 
-		public VarAttributeGeneralContext(VarAttributeContext ctx) {
+		public VarAttributeGeneralContext(VarAttributeContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class VarAttributeArrayOrMapContext extends
-			VarAttributeContext {
-		public TerminalNode RIGHT_SQBR() {
+	public static class VarAttributeArrayOrMapContext extends VarAttributeContext
+	{
+		public TerminalNode RIGHT_SQBR()
+		{
 			return getToken(BeetlParser.RIGHT_SQBR, 0);
 		}
 
-		public TerminalNode LEFT_SQBR() {
+		public TerminalNode LEFT_SQBR()
+		{
 			return getToken(BeetlParser.LEFT_SQBR, 0);
 		}
 
-		public ExpressionContext expression() {
+		public ExpressionContext expression()
+		{
 			return getRuleContext(ExpressionContext.class, 0);
 		}
 
-		public VarAttributeArrayOrMapContext(VarAttributeContext ctx) {
+		public VarAttributeArrayOrMapContext(VarAttributeContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public static class VarAttributeVirtualContext extends VarAttributeContext {
-		public TerminalNode Identifier() {
+	public static class VarAttributeVirtualContext extends VarAttributeContext
+	{
+		public TerminalNode Identifier()
+		{
 			return getToken(BeetlParser.Identifier, 0);
 		}
 
-		public TerminalNode VIRTUAL() {
+		public TerminalNode VIRTUAL()
+		{
 			return getToken(BeetlParser.VIRTUAL, 0);
 		}
 
-		public VarAttributeVirtualContext(VarAttributeContext ctx) {
+		public VarAttributeVirtualContext(VarAttributeContext ctx)
+		{
 			copyFrom(ctx);
 		}
 	}
 
-	public final VarAttributeContext varAttribute() throws RecognitionException {
-		VarAttributeContext _localctx = new VarAttributeContext(_ctx,
-				getState());
+	public final VarAttributeContext varAttribute() throws RecognitionException
+	{
+		VarAttributeContext _localctx = new VarAttributeContext(_ctx, getState());
 		enterRule(_localctx, 56, RULE_varAttribute);
-		try {
+		try
+		{
 			setState(415);
-			switch (getInterpreter().adaptivePredict(_input, 37, _ctx)) {
-			case 1:
-				_localctx = new VarAttributeGeneralContext(_localctx);
-				enterOuterAlt(_localctx, 1);
-				{
-					setState(407);
-					match(PERIOD);
-					setState(408);
-					match(Identifier);
-				}
-				break;
+			switch (getInterpreter().adaptivePredict(_input, 37, _ctx))
+			{
+				case 1:
+					_localctx = new VarAttributeGeneralContext(_localctx);
+					enterOuterAlt(_localctx, 1);
+					{
+						setState(407);
+						match(PERIOD);
+						setState(408);
+						match(Identifier);
+					}
+					break;
 
-			case 2:
-				_localctx = new VarAttributeVirtualContext(_localctx);
-				enterOuterAlt(_localctx, 2);
-				{
-					setState(409);
-					match(VIRTUAL);
-					setState(410);
-					match(Identifier);
-				}
-				break;
+				case 2:
+					_localctx = new VarAttributeVirtualContext(_localctx);
+					enterOuterAlt(_localctx, 2);
+					{
+						setState(409);
+						match(VIRTUAL);
+						setState(410);
+						match(Identifier);
+					}
+					break;
 
-			case 3:
-				_localctx = new VarAttributeArrayOrMapContext(_localctx);
-				enterOuterAlt(_localctx, 3);
-				{
-					setState(411);
-					match(LEFT_SQBR);
-					setState(412);
-					expression(0);
-					setState(413);
-					match(RIGHT_SQBR);
-				}
-				break;
+				case 3:
+					_localctx = new VarAttributeArrayOrMapContext(_localctx);
+					enterOuterAlt(_localctx, 3);
+					{
+						setState(411);
+						match(LEFT_SQBR);
+						setState(412);
+						expression(0);
+						setState(413);
+						match(RIGHT_SQBR);
+					}
+					break;
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class FunctionCallContext extends ParserRuleContext {
-		public TerminalNode RIGHT_PAR() {
+	public static class FunctionCallContext extends ParserRuleContext
+	{
+		public TerminalNode RIGHT_PAR()
+		{
 			return getToken(BeetlParser.RIGHT_PAR, 0);
 		}
 
-		public TerminalNode LEFT_PAR() {
+		public TerminalNode LEFT_PAR()
+		{
 			return getToken(BeetlParser.LEFT_PAR, 0);
 		}
 
-		public ExpressionListContext expressionList() {
+		public ExpressionListContext expressionList()
+		{
 			return getRuleContext(ExpressionListContext.class, 0);
 		}
 
-		public FunctionNsContext functionNs() {
+		public FunctionNsContext functionNs()
+		{
 			return getRuleContext(FunctionNsContext.class, 0);
 		}
 
-		public List<VarAttributeContext> varAttribute() {
+		public List<VarAttributeContext> varAttribute()
+		{
 			return getRuleContexts(VarAttributeContext.class);
 		}
 
-		public VarAttributeContext varAttribute(int i) {
+		public VarAttributeContext varAttribute(int i)
+		{
 			return getRuleContext(VarAttributeContext.class, i);
 		}
 
-		public FunctionCallContext(ParserRuleContext parent, int invokingState) {
+		public FunctionCallContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_functionCall;
 		}
 	}
 
-	public final FunctionCallContext functionCall() throws RecognitionException {
-		FunctionCallContext _localctx = new FunctionCallContext(_ctx,
-				getState());
+	public final FunctionCallContext functionCall() throws RecognitionException
+	{
+		FunctionCallContext _localctx = new FunctionCallContext(_ctx, getState());
 		enterRule(_localctx, 58, RULE_functionCall);
-		try {
+		try
+		{
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
@@ -3156,20 +3715,24 @@ public class BeetlParser extends Parser {
 				setState(418);
 				match(LEFT_PAR);
 				setState(420);
-				switch (getInterpreter().adaptivePredict(_input, 38, _ctx)) {
-				case 1: {
-					setState(419);
-					expressionList();
-				}
-					break;
+				switch (getInterpreter().adaptivePredict(_input, 38, _ctx))
+				{
+					case 1:
+					{
+						setState(419);
+						expressionList();
+					}
+						break;
 				}
 				setState(422);
 				match(RIGHT_PAR);
 				setState(426);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input, 39, _ctx);
-				while (_alt != 2 && _alt != -1) {
-					if (_alt == 1) {
+				while (_alt != 2 && _alt != -1)
+				{
+					if (_alt == 1)
+					{
 						{
 							{
 								setState(423);
@@ -3182,54 +3745,65 @@ public class BeetlParser extends Parser {
 					_alt = getInterpreter().adaptivePredict(_input, 39, _ctx);
 				}
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class FunctionTagCallContext extends ParserRuleContext {
-		public TerminalNode RIGHT_PAR() {
+	public static class FunctionTagCallContext extends ParserRuleContext
+	{
+		public TerminalNode RIGHT_PAR()
+		{
 			return getToken(BeetlParser.RIGHT_PAR, 0);
 		}
 
-		public TerminalNode LEFT_PAR() {
+		public TerminalNode LEFT_PAR()
+		{
 			return getToken(BeetlParser.LEFT_PAR, 0);
 		}
 
-		public ExpressionListContext expressionList() {
+		public ExpressionListContext expressionList()
+		{
 			return getRuleContext(ExpressionListContext.class, 0);
 		}
 
-		public FunctionNsContext functionNs() {
+		public FunctionNsContext functionNs()
+		{
 			return getRuleContext(FunctionNsContext.class, 0);
 		}
 
-		public BlockContext block() {
+		public BlockContext block()
+		{
 			return getRuleContext(BlockContext.class, 0);
 		}
 
-		public FunctionTagCallContext(ParserRuleContext parent,
-				int invokingState) {
+		public FunctionTagCallContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_functionTagCall;
 		}
 	}
 
-	public final FunctionTagCallContext functionTagCall()
-			throws RecognitionException {
-		FunctionTagCallContext _localctx = new FunctionTagCallContext(_ctx,
-				getState());
+	public final FunctionTagCallContext functionTagCall() throws RecognitionException
+	{
+		FunctionTagCallContext _localctx = new FunctionTagCallContext(_ctx, getState());
 		enterRule(_localctx, 60, RULE_functionTagCall);
-		try {
+		try
+		{
 			enterOuterAlt(_localctx, 1);
 			{
 				setState(429);
@@ -3237,59 +3811,74 @@ public class BeetlParser extends Parser {
 				setState(430);
 				match(LEFT_PAR);
 				setState(432);
-				switch (getInterpreter().adaptivePredict(_input, 40, _ctx)) {
-				case 1: {
-					setState(431);
-					expressionList();
-				}
-					break;
+				switch (getInterpreter().adaptivePredict(_input, 40, _ctx))
+				{
+					case 1:
+					{
+						setState(431);
+						expressionList();
+					}
+						break;
 				}
 				setState(434);
 				match(RIGHT_PAR);
 				setState(435);
 				block();
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class FunctionNsContext extends ParserRuleContext {
-		public TerminalNode Identifier(int i) {
+	public static class FunctionNsContext extends ParserRuleContext
+	{
+		public TerminalNode Identifier(int i)
+		{
 			return getToken(BeetlParser.Identifier, i);
 		}
 
-		public List<TerminalNode> Identifier() {
+		public List<TerminalNode> Identifier()
+		{
 			return getTokens(BeetlParser.Identifier);
 		}
 
-		public TerminalNode PERIOD(int i) {
+		public TerminalNode PERIOD(int i)
+		{
 			return getToken(BeetlParser.PERIOD, i);
 		}
 
-		public List<TerminalNode> PERIOD() {
+		public List<TerminalNode> PERIOD()
+		{
 			return getTokens(BeetlParser.PERIOD);
 		}
 
-		public FunctionNsContext(ParserRuleContext parent, int invokingState) {
+		public FunctionNsContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_functionNs;
 		}
 	}
 
-	public final FunctionNsContext functionNs() throws RecognitionException {
+	public final FunctionNsContext functionNs() throws RecognitionException
+	{
 		FunctionNsContext _localctx = new FunctionNsContext(_ctx, getState());
 		enterRule(_localctx, 62, RULE_functionNs);
-		try {
+		try
+		{
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
@@ -3298,8 +3887,10 @@ public class BeetlParser extends Parser {
 				setState(442);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input, 41, _ctx);
-				while (_alt != 2 && _alt != -1) {
-					if (_alt == 1) {
+				while (_alt != 2 && _alt != -1)
+				{
+					if (_alt == 1)
+					{
 						{
 							{
 								setState(438);
@@ -3314,63 +3905,80 @@ public class BeetlParser extends Parser {
 					_alt = getInterpreter().adaptivePredict(_input, 41, _ctx);
 				}
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class NativeCallContext extends ParserRuleContext {
-		public NativeArrayContext nativeArray(int i) {
+	public static class NativeCallContext extends ParserRuleContext
+	{
+		public NativeArrayContext nativeArray(int i)
+		{
 			return getRuleContext(NativeArrayContext.class, i);
 		}
 
-		public NativeVarRefChainContext nativeVarRefChain(int i) {
+		public NativeVarRefChainContext nativeVarRefChain(int i)
+		{
 			return getRuleContext(NativeVarRefChainContext.class, i);
 		}
 
-		public List<NativeMethodContext> nativeMethod() {
+		public List<NativeMethodContext> nativeMethod()
+		{
 			return getRuleContexts(NativeMethodContext.class);
 		}
 
-		public List<NativeVarRefChainContext> nativeVarRefChain() {
+		public List<NativeVarRefChainContext> nativeVarRefChain()
+		{
 			return getRuleContexts(NativeVarRefChainContext.class);
 		}
 
-		public NativeMethodContext nativeMethod(int i) {
+		public NativeMethodContext nativeMethod(int i)
+		{
 			return getRuleContext(NativeMethodContext.class, i);
 		}
 
-		public TerminalNode PERIOD(int i) {
+		public TerminalNode PERIOD(int i)
+		{
 			return getToken(BeetlParser.PERIOD, i);
 		}
 
-		public List<NativeArrayContext> nativeArray() {
+		public List<NativeArrayContext> nativeArray()
+		{
 			return getRuleContexts(NativeArrayContext.class);
 		}
 
-		public List<TerminalNode> PERIOD() {
+		public List<TerminalNode> PERIOD()
+		{
 			return getTokens(BeetlParser.PERIOD);
 		}
 
-		public NativeCallContext(ParserRuleContext parent, int invokingState) {
+		public NativeCallContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_nativeCall;
 		}
 	}
 
-	public final NativeCallContext nativeCall() throws RecognitionException {
+	public final NativeCallContext nativeCall() throws RecognitionException
+	{
 		NativeCallContext _localctx = new NativeCallContext(_ctx, getState());
 		enterRule(_localctx, 64, RULE_nativeCall);
-		try {
+		try
+		{
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
@@ -3379,31 +3987,36 @@ public class BeetlParser extends Parser {
 				setState(452);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input, 43, _ctx);
-				while (_alt != 2 && _alt != -1) {
-					if (_alt == 1) {
+				while (_alt != 2 && _alt != -1)
+				{
+					if (_alt == 1)
+					{
 						{
 							setState(450);
-							switch (getInterpreter().adaptivePredict(_input,
-									42, _ctx)) {
-							case 1: {
-								setState(446);
-								nativeMethod();
-							}
-								break;
+							switch (getInterpreter().adaptivePredict(_input, 42, _ctx))
+							{
+								case 1:
+								{
+									setState(446);
+									nativeMethod();
+								}
+									break;
 
-							case 2: {
-								setState(447);
-								nativeArray();
-							}
-								break;
+								case 2:
+								{
+									setState(447);
+									nativeArray();
+								}
+									break;
 
-							case 3: {
-								setState(448);
-								match(PERIOD);
-								setState(449);
-								nativeVarRefChain();
-							}
-								break;
+								case 3:
+								{
+									setState(448);
+									match(PERIOD);
+									setState(449);
+									nativeVarRefChain();
+								}
+									break;
 							}
 						}
 					}
@@ -3412,128 +4025,157 @@ public class BeetlParser extends Parser {
 					_alt = getInterpreter().adaptivePredict(_input, 43, _ctx);
 				}
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class NativeMethodContext extends ParserRuleContext {
-		public ExpressionContext expression(int i) {
+	public static class NativeMethodContext extends ParserRuleContext
+	{
+		public ExpressionContext expression(int i)
+		{
 			return getRuleContext(ExpressionContext.class, i);
 		}
 
-		public TerminalNode RIGHT_PAR() {
+		public TerminalNode RIGHT_PAR()
+		{
 			return getToken(BeetlParser.RIGHT_PAR, 0);
 		}
 
-		public TerminalNode LEFT_PAR() {
+		public TerminalNode LEFT_PAR()
+		{
 			return getToken(BeetlParser.LEFT_PAR, 0);
 		}
 
-		public List<TerminalNode> COMMA() {
+		public List<TerminalNode> COMMA()
+		{
 			return getTokens(BeetlParser.COMMA);
 		}
 
-		public List<ExpressionContext> expression() {
+		public List<ExpressionContext> expression()
+		{
 			return getRuleContexts(ExpressionContext.class);
 		}
 
-		public TerminalNode COMMA(int i) {
+		public TerminalNode COMMA(int i)
+		{
 			return getToken(BeetlParser.COMMA, i);
 		}
 
-		public NativeMethodContext(ParserRuleContext parent, int invokingState) {
+		public NativeMethodContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_nativeMethod;
 		}
 	}
 
-	public final NativeMethodContext nativeMethod() throws RecognitionException {
-		NativeMethodContext _localctx = new NativeMethodContext(_ctx,
-				getState());
+	public final NativeMethodContext nativeMethod() throws RecognitionException
+	{
+		NativeMethodContext _localctx = new NativeMethodContext(_ctx, getState());
 		enterRule(_localctx, 66, RULE_nativeMethod);
-		try {
+		try
+		{
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
 				setState(455);
 				match(LEFT_PAR);
 				setState(464);
-				switch (getInterpreter().adaptivePredict(_input, 45, _ctx)) {
-				case 1: {
-					setState(456);
-					expression(0);
-					setState(461);
-					_errHandler.sync(this);
-					_alt = getInterpreter().adaptivePredict(_input, 44, _ctx);
-					while (_alt != 2 && _alt != -1) {
-						if (_alt == 1) {
+				switch (getInterpreter().adaptivePredict(_input, 45, _ctx))
+				{
+					case 1:
+					{
+						setState(456);
+						expression(0);
+						setState(461);
+						_errHandler.sync(this);
+						_alt = getInterpreter().adaptivePredict(_input, 44, _ctx);
+						while (_alt != 2 && _alt != -1)
+						{
+							if (_alt == 1)
 							{
 								{
-									setState(457);
-									match(COMMA);
-									setState(458);
-									expression(0);
+									{
+										setState(457);
+										match(COMMA);
+										setState(458);
+										expression(0);
+									}
 								}
 							}
+							setState(463);
+							_errHandler.sync(this);
+							_alt = getInterpreter().adaptivePredict(_input, 44, _ctx);
 						}
-						setState(463);
-						_errHandler.sync(this);
-						_alt = getInterpreter().adaptivePredict(_input, 44,
-								_ctx);
 					}
-				}
-					break;
+						break;
 				}
 				setState(466);
 				match(RIGHT_PAR);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class NativeArrayContext extends ParserRuleContext {
-		public TerminalNode RIGHT_SQBR() {
+	public static class NativeArrayContext extends ParserRuleContext
+	{
+		public TerminalNode RIGHT_SQBR()
+		{
 			return getToken(BeetlParser.RIGHT_SQBR, 0);
 		}
 
-		public TerminalNode LEFT_SQBR() {
+		public TerminalNode LEFT_SQBR()
+		{
 			return getToken(BeetlParser.LEFT_SQBR, 0);
 		}
 
-		public ExpressionContext expression() {
+		public ExpressionContext expression()
+		{
 			return getRuleContext(ExpressionContext.class, 0);
 		}
 
-		public NativeArrayContext(ParserRuleContext parent, int invokingState) {
+		public NativeArrayContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_nativeArray;
 		}
 	}
 
-	public final NativeArrayContext nativeArray() throws RecognitionException {
+	public final NativeArrayContext nativeArray() throws RecognitionException
+	{
 		NativeArrayContext _localctx = new NativeArrayContext(_ctx, getState());
 		enterRule(_localctx, 68, RULE_nativeArray);
-		try {
+		try
+		{
 			enterOuterAlt(_localctx, 1);
 			{
 				setState(468);
@@ -3543,50 +4185,60 @@ public class BeetlParser extends Parser {
 				setState(470);
 				match(RIGHT_SQBR);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class NativeVarRefChainContext extends ParserRuleContext {
-		public TerminalNode Identifier(int i) {
+	public static class NativeVarRefChainContext extends ParserRuleContext
+	{
+		public TerminalNode Identifier(int i)
+		{
 			return getToken(BeetlParser.Identifier, i);
 		}
 
-		public List<TerminalNode> Identifier() {
+		public List<TerminalNode> Identifier()
+		{
 			return getTokens(BeetlParser.Identifier);
 		}
 
-		public TerminalNode PERIOD(int i) {
+		public TerminalNode PERIOD(int i)
+		{
 			return getToken(BeetlParser.PERIOD, i);
 		}
 
-		public List<TerminalNode> PERIOD() {
+		public List<TerminalNode> PERIOD()
+		{
 			return getTokens(BeetlParser.PERIOD);
 		}
 
-		public NativeVarRefChainContext(ParserRuleContext parent,
-				int invokingState) {
+		public NativeVarRefChainContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_nativeVarRefChain;
 		}
 	}
 
-	public final NativeVarRefChainContext nativeVarRefChain()
-			throws RecognitionException {
-		NativeVarRefChainContext _localctx = new NativeVarRefChainContext(_ctx,
-				getState());
+	public final NativeVarRefChainContext nativeVarRefChain() throws RecognitionException
+	{
+		NativeVarRefChainContext _localctx = new NativeVarRefChainContext(_ctx, getState());
 		enterRule(_localctx, 70, RULE_nativeVarRefChain);
-		try {
+		try
+		{
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
@@ -3595,8 +4247,10 @@ public class BeetlParser extends Parser {
 				setState(477);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input, 46, _ctx);
-				while (_alt != 2 && _alt != -1) {
-					if (_alt == 1) {
+				while (_alt != 2 && _alt != -1)
+				{
+					if (_alt == 1)
+					{
 						{
 							{
 								setState(473);
@@ -3611,440 +4265,523 @@ public class BeetlParser extends Parser {
 					_alt = getInterpreter().adaptivePredict(_input, 46, _ctx);
 				}
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class JsonContext extends ParserRuleContext {
-		public ExpressionContext expression(int i) {
+	public static class JsonContext extends ParserRuleContext
+	{
+		public ExpressionContext expression(int i)
+		{
 			return getRuleContext(ExpressionContext.class, i);
 		}
 
-		public TerminalNode RIGHT_BRACE() {
+		public TerminalNode RIGHT_BRACE()
+		{
 			return getToken(BeetlParser.RIGHT_BRACE, 0);
 		}
 
-		public TerminalNode RIGHT_SQBR() {
+		public TerminalNode RIGHT_SQBR()
+		{
 			return getToken(BeetlParser.RIGHT_SQBR, 0);
 		}
 
-		public List<JsonKeyValueContext> jsonKeyValue() {
+		public List<JsonKeyValueContext> jsonKeyValue()
+		{
 			return getRuleContexts(JsonKeyValueContext.class);
 		}
 
-		public TerminalNode LEFT_SQBR() {
+		public TerminalNode LEFT_SQBR()
+		{
 			return getToken(BeetlParser.LEFT_SQBR, 0);
 		}
 
-		public List<TerminalNode> COMMA() {
+		public List<TerminalNode> COMMA()
+		{
 			return getTokens(BeetlParser.COMMA);
 		}
 
-		public JsonKeyValueContext jsonKeyValue(int i) {
+		public JsonKeyValueContext jsonKeyValue(int i)
+		{
 			return getRuleContext(JsonKeyValueContext.class, i);
 		}
 
-		public List<ExpressionContext> expression() {
+		public List<ExpressionContext> expression()
+		{
 			return getRuleContexts(ExpressionContext.class);
 		}
 
-		public TerminalNode LEFT_BRACE() {
+		public TerminalNode LEFT_BRACE()
+		{
 			return getToken(BeetlParser.LEFT_BRACE, 0);
 		}
 
-		public TerminalNode COMMA(int i) {
+		public TerminalNode COMMA(int i)
+		{
 			return getToken(BeetlParser.COMMA, i);
 		}
 
-		public JsonContext(ParserRuleContext parent, int invokingState) {
+		public JsonContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_json;
 		}
 	}
 
-	public final JsonContext json() throws RecognitionException {
+	public final JsonContext json() throws RecognitionException
+	{
 		JsonContext _localctx = new JsonContext(_ctx, getState());
 		enterRule(_localctx, 72, RULE_json);
-		try {
+		try
+		{
 			int _alt;
 			setState(504);
-			switch (getInterpreter().adaptivePredict(_input, 51, _ctx)) {
-			case 1:
-				enterOuterAlt(_localctx, 1);
-				{
-					setState(480);
-					match(LEFT_SQBR);
-					setState(489);
-					switch (getInterpreter().adaptivePredict(_input, 48, _ctx)) {
-					case 1: {
-						setState(481);
-						expression(0);
-						setState(486);
-						_errHandler.sync(this);
-						_alt = getInterpreter().adaptivePredict(_input, 47,
-								_ctx);
-						while (_alt != 2 && _alt != -1) {
-							if (_alt == 1) {
+			switch (getInterpreter().adaptivePredict(_input, 51, _ctx))
+			{
+				case 1:
+					enterOuterAlt(_localctx, 1);
+					{
+						setState(480);
+						match(LEFT_SQBR);
+						setState(489);
+						switch (getInterpreter().adaptivePredict(_input, 48, _ctx))
+						{
+							case 1:
+							{
+								setState(481);
+								expression(0);
+								setState(486);
+								_errHandler.sync(this);
+								_alt = getInterpreter().adaptivePredict(_input, 47, _ctx);
+								while (_alt != 2 && _alt != -1)
 								{
+									if (_alt == 1)
 									{
-										setState(482);
-										match(COMMA);
-										setState(483);
-										expression(0);
+										{
+											{
+												setState(482);
+												match(COMMA);
+												setState(483);
+												expression(0);
+											}
+										}
 									}
+									setState(488);
+									_errHandler.sync(this);
+									_alt = getInterpreter().adaptivePredict(_input, 47, _ctx);
 								}
 							}
-							setState(488);
-							_errHandler.sync(this);
-							_alt = getInterpreter().adaptivePredict(_input, 47,
-									_ctx);
+								break;
 						}
+						setState(491);
+						match(RIGHT_SQBR);
 					}
-						break;
-					}
-					setState(491);
-					match(RIGHT_SQBR);
-				}
-				break;
+					break;
 
-			case 2:
-				enterOuterAlt(_localctx, 2);
-				{
-					setState(492);
-					match(LEFT_BRACE);
-					setState(501);
-					switch (getInterpreter().adaptivePredict(_input, 50, _ctx)) {
-					case 1: {
-						setState(493);
-						jsonKeyValue();
-						setState(498);
-						_errHandler.sync(this);
-						_alt = getInterpreter().adaptivePredict(_input, 49,
-								_ctx);
-						while (_alt != 2 && _alt != -1) {
-							if (_alt == 1) {
+				case 2:
+					enterOuterAlt(_localctx, 2);
+					{
+						setState(492);
+						match(LEFT_BRACE);
+						setState(501);
+						switch (getInterpreter().adaptivePredict(_input, 50, _ctx))
+						{
+							case 1:
+							{
+								setState(493);
+								jsonKeyValue();
+								setState(498);
+								_errHandler.sync(this);
+								_alt = getInterpreter().adaptivePredict(_input, 49, _ctx);
+								while (_alt != 2 && _alt != -1)
 								{
+									if (_alt == 1)
 									{
-										setState(494);
-										match(COMMA);
-										setState(495);
-										jsonKeyValue();
+										{
+											{
+												setState(494);
+												match(COMMA);
+												setState(495);
+												jsonKeyValue();
+											}
+										}
 									}
+									setState(500);
+									_errHandler.sync(this);
+									_alt = getInterpreter().adaptivePredict(_input, 49, _ctx);
 								}
 							}
-							setState(500);
-							_errHandler.sync(this);
-							_alt = getInterpreter().adaptivePredict(_input, 49,
-									_ctx);
+								break;
 						}
+						setState(503);
+						match(RIGHT_BRACE);
 					}
-						break;
-					}
-					setState(503);
-					match(RIGHT_BRACE);
-				}
-				break;
+					break;
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class JsonKeyValueContext extends ParserRuleContext {
-		public TerminalNode Identifier() {
+	public static class JsonKeyValueContext extends ParserRuleContext
+	{
+		public TerminalNode Identifier()
+		{
 			return getToken(BeetlParser.Identifier, 0);
 		}
 
-		public ExpressionContext expression() {
+		public ExpressionContext expression()
+		{
 			return getRuleContext(ExpressionContext.class, 0);
 		}
 
-		public TerminalNode StringLiteral() {
+		public TerminalNode StringLiteral()
+		{
 			return getToken(BeetlParser.StringLiteral, 0);
 		}
 
-		public TerminalNode COLON() {
+		public TerminalNode COLON()
+		{
 			return getToken(BeetlParser.COLON, 0);
 		}
 
-		public JsonKeyValueContext(ParserRuleContext parent, int invokingState) {
+		public JsonKeyValueContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_jsonKeyValue;
 		}
 	}
 
-	public final JsonKeyValueContext jsonKeyValue() throws RecognitionException {
-		JsonKeyValueContext _localctx = new JsonKeyValueContext(_ctx,
-				getState());
+	public final JsonKeyValueContext jsonKeyValue() throws RecognitionException
+	{
+		JsonKeyValueContext _localctx = new JsonKeyValueContext(_ctx, getState());
 		enterRule(_localctx, 74, RULE_jsonKeyValue);
-		try {
+		try
+		{
 			setState(512);
-			switch (getInterpreter().adaptivePredict(_input, 52, _ctx)) {
-			case 1:
-				enterOuterAlt(_localctx, 1);
-				{
-					setState(506);
-					match(StringLiteral);
-					setState(507);
-					match(COLON);
-					setState(508);
-					expression(0);
-				}
-				break;
+			switch (getInterpreter().adaptivePredict(_input, 52, _ctx))
+			{
+				case 1:
+					enterOuterAlt(_localctx, 1);
+					{
+						setState(506);
+						match(StringLiteral);
+						setState(507);
+						match(COLON);
+						setState(508);
+						expression(0);
+					}
+					break;
 
-			case 2:
-				enterOuterAlt(_localctx, 2);
-				{
-					setState(509);
-					match(Identifier);
-					setState(510);
-					match(COLON);
-					setState(511);
-					expression(0);
-				}
-				break;
+				case 2:
+					enterOuterAlt(_localctx, 2);
+					{
+						setState(509);
+						match(Identifier);
+						setState(510);
+						match(COLON);
+						setState(511);
+						expression(0);
+					}
+					break;
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class LiteralContext extends ParserRuleContext {
-		public TerminalNode StringLiteral() {
+	public static class LiteralContext extends ParserRuleContext
+	{
+		public TerminalNode StringLiteral()
+		{
 			return getToken(BeetlParser.StringLiteral, 0);
 		}
 
-		public TerminalNode FloatingPointLiteral() {
+		public TerminalNode FloatingPointLiteral()
+		{
 			return getToken(BeetlParser.FloatingPointLiteral, 0);
 		}
 
-		public TerminalNode DecimalLiteral() {
+		public TerminalNode DecimalLiteral()
+		{
 			return getToken(BeetlParser.DecimalLiteral, 0);
 		}
 
-		public TerminalNode NULL() {
+		public TerminalNode NULL()
+		{
 			return getToken(BeetlParser.NULL, 0);
 		}
 
-		public BooleanLiteralContext booleanLiteral() {
+		public BooleanLiteralContext booleanLiteral()
+		{
 			return getRuleContext(BooleanLiteralContext.class, 0);
 		}
 
-		public LiteralContext(ParserRuleContext parent, int invokingState) {
+		public LiteralContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_literal;
 		}
 	}
 
-	public final LiteralContext literal() throws RecognitionException {
+	public final LiteralContext literal() throws RecognitionException
+	{
 		LiteralContext _localctx = new LiteralContext(_ctx, getState());
 		enterRule(_localctx, 76, RULE_literal);
-		try {
+		try
+		{
 			setState(519);
-			switch (getInterpreter().adaptivePredict(_input, 53, _ctx)) {
-			case 1:
-				enterOuterAlt(_localctx, 1);
-				{
-					setState(514);
-					match(DecimalLiteral);
-				}
-				break;
+			switch (getInterpreter().adaptivePredict(_input, 53, _ctx))
+			{
+				case 1:
+					enterOuterAlt(_localctx, 1);
+					{
+						setState(514);
+						match(DecimalLiteral);
+					}
+					break;
 
-			case 2:
-				enterOuterAlt(_localctx, 2);
-				{
-					setState(515);
-					match(FloatingPointLiteral);
-				}
-				break;
+				case 2:
+					enterOuterAlt(_localctx, 2);
+					{
+						setState(515);
+						match(FloatingPointLiteral);
+					}
+					break;
 
-			case 3:
-				enterOuterAlt(_localctx, 3);
-				{
-					setState(516);
-					match(StringLiteral);
-				}
-				break;
+				case 3:
+					enterOuterAlt(_localctx, 3);
+					{
+						setState(516);
+						match(StringLiteral);
+					}
+					break;
 
-			case 4:
-				enterOuterAlt(_localctx, 4);
-				{
-					setState(517);
-					booleanLiteral();
-				}
-				break;
+				case 4:
+					enterOuterAlt(_localctx, 4);
+					{
+						setState(517);
+						booleanLiteral();
+					}
+					break;
 
-			case 5:
-				enterOuterAlt(_localctx, 5);
-				{
-					setState(518);
-					match(NULL);
-				}
-				break;
+				case 5:
+					enterOuterAlt(_localctx, 5);
+					{
+						setState(518);
+						match(NULL);
+					}
+					break;
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class BooleanLiteralContext extends ParserRuleContext {
-		public TerminalNode TRUE() {
+	public static class BooleanLiteralContext extends ParserRuleContext
+	{
+		public TerminalNode TRUE()
+		{
 			return getToken(BeetlParser.TRUE, 0);
 		}
 
-		public TerminalNode FALSE() {
+		public TerminalNode FALSE()
+		{
 			return getToken(BeetlParser.FALSE, 0);
 		}
 
-		public BooleanLiteralContext(ParserRuleContext parent, int invokingState) {
+		public BooleanLiteralContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_booleanLiteral;
 		}
 	}
 
-	public final BooleanLiteralContext booleanLiteral()
-			throws RecognitionException {
-		BooleanLiteralContext _localctx = new BooleanLiteralContext(_ctx,
-				getState());
+	public final BooleanLiteralContext booleanLiteral() throws RecognitionException
+	{
+		BooleanLiteralContext _localctx = new BooleanLiteralContext(_ctx, getState());
 		enterRule(_localctx, 78, RULE_booleanLiteral);
 		int _la;
-		try {
+		try
+		{
 			enterOuterAlt(_localctx, 1);
 			{
 				setState(521);
 				_la = _input.LA(1);
-				if (!(_la == TRUE || _la == FALSE)) {
+				if (!(_la == TRUE || _la == FALSE))
+				{
 					_errHandler.recoverInline(this);
 				}
 				consume();
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static class ArgumentsContext extends ParserRuleContext {
-		public TerminalNode RIGHT_PAR() {
+	public static class ArgumentsContext extends ParserRuleContext
+	{
+		public TerminalNode RIGHT_PAR()
+		{
 			return getToken(BeetlParser.RIGHT_PAR, 0);
 		}
 
-		public TerminalNode LEFT_PAR() {
+		public TerminalNode LEFT_PAR()
+		{
 			return getToken(BeetlParser.LEFT_PAR, 0);
 		}
 
-		public ExpressionListContext expressionList() {
+		public ExpressionListContext expressionList()
+		{
 			return getRuleContext(ExpressionListContext.class, 0);
 		}
 
-		public ArgumentsContext(ParserRuleContext parent, int invokingState) {
+		public ArgumentsContext(ParserRuleContext parent, int invokingState)
+		{
 			super(parent, invokingState);
 		}
 
 		@Override
-		public int getRuleIndex() {
+		public int getRuleIndex()
+		{
 			return RULE_arguments;
 		}
 	}
 
-	public final ArgumentsContext arguments() throws RecognitionException {
+	public final ArgumentsContext arguments() throws RecognitionException
+	{
 		ArgumentsContext _localctx = new ArgumentsContext(_ctx, getState());
 		enterRule(_localctx, 80, RULE_arguments);
-		try {
+		try
+		{
 			enterOuterAlt(_localctx, 1);
 			{
 				setState(523);
 				match(LEFT_PAR);
 				setState(525);
-				switch (getInterpreter().adaptivePredict(_input, 54, _ctx)) {
-				case 1: {
-					setState(524);
-					expressionList();
-				}
-					break;
+				switch (getInterpreter().adaptivePredict(_input, 54, _ctx))
+				{
+					case 1:
+					{
+						setState(524);
+						expressionList();
+					}
+						break;
 				}
 				setState(527);
 				match(RIGHT_PAR);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re)
+		{
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally
+		{
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
-		switch (ruleIndex) {
-		case 26:
-			return expression_sempred((ExpressionContext) _localctx, predIndex);
+	public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex)
+	{
+		switch (ruleIndex)
+		{
+			case 26:
+				return expression_sempred((ExpressionContext) _localctx, predIndex);
 		}
 		return true;
 	}
 
-	private boolean expression_sempred(ExpressionContext _localctx,
-			int predIndex) {
-		switch (predIndex) {
-		case 0:
-			return 7 >= _localctx._p;
+	private boolean expression_sempred(ExpressionContext _localctx, int predIndex)
+	{
+		switch (predIndex)
+		{
+			case 0:
+				return 7 >= _localctx._p;
 
-		case 1:
-			return 6 >= _localctx._p;
+			case 1:
+				return 6 >= _localctx._p;
 
-		case 2:
-			return 5 >= _localctx._p;
+			case 2:
+				return 5 >= _localctx._p;
 
-		case 3:
-			return 4 >= _localctx._p;
+			case 3:
+				return 4 >= _localctx._p;
 
-		case 4:
-			return 3 >= _localctx._p;
+			case 4:
+				return 3 >= _localctx._p;
 
-		case 5:
-			return 2 >= _localctx._p;
+			case 5:
+				return 2 >= _localctx._p;
 		}
 		return true;
 	}
@@ -4246,13 +4983,13 @@ public class BeetlParser extends Parser {
 			+ "\u0092\u00a6\u00b6\u00ba\u00c2\u00cb\u00d3\u00d9\u00dd\u00e7\u00ee\u00f6"
 			+ "\u00fe\u0108\u010e\u0114\u011c\u0121\u012a\u012d\u013c\u014c\u0151\u0158"
 			+ "\u016c\u0173\u0187\u018b\u018d\u018f\u0196\u01a1\u01a6\u01ac\u01b2\u01bc"
-			+ "\u01c4\u01c6\u01cf\u01d2\u01df\u01e8\u01eb\u01f4\u01f7\u01fa\u0202\u0209"
-			+ "\u020f";
-	public static final ATN _ATN = ATNSimulator.deserialize(_serializedATN
-			.toCharArray());
-	static {
+			+ "\u01c4\u01c6\u01cf\u01d2\u01df\u01e8\u01eb\u01f4\u01f7\u01fa\u0202\u0209" + "\u020f";
+	public static final ATN _ATN = ATNSimulator.deserialize(_serializedATN.toCharArray());
+	static
+	{
 		_decisionToDFA = new DFA[_ATN.getNumberOfDecisions()];
-		for (int i = 0; i < _ATN.getNumberOfDecisions(); i++) {
+		for (int i = 0; i < _ATN.getNumberOfDecisions(); i++)
+		{
 			_decisionToDFA[i] = new DFA(_ATN.getDecisionState(i), i);
 		}
 	}

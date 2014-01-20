@@ -33,6 +33,7 @@ package org.beetl.core;
  * @author joelli
  * 
  */
-public interface VirtualAttributeEval {
+public interface VirtualAttributeEval
+{
 	public Object eval(Object o, String attributeName, Context ctx);
 }

@@ -41,7 +41,8 @@ import org.beetl.core.asm3.Type;
  * @author Chris Nokleberg
  * @author Eric Bruneton
  */
-public class Method {
+public class Method
+{
 
 	/**
 	 * The method name.
@@ -89,7 +90,8 @@ public class Method {
 	 * @param desc
 	 *            the method's descriptor.
 	 */
-	public Method(final String name, final String desc) {
+	public Method(final String name, final String desc)
+	{
 		this.name = name;
 		this.desc = desc;
 	}
@@ -117,7 +119,8 @@ public class Method {
 	 * @return a {@link Method} corresponding to the given Java method
 	 *         declaration.
 	 */
-	public static Method getMethod(java.lang.reflect.Method m) {
+	public static Method getMethod(java.lang.reflect.Method m)
+	{
 		return new Method(m.getName(), Type.getMethodDescriptor(m));
 	}
 
@@ -129,7 +132,8 @@ public class Method {
 	 * @return a {@link Method} corresponding to the given Java constructor
 	 *         declaration.
 	 */
-	public static Method getMethod(java.lang.reflect.Constructor c) {
+	public static Method getMethod(java.lang.reflect.Constructor c)
+	{
 		return new Method("<init>", Type.getConstructorDescriptor(c));
 	}
 
@@ -242,7 +246,8 @@ public class Method {
 	 * 
 	 * @return the name of the method described by this object.
 	 */
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
@@ -251,12 +256,15 @@ public class Method {
 	 * 
 	 * @return the descriptor of the method described by this object.
 	 */
-	public String getDescriptor() {
+	public String getDescriptor()
+	{
 		return desc;
 	}
 
-	private void checkTypes() {
-		if (returnType == null) {
+	private void checkTypes()
+	{
+		if (returnType == null)
+		{
 			char[] buf = desc.toCharArray();
 			returnType = Type.getType(buf, desc.indexOf(')') + 1);
 			argumentTypes = Type.getArgumentTypes(buf);
@@ -268,7 +276,8 @@ public class Method {
 	 * 
 	 * @return the return type of the method described by this object.
 	 */
-	public Type getReturnType() {
+	public Type getReturnType()
+	{
 		checkTypes();
 		return returnType;
 	}
@@ -278,22 +287,27 @@ public class Method {
 	 * 
 	 * @return the argument types of the method described by this object.
 	 */
-	public Type[] getArgumentTypes() {
+	public Type[] getArgumentTypes()
+	{
 		checkTypes();
 		return argumentTypes;
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return name + desc;
 	}
 
 	@Override
-	public boolean equals(final Object o) {
-		if (this == o) {
+	public boolean equals(final Object o)
+	{
+		if (this == o)
+		{
 			return true;
 		}
-		if (!(o instanceof Method)) {
+		if (!(o instanceof Method))
+		{
 			return false;
 		}
 		Method other = (Method) o;
@@ -301,7 +315,8 @@ public class Method {
 	}
 
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		return name.hashCode() ^ desc.hashCode();
 	}
 }

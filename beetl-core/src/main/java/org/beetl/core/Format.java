@@ -57,7 +57,8 @@ package org.beetl.core;
  * @author joelli
  * 
  */
-public interface Format {
+public interface Format
+{
 
 	/**
 	 * @param data

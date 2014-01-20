@@ -34,7 +34,8 @@ package org.beetl.core.asm3;
  * 
  * @author Eric Bruneton
  */
-final class Frame {
+final class Frame
+{
 
 	/**
 	 * The stack size variation corresponding to each JVM instruction. This
@@ -46,14 +47,15 @@ final class Frame {
 	/**
 	 * Computes the stack size variation corresponding to each JVM instruction.
 	 */
-	static {
+	static
+	{
 		int i;
 		int[] b = new int[202];
 		String s = "EFFFFFFFFGGFFFGGFFFEEFGFGFEEEEEEEEEEEEEEEEEEEEDEDEDDDDD"
 				+ "CDCDEEEEEEEEEEEEEEEEEEEEBABABBBBDCFFFGGGEDCDCDCDCDCDCDCDCD"
-				+ "CDCEEEEDDDDDDDCDCDCEFEFDDEEFFDEDEEEBDDBBDDDDDDCCCCCCCCEFED"
-				+ "DDCDCDEEEEEEEEEEFEEEEEEDDEEDDEE";
-		for (i = 0; i < b.length; ++i) {
+				+ "CDCEEEEDDDDDDDCDCDCEFEFDDEEFFDEDEEEBDDBBDDDDDDCCCCCCCCEFED" + "DDCDCDEEEEEEEEEEFEEEEEEDDEEDDEE";
+		for (i = 0; i < b.length; ++i)
+		{
 			b[i] = s.charAt(i) - 'E';
 		}
 		SIZE = b;

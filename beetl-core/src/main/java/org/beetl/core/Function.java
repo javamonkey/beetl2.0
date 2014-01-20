@@ -29,7 +29,8 @@ package org.beetl.core;
  * 
  */
 
-public interface Function {
+public interface Function
+{
 
 	/**
 	 * 

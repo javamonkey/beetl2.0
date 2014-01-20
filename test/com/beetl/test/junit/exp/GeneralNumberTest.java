@@ -77,22 +77,20 @@ public class GeneralNumberTest extends BasicTestCase
 
 	}
 
-	/*
-	public void testMul() throws Exception {
+	public void testMul() throws Exception
+	{
 		Template t = gt.getTemplate("/exp/general_mul_template.html");
 		this.bind(t, "d1", d1, "d2", d2);
 		String str = t.render();
 		print(str);
-		Assert.assertEquals(
-				this.getFileContent("/exp/general_mul_expected.html"), str);
+		Assert.assertEquals(this.getFileContent("/exp/general_mul_expected.html"), str);
 
 		t = this.gt.getTemplate("/exp/general_mul_template.html");
 		this.bind(t, "d1", d1, "d2", d2);
 		str = t.render();
 
-		Assert.assertEquals(
-				this.getFileContent("/exp/general_mul_expected.html"), str);
+		Assert.assertEquals(this.getFileContent("/exp/general_mul_expected.html"), str);
 
 	}
-	*/
+
 }

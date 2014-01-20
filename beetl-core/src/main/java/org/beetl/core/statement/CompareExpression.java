@@ -4,7 +4,8 @@ import org.beetl.core.ALU;
 import org.beetl.core.Context;
 import org.beetl.core.exception.TempException;
 
-public class CompareExpression extends Expression {
+public class CompareExpression extends Expression
+{
 
 	final short EQUAL = 0;
 	final short NOT_EQUAL = 1;
@@ -18,61 +19,75 @@ public class CompareExpression extends Expression {
 	public Expression a;
 	public Expression b;
 
-	public CompareExpression(Expression a, Expression b, short mode, Token token) {
+	public CompareExpression(Expression a, Expression b, short mode, Token token)
+	{
 		super(token);
 		this.a = a;
 		this.b = b;
 		this.compareMode = mode;
 	}
 
-	public Object evaluate(Context ctx) {
+	public Object evaluate(Context ctx)
+	{
 		Object x = a.evaluate(ctx);
 		Object y = b.evaluate(ctx);
 		int r = 0;
-		switch (compareMode) {
-		case EQUAL:
-			return ALU.equals(x, y);
+		switch (compareMode)
+		{
+			case EQUAL:
+				return ALU.equals(x, y);
 
-		case NOT_EQUAL:
-			return !ALU.equals(x, y);
-		case LARGE_EQUAL:
-			return ALU.less(y, x);
+			case NOT_EQUAL:
+				return !ALU.equals(x, y);
+			case LARGE_EQUAL:
+				return ALU.less(y, x);
 
-		case LARGE:
-			return ALU.lessEquals(y, x);
-		case LESS:
-			return ALU.less(x, y);
-		case LESS_EQUAL:
-			return ALU.lessEquals(x, y);
-		default:
-			throw new TempException("不可能发生");
+			case LARGE:
+				return ALU.lessEquals(y, x);
+			case LESS:
+				return ALU.less(x, y);
+			case LESS_EQUAL:
+				return ALU.lessEquals(x, y);
+			default:
+				throw new TempException("不可能发生");
 
 		}
 
 	}
 
-	protected int compare(Object x, Object y) {
-		try {
+	protected int compare(Object x, Object y)
+	{
+		try
+		{
 			Comparable a1 = (Comparable) x;
 			Comparable a2 = (Comparable) y;
 			return a1.compareTo(a2);
-		} catch (ClassCastException cce) {
+		}
+		catch (ClassCastException cce)
+		{
 			throw new TempException("不能做比较");
 		}
 
 	}
 
-	protected boolean equal(Object x, Object y) {
-		if (x != null) {
+	protected boolean equal(Object x, Object y)
+	{
+		if (x != null)
+		{
 			return x.equals(y);
-		} else if (y == null) {
+		}
+		else if (y == null)
+		{
 			return true;
-		} else {
+		}
+		else
+		{
 			return false;
 		}
 	}
 
-	public void infer(Type[] types, Object temp) {
+	public void infer(Type[] types, Object temp)
+	{
 		a.infer(types, temp);
 		b.infer(types, temp);
 		this.type = Type.BooleanType;
@@ -81,7 +96,8 @@ public class CompareExpression extends Expression {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args)
+	{
 		// TODO Auto-generated method stub
 
 	}

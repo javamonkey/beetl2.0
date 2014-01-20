@@ -5,32 +5,42 @@ import java.io.IOException;
 import org.beetl.core.Context;
 import org.beetl.core.exception.TempException;
 
-public final class StaticTextASTNode extends Statement {
+public final class StaticTextASTNode extends Statement
+{
 
 	int textIndex;
 
-	public StaticTextASTNode(int textIndex, Token token) {
+	public StaticTextASTNode(int textIndex, Token token)
+	{
 		super(token);
 		this.textIndex = textIndex;
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public void execute(Context ctx) {
-		try {
-			if (ctx.byteOutputMode) {
+	public void execute(Context ctx)
+	{
+		try
+		{
+			if (ctx.byteOutputMode)
+			{
 				ctx.byteWriter.write((byte[]) ctx.staticTextArray[textIndex]);
-			} else {
+			}
+			else
+			{
 				ctx.byteWriter.write((char[]) ctx.staticTextArray[textIndex]);
 			}
-		} catch (IOException ex) {
+		}
+		catch (IOException ex)
+		{
 			throw new TempException(ex.getMessage());
 		}
 
 	}
 
 	@Override
-	public void infer(Type[] types, Object temp) {
+	public void infer(Type[] types, Object temp)
+	{
 		// do nothing
 	}
 

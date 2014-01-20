@@ -31,11 +31,13 @@ import java.io.IOException;
 
 import org.beetl.core.SuperVar;
 
-public abstract class ByteWriter {
+public abstract class ByteWriter
+{
 
 	public abstract void write(char[] cbuf) throws IOException;
 
-	public void write(String str) throws IOException {
+	public void write(String str) throws IOException
+	{
 
 		if (str != null)
 			this.write(str.toCharArray());
@@ -61,30 +63,37 @@ public abstract class ByteWriter {
 	 */
 	public abstract void flushToParent() throws IOException;
 
-	public void write(Object o) throws IOException {
-		if (o != null) {
+	public void write(Object o) throws IOException
+	{
+		if (o != null)
+		{
 			this.write(o.toString());
 		}
 
 	}
 
-	public void write(int c) throws IOException {
+	public void write(int c) throws IOException
+	{
 		this.write(String.valueOf(c));
 	}
 
-	public void write(long c) throws IOException {
+	public void write(long c) throws IOException
+	{
 		this.write(String.valueOf(c));
 	}
 
-	public void write(double c) throws IOException {
+	public void write(double c) throws IOException
+	{
 		this.write(String.valueOf(c));
 	}
 
-	public void write(short c) throws IOException {
+	public void write(short c) throws IOException
+	{
 		this.write(String.valueOf(c));
 	}
 
-	public void write(float c) throws IOException {
+	public void write(float c) throws IOException
+	{
 		this.write(String.valueOf(c));
 	}
 

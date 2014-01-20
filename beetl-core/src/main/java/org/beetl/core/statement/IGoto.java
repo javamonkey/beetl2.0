@@ -1,6 +1,7 @@
 package org.beetl.core.statement;
 
-public interface IGoto {
+public interface IGoto
+{
 	public final static short NORMAL = 0;
 	public final static short CONTINUE = 1;
 	public final static short BREAK = 2;

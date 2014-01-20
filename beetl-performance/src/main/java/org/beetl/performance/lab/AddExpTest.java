@@ -2,7 +2,6 @@ package org.beetl.performance.lab;
 
 import org.beetl.performance.Log;
 
-
 /**
  * wrap class=829 百分比,Infinity alu改进=1294 百分比,Infinity 原来的alu=804 百分比,Infinity
  * 

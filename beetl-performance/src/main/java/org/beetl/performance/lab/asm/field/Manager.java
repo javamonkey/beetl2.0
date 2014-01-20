@@ -15,7 +15,7 @@ public class Manager extends User {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	public String getName() {
 		return "manager";
 	}

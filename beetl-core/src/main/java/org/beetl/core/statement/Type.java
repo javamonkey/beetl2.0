@@ -14,93 +14,134 @@ import org.beetl.core.util.ObjectUtil;
  * @author joelli
  * 
  */
-public class Type implements java.io.Serializable {
+public class Type implements java.io.Serializable
+{
 	public Class cls;
 	public Type[] types = null;
 	public static final Type ObjectType = new Type(Object.class);
 	public static final Type BooleanType = new Type(Boolean.class);
 	public static final Type StringType = new Type(String.class);
 
-	public static final Class[] StringPara = new Class[] { String.class };
-	public static final Class[] GetMethodPara = new Class[] {};
+	public static final Class[] StringPara = new Class[]
+	{ String.class };
+	public static final Class[] GetMethodPara = new Class[]
+	{};
 
-	public Type() {
+	public Type()
+	{
 
 	}
 
-	public Type(Class cls) {
+	public Type(Class cls)
+	{
 		this.cls = cls;
 
 	}
 
-	public Type(Class cls, Class c1) {
+	public Type(Class cls, Class c1)
+	{
 		this.cls = cls;
-		types = new Type[] { new Type(c1) };
+		types = new Type[]
+		{ new Type(c1) };
 
 	}
 
-	public Type(Class cls, Class c1, Class c2) {
+	public Type(Class cls, Class c1, Class c2)
+	{
 		this.cls = cls;
-		types = new Type[] { new Type(c1), new Type(c2) };
+		types = new Type[]
+		{ new Type(c1), new Type(c2) };
 
 	}
 
-	public Type(Class cls, Type type) {
+	public Type(Class cls, Type type)
+	{
 		this.cls = cls;
-		types = new Type[] { type };
+		types = new Type[]
+		{ type };
 
 	}
 
-	public Type getType(String attrName) {
-		if (Map.class.isAssignableFrom(cls)) {
-			if (types != null) {
+	public Type getType(String attrName)
+	{
+		if (Map.class.isAssignableFrom(cls))
+		{
+			if (types != null)
+			{
 				return types[1];
-			} else {
+			}
+			else
+			{
 
 			}
 			return ObjectType;
-		} else if (Collection.class.isAssignableFrom(cls)) {
-			if (types != null) {
+		}
+		else if (Collection.class.isAssignableFrom(cls))
+		{
+			if (types != null)
+			{
 				return types[0];
-			} else {
+			}
+			else
+			{
 				return ObjectType;
 			}
 
-		} else if (cls == IteratorStatus.class) {
+		}
+		else if (cls == IteratorStatus.class)
+		{
 			return types[0];
-		} else if (cls == Object.class) {
+		}
+		else if (cls == Object.class)
+		{
 			return new Type(Object.class);
-		} else {
+		}
+		else
+		{
 
 			Method m = null;
-			try {
+			try
+			{
 				m = cls.getMethod(ObjectUtil.getMethod(attrName), GetMethodPara);
 				Class returnCls = m.getReturnType();
 				return new Type(returnCls);
-			} catch (NoSuchMethodException e1) {
-
-			} catch (SecurityException e1) {
+			}
+			catch (NoSuchMethodException e1)
+			{
 
 			}
-			
-			try {
+			catch (SecurityException e1)
+			{
+
+			}
+
+			try
+			{
 				m = cls.getMethod(ObjectUtil.getIsMethod(attrName), GetMethodPara);
 				Class returnCls = m.getReturnType();
 				return new Type(returnCls);
-			} catch (NoSuchMethodException e1) {
-
-			} catch (SecurityException e1) {
+			}
+			catch (NoSuchMethodException e1)
+			{
 
 			}
-			
+			catch (SecurityException e1)
+			{
 
-			try {
+			}
+
+			try
+			{
 				m = cls.getMethod("get", StringPara);
 				Class returnCls = m.getReturnType();
 				return new Type(returnCls);
-			} catch (NoSuchMethodException e) {
+			}
+			catch (NoSuchMethodException e)
+			{
 
-			} catch (SecurityException e) {
+			}
+			catch (SecurityException e)
+			{
 
 			}
 
@@ -109,11 +150,14 @@ public class Type implements java.io.Serializable {
 		}
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		StringBuilder sb = new StringBuilder(this.cls.toString());
-		if (types != null) {
+		if (types != null)
+		{
 			sb.append("<");
-			for (Type t : this.types) {
+			for (Type t : this.types)
+			{
 				sb.append(t).append(",");
 			}
 			sb.setLength(sb.length() - 1);

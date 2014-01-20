@@ -2,7 +2,6 @@ package org.beetl.performance.lab;
 
 import org.beetl.performance.Log;
 
-
 /**
  * 分配=1709 百分比,Infinity 重用=507 百分比,Infinity
  * 

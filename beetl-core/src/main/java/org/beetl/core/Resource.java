@@ -2,7 +2,8 @@ package org.beetl.core;
 
 import java.io.Reader;
 
-public abstract class Resource {
+public abstract class Resource
+{
 
 	ResourceLoader resourceLoader = null;
 
@@ -34,11 +35,13 @@ public abstract class Resource {
 	 * 
 	 * @return
 	 */
-	public ResourceLoader getResourceLoader() {
+	public ResourceLoader getResourceLoader()
+	{
 		return this.resourceLoader;
 	}
 
-	public void setResourceLoader(ResourceLoader resourceLoader) {
+	public void setResourceLoader(ResourceLoader resourceLoader)
+	{
 		this.resourceLoader = resourceLoader;
 	}
 

@@ -2,14 +2,15 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 
-public class TernaryExpression extends Expression {
+public class TernaryExpression extends Expression
+{
 
 	public Expression condtion;
 	public Expression a;
 	public Expression b;
 
-	public TernaryExpression(Expression condtion, Expression a, Expression b,
-			Token token) {
+	public TernaryExpression(Expression condtion, Expression a, Expression b, Token token)
+	{
 		super(token);
 		this.condtion = condtion;
 		this.a = a;
@@ -17,44 +18,62 @@ public class TernaryExpression extends Expression {
 
 	}
 
-	public Object evaluate(Context ctx) {
+	public Object evaluate(Context ctx)
+	{
 		boolean cond = (Boolean) condtion.evaluate(ctx);
-		if (cond) {
-			if (a != null) {
+		if (cond)
+		{
+			if (a != null)
+			{
 				return a.evaluate(ctx);
-			} else {
+			}
+			else
+			{
 				return null;
 			}
-		} else {
-			if (b != null) {
+		}
+		else
+		{
+			if (b != null)
+			{
 				return b.evaluate(ctx);
-			} else {
+			}
+			else
+			{
 				return null;
 			}
 		}
 
 	}
 
-	public void infer(Type[] types, Object temp) {
+	public void infer(Type[] types, Object temp)
+	{
 		condtion.infer(types, temp);
-		if (a != null) {
+		if (a != null)
+		{
 			a.infer(types, temp);
-			if (b == null) {
+			if (b == null)
+			{
 				this.type = a.type;
 				return;
 			}
 		}
-		if (b != null) {
+		if (b != null)
+		{
 			b.infer(types, temp);
-			if (a == null) {
+			if (a == null)
+			{
 				this.type = b.type;
 				return;
 			}
 		}
 
-		if (a.type.equals(b.type)) {
+		if (a.type.equals(b.type))
+		{
 			this.type = a.type;
-		} else {
+		}
+		else
+		{
 			// 能优化成共同的接口或者父类？
 			this.type = Type.ObjectType;
 		}

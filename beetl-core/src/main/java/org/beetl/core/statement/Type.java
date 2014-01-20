@@ -82,9 +82,10 @@ public class Type implements java.io.Serializable {
 			} catch (SecurityException e1) {
 
 			}
-			
+
 			try {
-				m = cls.getMethod(ObjectUtil.getIsMethod(attrName), GetMethodPara);
+				m = cls.getMethod(ObjectUtil.getIsMethod(attrName),
+						GetMethodPara);
 				Class returnCls = m.getReturnType();
 				return new Type(returnCls);
 			} catch (NoSuchMethodException e1) {
@@ -92,7 +93,6 @@ public class Type implements java.io.Serializable {
 			} catch (SecurityException e1) {
 
 			}
-			
 
 			try {
 				m = cls.getMethod("get", StringPara);

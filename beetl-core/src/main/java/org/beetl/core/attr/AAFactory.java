@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.beetl.core.exception.TempException;
 
-
 public class AAFactory {
 
 	// 已经为属性生成的访问代理类

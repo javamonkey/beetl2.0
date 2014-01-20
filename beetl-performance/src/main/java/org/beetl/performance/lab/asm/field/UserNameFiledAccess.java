@@ -9,12 +9,9 @@ public class UserNameFiledAccess extends FieldAccess {
 	}
 
 	@Override
-	public Object value(Object o,  Object name) {
+	public Object value(Object o, Object name) {
 		// TODO Auto-generated method stub
-		return ((User)o).getName();
+		return ((User) o).getName();
 	}
-
-
-	
 
 }

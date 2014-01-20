@@ -18,24 +18,20 @@ import org.beetl.core.statement.Type;
 import org.beetl.core.statement.VarAttribute;
 import org.beetl.core.statement.VarRef;
 
-public class AAFilter extends Filter implements Executor
-{
+public class AAFilter extends Filter implements Executor {
 
 	Cache cache = null;
 
-	public AAFilter(Program program)
-	{
+	public AAFilter(Program program) {
 		super(program);
 
 	}
 
 	@Override
-	public void check(Context ctx)
-	{
+	public void check(Context ctx) {
 		StatementSeacher seacher = new StatementSeacher();
 		// 优化VarRef，和循环
-		Class[] matchClasses = new Class[]
-		{ VarRef.class, ForStatement.class };
+		Class[] matchClasses = new Class[] { VarRef.class, ForStatement.class };
 		seacher.match(program.metaData.statements, matchClasses, this);
 		// 替换成性能较好的
 		this.program.groupTempalte.getProgramCache().set(program.id, program);
@@ -45,15 +41,12 @@ public class AAFilter extends Filter implements Executor
 	}
 
 	@Override
-	public void on(Stack<ASTNode> stack)
-	{
+	public void on(Stack<ASTNode> stack) {
 		Object o = stack.peek();
-		if (o instanceof VarRef)
-		{
+		if (o instanceof VarRef) {
 			VarRef ref = (VarRef) o;
 			VarAttribute[] attrs = ref.attributes;
-			for (VarAttribute attr : attrs)
-			{
+			for (VarAttribute attr : attrs) {
 				Type type = attr.type;
 				String name = attr.token != null ? attr.token.text : null;
 				// 换成速度较快的属性访问类
@@ -62,36 +55,23 @@ public class AAFilter extends Filter implements Executor
 
 			}
 
-		}
-		else if (o instanceof ForStatement)
-		{
+		} else if (o instanceof ForStatement) {
 			ForStatement f = (ForStatement) o;
 			Expression exp = f.exp;
-			if (Map.class.isAssignableFrom(exp.type.cls))
-			{
+			if (Map.class.isAssignableFrom(exp.type.cls)) {
 				f.itType = IteratorStatus.MAP;
-			}
-			else if (Collection.class.isAssignableFrom(exp.type.cls))
-			{
+			} else if (Collection.class.isAssignableFrom(exp.type.cls)) {
 				f.itType = IteratorStatus.COLLECTION;
-			}
-			else if (Iterable.class.isAssignableFrom(exp.type.cls))
-			{
+			} else if (Iterable.class.isAssignableFrom(exp.type.cls)) {
 				f.itType = IteratorStatus.ITERABLE;
-			}
-			else if (exp.type.cls.isArray())
-			{
+			} else if (exp.type.cls.isArray()) {
 				f.itType = IteratorStatus.ARRAY;
-			}
-			else
-			{
+			} else {
 				// 运行时刻判断
 				f.itType = IteratorStatus.GENERAL;
 			}
 
-		}
-		else
-		{
+		} else {
 			throw new UnsupportedOperationException();
 		}
 

@@ -27,12 +27,12 @@
  */
 package org.beetl.core;
 
-
 /**
  * 虚拟属性
+ * 
  * @author joelli
- *
+ * 
  */
-public interface  VirtualAttributeEval {
-	public Object eval(Object o,String attributeName,Context ctx);		
+public interface VirtualAttributeEval {
+	public Object eval(Object o, String attributeName, Context ctx);
 }

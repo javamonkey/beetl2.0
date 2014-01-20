@@ -5,7 +5,6 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-
 public class ASMUtil implements Opcodes {
 
 	class ASMClassLoader extends ClassLoader {
@@ -134,6 +133,5 @@ public class ASMUtil implements Opcodes {
 		}
 		return sb.toString();
 	}
-
 
 }

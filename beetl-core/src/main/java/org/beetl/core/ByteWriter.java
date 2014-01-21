@@ -29,7 +29,8 @@ package org.beetl.core;
  */
 import java.io.IOException;
 
-public abstract class ByteWriter {
+public abstract class ByteWriter
+{
 
 	char[] buffer = new char[64];
 
@@ -37,15 +38,20 @@ public abstract class ByteWriter {
 
 	public abstract void write(char[] cbuf, int len) throws IOException;
 
-	public final void write(String str) throws IOException {
+	public final void write(String str) throws IOException
+	{
 
-		if (str != null) {
+		if (str != null)
+		{
 			int len = str.length();
-			if (len < buffer.length) {
+			if (len < buffer.length)
+			{
 				str.getChars(0, len, buffer, 0);
 				this.write(buffer, len);
 
-			} else {
+			}
+			else
+			{
 				this.write(str.toCharArray());
 			}
 
@@ -73,30 +79,37 @@ public abstract class ByteWriter {
 	 */
 	public abstract void flushToParent() throws IOException;
 
-	public void write(Object o) throws IOException {
-		if (o != null) {
+	public void write(Object o) throws IOException
+	{
+		if (o != null)
+		{
 			this.write(o.toString());
 		}
 
 	}
 
-	public void write(int c) throws IOException {
+	public void write(int c) throws IOException
+	{
 		this.write(String.valueOf(c));
 	}
 
-	public void write(long c) throws IOException {
+	public void write(long c) throws IOException
+	{
 		this.write(String.valueOf(c));
 	}
 
-	public void write(double c) throws IOException {
+	public void write(double c) throws IOException
+	{
 		this.write(String.valueOf(c));
 	}
 
-	public void write(short c) throws IOException {
+	public void write(short c) throws IOException
+	{
 		this.write(String.valueOf(c));
 	}
 
-	public void write(float c) throws IOException {
+	public void write(float c) throws IOException
+	{
 		this.write(String.valueOf(c));
 	}
 

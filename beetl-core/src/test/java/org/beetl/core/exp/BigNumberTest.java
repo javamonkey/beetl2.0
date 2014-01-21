@@ -10,9 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class BigNumberTest extends BasicTestCase {
-	//日志对象
-	private static final Logger LOG = LoggerFactory.getLogger(BigNumberTest.class);
-	
+	// 日志对象
+	private static final Logger LOG = LoggerFactory
+			.getLogger(BigNumberTest.class);
+
 	BigDecimal d1 = new BigDecimal("1.000000000000001");
 	int d2 = 2;
 

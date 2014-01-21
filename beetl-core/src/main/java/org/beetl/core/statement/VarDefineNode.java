@@ -2,29 +2,34 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 
-public class VarDefineNode extends Expression implements IVarIndex {
+public class VarDefineNode extends Expression implements IVarIndex
+{
 
 	int varIndex = 0;
 
-	public VarDefineNode(Token token) {
+	public VarDefineNode(Token token)
+	{
 		super(token);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public Object evaluate(Context ctx) {
+	public Object evaluate(Context ctx)
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void setVarIndex(int index) {
+	public void setVarIndex(int index)
+	{
 		this.varIndex = index;
 
 	}
 
 	@Override
-	public int getVarIndex() {
+	public int getVarIndex()
+	{
 		return varIndex;
 	}
 

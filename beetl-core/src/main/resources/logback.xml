@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false" scan="true" scanPeriod="30 seconds">
 	<contextName>beetl-core</contextName>
-	<substitutionProperty name="log.base"
-		value="logs" />
+	<substitutionProperty name="log.base" value="logs" />
 	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
 		<withJansi>false</withJansi>
 		<encoder charset="utf-8">

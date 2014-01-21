@@ -11,27 +11,34 @@ import java.io.UnsupportedEncodingException;
 import org.beetl.core.Resource;
 import org.beetl.core.exception.TempException;
 
-public class FileResource extends Resource {
+public class FileResource extends Resource
+{
 
 	File file = null;
 	String id = null;
 
-	public FileResource(File file, String id) {
+	public FileResource(File file, String id)
+	{
 		this.file = file;
 		this.id = id;
 
 	}
 
 	@Override
-	public Reader openReader() {
+	public Reader openReader()
+	{
 		Reader br;
-		try {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(
-					file),
+		try
+		{
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(file),
 					((FileResourceLoader) this.getResourceLoader()).charset));
-		} catch (UnsupportedEncodingException e) {
+		}
+		catch (UnsupportedEncodingException e)
+		{
 			return null;
-		} catch (FileNotFoundException e) {
+		}
+		catch (FileNotFoundException e)
+		{
 			throw new TempException(e.getMessage());
 
 		}
@@ -39,19 +46,22 @@ public class FileResource extends Resource {
 	}
 
 	@Override
-	public String getContent(int startLine, int endLine) {
+	public String getContent(int startLine, int endLine)
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public boolean isModified() {
+	public boolean isModified()
+	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public String getId() {
+	public String getId()
+	{
 		return this.id;
 	}
 

@@ -14,15 +14,19 @@ import org.beetl.core.parser.BeetlParser.ProgContext;
 import org.beetl.core.statement.Program;
 import org.beetl.core.statement.ProgramMetaData;
 
-public class DefaultTemplateEngine implements TemplateEngine {
+public class DefaultTemplateEngine implements TemplateEngine
+{
 
 	@Override
-	public Program createProgram(String id, Reader reader,
-			Map<Integer, String> textMap, GroupTemplate gt) {
+	public Program createProgram(String id, Reader reader, Map<Integer, String> textMap, GroupTemplate gt)
+	{
 		ANTLRInputStream input;
-		try {
+		try
+		{
 			input = new ANTLRInputStream(reader);
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			// 不可能发生
 			throw new RuntimeException(e);
 		}
@@ -41,18 +45,23 @@ public class DefaultTemplateEngine implements TemplateEngine {
 		program.metaData.staticTextArray = new Object[textMap.size()];
 		int i = 0;
 
-		for (Entry<Integer, String> entry : textMap.entrySet()) {
-			if (gt.conf.directByteOutput) {
-				try {
-					program.metaData.staticTextArray[i++] = entry.getValue()
-							.getBytes(gt.conf.charset);
-				} catch (UnsupportedEncodingException e) {
+		for (Entry<Integer, String> entry : textMap.entrySet())
+		{
+			if (gt.conf.directByteOutput)
+			{
+				try
+				{
+					program.metaData.staticTextArray[i++] = entry.getValue().getBytes(gt.conf.charset);
+				}
+				catch (UnsupportedEncodingException e)
+				{
 					throw new RuntimeException(e);
 				}
-			} else {
+			}
+			else
+			{
 
-				program.metaData.staticTextArray[i++] = entry.getValue()
-						.toCharArray();
+				program.metaData.staticTextArray[i++] = entry.getValue().toCharArray();
 
 			}
 

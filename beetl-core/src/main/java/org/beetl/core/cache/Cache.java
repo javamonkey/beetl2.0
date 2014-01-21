@@ -1,6 +1,7 @@
 package org.beetl.core.cache;
 
-public interface Cache {
+public interface Cache
+{
 
 	public Object get(String key);
 

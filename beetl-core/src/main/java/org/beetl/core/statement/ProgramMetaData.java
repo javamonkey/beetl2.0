@@ -7,7 +7,8 @@ import java.util.Map.Entry;
 import org.beetl.core.Context;
 import org.beetl.core.util.ObjectUtil;
 
-public class ProgramMetaData implements java.io.Serializable {
+public class ProgramMetaData implements java.io.Serializable
+{
 	public Statement[] statements = null;
 
 	// 模板静态数据
@@ -21,7 +22,8 @@ public class ProgramMetaData implements java.io.Serializable {
 	// 全局变量属性
 	public Map<String, String[]> globalVarAttr = new HashMap<String, String[]>();
 
-	public void initContext(Context ctx) {
+	public void initContext(Context ctx)
+	{
 		// 模板静态文本部分
 		ctx.staticTextArray = staticTextArray;
 		// 模板各种缓存存放地
@@ -36,7 +38,8 @@ public class ProgramMetaData implements java.io.Serializable {
 
 	}
 
-	public void replaceGlobal(Context ctx) {
+	public void replaceGlobal(Context ctx)
+	{
 		putGlobaToArray(ctx);
 
 	}
@@ -46,7 +49,8 @@ public class ProgramMetaData implements java.io.Serializable {
 	 * 
 	 * @param ctx
 	 */
-	public void initContextAgain(Context ctx) {
+	public void initContextAgain(Context ctx)
+	{
 		this.putGlobaToArray(ctx);
 	}
 
@@ -55,23 +59,29 @@ public class ProgramMetaData implements java.io.Serializable {
 	 * 
 	 * @param map
 	 */
-	protected void putGlobaToArray(Context ctx) {
+	protected void putGlobaToArray(Context ctx)
+	{
 		Map<String, Object> globalVar = ctx.globalVar;
 		if (globalVar == null)
 			return;
-		for (Entry<String, Integer> entry : globalIndexMap.entrySet()) {
+		for (Entry<String, Integer> entry : globalIndexMap.entrySet())
+		{
 			String key = entry.getKey();
 			int index = entry.getValue();
-			if (globalVar.containsKey(key)) {
+			if (globalVar.containsKey(key))
+			{
 				ctx.vars[index] = globalVar.get(key);
-			} else {
+			}
+			else
+			{
 				// 不存在
 				ctx.vars[index] = ctx.NOT_EXIST_OBJECT;
 			}
 		}
 	}
 
-	public ProgramMetaData copy() {
+	public ProgramMetaData copy()
+	{
 		ProgramMetaData newCopy = (ProgramMetaData) ObjectUtil.copy(this);
 		return newCopy;
 	}

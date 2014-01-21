@@ -13,7 +13,8 @@ import org.beetl.core.exception.HTMLTagParserException;
 import org.beetl.core.exception.TempException;
 import org.beetl.core.statement.Program;
 
-public class GroupTemplate {
+public class GroupTemplate
+{
 
 	/* 模板在运行过程中,class方法，accessory调用等需要的classLoader */
 	ClassLoader classLoader = null;
@@ -32,7 +33,8 @@ public class GroupTemplate {
 	 *            模板引擎配置
 	 */
 
-	public GroupTemplate(ResourceLoader loader, Configuration conf) {
+	public GroupTemplate(ResourceLoader loader, Configuration conf)
+	{
 		this.resourceLoader = loader;
 		this.conf = conf;
 		engine = TemplateEngineFactory.getEngine();
@@ -46,16 +48,21 @@ public class GroupTemplate {
 	 * 
 	 */
 
-	protected void setClassLoader(ClassLoader classLoader) {
+	protected void setClassLoader(ClassLoader classLoader)
+	{
 
 	}
 
-	public Template getTemplate(String key) {
+	public Template getTemplate(String key)
+	{
 		key = key.intern();
 		Program program = (Program) this.programCache.get(key);
-		if (program == null) {
-			synchronized (key) {
-				if (program == null) {
+		if (program == null)
+		{
+			synchronized (key)
+			{
+				if (program == null)
+				{
 					Resource resource = resourceLoader.getResource(key);
 					program = this.loadTemplate(resource);
 					this.programCache.set(key, program);
@@ -67,28 +74,34 @@ public class GroupTemplate {
 
 	}
 
-	public Program getProgram(String key) {
+	public Program getProgram(String key)
+	{
 		Program program = (Program) this.programCache.get(key);
 		return program;
 	}
 
-	private Program loadTemplate(Resource res) {
+	private Program loadTemplate(Resource res)
+	{
 
 		Reader reader = res.openReader();
-		Transformator sf = new Transformator(conf.placeholderStart,
-				conf.placeholderEnd, conf.statementStart, conf.statementEnd);
+		Transformator sf = new Transformator(conf.placeholderStart, conf.placeholderEnd, conf.statementStart,
+				conf.statementEnd);
 		Reader scriptReader;
-		try {
+		try
+		{
 			scriptReader = sf.transform(reader);
 
-		} catch (HTMLTagParserException e) {
+		}
+		catch (HTMLTagParserException e)
+		{
 			throw new TempException(e.getMessage());
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			throw new TempException(e.getMessage());
 		}
 
-		Program program = engine.createProgram(res.getId(), scriptReader,
-				sf.textMap, this);
+		Program program = engine.createProgram(res.getId(), scriptReader, sf.textMap, this);
 		return program;
 
 	}
@@ -96,7 +109,8 @@ public class GroupTemplate {
 	/**
 	 * 关闭GroupTemplate，清理所有的资源
 	 */
-	public void close() {
+	public void close()
+	{
 
 	}
 
@@ -108,37 +122,46 @@ public class GroupTemplate {
 	//
 	// }
 
-	public ResourceLoader getResourceLoader() {
+	public ResourceLoader getResourceLoader()
+	{
 		return resourceLoader;
 	}
 
-	public void setResourceLoader(ResourceLoader resourceLoader) {
+	public void setResourceLoader(ResourceLoader resourceLoader)
+	{
 		this.resourceLoader = resourceLoader;
 	}
 
-	public Configuration getConf() {
+	public Configuration getConf()
+	{
 		return conf;
 	}
 
-	public void setConf(Configuration conf) {
+	public void setConf(Configuration conf)
+	{
 		this.conf = conf;
 	}
 
-	public ClassLoader getClassLoader() {
+	public ClassLoader getClassLoader()
+	{
 		return classLoader;
 	}
 
-	public void fireEvent(Event event) {
-		for (Listener l : this.ls) {
+	public void fireEvent(Event event)
+	{
+		for (Listener l : this.ls)
+		{
 			l.onEvent(event);
 		}
 	}
 
-	public void addListener(Listener listener) {
+	public void addListener(Listener listener)
+	{
 		this.ls.add(listener);
 	}
 
-	public Cache getProgramCache() {
+	public Cache getProgramCache()
+	{
 		return programCache;
 	}
 

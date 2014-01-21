@@ -6,16 +6,19 @@ package org.beetl.core.statement;
  * @author joelli
  * 
  */
-public class VarSquareAttribute extends VarAttribute {
+public class VarSquareAttribute extends VarAttribute
+{
 	protected short type = 1;
 	public Expression exp;
 
-	public VarSquareAttribute(Expression exp, Token token) {
+	public VarSquareAttribute(Expression exp, Token token)
+	{
 		super(token);
 		this.exp = exp;
 	}
 
-	public void infer(Type[] types, Object temp) {
+	public void infer(Type[] types, Object temp)
+	{
 		super.infer(types, temp);
 	}
 

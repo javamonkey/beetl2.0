@@ -2,11 +2,13 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 
-public class Literal extends Expression {
+public class Literal extends Expression
+{
 
 	Object obj = null;
 
-	public Literal(Object value, Token token) {
+	public Literal(Object value, Token token)
+	{
 		super(token);
 		this.obj = value;
 
@@ -14,11 +16,13 @@ public class Literal extends Expression {
 	}
 
 	@Override
-	public Object evaluate(Context ctx) {
+	public Object evaluate(Context ctx)
+	{
 		return obj;
 	}
 
-	public void infer(Type[] types, Object temp) {
+	public void infer(Type[] types, Object temp)
+	{
 		this.type = new Type(obj.getClass());
 	}
 

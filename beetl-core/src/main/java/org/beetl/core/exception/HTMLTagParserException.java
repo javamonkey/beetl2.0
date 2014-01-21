@@ -35,17 +35,20 @@ import org.beetl.core.statement.Token;
  * @author joelli
  * 
  */
-public class HTMLTagParserException extends BeetlException {
+public class HTMLTagParserException extends BeetlException
+{
 	String msg = null;
 	public Token token = null;
 	public int line = 0;
 
-	public HTMLTagParserException(String message) {
+	public HTMLTagParserException(String message)
+	{
 		this.msg = message;
 
 	}
 
-	public String getHtmlTagErrorMsg() {
+	public String getHtmlTagErrorMsg()
+	{
 		return msg;
 	}
 }

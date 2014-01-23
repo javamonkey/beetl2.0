@@ -38,14 +38,14 @@ public class AAFilter extends Filter implements Executor
 		{ VarRef.class, ForStatement.class };
 		seacher.match(program.metaData.statements, matchClasses, this);
 		// 替换成性能较好的
-		this.program.groupTempalte.getProgramCache().set(program.id, program);
+		this.program.gt.getProgramCache().set(program.id, program);
 		ProgramReplaceEvent event = new ProgramReplaceEvent(program);
-		this.program.groupTempalte.fireEvent(event);
+		this.program.gt.fireEvent(event);
 
 	}
 
 	@Override
-	public void on(Stack<ASTNode> stack)
+	public ASTNode on(Stack<ASTNode> stack)
 	{
 		Object o = stack.peek();
 		if (o instanceof VarRef)
@@ -90,10 +90,8 @@ public class AAFilter extends Filter implements Executor
 			}
 
 		}
-		else
-		{
-			throw new UnsupportedOperationException();
-		}
+
+		return null;
 
 	}
 

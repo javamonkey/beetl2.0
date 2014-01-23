@@ -35,9 +35,10 @@ statement
     |   Var varDeclareList END  #varSt
     |   Directive  directiveExp #directiveSt 
     |   assignMent END  #assignSt
-    |   functionTagCall #functionSt
+    |   functionTagCall #functionTagSt
+    |   functionCall #functionCallSt
     |   statementExpression END   #statmentExpSt 
-     
+      
     ;
 //×¢½â:@type (User)user,(List<User>userList
 commentTypeTag: commentTypeItemTag (COMMA1 commentTypeItemTag);

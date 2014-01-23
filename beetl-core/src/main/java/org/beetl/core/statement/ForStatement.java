@@ -1,6 +1,7 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
+import org.beetl.core.InferContext;
 import org.beetl.core.IteratorStatus;
 
 public final class ForStatement extends Statement implements IGoto
@@ -89,17 +90,17 @@ public final class ForStatement extends Statement implements IGoto
 	}
 
 	@Override
-	public void infer(Type[] types, Object temp)
+	public void infer(InferContext inferCtx)
 	{
-		exp.infer(types, null);
+		exp.infer(inferCtx);
 		idNode.type = exp.getType().types[0];
 		int index = ((IVarIndex) idNode).getVarIndex();
-		types[index] = idNode.type;
-		types[index + 1] = new Type(IteratorStatus.class, idNode.type.cls);
-		forPart.infer(types, null);
+		inferCtx.types[index] = idNode.type;
+		inferCtx.types[index + 1] = new Type(IteratorStatus.class, idNode.type.cls);
+		forPart.infer(inferCtx);
 		if (elseforPart != null)
 		{
-			elseforPart.infer(types, null);
+			elseforPart.infer(inferCtx);
 		}
 
 	}

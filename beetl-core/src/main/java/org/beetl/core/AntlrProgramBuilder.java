@@ -22,6 +22,8 @@ import org.beetl.core.parser.BeetlParser.ContinueStContext;
 import org.beetl.core.parser.BeetlParser.ExpressionContext;
 import org.beetl.core.parser.BeetlParser.ForControlContext;
 import org.beetl.core.parser.BeetlParser.ForStContext;
+import org.beetl.core.parser.BeetlParser.FunctionCallContext;
+import org.beetl.core.parser.BeetlParser.FunctionCallStContext;
 import org.beetl.core.parser.BeetlParser.IfStContext;
 import org.beetl.core.parser.BeetlParser.LiteralExpContext;
 import org.beetl.core.parser.BeetlParser.MuldivmodExpContext;
@@ -158,6 +160,13 @@ public class AntlrProgramBuilder
 		{
 			return parseIf((IfStContext) node);
 		}
+		else if (node instanceof FunctionCallStContext)
+		{
+			FunctionCallStContext st = (FunctionCallStContext) node;
+			FunctionCallContext fcc = st.functionCall();
+			return parseFuncti((FunctionStContext) node);
+		}
+
 		else
 		{
 			throw new UnsupportedOperationException();
@@ -165,7 +174,7 @@ public class AntlrProgramBuilder
 
 	}
 
-	protected IfStatement parseIf(IfStContext ctx)
+	protected protected IfStatement parseIf(IfStContext ctx)
 	{
 		ParExpressionContext pe = ctx.parExpression();
 		ExpressionContext expCtx = pe.expression();

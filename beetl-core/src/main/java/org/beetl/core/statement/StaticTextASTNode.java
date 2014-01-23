@@ -3,6 +3,7 @@ package org.beetl.core.statement;
 import java.io.IOException;
 
 import org.beetl.core.Context;
+import org.beetl.core.InferContext;
 import org.beetl.core.exception.TempException;
 
 public final class StaticTextASTNode extends Statement
@@ -39,7 +40,7 @@ public final class StaticTextASTNode extends Statement
 	}
 
 	@Override
-	public void infer(Type[] types, Object temp)
+	public void infer(InferContext inferCtx)
 	{
 		// do nothing
 	}

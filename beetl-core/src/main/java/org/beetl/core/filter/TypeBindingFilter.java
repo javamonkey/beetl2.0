@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.beetl.core.Context;
+import org.beetl.core.InferContext;
 import org.beetl.core.statement.Program;
 import org.beetl.core.statement.ProgramMetaData;
 import org.beetl.core.statement.Statement;
@@ -31,7 +32,7 @@ public class TypeBindingFilter extends Filter
 		Program copyProgram = new Program();
 		copyProgram.metaData = metaData;
 		copyProgram.id = p.id;
-		copyProgram.groupTempalte = p.groupTempalte;
+		copyProgram.gt = p.gt;
 		this.program = copyProgram;
 
 		nextFilter.program = this.program;
@@ -91,9 +92,11 @@ public class TypeBindingFilter extends Filter
 	protected void infer()
 	{
 
+		InferContext ctx = new InferContext();
+		ctx.types = types;
 		for (Statement st : this.program.metaData.statements)
 		{
-			st.infer(types, null);
+			st.infer(ctx);
 		}
 
 	}

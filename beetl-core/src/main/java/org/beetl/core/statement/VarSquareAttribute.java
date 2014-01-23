@@ -1,5 +1,7 @@
 package org.beetl.core.statement;
 
+import org.beetl.core.InferContext;
+
 /**
  * a.[]
  * 
@@ -17,9 +19,9 @@ public class VarSquareAttribute extends VarAttribute
 		this.exp = exp;
 	}
 
-	public void infer(Type[] types, Object temp)
+	public void infer(InferContext inferCtx)
 	{
-		super.infer(types, temp);
+		super.infer(inferCtx);
 	}
 
 }

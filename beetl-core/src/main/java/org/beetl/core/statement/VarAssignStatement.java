@@ -1,6 +1,7 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
+import org.beetl.core.InferContext;
 
 public class VarAssignStatement extends Statement implements IVarIndex
 {
@@ -30,10 +31,10 @@ public class VarAssignStatement extends Statement implements IVarIndex
 		this.varIndex = varIndex;
 	}
 
-	public void infer(Type[] types, Object temp)
+	public void infer(InferContext inferCtx)
 	{
-		exp.infer(types, temp);
-		types[varIndex] = exp.type;
+		exp.infer(inferCtx);
+		inferCtx.types[varIndex] = exp.type;
 	}
 
 }

@@ -2,6 +2,7 @@ package org.beetl.core.statement;
 
 import org.beetl.core.ALU;
 import org.beetl.core.Context;
+import org.beetl.core.InferContext;
 import org.beetl.core.exception.TempException;
 
 public class ArthExpression extends Expression
@@ -49,10 +50,10 @@ public class ArthExpression extends Expression
 
 	}
 
-	public void infer(Type[] types, Object temp)
+	public void infer(InferContext inferCtx)
 	{
-		a.infer(types, temp);
-		b.infer(types, temp);
+		a.infer(inferCtx);
+		b.infer(inferCtx);
 		this.type = new Type(ALU.getBaseTypeClass(a.type.cls, b.type.cls));
 	}
 

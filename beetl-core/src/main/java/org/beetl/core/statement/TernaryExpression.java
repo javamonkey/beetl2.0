@@ -1,6 +1,7 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
+import org.beetl.core.InferContext;
 
 public class TernaryExpression extends Expression
 {
@@ -46,12 +47,12 @@ public class TernaryExpression extends Expression
 
 	}
 
-	public void infer(Type[] types, Object temp)
+	public void infer(InferContext inferCtx)
 	{
-		condtion.infer(types, temp);
+		condtion.infer(inferCtx);
 		if (a != null)
 		{
-			a.infer(types, temp);
+			a.infer(inferCtx);
 			if (b == null)
 			{
 				this.type = a.type;
@@ -60,7 +61,7 @@ public class TernaryExpression extends Expression
 		}
 		if (b != null)
 		{
-			b.infer(types, temp);
+			b.infer(inferCtx);
 			if (a == null)
 			{
 				this.type = b.type;

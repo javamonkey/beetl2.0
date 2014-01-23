@@ -3,7 +3,9 @@ package org.beetl.core;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.beetl.core.cache.Cache;
 import org.beetl.core.cache.ProgramCacheFactory;
@@ -23,6 +25,8 @@ public class GroupTemplate
 	TemplateEngine engine = null;
 	Cache programCache = ProgramCacheFactory.defaulCache();
 	List<Listener> ls = new ArrayList<Listener>();
+	//所有注册的方法
+	Map<String, Function> fnMap = new HashMap<String, Function>();
 
 	/**
 	 * 使用loader 和 conf初始化GroupTempalte
@@ -70,7 +74,7 @@ public class GroupTemplate
 			}
 		}
 
-		return new Template(program, this.conf);
+		return new Template(this, program, this.conf);
 
 	}
 
@@ -102,6 +106,7 @@ public class GroupTemplate
 		}
 
 		Program program = engine.createProgram(res.getId(), scriptReader, sf.textMap, this);
+
 		return program;
 
 	}
@@ -163,6 +168,22 @@ public class GroupTemplate
 	public Cache getProgramCache()
 	{
 		return programCache;
+	}
+
+	public void registerFunction(String name, Function fn)
+	{
+		/*
+		if (this.containTag(name)) {
+			throw new RuntimeException("Function和Tag方法名不能重复:" + name);
+		}
+		*/
+		this.fnMap.put(name, fn);
+	}
+
+	public Function getFunction(String name)
+	{
+		Function fn = fnMap.get(name);
+		return fn;
 	}
 
 }

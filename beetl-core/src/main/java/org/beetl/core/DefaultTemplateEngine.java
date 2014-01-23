@@ -40,7 +40,7 @@ public class DefaultTemplateEngine implements TemplateEngine
 		Program program = new Program();
 		program.metaData = data;
 		program.id = id;
-		program.groupTempalte = gt;
+		program.gt = gt;
 
 		program.metaData.staticTextArray = new Object[textMap.size()];
 		int i = 0;

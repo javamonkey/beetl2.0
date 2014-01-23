@@ -1,6 +1,7 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
+import org.beetl.core.InferContext;
 import org.beetl.core.attr.AA;
 
 public class VarAttribute extends Expression
@@ -32,9 +33,9 @@ public class VarAttribute extends Expression
 	}
 
 	@Override
-	public void infer(Type[] types, Object temp)
+	public void infer(InferContext inferCtx)
 	{
-		Type type = (Type) temp;
+		Type type = (Type) inferCtx.temp;
 		String attrName = token.text;
 		this.type = type.getType(attrName);
 	}

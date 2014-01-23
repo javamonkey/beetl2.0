@@ -1,5 +1,7 @@
 package org.beetl.core.statement;
 
+import org.beetl.core.InferContext;
+
 public class ASTNode implements java.io.Serializable
 {
 	public Token token;
@@ -9,7 +11,7 @@ public class ASTNode implements java.io.Serializable
 		this.token = token;
 	}
 
-	public void infer(Type[] types, Object temp)
+	public void infer(InferContext inferCtx)
 	{
 		throw new UnsupportedOperationException();
 	}

@@ -8,7 +8,7 @@ public class Program
 	// 模板的所有脚本语句
 	public ProgramMetaData metaData = null;
 	public String id = null;
-	public GroupTemplate groupTempalte = null;
+	public GroupTemplate gt = null;
 
 	public Program()
 	{

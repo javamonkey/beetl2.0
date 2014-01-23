@@ -1,6 +1,7 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
+import org.beetl.core.InferContext;
 
 public class IfStatement extends Statement
 {
@@ -37,13 +38,13 @@ public class IfStatement extends Statement
 
 	}
 
-	public void infer(Type[] types, Object temp)
+	public void infer(InferContext inferCtx)
 	{
-		condtion.infer(types, temp);
-		ifStatement.infer(types, temp);
+		condtion.infer(inferCtx);
+		ifStatement.infer(inferCtx);
 		if (elseStatement != null)
 		{
-			elseStatement.infer(types, temp);
+			elseStatement.infer(inferCtx);
 		}
 	}
 

@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Stack;
 
+import org.beetl.core.exception.TempException;
 import org.beetl.core.statement.ASTNode;
 import org.beetl.core.statement.BlockStatement;
 import org.beetl.core.statement.Statement;
@@ -82,14 +83,24 @@ public class StatementSeacher
 						if (isArray)
 						{
 							Object[] targetValue = (Object[]) values;
-							for (Object o : targetValue)
+
+							for (int i = 0; i < targetValue.length; i++)
 							{
+								Object o = targetValue[i];
 								if (o == null)
 									continue;
 								if (expected.isAssignableFrom(o.getClass()))
 								{
 									stack.push(o);
-									executor.on(stack);
+									Object newASTNode = executor.on(stack);
+									if (newASTNode != null)
+									{
+										stack.pop();
+										stack.push(newASTNode);
+										//替换原有节点
+										targetValue[i] = newASTNode;
+										o = newASTNode;
+									}
 									// 继续遍历子节点
 									this.exec(o, matchClasses, executor, stack);
 									stack.pop();
@@ -103,7 +114,24 @@ public class StatementSeacher
 							if (expected.isAssignableFrom(values.getClass()))
 							{
 								stack.push(values);
-								executor.on(stack);
+								ASTNode newASTNode = executor.on(stack);
+
+								if (newASTNode != null)
+								{
+									stack.pop();
+									stack.push(newASTNode);
+									//替换原有节点
+									try
+									{
+										f.set(astNode, values);
+									}
+									catch (Exception e)
+									{
+										throw new TempException(e.getMessage());
+									}
+
+									values = newASTNode;
+								}
 								this.exec(values, matchClasses, executor, stack);
 
 								stack.pop();

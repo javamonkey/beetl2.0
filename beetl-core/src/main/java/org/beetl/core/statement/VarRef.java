@@ -1,6 +1,7 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
+import org.beetl.core.InferContext;
 import org.beetl.core.exception.TempException;
 
 public class VarRef extends Expression implements IVarIndex
@@ -69,14 +70,15 @@ public class VarRef extends Expression implements IVarIndex
 	}
 
 	@Override
-	public void infer(Type[] types, Object temp)
+	public void infer(InferContext inferCtx)
 	{
-		Type type = types[this.varIndex];
+		Type type = inferCtx.types[this.varIndex];
 		Type lastType = type;
 		Type t = null;
 		for (VarAttribute attr : attributes)
 		{
-			attr.infer(types, lastType);
+			inferCtx.temp = lastType;
+			attr.infer(inferCtx);
 			t = lastType;
 			lastType = attr.type;
 			attr.type = t;

@@ -14,6 +14,8 @@ public class Context
 	public static Object NOT_EXIST_OBJECT = new Object();
 
 	public ByteWriter byteWriter;
+
+	public GroupTemplate gt = null;
 	/* 全局变量 */
 	public Map<String, Object> globalVar;
 	/*

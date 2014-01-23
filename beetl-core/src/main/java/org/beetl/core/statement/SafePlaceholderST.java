@@ -1,6 +1,7 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
+import org.beetl.core.InferContext;
 
 public class SafePlaceholderST extends Statement
 {
@@ -29,7 +30,7 @@ public class SafePlaceholderST extends Statement
 	}
 
 	@Override
-	public void infer(Type[] types, Object temp)
+	public void infer(InferContext inferCtx)
 	{
 		// do nothing
 	}

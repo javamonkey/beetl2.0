@@ -3,6 +3,7 @@ package org.beetl.core.statement;
 import java.io.IOException;
 
 import org.beetl.core.Context;
+import org.beetl.core.InferContext;
 import org.beetl.core.exception.TempException;
 
 public final class PlaceholderST extends Statement
@@ -33,9 +34,9 @@ public final class PlaceholderST extends Statement
 	}
 
 	@Override
-	public void infer(Type[] types, Object temp)
+	public void infer(InferContext inferCtx)
 	{
-		expression.infer(types, temp);
+		expression.infer(inferCtx);
 	}
 
 }

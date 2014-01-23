@@ -14,11 +14,13 @@ import org.beetl.core.statement.Program;
 
 public class Template
 {
-	protected Program program = null;
-	protected Configuration cf = null;
+	protected Program program;
+	protected Configuration cf;
+	protected GroupTemplate gt;
+
 	Context ctx = new Context();
 
-	protected Template(Program program, Configuration cf)
+	protected Template(GroupTemplate gt, Program program, Configuration cf)
 	{
 		this.program = program;
 		this.cf = cf;
@@ -66,6 +68,7 @@ public class Template
 	{
 		ctx.byteWriter = byteWriter;
 		ctx.byteOutputMode = cf.directByteOutput;
+		ctx.gt = this.gt;
 		program.metaData.initContext(ctx);
 		program.execute(ctx);
 		try

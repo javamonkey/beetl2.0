@@ -5,14 +5,18 @@ import org.beetl.core.Context;
 public class FunctionStatement extends Statement
 {
 
-	
-	
-	public FunctionStatement()
-	
+	FunctionExpression fe;
+
+	public FunctionStatement(FunctionExpression fe, Token token)
+	{
+		super(token);
+		this.fe = fe;
+	}
+
 	@Override
 	public void execute(Context ctx)
 	{
-		// TODO Auto-generated method stub
+		fe.evaluate(ctx);
 
 	}
 

@@ -20,9 +20,11 @@ import org.beetl.core.parser.BeetlParser.CompareExpContext;
 import org.beetl.core.parser.BeetlParser.ConstantsTextStatmentContext;
 import org.beetl.core.parser.BeetlParser.ContinueStContext;
 import org.beetl.core.parser.BeetlParser.ExpressionContext;
+import org.beetl.core.parser.BeetlParser.ExpressionListContext;
 import org.beetl.core.parser.BeetlParser.ForControlContext;
 import org.beetl.core.parser.BeetlParser.ForStContext;
 import org.beetl.core.parser.BeetlParser.FunctionCallContext;
+import org.beetl.core.parser.BeetlParser.FunctionCallExpContext;
 import org.beetl.core.parser.BeetlParser.FunctionCallStContext;
 import org.beetl.core.parser.BeetlParser.IfStContext;
 import org.beetl.core.parser.BeetlParser.LiteralExpContext;
@@ -52,6 +54,8 @@ import org.beetl.core.statement.CompareExpression;
 import org.beetl.core.statement.ContinueStatement;
 import org.beetl.core.statement.Expression;
 import org.beetl.core.statement.ForStatement;
+import org.beetl.core.statement.FunctionExpression;
+import org.beetl.core.statement.FunctionStatement;
 import org.beetl.core.statement.IGoto;
 import org.beetl.core.statement.IfStatement;
 import org.beetl.core.statement.Literal;
@@ -164,9 +168,11 @@ public class AntlrProgramBuilder
 		{
 			FunctionCallStContext st = (FunctionCallStContext) node;
 			FunctionCallContext fcc = st.functionCall();
-			return parseFuncti((FunctionStContext) node);
-		}
+			FunctionExpression fn = parseFunExp(fcc);
+			FunctionStatement fs = new FunctionStatement(fn, null);
+			return fs;
 
+		}
 		else
 		{
 			throw new UnsupportedOperationException();
@@ -174,7 +180,21 @@ public class AntlrProgramBuilder
 
 	}
 
-	protected protected IfStatement parseIf(IfStContext ctx)
+	protected FunctionExpression parseFunExp(FunctionCallContext ctx)
+	{
+		ExpressionListContext expListCtx = ctx.expressionList();
+		Expression[] exps = this.getExprssionList(expListCtx);
+		List<VarAttributeContext> vaListCtx = ctx.varAttribute();
+		VarAttribute[] vs = this.parseVarAttribute(vaListCtx);
+		List<TerminalNode> idList = ctx.functionNs().Identifier();
+		String nsId = this.getID(idList);
+		org.beetl.core.statement.Token btToken = new org.beetl.core.statement.Token(nsId, ctx.start.getLine(), 0);
+		FunctionExpression fe = new FunctionExpression(nsId, exps, vs, btToken);
+		return fe;
+
+	}
+
+	protected IfStatement parseIf(IfStContext ctx)
 	{
 		ParExpressionContext pe = ctx.parExpression();
 		ExpressionContext expCtx = pe.expression();
@@ -188,6 +208,28 @@ public class AntlrProgramBuilder
 			elseStat = this.parseStatment(ifStatCtx);
 		}
 		return new IfStatement(exp, ifStat, elseStat, this.getBTToken(ctx.If().getSymbol()));
+	}
+
+	protected String getID(List<TerminalNode> ids)
+	{
+		StringBuilder sb = new StringBuilder();
+		for (TerminalNode n : ids)
+		{
+			sb.append(n.getSymbol().getText()).append(".");
+		}
+		sb.setLength(sb.length() - 1);
+		return sb.toString();
+	}
+
+	protected Expression[] getExprssionList(ExpressionListContext expListCtx)
+	{
+		List<ExpressionContext> ecList = expListCtx.expression();
+		Expression[] exps = new Expression[ecList.size()];
+		for (int i = 0; i < ecList.size(); i++)
+		{
+			exps[i] = this.parseExpress(ecList.get(i));
+		}
+		return exps;
 	}
 
 	protected ForStatement parseForSt(ForStContext ctx)
@@ -308,7 +350,11 @@ public class AntlrProgramBuilder
 			ParExpContext par = (ParExpContext) ctx;
 			return this.parseExpress(par.expression());
 		}
-
+		else if (ctx instanceof FunctionCallExpContext)
+		{
+			FunctionCallExpContext fceCtx = (FunctionCallExpContext) ctx;
+			return this.parseFunExp(fceCtx.functionCall());
+		}
 		else
 		{
 			throw new UnsupportedOperationException();
@@ -412,8 +458,26 @@ public class AntlrProgramBuilder
 
 		}
 		List<VarAttributeContext> list = varRef.varAttribute();
+		VarAttribute[] vas = this.parseVarAttribute(list);
+		if (vas.length > 0)
+		{
+			VarAttribute first = vas[0];
+			if (!(first instanceof VarSquareAttribute || first instanceof VarVirtualAttribute))
+			{
+				pbCtx.setVarAttr(varRef.Identifier().getText(), first.token.text);
+			}
+
+		}
+
+		VarRef var = new VarRef(vas, safeExp, this.getBTToken(varRef.Identifier().getSymbol()));
+		pbCtx.setVarPosition(varRef.Identifier().getText(), var);
+		return var;
+	}
+
+	protected VarAttribute[] parseVarAttribute(List<VarAttributeContext> list)
+	{
 		List<VarAttribute> listVarAttr = new ArrayList<VarAttribute>();
-		boolean isFirstAttr = true;
+
 		for (VarAttributeContext vac : list)
 		{
 			if (vac instanceof VarAttributeGeneralContext)
@@ -421,11 +485,6 @@ public class AntlrProgramBuilder
 				VarAttributeGeneralContext zf = (VarAttributeGeneralContext) vac;
 				VarAttribute attr = new VarAttribute(this.getBTToken(zf.Identifier().getSymbol()));
 				listVarAttr.add(attr);
-				if (isFirstAttr)
-				{
-					pbCtx.setVarAttr(varRef.Identifier().getText(), zf.Identifier().getText());
-					isFirstAttr = false;
-				}
 				attr.setAA(ObjectAA.defaultObjectAA());
 
 			}
@@ -443,10 +502,8 @@ public class AntlrProgramBuilder
 			}
 		}
 
-		VarRef var = new VarRef(listVarAttr.toArray(new VarAttribute[0]), safeExp, this.getBTToken(varRef.Identifier()
-				.getSymbol()));
-		pbCtx.setVarPosition(varRef.Identifier().getText(), var);
-		return var;
+		return listVarAttr.toArray(new VarVirtualAttribute[0]);
+
 	}
 
 	protected Expression parseLiteralExpress(LiteralExpContext ctx)

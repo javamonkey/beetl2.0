@@ -30,44 +30,53 @@ package org.beetl.ext.fn;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import org.bee.tl.core.BeeNumber;
-import org.bee.tl.core.Context;
-import org.bee.tl.core.Function;
-import org.bee.tl.core.number.NumberFactory;
+import org.beetl.core.Context;
+import org.beetl.core.Function;
 
 /**
- * 截取数字，剩下指定位数,如果输入0，则取整
+ * 截取数字，剩下指定位数,如果输入0，则取整，因为这个仅仅用于输出，所以建议用format函数定制
  * 如
  * ${trunc(12.333,1)},输出是12.3
  *
  */
+@Deprecated
 public class TruncFunction implements Function
 {
 
-	public BeeNumber call(Object[] paras, Context ctx)
+	public Number call(Object[] paras, Context ctx)
 	{
-		BeeNumber n = (BeeNumber) paras[0];
+		Number n = (Number) paras[0];
 		int pos = 0;
 		if (paras.length != 1)
 		{
-			pos = ((BeeNumber) paras[1]).intValue();			
+			pos = ((Number) paras[1]).intValue();
 		}
-		//@todo ,得到正确的Number工厂
+
 		if (pos == 0)
-			return NumberFactory.big.y(n.longValue());
+			return n.longValue();
 		else
 		{
-			BigDecimal c = n.getBigDecimal().setScale(pos, RoundingMode.UP);
-			
-			return NumberFactory.big.y(c);
+
+			if (n instanceof BigDecimal)
+			{
+				BigDecimal c = ((BigDecimal) n).setScale(pos, RoundingMode.UP);
+				return c;
+			}
+			else
+			{
+				//todo:还原成输入类型
+				BigDecimal c = new BigDecimal(n.doubleValue());
+				return ((BigDecimal) n).setScale(pos, RoundingMode.UP).doubleValue();
+
+			}
+
 		}
 
 	}
 
 	public static void main(String[] args)
 	{
-		
-		
+
 		BigDecimal b = new BigDecimal("1212.2632");
 		//		b.setScale(0);
 		BigDecimal c = b.setScale(1, RoundingMode.UP);

@@ -2,7 +2,7 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 
-public class Expression extends ASTNode
+public abstract class Expression extends ASTNode
 {
 
 	public Type type = null;

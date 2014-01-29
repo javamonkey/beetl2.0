@@ -52,7 +52,7 @@ public class Println implements Function
 			try
 			{
 				w.write(o.toString());
-				//w.write(cr);
+				w.write(ctx.template.program.metaData.lineSeparator);
 			}
 			catch (IOException e)
 			{

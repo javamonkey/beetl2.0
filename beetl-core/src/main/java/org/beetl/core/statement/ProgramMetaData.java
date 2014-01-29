@@ -9,6 +9,9 @@ import org.beetl.core.util.ObjectUtil;
 
 public class ProgramMetaData implements java.io.Serializable
 {
+
+	public String lineSeparator = null;
+
 	public Statement[] statements = null;
 
 	// 模板静态数据
@@ -63,7 +66,14 @@ public class ProgramMetaData implements java.io.Serializable
 	{
 		Map<String, Object> globalVar = ctx.globalVar;
 		if (globalVar == null)
+		{
+			for (int i = 0; i < this.tempVarStartIndex; i++)
+			{
+				ctx.vars[i] = ctx.NOT_EXIST_OBJECT;
+			}
 			return;
+		}
+
 		for (Entry<String, Integer> entry : globalIndexMap.entrySet())
 		{
 			String key = entry.getKey();

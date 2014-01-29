@@ -33,7 +33,9 @@ import org.beetl.core.parser.BeetlParser.ParExpContext;
 import org.beetl.core.parser.BeetlParser.ParExpressionContext;
 import org.beetl.core.parser.BeetlParser.ReturnStContext;
 import org.beetl.core.parser.BeetlParser.StatementContext;
+import org.beetl.core.parser.BeetlParser.StatementExpressionContext;
 import org.beetl.core.parser.BeetlParser.StaticOutputStContext;
+import org.beetl.core.parser.BeetlParser.StatmentExpStContext;
 import org.beetl.core.parser.BeetlParser.TernaryExpContext;
 import org.beetl.core.parser.BeetlParser.TextOutputStContext;
 import org.beetl.core.parser.BeetlParser.TextStatmentContext;
@@ -64,6 +66,7 @@ import org.beetl.core.statement.ProgramMetaData;
 import org.beetl.core.statement.ReturnStatement;
 import org.beetl.core.statement.SafePlaceholderST;
 import org.beetl.core.statement.Statement;
+import org.beetl.core.statement.StatementExpression;
 import org.beetl.core.statement.StaticTextASTNode;
 import org.beetl.core.statement.TernaryExpression;
 import org.beetl.core.statement.VarAssignStatement;
@@ -172,6 +175,14 @@ public class AntlrProgramBuilder
 			FunctionStatement fs = new FunctionStatement(fn, null);
 			return fs;
 
+		}
+		else if (node instanceof StatmentExpStContext)
+		{
+
+			StatementExpressionContext sec = ((StatmentExpStContext) node).statementExpression();
+			Expression expression = this.parseExpress(sec.expression());
+			StatementExpression se = new StatementExpression(expression, null);
+			return se;
 		}
 		else
 		{

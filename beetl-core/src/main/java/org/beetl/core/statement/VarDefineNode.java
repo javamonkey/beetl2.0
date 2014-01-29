@@ -1,6 +1,7 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
+import org.beetl.core.InferContext;
 
 public class VarDefineNode extends Expression implements IVarIndex
 {
@@ -31,6 +32,13 @@ public class VarDefineNode extends Expression implements IVarIndex
 	public int getVarIndex()
 	{
 		return varIndex;
+	}
+
+	@Override
+	public void infer(InferContext inferCtx)
+	{
+		// TODO Auto-generated method stub
+
 	}
 
 }

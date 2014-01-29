@@ -1,6 +1,7 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
+import org.beetl.core.InferContext;
 
 public class VarTemplateAssignStatement extends Expression
 {
@@ -18,6 +19,14 @@ public class VarTemplateAssignStatement extends Expression
 	{
 		// 初始化一个临时的bytewrite
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void infer(InferContext inferCtx)
+	{
+		// 初始化一个临时的bytewrite
+		throw new UnsupportedOperationException();
+
 	}
 
 }

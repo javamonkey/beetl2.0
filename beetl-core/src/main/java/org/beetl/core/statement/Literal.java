@@ -1,6 +1,7 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
+import org.beetl.core.InferContext;
 
 public class Literal extends Expression
 {
@@ -21,7 +22,7 @@ public class Literal extends Expression
 		return obj;
 	}
 
-	public void infer(Type[] types, Object temp)
+	public void infer(InferContext inferCtx)
 	{
 		this.type = new Type(obj.getClass());
 	}

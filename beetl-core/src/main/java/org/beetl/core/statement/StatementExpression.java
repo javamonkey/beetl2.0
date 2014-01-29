@@ -3,26 +3,29 @@ package org.beetl.core.statement;
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
 
-public class ReturnStatement extends Statement
+public class StatementExpression extends Statement
 {
 
-	public ReturnStatement(Token token)
+	Expression exp;
+
+	public StatementExpression(Expression exp, Token token)
 	{
 		super(token);
-		// TODO Auto-generated constructor stub
+		this.exp = exp;
+
 	}
 
 	@Override
 	public void execute(Context ctx)
 	{
-		ctx.gotoFlag = IGoto.RETURN;
+		exp.evaluate(ctx);
 
 	}
 
 	@Override
 	public void infer(InferContext inferCtx)
 	{
-		// TODO Auto-generated method stub
+		exp.infer(inferCtx);
 
 	}
 

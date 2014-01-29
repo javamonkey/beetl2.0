@@ -94,6 +94,7 @@ public class TypeBindingFilter extends Filter
 
 		InferContext ctx = new InferContext();
 		ctx.types = types;
+		ctx.gt = this.program.gt;
 		for (Statement st : this.program.metaData.statements)
 		{
 			st.infer(ctx);

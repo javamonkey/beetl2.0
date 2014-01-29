@@ -31,7 +31,7 @@ public class FunctionExpression extends Expression
 		Function fn = ctx.gt.getFunction(name);
 		if (fn == null)
 		{
-			throw new TempException("fn:" + name + "isNull");
+			throw new TempException("fn:" + name + " is Null");
 		}
 
 		Object[] paras = new Object[exps.length];

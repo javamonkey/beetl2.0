@@ -90,13 +90,4 @@ public class DecodeFunction implements Function
 		}
 	}
 
-	public static void main(String args[])
-	{
-		DecodeFunction f = new DecodeFunction();
-		int a = 5;
-		Object result = f.call(new Object[]
-		{ a, 1, "a=1", 2, "a=2", "不知道了", 1 }, null);
-		System.out.println(result);
-
-	}
 }

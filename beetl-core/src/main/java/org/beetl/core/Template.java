@@ -14,9 +14,9 @@ import org.beetl.core.statement.Program;
 
 public class Template
 {
-	protected Program program;
-	protected Configuration cf;
-	protected GroupTemplate gt;
+	public Program program;
+	public Configuration cf;
+	public GroupTemplate gt;
 
 	Context ctx = new Context();
 
@@ -24,6 +24,7 @@ public class Template
 	{
 		this.program = program;
 		this.cf = cf;
+		this.gt = gt;
 	}
 
 	/**
@@ -69,8 +70,10 @@ public class Template
 		ctx.byteWriter = byteWriter;
 		ctx.byteOutputMode = cf.directByteOutput;
 		ctx.gt = this.gt;
+		ctx.template = this;
 		program.metaData.initContext(ctx);
 		program.execute(ctx);
+
 		try
 		{
 			byteWriter.flush();

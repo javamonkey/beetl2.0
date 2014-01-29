@@ -1,6 +1,7 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
+import org.beetl.core.InferContext;
 
 public class VarAssignNullStatment extends Statement
 {
@@ -18,6 +19,13 @@ public class VarAssignNullStatment extends Statement
 	{
 		// TODO Auto-generated method stub
 		ctx.vars[varIndex] = null;
+
+	}
+
+	@Override
+	public void infer(InferContext inferCtx)
+	{
+		// TODO Auto-generated method stub
 
 	}
 

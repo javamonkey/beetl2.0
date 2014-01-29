@@ -15,6 +15,8 @@ public class Context
 
 	public ByteWriter byteWriter;
 
+	public Template template;
+
 	public GroupTemplate gt = null;
 	/* 全局变量 */
 	public Map<String, Object> globalVar;

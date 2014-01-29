@@ -14,6 +14,18 @@ import org.beetl.core.event.Listener;
 import org.beetl.core.exception.HTMLTagParserException;
 import org.beetl.core.exception.TempException;
 import org.beetl.core.statement.Program;
+import org.beetl.ext.fn.AssertFunction;
+import org.beetl.ext.fn.CheckExistFunction;
+import org.beetl.ext.fn.DateFunction;
+import org.beetl.ext.fn.DebugFunction;
+import org.beetl.ext.fn.DecodeFunction;
+import org.beetl.ext.fn.EmptyFunction;
+import org.beetl.ext.fn.NVLFunction;
+import org.beetl.ext.fn.Print;
+import org.beetl.ext.fn.Printf;
+import org.beetl.ext.fn.Println;
+import org.beetl.ext.fn.QuestionMark;
+import org.beetl.ext.fn.TruncFunction;
 
 public class GroupTemplate
 {
@@ -42,6 +54,36 @@ public class GroupTemplate
 		this.resourceLoader = loader;
 		this.conf = conf;
 		engine = TemplateEngineFactory.getEngine();
+		this.initFunction();
+		this.initFormatter();
+		this.initTag();
+	}
+
+	protected void initFunction()
+	{
+		this.registerFunction("date", new DateFunction());
+		this.registerFunction("nvl", new NVLFunction());
+		this.registerFunction("debug", new DebugFunction());
+		this.registerFunction("exist", new CheckExistFunction());
+		this.registerFunction("printf", new Printf());
+		this.registerFunction("decode", new DecodeFunction());
+		this.registerFunction("assert", new AssertFunction());
+		this.registerFunction("print", new Print());
+		this.registerFunction("println", new Println());
+		this.registerFunction("prinf", new Printf());
+		this.registerFunction("trunc", new TruncFunction());
+		this.registerFunction("empty", new EmptyFunction());
+		this.registerFunction("qmark", new QuestionMark());
+	}
+
+	protected void initFormatter()
+	{
+
+	}
+
+	protected void initTag()
+	{
+
 	}
 
 	/**
@@ -106,7 +148,7 @@ public class GroupTemplate
 		}
 
 		Program program = engine.createProgram(res.getId(), scriptReader, sf.textMap, this);
-
+		program.metaData.lineSeparator = sf.lineSeparator;
 		return program;
 
 	}

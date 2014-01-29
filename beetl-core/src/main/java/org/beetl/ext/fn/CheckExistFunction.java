@@ -43,10 +43,13 @@ public class CheckExistFunction implements Function
 	public Boolean call(Object[] paras, Context ctx)
 	{
 
+		if (ctx.globalVar == null)
+			return false;
 		String key = null;
 		for (Object o : paras)
 		{
 			key = (String) o;
+
 			if (ctx.globalVar.containsKey(key))
 			{
 				continue;

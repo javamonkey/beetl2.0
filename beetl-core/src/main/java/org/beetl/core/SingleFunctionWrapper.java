@@ -4,12 +4,18 @@ import java.lang.reflect.Method;
 
 import org.beetl.core.exception.TempException;
 
+/**
+ * 
+ * @author joelli
+ *
+ */
 public class SingleFunctionWrapper extends FunctionWrapper
 {
 	Method m;
 
-	public SingleFunctionWrapper(Object target, Method m)
+	public SingleFunctionWrapper(String funName, Object target, Method m)
 	{
+		super(funName);
 		this.target = target;
 		this.m = m;
 		this.requiredContext = this.checkContextRequried(m.getParameterTypes());

@@ -222,6 +222,24 @@ public class GroupTemplate
 		this.fnMap.put(name, fn);
 	}
 
+	/**
+	 * 注册一个function包，包名由packageName指定，方法名是对象o里的所有方法
+	 * 如果方法定义为void，则方法返回null，如果方法参数最后一个Context，则传入一个Context
+	 * 
+	 * @param packageName
+	 * @param o
+	 */
+	public void registerFunctionPackage(String packageName, Object o)
+	{
+
+		List<FunctionWrapper> list = FunctionWrapper.getFunctionWrapper(packageName, o);
+		for (FunctionWrapper fw : list)
+		{
+			this.registerFunction(fw.functionName, fw);
+		}
+
+	}
+
 	public Function getFunction(String name)
 	{
 		Function fn = fnMap.get(name);

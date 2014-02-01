@@ -2,6 +2,7 @@ package org.beetl.core;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,9 +16,29 @@ public class MutipleFunctionWrapper extends FunctionWrapper
 	Method[] ms = null;
 	HashMap<Integer, List<MethodContext>> map = new HashMap<Integer, List<MethodContext>>();
 
-	public MutipleFunctionWrapper(Object target, Method[] ms)
+	public MutipleFunctionWrapper(String funName, Object target, Method[] ms)
 	{
+		super(funName);
 		this.ms = ms;
+		for (Method m : ms)
+		{
+			Class[] paraType = m.getParameterTypes();
+			MethodContext mc = new MethodContext();
+			mc.m = m;
+			mc.parasType = paraType;
+			if (paraType.length != 0 && paraType[paraType.length - 1] == Context.class)
+			{
+				mc.contextRequired = true;
+			}
+			List<MethodContext> list = map.get(paraType.length);
+			if (list == null)
+			{
+				list = new ArrayList<MethodContext>();
+				map.put(paraType.length, list);
+			}
+			list.add(mc);
+
+		}
 
 	}
 

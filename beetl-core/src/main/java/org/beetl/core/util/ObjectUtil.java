@@ -14,7 +14,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ObjectUtil
 {
@@ -61,6 +64,27 @@ public class ObjectUtil
 		StringBuilder mbuffer = new StringBuilder("is");
 		mbuffer.append(attrName.substring(0, 1).toUpperCase()).append(attrName.substring(1));
 		return mbuffer.toString();
+	}
+
+	/**得到对象自己的所有public方法
+	 * @param o
+	 * @return
+	 */
+	public static Method[] getSelfPublicMethod(Object o)
+	{
+		Class c = o.getClass();
+		Method[] ms = o.getClass().getMethods();
+		List list = new ArrayList();
+		for (Method m : ms)
+		{
+			int mod = m.getModifiers();
+			if (m.getDeclaringClass().equals(c) && Modifier.isPublic(mod) && !Modifier.isStatic(mod))
+			{
+				list.add(m);
+			}
+
+		}
+		return (Method[]) list.toArray(new Method[0]);
 	}
 
 	/**看给定的参数是否匹配给定方法的前parameterCount参数 joelli

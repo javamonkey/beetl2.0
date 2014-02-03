@@ -13,7 +13,7 @@ public class Token implements Cloneable, java.io.Serializable
 		this.col = col;
 	}
 
-	public static Token createErrorToken(String tagName, int line)
+	public static Token createToken(String tagName, int line)
 	{
 		return new Token(tagName, line, 1);
 	}

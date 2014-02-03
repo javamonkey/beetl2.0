@@ -20,6 +20,7 @@ public class MutipleFunctionWrapper extends FunctionWrapper
 	{
 		super(funName);
 		this.ms = ms;
+		this.target = target;
 		for (Method m : ms)
 		{
 			Class[] paraType = m.getParameterTypes();

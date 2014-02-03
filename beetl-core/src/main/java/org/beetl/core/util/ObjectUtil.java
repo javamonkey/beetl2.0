@@ -143,7 +143,7 @@ public class ObjectUtil
 				continue;
 			}
 
-			else if (paras[j].isPrimitive())
+			else if (paras[j].isPrimitive() && Number.class.isAssignableFrom(parameterType[j]))
 			{
 
 				if (paras[j] == int.class)
@@ -167,7 +167,7 @@ public class ObjectUtil
 					convert[j] = SHORT_CONVERT;
 				}
 			}
-			else if (Number.class.isAssignableFrom(paras[j]))
+			else if (Number.class.isAssignableFrom(paras[j]) && Number.class.isAssignableFrom(parameterType[j]))
 			{
 				if (paras[j] == Integer.class)
 				{

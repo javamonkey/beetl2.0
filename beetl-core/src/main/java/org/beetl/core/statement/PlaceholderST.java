@@ -11,9 +11,12 @@ public final class PlaceholderST extends Statement
 
 	public Expression expression;
 
-	public PlaceholderST(Expression exp, Token token)
+	FormatExpression format;
+
+	public PlaceholderST(Expression exp, FormatExpression format, Token token)
 	{
 		super(token);
+		this.format = format;
 		this.expression = exp;
 
 	}
@@ -24,6 +27,10 @@ public final class PlaceholderST extends Statement
 		Object value = expression.evaluate(ctx);
 		try
 		{
+			if (format != null)
+			{
+				value = format.evaluateValue(value, ctx);
+			}
 			ctx.byteWriter.write(value);
 		}
 		catch (IOException e)

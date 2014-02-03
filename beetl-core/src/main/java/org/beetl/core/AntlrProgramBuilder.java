@@ -25,7 +25,7 @@ import org.beetl.core.parser.BeetlParser.ForControlContext;
 import org.beetl.core.parser.BeetlParser.ForStContext;
 import org.beetl.core.parser.BeetlParser.FunctionCallContext;
 import org.beetl.core.parser.BeetlParser.FunctionCallExpContext;
-import org.beetl.core.parser.BeetlParser.FunctionCallStContext;
+import org.beetl.core.parser.BeetlParser.FunctionNsContext;
 import org.beetl.core.parser.BeetlParser.IfStContext;
 import org.beetl.core.parser.BeetlParser.LiteralExpContext;
 import org.beetl.core.parser.BeetlParser.MuldivmodExpContext;
@@ -56,8 +56,8 @@ import org.beetl.core.statement.CompareExpression;
 import org.beetl.core.statement.ContinueStatement;
 import org.beetl.core.statement.Expression;
 import org.beetl.core.statement.ForStatement;
+import org.beetl.core.statement.FormatExpression;
 import org.beetl.core.statement.FunctionExpression;
-import org.beetl.core.statement.FunctionStatement;
 import org.beetl.core.statement.IGoto;
 import org.beetl.core.statement.IfStatement;
 import org.beetl.core.statement.Literal;
@@ -82,6 +82,8 @@ public class AntlrProgramBuilder
 
 	ProgramMetaData data = new ProgramMetaData();
 	ProgramBuilderContext pbCtx = new ProgramBuilderContext();
+
+	Expression[] EMPTY_EXPRESSION = new Expression[0];
 
 	public AntlrProgramBuilder()
 	{
@@ -167,15 +169,7 @@ public class AntlrProgramBuilder
 		{
 			return parseIf((IfStContext) node);
 		}
-		else if (node instanceof FunctionCallStContext)
-		{
-			FunctionCallStContext st = (FunctionCallStContext) node;
-			FunctionCallContext fcc = st.functionCall();
-			FunctionExpression fn = parseFunExp(fcc);
-			FunctionStatement fs = new FunctionStatement(fn, null);
-			return fs;
 
-		}
 		else if (node instanceof StatmentExpStContext)
 		{
 
@@ -234,6 +228,9 @@ public class AntlrProgramBuilder
 
 	protected Expression[] getExprssionList(ExpressionListContext expListCtx)
 	{
+
+		if (expListCtx == null)
+			return EMPTY_EXPRESSION;
 		List<ExpressionContext> ecList = expListCtx.expression();
 		Expression[] exps = new Expression[ecList.size()];
 		for (int i = 0; i < ecList.size(); i++)
@@ -279,6 +276,7 @@ public class AntlrProgramBuilder
 	{
 
 		TextStatmentContext tsc = ctx.textStatment();
+		FormatExpression format = null;
 		boolean isSafe = false;
 		if (tsc.NOT() != null)
 		{
@@ -287,19 +285,42 @@ public class AntlrProgramBuilder
 		TextVarContext tvc = tsc.textVar();
 		if (tvc.COMMA() != null)
 		{
+			String formatName = null;
+			String pattern = null;
+			String tokenName = null;
+			int line = 0;
 			TextformatContext tfc = tvc.textformat();
-			// todo ignore
+			TerminalNode node = tfc.StringLiteral();
+			if (node != null)
+			{
+				tokenName = pattern = getStringValue(node.getText());
+				line = node.getSymbol().getLine();
+
+			}
+
+			FunctionNsContext fnsc = tfc.functionNs();
+			if (fnsc != null)
+			{
+				List<TerminalNode> listId = fnsc.Identifier();
+				formatName = this.getID(listId);
+				tokenName = formatName;
+				line = listId.get(0).getSymbol().getLine();
+
+			}
+			format = new FormatExpression(formatName, pattern, org.beetl.core.statement.Token.createToken(tokenName,
+					line));
+
 		}
 
 		Expression exp = this.parseExpress(tvc.expression());
 		if (isSafe)
 		{
-			SafePlaceholderST placeholder = new SafePlaceholderST(exp, null);
+			SafePlaceholderST placeholder = new SafePlaceholderST(exp, format, null);
 			return placeholder;
 		}
 		else
 		{
-			PlaceholderST placeholder = new PlaceholderST(exp, null);
+			PlaceholderST placeholder = new PlaceholderST(exp, format, null);
 			return placeholder;
 		}
 	}
@@ -531,7 +552,7 @@ public class AntlrProgramBuilder
 			switch (type)
 			{
 				case BeetlParser.StringLiteral:
-					value = strValue.substring(1, strValue.length() - 1);
+					value = getStringValue(strValue);
 					break;
 				case BeetlParser.FloatingPointLiteral:
 					char c = strValue.charAt(strValue.length() - 1);
@@ -575,6 +596,11 @@ public class AntlrProgramBuilder
 		Literal literal = new Literal(value, null);
 		return literal;
 
+	}
+
+	private String getStringValue(String strValue)
+	{
+		return strValue.substring(1, strValue.length() - 1);
 	}
 
 	private boolean isHighScaleNumber(String strValue)

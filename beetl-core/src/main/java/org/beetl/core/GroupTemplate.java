@@ -26,6 +26,8 @@ import org.beetl.ext.fn.Printf;
 import org.beetl.ext.fn.Println;
 import org.beetl.ext.fn.QuestionMark;
 import org.beetl.ext.fn.TruncFunction;
+import org.beetl.ext.format.DateFormat;
+import org.beetl.ext.format.NumberFormat;
 
 public class GroupTemplate
 {
@@ -39,6 +41,8 @@ public class GroupTemplate
 	List<Listener> ls = new ArrayList<Listener>();
 	//所有注册的方法
 	Map<String, Function> fnMap = new HashMap<String, Function>();
+	Map<String, Format> formatMap = new HashMap<String, Format>();
+	Map<Class, Format> defaultFormatMap = new HashMap<Class, Format>(0);
 
 	/**
 	 * 使用loader 和 conf初始化GroupTempalte
@@ -78,6 +82,33 @@ public class GroupTemplate
 
 	protected void initFormatter()
 	{
+		// format
+		Format dateForamt = new DateFormat();
+		Format numberFormat = new NumberFormat();
+
+		this.registerFormat("dateFormat", dateForamt);
+		this.registerFormat("numberFormat", numberFormat);
+
+		this.registerDefaultFormat(java.util.Date.class, dateForamt);
+		this.registerDefaultFormat(java.sql.Date.class, dateForamt);
+		this.registerDefaultFormat(java.sql.Time.class, dateForamt);
+		this.registerDefaultFormat(java.sql.Timestamp.class, dateForamt);
+
+		this.registerDefaultFormat(java.lang.Short.class, numberFormat);
+		this.registerDefaultFormat(java.lang.Long.class, numberFormat);
+		this.registerDefaultFormat(java.lang.Integer.class, numberFormat);
+		this.registerDefaultFormat(java.lang.Float.class, numberFormat);
+		this.registerDefaultFormat(java.lang.Double.class, numberFormat);
+		this.registerDefaultFormat(short.class, numberFormat);
+		this.registerDefaultFormat(long.class, numberFormat);
+		this.registerDefaultFormat(int.class, numberFormat);
+		this.registerDefaultFormat(float.class, numberFormat);
+		this.registerDefaultFormat(double.class, numberFormat);
+
+		this.registerDefaultFormat(java.math.BigInteger.class, numberFormat);
+		this.registerDefaultFormat(java.math.BigDecimal.class, numberFormat);
+		this.registerDefaultFormat(java.util.concurrent.atomic.AtomicLong.class, numberFormat);
+		this.registerDefaultFormat(java.util.concurrent.atomic.AtomicInteger.class, numberFormat);
 
 	}
 
@@ -240,10 +271,38 @@ public class GroupTemplate
 
 	}
 
+	/**
+	 * 注册一个自定义格式化函数，参考{@link org.bee.tl.ext.DateFormat}
+	 * 
+	 * @param name
+	 * @param format
+	 */
+	public void registerFormat(String name, Format format)
+	{
+
+		this.formatMap.put(name, format);
+	}
+
+	public void registerDefaultFormat(Class type, Format format)
+	{
+		this.defaultFormatMap.put(type, format);
+	}
+
 	public Function getFunction(String name)
 	{
 		Function fn = fnMap.get(name);
 		return fn;
+	}
+
+	public Format getFormat(String name)
+	{
+		return formatMap.get(name);
+	}
+
+	public Format getDefaultFormat(Class type)
+	{
+		return this.defaultFormatMap.get(type);
+
 	}
 
 }

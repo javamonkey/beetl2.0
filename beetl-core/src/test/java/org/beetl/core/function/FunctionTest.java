@@ -28,4 +28,17 @@ public class FunctionTest extends BasicTestCase
 		str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/function/function_expected.html"), str);
 	}
+
+	public void testPackage() throws Exception
+	{
+		gt.registerFunctionPackage("test", new SampleFunctionPackage());
+		Template t = gt.getTemplate("/function/function_package_template.html");
+		String str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/function/function_package_expected.html"), str);
+
+		t = gt.getTemplate("/function/function_package_template.html");
+		str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/function/function_package_expected.html"), str);
+
+	}
 }

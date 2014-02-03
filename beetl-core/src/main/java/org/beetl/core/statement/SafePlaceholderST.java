@@ -7,11 +7,13 @@ public class SafePlaceholderST extends Statement
 {
 
 	public Expression exp;
+	FormatExpression format;
 
-	public SafePlaceholderST(Expression exp, Token token)
+	public SafePlaceholderST(Expression exp, FormatExpression format, Token token)
 	{
 		super(token);
 		this.exp = exp;
+		this.format = format;
 	}
 
 	@Override
@@ -20,11 +22,15 @@ public class SafePlaceholderST extends Statement
 		try
 		{
 			Object value = exp.evaluate(ctx);
+			if (format != null)
+			{
+				value = format.evaluateValue(value, ctx);
+			}
 			ctx.byteWriter.write(value);
 		}
 		catch (Exception ex)
 		{
-
+			//
 		}
 
 	}

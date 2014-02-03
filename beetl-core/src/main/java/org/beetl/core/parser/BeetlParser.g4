@@ -36,7 +36,7 @@ statement
     |   Directive  directiveExp #directiveSt 
     |   assignMent END  #assignSt
     |   functionTagCall #functionTagSt
-    |   functionCall #functionCallSt
+    //|   functionCall #functionCallSt
     |   statementExpression END   #statmentExpSt 
       
     ;
@@ -114,7 +114,7 @@ textVar
 :	b=expression  (COMMA textformat)?
 ;
 textformat:
-        fm=functionNs (ASSIN StringLiteral)
+        fm=functionNs (ASSIN StringLiteral)?
         | StringLiteral  ;
 
 constantsTextStatment

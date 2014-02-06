@@ -65,10 +65,12 @@ public class AAFilter extends Filter implements Executor
 				if (attr.getClass() == VarAttribute.class)
 				{
 					Type type = attr.type;
+
 					String name = attr.token != null ? attr.token.text : null;
 					// 换成速度较快的属性访问类
 					AA aa = AAFactory.buildFiledAccessor(type.cls, name);
 					attr.aa = aa;
+
 				}
 				else if (attr.getClass() == VarSquareAttribute.class)
 				{
@@ -107,7 +109,7 @@ public class AAFilter extends Filter implements Executor
 				else if (attr.getClass() == VarVirtualAttribute.class)
 				{
 					//对虚拟属性~size做优化
-					if (attr.token.text == "size")
+					if (attr.token.text.equals("size"))
 					{
 						//优化
 						Class c = attr.type.cls;

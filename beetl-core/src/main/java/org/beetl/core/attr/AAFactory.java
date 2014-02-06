@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.beetl.core.exception.TempException;
+import org.beetl.core.util.ObjectUtil;
 
 public class AAFactory
 {
@@ -99,13 +100,8 @@ public class AAFactory
 
 	public static FindResult findCommonInterfaceOrClass(Class c, String name)
 	{
-		StringBuilder mbuffer = new StringBuilder("get");
-		mbuffer.append(name.substring(0, 1).toUpperCase()).append(name.substring(1));
-		String getName = mbuffer.toString();
-		mbuffer = new StringBuilder("is");
-		mbuffer.append(name.substring(0, 1).toUpperCase()).append(name.substring(1));
-		String isName = mbuffer.toString();
-		FindResult findResult = findResult(c, getName, isName);
+
+		FindResult findResult = findResult(c, ObjectUtil.getMethod(name), ObjectUtil.getIsMethod(name));
 		return findResult;
 
 	}

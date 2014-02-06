@@ -116,7 +116,7 @@ public class TypeBindingFilter extends Filter
 				Object value = entry.getValue();
 				if (value != null)
 				{
-					type = new Type(Map.class, new Type(Map.Entry.class, key.getClass(), value.getClass()));
+					type = new Type(Map.class, key.getClass(), value.getClass());
 					return type;
 				}
 

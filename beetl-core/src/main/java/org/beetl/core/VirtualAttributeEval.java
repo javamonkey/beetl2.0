@@ -27,6 +27,7 @@
  */
 package org.beetl.core;
 
+
 /**
  * 虚拟属性
  * 
@@ -36,4 +37,6 @@ package org.beetl.core;
 public interface VirtualAttributeEval
 {
 	public Object eval(Object o, String attributeName, Context ctx);
+
+	public boolean isSupport(Class c, String attributeName);
 }

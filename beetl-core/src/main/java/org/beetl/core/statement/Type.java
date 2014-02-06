@@ -1,10 +1,10 @@
 package org.beetl.core.statement;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
 
 import org.beetl.core.IteratorStatus;
+import org.beetl.core.attr.MethodInvoker;
 import org.beetl.core.exception.TempException;
 import org.beetl.core.util.ObjectUtil;
 
@@ -99,54 +99,13 @@ public class Type implements java.io.Serializable
 		else
 		{
 
-			Method m = null;
-			try
+			MethodInvoker invoker = ObjectUtil.getInvokder(cls, attrName);
+			if (invoker == null)
 			{
-				m = cls.getMethod(ObjectUtil.getMethod(attrName), GetMethodPara);
-				Class returnCls = m.getReturnType();
-				return new Type(returnCls);
+				throw new TempException(cls + " 无" + attrName + "方法");
 			}
-			catch (NoSuchMethodException e1)
-			{
-
-			}
-			catch (SecurityException e1)
-			{
-
-			}
-
-			try
-			{
-				m = cls.getMethod(ObjectUtil.getIsMethod(attrName), GetMethodPara);
-				Class returnCls = m.getReturnType();
-				return new Type(returnCls);
-			}
-			catch (NoSuchMethodException e1)
-			{
-
-			}
-			catch (SecurityException e1)
-			{
-
-			}
-
-			try
-			{
-				m = cls.getMethod("get", StringPara);
-				Class returnCls = m.getReturnType();
-				return new Type(returnCls);
-			}
-			catch (NoSuchMethodException e)
-			{
-
-			}
-			catch (SecurityException e)
-			{
-
-			}
-
-			throw new TempException(cls + " 无" + attrName + "方法");
-
+			Class returnCls = invoker.getReturnType();
+			return new Type(returnCls);
 		}
 	}
 

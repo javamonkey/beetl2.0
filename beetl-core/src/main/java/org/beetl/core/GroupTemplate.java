@@ -3,6 +3,7 @@ package org.beetl.core;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,7 @@ public class GroupTemplate
 	Map<String, Function> fnMap = new HashMap<String, Function>();
 	Map<String, Format> formatMap = new HashMap<String, Format>();
 	Map<Class, Format> defaultFormatMap = new HashMap<Class, Format>(0);
+	List<VirtualAttributeEval> virtualAttributeList = new ArrayList<VirtualAttributeEval>();
 
 	/**
 	 * 使用loader 和 conf初始化GroupTempalte
@@ -61,6 +63,7 @@ public class GroupTemplate
 		this.initFunction();
 		this.initFormatter();
 		this.initTag();
+		this.initVirtual();
 	}
 
 	protected void initFunction()
@@ -115,6 +118,55 @@ public class GroupTemplate
 	protected void initTag()
 	{
 
+	}
+
+	protected void initVirtual()
+	{
+		// 可以根据类型做一定优化
+		this.registerVirtualAttributeEval(new VirtualAttributeEval() {
+			public Integer eval(Object o, String attributeName, Context ctx)
+			{
+				if (attributeName.equals("size"))
+				{
+					if (o instanceof Collection)
+					{
+						return ((Collection) o).size();
+					}
+					else if (o instanceof Map)
+					{
+						return ((Map) o).size();
+					}
+					else if (o.getClass().isArray())
+					{
+						return ((Object[]) o).length;
+
+					}
+					else
+					{
+						throw new IllegalArgumentException();
+					}
+
+				}
+				else
+				{
+					throw new IllegalArgumentException();
+				}
+
+			}
+
+			public boolean isSupport(Class c, String attributeName)
+			{
+				if ((Map.class.isAssignableFrom(c) || Collection.class.isAssignableFrom(c) || c.isArray())
+						&& attributeName.equals("size"))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		});
 	}
 
 	/**
@@ -303,6 +355,24 @@ public class GroupTemplate
 	{
 		return this.defaultFormatMap.get(type);
 
+	}
+
+	public void registerVirtualAttributeEval(VirtualAttributeEval e)
+	{
+		virtualAttributeList.add(e);
+
+	}
+
+	public VirtualAttributeEval getVirtualAttributeEval(Class c, String attributeName)
+	{
+		for (VirtualAttributeEval eval : virtualAttributeList)
+		{
+			if (eval.isSupport(c, attributeName))
+			{
+				return eval;
+			}
+		}
+		return null;
 	}
 
 }

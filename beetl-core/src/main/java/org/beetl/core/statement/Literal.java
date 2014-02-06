@@ -6,7 +6,7 @@ import org.beetl.core.InferContext;
 public class Literal extends Expression
 {
 
-	Object obj = null;
+	public Object obj = null;
 
 	public Literal(Object value, Token token)
 	{

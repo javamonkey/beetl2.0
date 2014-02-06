@@ -12,16 +12,18 @@ import org.beetl.core.exception.TempException;
 public class ClasspathResource extends Resource
 {
 	private String id;
+	String path = null;
 
-	public ClasspathResource(String key)
+	public ClasspathResource(String key, String path)
 	{
 		this.id = key;
+		this.path = path;
 	}
 
 	@Override
 	public Reader openReader()
 	{
-		InputStream is = ClasspathResource.class.getResourceAsStream(id);
+		InputStream is = ClasspathResource.class.getResourceAsStream(path);
 		if (is == null)
 		{
 			throw new TempException("classpath resource not found:" + id);

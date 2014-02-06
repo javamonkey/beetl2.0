@@ -129,7 +129,7 @@ public class AntlrProgramBuilder
 		else if (node instanceof BlockStContext)
 		{
 			BlockStContext bc = (BlockStContext) node;
-			Statement block = parseBlock(bc.block().statement());
+			Statement block = parseBlock(bc.block().statement(), node);
 			return block;
 		}
 		else if (node instanceof TextOutputStContext)
@@ -523,18 +523,22 @@ public class AntlrProgramBuilder
 			else if (vac instanceof VarAttributeArrayOrMapContext)
 			{
 				VarAttributeArrayOrMapContext zf = (VarAttributeArrayOrMapContext) vac;
+
 				Expression exp = this.parseExpress(zf.expression());
-				VarSquareAttribute attr = new VarSquareAttribute(exp, null);
+				VarSquareAttribute attr = new VarSquareAttribute(exp, this.getBTToken("[]", exp.token.line));
+				attr.setAA(ObjectAA.defaultObjectAA());
 				listVarAttr.add(attr);
 			}
 			else if (vac instanceof VarAttributeVirtualContext)
 			{
 				VarAttributeVirtualContext zf = (VarAttributeVirtualContext) vac;
 				VarVirtualAttribute attr = new VarVirtualAttribute(this.getBTToken(zf.Identifier().getSymbol()));
+
+				listVarAttr.add(attr);
 			}
 		}
 
-		return listVarAttr.toArray(new VarVirtualAttribute[0]);
+		return listVarAttr.toArray(new VarAttribute[0]);
 
 	}
 
@@ -593,7 +597,7 @@ public class AntlrProgramBuilder
 			value = Boolean.parseBoolean(strValue);
 		}
 
-		Literal literal = new Literal(value, null);
+		Literal literal = new Literal(value, this.getBTToken(ctx.getStart()));
 		return literal;
 
 	}
@@ -617,7 +621,7 @@ public class AntlrProgramBuilder
 		}
 	}
 
-	protected BlockStatement parseBlock(List list)
+	protected BlockStatement parseBlock(List list, ParserRuleContext ctx)
 	{
 		pbCtx.enterBlock();
 		ASTNode[] statements = new ASTNode[list.size()];
@@ -628,7 +632,7 @@ public class AntlrProgramBuilder
 
 		}
 
-		BlockStatement block = new BlockStatement(nodes.toArray(new Statement[0]), null);
+		BlockStatement block = new BlockStatement(nodes.toArray(new Statement[0]), this.getBTToken(ctx.getStart()));
 		switch (pbCtx.current.gotoValue)
 		{
 			case IGoto.NORMAL:
@@ -653,6 +657,12 @@ public class AntlrProgramBuilder
 	{
 		org.beetl.core.statement.Token token = new org.beetl.core.statement.Token(t.getText(), t.getLine(),
 				t.getCharPositionInLine());
+		return token;
+	}
+
+	public org.beetl.core.statement.Token getBTToken(String text, int line)
+	{
+		org.beetl.core.statement.Token token = org.beetl.core.statement.Token.createToken(text, line);
 		return token;
 	}
 

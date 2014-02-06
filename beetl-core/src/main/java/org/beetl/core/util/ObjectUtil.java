@@ -18,9 +18,17 @@ import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.beetl.core.attr.GeneralGetMethodInvoker;
+import org.beetl.core.attr.MethodInvoker;
+import org.beetl.core.attr.PojoMethodInvoker;
 
 public class ObjectUtil
 {
+	static Map<String, MethodInvoker> methodInvokerCache = new ConcurrentHashMap<String, MethodInvoker>();
+
 	public static Object copy(Object o)
 	{
 		if (o instanceof java.io.Serializable)
@@ -64,6 +72,76 @@ public class ObjectUtil
 		StringBuilder mbuffer = new StringBuilder("is");
 		mbuffer.append(attrName.substring(0, 1).toUpperCase()).append(attrName.substring(1));
 		return mbuffer.toString();
+	}
+
+	/** 得到一个可供调用get属性的invoker
+	 * @param c
+	 * @param name
+	 * @return
+	 */
+	public static MethodInvoker getInvokder(Class c, String name)
+	{
+		//先检测 get，然后 is，然后是general get
+
+		String key = c + "_" + name;
+		MethodInvoker invoker = methodInvokerCache.get(key);
+		if (invoker != null)
+		{
+			return invoker;
+		}
+		//try get
+		String methodName = getMethod(name);
+		Method method = getGetMethod(c, methodName, null);
+		if (method != null)
+		{
+			invoker = new PojoMethodInvoker(method);
+		}
+		else
+		{
+			methodName = getIsMethod(name);
+			method = getGetMethod(c, methodName, null);
+			if (method != null)
+			{
+				invoker = new PojoMethodInvoker(method);
+			}
+			else
+			{
+				method = getGetMethod(c, "get", new Class[]
+				{ String.class });
+				if (method != null)
+				{
+					invoker = new GeneralGetMethodInvoker(method, name);
+				}
+			}
+
+		}
+
+		if (invoker != null)
+		{
+			methodInvokerCache.put(key, invoker);
+			return invoker;
+		}
+		else
+		{
+			return null;
+		}
+
+	}
+
+	public static Method getGetMethod(Class c, String methodName, Class... paras)
+	{
+		try
+		{
+			return c.getMethod(methodName, paras);
+		}
+		catch (SecurityException e)
+		{
+			return null;
+		}
+		catch (NoSuchMethodException e)
+		{
+			return null;
+		}
 	}
 
 	/**得到对象自己的所有public方法

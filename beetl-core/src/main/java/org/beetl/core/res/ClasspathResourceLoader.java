@@ -1,7 +1,5 @@
 package org.beetl.core.res;
 
-import java.io.InputStream;
-
 import org.beetl.core.Resource;
 import org.beetl.core.ResourceLoader;
 
@@ -42,7 +40,7 @@ public class ClasspathResourceLoader implements ResourceLoader
 	public Resource getResource(String key)
 	{
 
-		Resource resource = new ClasspathResource(prefix + key);
+		Resource resource = new ClasspathResource(key, prefix + key);
 		return resource;
 	}
 

@@ -25,6 +25,11 @@ import org.beetl.core.statement.VarSquareAttribute;
 import org.beetl.core.statement.VarVirtualAttribute;
 import org.beetl.core.util.NumberUtil;
 
+/**
+ * 子类可继承此类，重载getMore，以及handleMore
+ * @author joelli
+ *
+ */
 public class AAFilter extends Filter implements Executor
 {
 
@@ -43,11 +48,36 @@ public class AAFilter extends Filter implements Executor
 		// 优化VarRef，和循环
 		Class[] matchClasses = new Class[]
 		{ VarRef.class, ForStatement.class };
+		Class[] more = this.getMore();
+
+		Class[] allMatchClasses = null;
+
+		if (more == null)
+		{
+			allMatchClasses = matchClasses;
+		}
+		else
+		{
+			allMatchClasses = new Class[matchClasses.length + more.length];
+			System.arraycopy(matchClasses, 0, allMatchClasses, 0, matchClasses.length);
+			System.arraycopy(matchClasses, matchClasses.length, more, 0, more.length);
+
+		}
 		seacher.match(program.metaData.statements, matchClasses, this);
 		// 替换成性能较好的
 		this.program.gt.getProgramCache().set(program.id, program);
 		ProgramReplaceEvent event = new ProgramReplaceEvent(program);
 		this.program.gt.fireEvent(event);
+
+	}
+
+	protected Class[] getMore()
+	{
+		return null;
+	}
+
+	protected void handleMore(ASTNode current, Stack<ASTNode> stack)
+	{
 
 	}
 
@@ -160,6 +190,10 @@ public class AAFilter extends Filter implements Executor
 				f.itType = IteratorStatus.GENERAL;
 			}
 
+		}
+		else
+		{
+			this.handleMore((ASTNode) o, stack);
 		}
 
 		return null;

@@ -21,9 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.beetl.core.attr.GeneralGetMethodInvoker;
-import org.beetl.core.attr.MethodInvoker;
-import org.beetl.core.attr.PojoMethodInvoker;
+import org.beetl.core.resolver.GeneralGetMethodInvoker;
+import org.beetl.core.resolver.MethodInvoker;
+import org.beetl.core.resolver.PojoMethodInvoker;
 
 public class ObjectUtil
 {

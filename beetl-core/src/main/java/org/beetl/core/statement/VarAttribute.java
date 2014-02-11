@@ -2,7 +2,7 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
-import org.beetl.core.attr.AA;
+import org.beetl.core.resolver.AA;
 
 public class VarAttribute extends Expression
 {

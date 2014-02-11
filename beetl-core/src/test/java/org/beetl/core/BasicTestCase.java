@@ -5,7 +5,7 @@ import java.io.Reader;
 
 import junit.framework.TestCase;
 
-import org.beetl.core.res.ClasspathResourceLoader;
+import org.beetl.core.resource.ClasspathResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

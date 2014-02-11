@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.beetl.core.IteratorStatus;
-import org.beetl.core.attr.MethodInvoker;
 import org.beetl.core.exception.TempException;
+import org.beetl.core.resolver.MethodInvoker;
 import org.beetl.core.util.ObjectUtil;
 
 /**

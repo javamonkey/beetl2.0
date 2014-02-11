@@ -3,9 +3,9 @@ package org.beetl.core;
 import java.io.Reader;
 import java.util.Map;
 
-import org.beetl.core.filter.AAFilter;
-import org.beetl.core.filter.Filter;
-import org.beetl.core.filter.TypeBindingFilter;
+import org.beetl.core.probe.BasicProgramOptProbe;
+import org.beetl.core.probe.Probe;
+import org.beetl.core.probe.TypeBindingProbe;
 import org.beetl.core.statement.Program;
 import org.beetl.core.statement.Statement;
 
@@ -17,17 +17,17 @@ public class FastRuntimeEngine extends DefaultTemplateEngine
 	{
 
 		Program program = super.createProgram(id, reader, textMap, gt);
-		Filter nextFilter = new AAFilter(program);
-		Filter filter = new TypeBindingFilter(program, nextFilter);
+		Probe nextFilter = new BasicProgramOptProbe(program);
+		Probe filter = new TypeBindingProbe(program, nextFilter);
 		FilterProgram filterProgram = new FilterProgram(program, filter);
 		return filterProgram;
 	}
 
 	class FilterProgram extends Program
 	{
-		Filter filter = null;
+		Probe filter = null;
 
-		public FilterProgram(Program program, Filter filter)
+		public FilterProgram(Program program, Probe filter)
 		{
 			this.metaData = program.metaData;
 			this.filter = filter;

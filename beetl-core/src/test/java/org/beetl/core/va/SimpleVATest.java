@@ -1,6 +1,8 @@
 package org.beetl.core.va;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.beetl.core.BasicTestCase;
 import org.beetl.core.Context;
@@ -12,44 +14,44 @@ import org.testng.annotations.Test;
 
 public class SimpleVATest extends BasicTestCase
 {
-	//	@Test
-	//	public void testUserAttribute() throws Exception
-	//	{
-	//
-	//		User user = User.getTestUser();
-	//
-	//		Template t = gt.getTemplate("/va/va_simple_template.html");
-	//		this.bind(t, "user", user);
-	//		String str = t.render();
-	//		AssertJUnit.assertEquals(this.getFileContent("/va/va_simple_expected.html"), str);
-	//
-	//		t = gt.getTemplate("/va/va_simple_template.html");
-	//		this.bind(t, "user", user);
-	//		str = t.render();
-	//		AssertJUnit.assertEquals(this.getFileContent("/va/va_simple_expected.html"), str);
-	//
-	//	}
+	@Test
+	public void testUserAttribute() throws Exception
+	{
 
-	//	@Test
-	//	public void testMapAttribute() throws Exception
-	//	{
-	//
-	//		User user = User.getTestUser();
-	//		Map map = new HashMap();
-	//		map.put("name", "joelli");
-	//		map.put("salary", 10000.01);
-	//
-	//		Template t = gt.getTemplate("/va/va_map_template.html");
-	//		this.bind(t, "user", user, "map", map);
-	//		String str = t.render();
-	//		AssertJUnit.assertEquals(this.getFileContent("/va/va_map_expected.html"), str);
-	//
-	//		t = gt.getTemplate("/va/va_map_template.html");
-	//		this.bind(t, "user", user, "map", map);
-	//		str = t.render();
-	//		AssertJUnit.assertEquals(this.getFileContent("/va/va_map_expected.html"), str);
-	//
-	//	}
+		User user = User.getTestUser();
+
+		Template t = gt.getTemplate("/va/va_simple_template.html");
+		this.bind(t, "user", user);
+		String str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/va/va_simple_expected.html"), str);
+
+		t = gt.getTemplate("/va/va_simple_template.html");
+		this.bind(t, "user", user);
+		str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/va/va_simple_expected.html"), str);
+
+	}
+
+	@Test
+	public void testMapAttribute() throws Exception
+	{
+
+		User user = User.getTestUser();
+		Map map = new HashMap();
+		map.put("name", "joelli");
+		map.put("salary", 10000.01);
+
+		Template t = gt.getTemplate("/va/va_map_template.html");
+		this.bind(t, "user", user, "map", map);
+		String str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/va/va_map_expected.html"), str);
+
+		t = gt.getTemplate("/va/va_map_template.html");
+		this.bind(t, "user", user, "map", map);
+		str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/va/va_map_expected.html"), str);
+
+	}
 
 	@Test
 	public void testVirtualAttribute() throws Exception

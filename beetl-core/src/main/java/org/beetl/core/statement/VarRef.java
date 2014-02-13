@@ -8,15 +8,17 @@ public class VarRef extends Expression implements IVarIndex
 {
 
 	public VarAttribute[] attributes;
-	public Expression safe = null;
+	public Expression safe;
 	int varIndex;
+	boolean hasSafe;
 
-	public VarRef(VarAttribute[] attributes, Expression safe, Token token)
+	public VarRef(VarAttribute[] attributes, boolean hasSafe, Expression safe, Token token)
 	{
 		super(token);
 
 		this.attributes = attributes;
 		this.safe = safe;
+		this.hasSafe = hasSafe;
 
 	}
 
@@ -27,9 +29,9 @@ public class VarRef extends Expression implements IVarIndex
 		Object value = ctx.vars[varIndex];
 		if (value == null || value == Context.NOT_EXIST_OBJECT)
 		{
-			if (safe != null)
+			if (hasSafe)
 			{
-				return safe.evaluate(ctx);
+				return safe == null ? null : safe.evaluate(ctx);
 			}
 			else if (ctx.safeOutput)
 			{
@@ -51,9 +53,9 @@ public class VarRef extends Expression implements IVarIndex
 
 			value = attr.evaluate(ctx, value);
 
-			if (value == null && safe != null)
+			if (value == null && hasSafe)
 			{
-				return safe.evaluate(ctx);
+				return safe == null ? null : safe.evaluate(ctx);
 			}
 		}
 		return value;

@@ -23,6 +23,7 @@ import org.beetl.core.parser.BeetlParser.CompareExpContext;
 import org.beetl.core.parser.BeetlParser.ConstantsTextStatmentContext;
 import org.beetl.core.parser.BeetlParser.ContinueStContext;
 import org.beetl.core.parser.BeetlParser.DirectiveExpContext;
+import org.beetl.core.parser.BeetlParser.DirectiveExpIDListContext;
 import org.beetl.core.parser.BeetlParser.DirectiveStContext;
 import org.beetl.core.parser.BeetlParser.ExpressionContext;
 import org.beetl.core.parser.BeetlParser.ExpressionListContext;
@@ -37,6 +38,7 @@ import org.beetl.core.parser.BeetlParser.MuldivmodExpContext;
 import org.beetl.core.parser.BeetlParser.ParExpContext;
 import org.beetl.core.parser.BeetlParser.ParExpressionContext;
 import org.beetl.core.parser.BeetlParser.ReturnStContext;
+import org.beetl.core.parser.BeetlParser.Safe_outputContext;
 import org.beetl.core.parser.BeetlParser.StatementContext;
 import org.beetl.core.parser.BeetlParser.StatementExpressionContext;
 import org.beetl.core.parser.BeetlParser.StaticOutputStContext;
@@ -201,6 +203,10 @@ public class AntlrProgramBuilder
 
 	}
 
+	/** directive dynamic xxx,yy
+	 * @param node
+	 * @return
+	 */
 	protected DirectiveStatement parseDirectiveStatement(DirectiveStContext node)
 	{
 		DirectiveStContext stContext = (DirectiveStContext) node;
@@ -208,7 +214,13 @@ public class AntlrProgramBuilder
 		Token token = direExp.Identifier().getSymbol();
 		String directive = token.getText().toLowerCase().intern();
 		TerminalNode value = direExp.StringLiteral();
-		List<TerminalNode> idNodeList = direExp.directiveExpIDList().Identifier();
+		List<TerminalNode> idNodeList = null;
+		DirectiveExpIDListContext directExpidLisCtx = direExp.directiveExpIDList();
+		if (directExpidLisCtx != null)
+		{
+			idNodeList = directExpidLisCtx.Identifier();
+		}
+
 		Set<String> idList = null;
 		DirectiveStatement ds = null;
 
@@ -552,10 +564,13 @@ public class AntlrProgramBuilder
 		VarRefContext varRef = ctx.varRef();
 
 		Expression safeExp = null;
-		if (ctx.NOT() != null)
+		Safe_outputContext soctx = varRef.safe_output();
+		boolean hasSafe = false;
+		if (soctx != null)
 		{
-			ExpressionContext safeExpression = ctx.expression();
+			ExpressionContext safeExpression = soctx.expression();
 			safeExp = this.parseExpress(safeExpression);
+			hasSafe = true;
 
 		}
 		List<VarAttributeContext> list = varRef.varAttribute();
@@ -570,7 +585,7 @@ public class AntlrProgramBuilder
 
 		}
 
-		VarRef var = new VarRef(vas, safeExp, this.getBTToken(varRef.Identifier().getSymbol()));
+		VarRef var = new VarRef(vas, hasSafe, safeExp, this.getBTToken(varRef.Identifier().getSymbol()));
 		pbCtx.setVarPosition(varRef.Identifier().getText(), var);
 		return var;
 	}

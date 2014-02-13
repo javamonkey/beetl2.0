@@ -131,7 +131,7 @@ constantExpression
     :   literal        #literalExp
     |   AT nativeCall   #nativeCallExp
     |   functionCall    #functionCallExp
-    |   varRef ( NOT expression)?           #varRefExp
+    |   varRef          #varRefExp
     |   json        #jsonExp  
     |   (ADD|MIN) expression    #negExp
     |   NOT expression      #notExp
@@ -146,13 +146,14 @@ constantExpression
     ;
     
 
-    varRef:Identifier ( varAttribute)*  
+ varRef:Identifier ( varAttribute)*  (safe_output)?
 ;
 varAttribute :PERIOD Identifier   #varAttributeGeneral
              | VIRTUAL Identifier #varAttributeVirtual
              |LEFT_SQBR expression RIGHT_SQBR #varAttributeArrayOrMap
              ;
-
+safe_output: NOT expression? ;
+    
 
 functionCall: functionNs LEFT_PAR expressionList? RIGHT_PAR (varAttribute)* ; 
 functionTagCall:functionNs  LEFT_PAR expressionList? RIGHT_PAR  block ;

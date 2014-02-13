@@ -1,1 +1,1 @@
-directive dynamic_object  xxx,yy;
+var a = aa.c.k!1;

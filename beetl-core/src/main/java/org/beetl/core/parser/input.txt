@@ -1,5 +1,1 @@
-var date = date('2014-02-03','yyyy-MM-dd');
-
-<<date,'yyyy-MM-dd'>><$0>>
-<<date,dateFormat='yyyy-MM-dd'>><$1>>
-<<date,date.short>>
+directive dynamic_object  xxx,yy;

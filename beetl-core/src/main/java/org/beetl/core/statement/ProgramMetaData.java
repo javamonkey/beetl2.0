@@ -1,8 +1,10 @@
 package org.beetl.core.statement;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.beetl.core.Context;
 import org.beetl.core.util.ObjectUtil;
@@ -24,6 +26,12 @@ public class ProgramMetaData implements java.io.Serializable
 	public Map<String, Integer> globalIndexMap = new HashMap<String, Integer>();
 	// 全局变量属性
 	public Map<String, String[]> globalVarAttr = new HashMap<String, String[]>();
+	//directive dynamic ;
+	public boolean allDynamic = false;
+	//directive dynamic xx,bb,cc
+	public Set<String> dynamicObjectSet = new HashSet<String>(0);
+	//@type(User cc,List<User> list)
+	public Map<String, Type> globalType = new HashMap<String, Type>(0);
 
 	public void initContext(Context ctx)
 	{

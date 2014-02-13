@@ -53,7 +53,9 @@ typeArgument
     ;
 
 //ЦёБо  directive object xx,xx,xx                 
-directiveExp:  Identifier (StringLiteral)? END;
+directiveExp:  Identifier (StringLiteral|directiveExpIDList)? END;
+directiveExpIDList: Identifier (COMMA Identifier)* ;
+
 
 g_switchStatment
 	:	 (LEFT_PAR base=expression RIGHT_PAR)? LEFT_BRACE g_caseStatment* g_defaultStatment? RIGHT_BRACE

@@ -31,6 +31,10 @@ public class VarRef extends Expression implements IVarIndex
 			{
 				return safe.evaluate(ctx);
 			}
+			else if (ctx.safeOutput)
+			{
+				return null;
+			}
 			else
 			{
 				throw new TempException("未定义或者是空" + this.token.text);

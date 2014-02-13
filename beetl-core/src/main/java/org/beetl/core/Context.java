@@ -40,6 +40,9 @@ public class Context
 
 	public boolean isInit;
 
+	// 当前所有变量是否都是安全输出
+	public boolean safeOutput;
+
 	/**
 	 * 得到临时模板变量
 	 * 

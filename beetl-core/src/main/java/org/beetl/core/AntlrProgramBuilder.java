@@ -2,7 +2,11 @@ package org.beetl.core;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -18,6 +22,8 @@ import org.beetl.core.parser.BeetlParser.BreakStContext;
 import org.beetl.core.parser.BeetlParser.CompareExpContext;
 import org.beetl.core.parser.BeetlParser.ConstantsTextStatmentContext;
 import org.beetl.core.parser.BeetlParser.ContinueStContext;
+import org.beetl.core.parser.BeetlParser.DirectiveExpContext;
+import org.beetl.core.parser.BeetlParser.DirectiveStContext;
 import org.beetl.core.parser.BeetlParser.ExpressionContext;
 import org.beetl.core.parser.BeetlParser.ExpressionListContext;
 import org.beetl.core.parser.BeetlParser.ForControlContext;
@@ -54,6 +60,7 @@ import org.beetl.core.statement.BlockStatement;
 import org.beetl.core.statement.BreakStatement;
 import org.beetl.core.statement.CompareExpression;
 import org.beetl.core.statement.ContinueStatement;
+import org.beetl.core.statement.DirectiveStatement;
 import org.beetl.core.statement.Expression;
 import org.beetl.core.statement.ForStatement;
 import org.beetl.core.statement.FormatExpression;
@@ -97,7 +104,11 @@ public class AntlrProgramBuilder
 		List<Statement> ls = new ArrayList<Statement>(size);
 		for (int i = 0; i < size; i++)
 		{
-			ls.add(parseStatment((ParserRuleContext) tree.getChild(i)));
+			Statement st = parseStatment((ParserRuleContext) tree.getChild(i));
+			if (st != null)
+			{
+				ls.add(st);
+			}
 
 		}
 
@@ -178,11 +189,69 @@ public class AntlrProgramBuilder
 			StatementExpression se = new StatementExpression(expression, null);
 			return se;
 		}
+		else if (node instanceof DirectiveStContext)
+		{
+			return parseDirectiveStatement((DirectiveStContext) node);
+
+		}
 		else
 		{
 			throw new UnsupportedOperationException();
 		}
 
+	}
+
+	protected DirectiveStatement parseDirectiveStatement(DirectiveStContext node)
+	{
+		DirectiveStContext stContext = (DirectiveStContext) node;
+		DirectiveExpContext direExp = stContext.directiveExp();
+		Token token = direExp.Identifier().getSymbol();
+		String directive = token.getText().toLowerCase().intern();
+		TerminalNode value = direExp.StringLiteral();
+		List<TerminalNode> idNodeList = direExp.directiveExpIDList().Identifier();
+		Set<String> idList = null;
+		DirectiveStatement ds = null;
+
+		if (value != null)
+		{
+			String idListValue = this.getStringValue(value.getText());
+			idList = new HashSet(Arrays.asList(idListValue.split(",")));
+			ds = new DirectiveStatement(directive, idList, this.getBTToken(token));
+
+		}
+		else if (idNodeList != null)
+		{
+			idList = new HashSet<String>();
+			for (TerminalNode t : idNodeList)
+			{
+				idList.add(t.getText());
+			}
+			ds = new DirectiveStatement(directive, idList, this.getBTToken(token));
+
+		}
+		else
+		{
+			ds = new DirectiveStatement(directive, Collections.EMPTY_SET, this.getBTToken(token));
+		}
+
+		if (directive.equals("dynamic"))
+		{
+
+			if (ds.getIdList().size() == 0)
+			{
+				data.allDynamic = true;
+			}
+			else
+			{
+				data.dynamicObjectSet = ds.getIdList();
+			}
+			return null;
+
+		}
+		else
+		{
+			return ds;
+		}
 	}
 
 	protected FunctionExpression parseFunExp(FunctionCallContext ctx)

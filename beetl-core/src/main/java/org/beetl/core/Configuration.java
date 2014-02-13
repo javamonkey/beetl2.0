@@ -1,5 +1,8 @@
 package org.beetl.core;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * 模板配置
  * 
@@ -34,6 +37,7 @@ public class Configuration
 
 	String htmlTagStart = "<" + htmlTagFlag;
 	String htmlTagEnd = "</" + htmlTagFlag;
+	Set<String> pkgList = new HashSet<String>();
 
 	// 关于引擎的设置
 
@@ -46,7 +50,7 @@ public class Configuration
 
 	public Configuration()
 	{
-
+		pkgList.add("java.util.");
 	}
 
 	public String getCharset()
@@ -172,6 +176,21 @@ public class Configuration
 	public void setCharset(String charset)
 	{
 		this.charset = charset;
+	}
+
+	public Set<String> getPkgList()
+	{
+		return pkgList;
+	}
+
+	public void addPkg(String pkg)
+	{
+		this.pkgList.add(pkg);
+	}
+
+	public void setPkgList(Set<String> pkgList)
+	{
+		this.pkgList = pkgList;
 	}
 
 }

@@ -15,6 +15,7 @@ import org.beetl.core.event.Listener;
 import org.beetl.core.exception.HTMLTagParserException;
 import org.beetl.core.exception.TempException;
 import org.beetl.core.statement.Program;
+import org.beetl.core.util.ClassSearch;
 import org.beetl.ext.fn.AssertFunction;
 import org.beetl.ext.fn.CheckExistFunction;
 import org.beetl.ext.fn.DateFunction;
@@ -45,6 +46,7 @@ public class GroupTemplate
 	Map<String, Format> formatMap = new HashMap<String, Format>();
 	Map<Class, Format> defaultFormatMap = new HashMap<Class, Format>(0);
 	List<VirtualAttributeEval> virtualAttributeList = new ArrayList<VirtualAttributeEval>();
+	ClassSearch classSearch = null;
 
 	/**
 	 * 使用loader 和 conf初始化GroupTempalte
@@ -64,6 +66,7 @@ public class GroupTemplate
 		this.initFormatter();
 		this.initTag();
 		this.initVirtual();
+		classSearch = new ClassSearch(conf.getPkgList());
 	}
 
 	protected void initFunction()
@@ -373,6 +376,15 @@ public class GroupTemplate
 			}
 		}
 		return null;
+	}
+
+	/** 通过class的简单名字找到class
+	 * @param simpleName
+	 * @return
+	 */
+	public Class loadClassBySimpleName(String simpleName)
+	{
+
 	}
 
 }

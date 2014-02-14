@@ -121,8 +121,9 @@ public class User
 		joelli.setSalary(12000.01);
 
 		List all = new ArrayList();
-		all.add(lucy);
+
 		all.add(joelli);
+		all.add(lucy);
 		all.add(lyy);
 		return all;
 

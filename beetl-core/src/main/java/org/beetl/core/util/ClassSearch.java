@@ -42,6 +42,7 @@ public class ClassSearch
 						String clsName = pkg.concat(name);
 						cls = Class.forName(clsName);
 						map.put(name, cls);
+						return cls;
 
 					}
 					catch (Exception ex)
@@ -49,9 +50,13 @@ public class ClassSearch
 						// continue;
 					}
 				}
+				return null;
+			}
+			else
+			{
+				return cls;
 			}
 
-			return null;
 		}
 
 	}

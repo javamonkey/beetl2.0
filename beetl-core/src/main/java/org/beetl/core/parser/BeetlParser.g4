@@ -40,9 +40,9 @@ statement
     |   statementExpression END   #statmentExpSt 
       
     ;
-//×¢½â:@type (User)user,(List<User>userList
-commentTypeTag: commentTypeItemTag (COMMA1 commentTypeItemTag);
-commentTypeItemTag:   LEFT_PAR1 classOrInterfaceType RIGHT_PAR1  Identifier1    
+//×¢½â:@type User user,List<User> userList
+commentTypeTag: commentTypeItemTag (COMMA1 commentTypeItemTag)*;
+commentTypeItemTag:    classOrInterfaceType   Identifier1    
                   ;
 classOrInterfaceType: Identifier1 (PERIOD1 Identifier1 )* typeArguments?;
 typeArguments

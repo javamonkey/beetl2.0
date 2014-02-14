@@ -12,6 +12,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.beetl.core.exception.TempException;
 import org.beetl.core.parser.BeetlParser;
 import org.beetl.core.parser.BeetlParser.AddminExpContext;
 import org.beetl.core.parser.BeetlParser.AssignGeneralContext;
@@ -19,6 +20,10 @@ import org.beetl.core.parser.BeetlParser.AssignMentContext;
 import org.beetl.core.parser.BeetlParser.BlockStContext;
 import org.beetl.core.parser.BeetlParser.BooleanLiteralContext;
 import org.beetl.core.parser.BeetlParser.BreakStContext;
+import org.beetl.core.parser.BeetlParser.ClassOrInterfaceTypeContext;
+import org.beetl.core.parser.BeetlParser.CommentTagStContext;
+import org.beetl.core.parser.BeetlParser.CommentTypeItemTagContext;
+import org.beetl.core.parser.BeetlParser.CommentTypeTagContext;
 import org.beetl.core.parser.BeetlParser.CompareExpContext;
 import org.beetl.core.parser.BeetlParser.ConstantsTextStatmentContext;
 import org.beetl.core.parser.BeetlParser.ContinueStContext;
@@ -48,6 +53,8 @@ import org.beetl.core.parser.BeetlParser.TextOutputStContext;
 import org.beetl.core.parser.BeetlParser.TextStatmentContext;
 import org.beetl.core.parser.BeetlParser.TextVarContext;
 import org.beetl.core.parser.BeetlParser.TextformatContext;
+import org.beetl.core.parser.BeetlParser.TypeArgumentContext;
+import org.beetl.core.parser.BeetlParser.TypeArgumentsContext;
 import org.beetl.core.parser.BeetlParser.VarAttributeArrayOrMapContext;
 import org.beetl.core.parser.BeetlParser.VarAttributeContext;
 import org.beetl.core.parser.BeetlParser.VarAttributeGeneralContext;
@@ -78,6 +85,7 @@ import org.beetl.core.statement.Statement;
 import org.beetl.core.statement.StatementExpression;
 import org.beetl.core.statement.StaticTextASTNode;
 import org.beetl.core.statement.TernaryExpression;
+import org.beetl.core.statement.Type;
 import org.beetl.core.statement.VarAssignStatement;
 import org.beetl.core.statement.VarAssignStatementSeq;
 import org.beetl.core.statement.VarAttribute;
@@ -93,10 +101,11 @@ public class AntlrProgramBuilder
 	ProgramBuilderContext pbCtx = new ProgramBuilderContext();
 
 	Expression[] EMPTY_EXPRESSION = new Expression[0];
+	GroupTemplate gt;
 
-	public AntlrProgramBuilder()
+	public AntlrProgramBuilder(GroupTemplate gt)
 	{
-
+		this.gt = gt;
 	}
 
 	public ProgramMetaData build(ParseTree tree)
@@ -196,10 +205,63 @@ public class AntlrProgramBuilder
 			return parseDirectiveStatement((DirectiveStContext) node);
 
 		}
+		else if (node instanceof CommentTagStContext)
+		{
+			CommentTypeTagContext typeCtx = ((CommentTagStContext) node).commentTypeTag();
+			this.parseCommentTag(typeCtx);
+			return null;
+
+		}
 		else
 		{
 			throw new UnsupportedOperationException();
 		}
+
+	}
+
+	protected void parseCommentTag(CommentTypeTagContext typeCtx)
+	{
+		List<CommentTypeItemTagContext> list = typeCtx.commentTypeItemTag();
+		for (CommentTypeItemTagContext ctx : list)
+		{
+			ClassOrInterfaceTypeContext classCtx = ctx.classOrInterfaceType();
+			Type type = getClassType(classCtx);
+			String globalVarName = ctx.Identifier1().getSymbol().getText();
+			this.data.globalType.put(globalVarName, type);
+
+		}
+	}
+
+	private Type getClassType(ClassOrInterfaceTypeContext ctx)
+	{
+		List<TerminalNode> list = ctx.Identifier1();
+		String className = this.getID(list);
+		Class cls = gt.loadClassBySimpleName(className);
+		if (cls == null)
+		{
+			throw new TempException(className + " not found");
+		}
+		Type classType = new Type(cls);
+		TypeArgumentsContext typeArgCtx = ctx.typeArguments();
+		if (typeArgCtx != null)
+		{
+			List<TypeArgumentContext> listType = typeArgCtx.typeArgument();
+			if (listType != null)
+			{
+				Type[] subType = new Type[listType.size()];
+				int i = 0;
+				for (TypeArgumentContext typeCtx : listType)
+				{
+					ClassOrInterfaceTypeContext child = typeCtx.classOrInterfaceType();
+					Type type = this.getClassType(child);
+					subType[i] = type;
+				}
+				classType.types = subType;
+			}
+
+		}
+
+		return classType;
 
 	}
 

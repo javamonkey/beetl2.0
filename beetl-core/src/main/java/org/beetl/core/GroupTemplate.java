@@ -384,7 +384,7 @@ public class GroupTemplate
 	 */
 	public Class loadClassBySimpleName(String simpleName)
 	{
-
+		return this.classSearch.getClassByName(simpleName);
 	}
 
 }

@@ -10,7 +10,7 @@ public final class PlaceholderST extends Statement
 {
 
 	public Expression expression;
-
+	public Type type = null;
 	FormatExpression format;
 
 	public PlaceholderST(Expression exp, FormatExpression format, Token token)
@@ -44,6 +44,7 @@ public final class PlaceholderST extends Statement
 	public void infer(InferContext inferCtx)
 	{
 		expression.infer(inferCtx);
+		this.type = expression.type;
 	}
 
 }

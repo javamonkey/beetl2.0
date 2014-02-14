@@ -51,6 +51,8 @@ public class Configuration
 	public Configuration()
 	{
 		pkgList.add("java.util.");
+		pkgList.add("java.lang.");
+
 	}
 
 	public String getCharset()
@@ -185,7 +187,7 @@ public class Configuration
 
 	public void addPkg(String pkg)
 	{
-		this.pkgList.add(pkg);
+		this.pkgList.add(pkg.concat("."));
 	}
 
 	public void setPkgList(Set<String> pkgList)

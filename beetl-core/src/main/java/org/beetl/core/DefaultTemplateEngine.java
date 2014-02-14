@@ -35,7 +35,7 @@ public class DefaultTemplateEngine implements TemplateEngine
 
 		BeetlParser parser = new BeetlParser(tokens);
 		ProgContext tree = parser.prog(); // begin parsing at init rule
-		AntlrProgramBuilder pb = new AntlrProgramBuilder();
+		AntlrProgramBuilder pb = new AntlrProgramBuilder(gt);
 		ProgramMetaData data = pb.build(tree);
 		Program program = new Program();
 		program.metaData = data;

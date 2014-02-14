@@ -24,6 +24,7 @@ public class BasicTestCase extends TestCase
 		Configuration cf = Configuration.defaultConfiguration();
 		cf.setStatementStart("<%");
 		cf.setStatementEnd("%>");
+		cf.addPkg("org.beetl.core");
 		// FileResourceLoader rs = new FileResourceLoader(home,
 		// cf.getCharset());
 		rs = new ClasspathResourceLoader("template");

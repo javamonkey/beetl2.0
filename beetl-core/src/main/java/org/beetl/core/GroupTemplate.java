@@ -46,6 +46,7 @@ public class GroupTemplate
 	Map<String, Format> formatMap = new HashMap<String, Format>();
 	Map<Class, Format> defaultFormatMap = new HashMap<Class, Format>(0);
 	List<VirtualAttributeEval> virtualAttributeList = new ArrayList<VirtualAttributeEval>();
+	Map<Class, VirtualClassAttribute> virtualClass = new HashMap<Class, VirtualClassAttribute>();
 	ClassSearch classSearch = null;
 
 	/**
@@ -366,8 +367,19 @@ public class GroupTemplate
 
 	}
 
-	public VirtualAttributeEval getVirtualAttributeEval(Class c, String attributeName)
+	public void registerVirtualAttributeClass(Class cls, VirtualClassAttribute virtual)
 	{
+		this.virtualClass.put(cls, virtual);
+
+	}
+
+	public VirtualClassAttribute getVirtualAttributeEval(Class c, String attributeName)
+	{
+
+		VirtualClassAttribute attr = virtualClass.get(c);
+		if (attr != null)
+			return attr;
+
 		for (VirtualAttributeEval eval : virtualAttributeList)
 		{
 			if (eval.isSupport(c, attributeName))

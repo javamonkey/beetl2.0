@@ -41,7 +41,7 @@ statement
       
     ;
 //×¢½â:@type User user,List<User> userList
-commentTypeTag: commentTypeItemTag (COMMA1 commentTypeItemTag)*;
+commentTypeTag: LEFT_PAR1 commentTypeItemTag (COMMA1 commentTypeItemTag)* RIGHT_PAR1;
 commentTypeItemTag:    classOrInterfaceType   Identifier1    
                   ;
 classOrInterfaceType: Identifier1 (PERIOD1 Identifier1 )* typeArguments?;

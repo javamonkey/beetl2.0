@@ -1,4 +1,5 @@
-/*
-@type List<User> users ,String str
-*/
-var u = users;
+var b = c ;
+
+/*@type(List<User> users ,String str)*/
+
+var u = d;

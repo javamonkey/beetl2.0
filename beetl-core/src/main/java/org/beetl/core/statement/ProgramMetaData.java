@@ -22,6 +22,8 @@ public class ProgramMetaData implements java.io.Serializable
 	// 所有变量存放在数组中，数组长度为varIndexSize
 	public int varIndexSize = 0;
 	public int tempVarStartIndex = 0;
+
+	public boolean hasGoto = false;
 	// 为全局变量在数组里分配的位置
 	public Map<String, Integer> globalIndexMap = new HashMap<String, Integer>();
 	// 全局变量属性

@@ -18,9 +18,23 @@ public class Program
 	public void execute(Context ctx)
 	{
 
-		for (Statement node : metaData.statements)
+		if (metaData.hasGoto)
 		{
-			node.execute(ctx);
+			for (Statement node : metaData.statements)
+			{
+				node.execute(ctx);
+				if (ctx.gotoFlag == IGoto.RETURN)
+				{
+					return;
+				}
+			}
+		}
+		else
+		{
+			for (Statement node : metaData.statements)
+			{
+				node.execute(ctx);
+			}
 		}
 
 	}

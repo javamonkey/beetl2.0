@@ -17,6 +17,7 @@ import org.beetl.core.parser.BeetlParser;
 import org.beetl.core.parser.BeetlParser.AddminExpContext;
 import org.beetl.core.parser.BeetlParser.AssignGeneralContext;
 import org.beetl.core.parser.BeetlParser.AssignMentContext;
+import org.beetl.core.parser.BeetlParser.BlockContext;
 import org.beetl.core.parser.BeetlParser.BlockStContext;
 import org.beetl.core.parser.BeetlParser.BooleanLiteralContext;
 import org.beetl.core.parser.BeetlParser.BreakStContext;
@@ -53,6 +54,7 @@ import org.beetl.core.parser.BeetlParser.TextOutputStContext;
 import org.beetl.core.parser.BeetlParser.TextStatmentContext;
 import org.beetl.core.parser.BeetlParser.TextVarContext;
 import org.beetl.core.parser.BeetlParser.TextformatContext;
+import org.beetl.core.parser.BeetlParser.TryStContext;
 import org.beetl.core.parser.BeetlParser.TypeArgumentContext;
 import org.beetl.core.parser.BeetlParser.TypeArgumentsContext;
 import org.beetl.core.parser.BeetlParser.VarAttributeArrayOrMapContext;
@@ -85,6 +87,7 @@ import org.beetl.core.statement.Statement;
 import org.beetl.core.statement.StatementExpression;
 import org.beetl.core.statement.StaticTextASTNode;
 import org.beetl.core.statement.TernaryExpression;
+import org.beetl.core.statement.TryStatement;
 import org.beetl.core.statement.Type;
 import org.beetl.core.statement.VarAssignStatement;
 import org.beetl.core.statement.VarAssignStatementSeq;
@@ -212,11 +215,39 @@ public class AntlrProgramBuilder
 			return null;
 
 		}
+		else if (node instanceof TryStContext)
+		{
+
+			return parseTryCatch((TryStContext) node);
+		}
 		else
 		{
 			throw new UnsupportedOperationException();
 		}
 
+	}
+
+	protected TryStatement parseTryCatch(TryStContext tryStCtx)
+	{
+
+		BlockContext tryBlockCtx = tryStCtx.block(0);
+		BlockStatement tryPart = (BlockStatement) this.parseStatment(tryBlockCtx);
+		BlockStatement catchPart = null;
+		VarDefineNode errorNode = null;
+		if (tryStCtx.Catch() != null)
+		{
+			this.pbCtx.enterBlock();
+			Token errorToken = tryStCtx.Identifier().getSymbol();
+			errorNode = new VarDefineNode(this.getBTToken(errorToken));
+			this.pbCtx.addVarAndPostion(errorNode);
+			BlockContext catchBlockCtx = tryStCtx.block(1);
+			catchPart = (BlockStatement) this.parseStatment(catchBlockCtx);
+			this.pbCtx.exitBlock();
+
+		}
+		TryStatement statement = new TryStatement(tryPart, catchPart, errorNode, this.getBTToken(tryStCtx.Try()
+				.getSymbol()));
+		return statement;
 	}
 
 	protected void parseCommentTag(CommentTypeTagContext typeCtx)
@@ -394,6 +425,7 @@ public class AntlrProgramBuilder
 				+ "LP", forCtx.Identifier().getSymbol().getLine(), 0));
 
 		pbCtx.addVarAndPostion(forVar);
+
 		pbCtx.addVarAndPostion(loopStatusVar);
 
 		StatementContext forContext = ctx.statement(0);
@@ -792,6 +824,10 @@ public class AntlrProgramBuilder
 				if (pbCtx.current.parent != null)
 				{
 					pbCtx.current.parent.gotoValue = IGoto.RETURN;
+				}
+				else
+				{
+					this.data.hasGoto = true;
 				}
 
 		}

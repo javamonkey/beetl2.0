@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import org.beetl.core.GroupTemplate;
 import org.beetl.core.event.Listener;
 import org.beetl.core.event.NodeEvent;
 import org.beetl.core.exception.TempException;
@@ -22,10 +23,13 @@ public class StatementParser
 
 	Map<Class, Listener> listeners = new HashMap<Class, Listener>();
 	BlockStatement block = null;
+	Map firstNode = new HashMap(2);
 
-	public StatementParser(Statement[] sts)
+	public StatementParser(Statement[] sts, GroupTemplate gt, String resourceId)
 	{
 		block = new BlockStatement(sts, null);
+		firstNode.put("groupTemplate", gt);
+		firstNode.put("resourceId", resourceId);
 	}
 
 	public void addListener(Class c, Listener ls)
@@ -35,8 +39,8 @@ public class StatementParser
 
 	public void parse()
 	{
-		Stack<ASTNode> stack = new Stack<ASTNode>();
-
+		Stack<Object> stack = new Stack<Object>();
+		stack.push(firstNode);
 		Class[] matchClasses = listeners.keySet().toArray(new Class[0]);
 
 		this.exec(block, matchClasses, stack);

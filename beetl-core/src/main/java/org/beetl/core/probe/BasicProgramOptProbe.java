@@ -42,7 +42,7 @@ public class BasicProgramOptProbe extends Probe
 	@Override
 	public void check(Context ctx)
 	{
-		StatementParser seacher = new StatementParser(program.metaData.statements);
+		StatementParser seacher = new StatementParser(program.metaData.statements, program.gt, program.id);
 		Map<Class, Listener> map = initProbeNode();
 		for (Entry<Class, Listener> entry : map.entrySet())
 		{

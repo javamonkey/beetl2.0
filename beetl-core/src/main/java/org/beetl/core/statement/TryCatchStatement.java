@@ -31,8 +31,20 @@ public class TryCatchStatement extends Statement
 		{
 			if (catchPart != null)
 			{
-				ctx.vars[error.varIndex] = ex;
+				if (error != null)
+				{
+					if (ex instanceof TempException)
+					{
+						ctx.vars[error.varIndex] = ex;
+					}
+					else
+					{
+						ctx.vars[error.varIndex] = new TempException(ex.getMessage());
+					}
+
+				}
 				catchPart.execute(ctx);
+
 			}
 			else
 			{

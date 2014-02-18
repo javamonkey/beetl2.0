@@ -28,7 +28,7 @@ statement
     |   While parExpression statement   #whileSt
     |   Switch parExpression switchBlock    #siwchSt
     |   Select g_switchStatment #selectSt
-    |   Try  block (Catch  LEFT_PAR Identifier RIGHT_PAR  block   )?    #trySt
+    |   Try  block (Catch  LEFT_PAR Identifier? RIGHT_PAR  block   )?    #trySt
     |   Return expression? END  #returnSt
     |   Break END   #breakSt
     |   Continue END    #continueSt

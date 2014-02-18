@@ -241,9 +241,13 @@ public class AntlrProgramBuilder
 		if (tryStCtx.Catch() != null)
 		{
 			this.pbCtx.enterBlock();
-			Token errorToken = tryStCtx.Identifier().getSymbol();
-			errorNode = new VarDefineNode(this.getBTToken(errorToken));
-			this.pbCtx.addVarAndPostion(errorNode);
+			if (tryStCtx.Identifier() != null)
+			{
+				Token errorToken = tryStCtx.Identifier().getSymbol();
+				errorNode = new VarDefineNode(this.getBTToken(errorToken));
+				this.pbCtx.addVarAndPostion(errorNode);
+			}
+
 			BlockContext catchBlockCtx = tryStCtx.block(1);
 			catchPart = (BlockStatement) this.parseBlock(catchBlockCtx.statement(), catchBlockCtx);
 			this.pbCtx.exitBlock();

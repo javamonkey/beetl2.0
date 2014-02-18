@@ -6,4 +6,5 @@ public class TempException extends RuntimeException
 	{
 		super(str);
 	}
+
 }

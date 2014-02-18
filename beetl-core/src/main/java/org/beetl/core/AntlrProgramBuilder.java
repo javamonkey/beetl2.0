@@ -4,8 +4,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -39,6 +41,9 @@ import org.beetl.core.parser.BeetlParser.FunctionCallContext;
 import org.beetl.core.parser.BeetlParser.FunctionCallExpContext;
 import org.beetl.core.parser.BeetlParser.FunctionNsContext;
 import org.beetl.core.parser.BeetlParser.IfStContext;
+import org.beetl.core.parser.BeetlParser.JsonContext;
+import org.beetl.core.parser.BeetlParser.JsonExpContext;
+import org.beetl.core.parser.BeetlParser.JsonKeyValueContext;
 import org.beetl.core.parser.BeetlParser.LiteralExpContext;
 import org.beetl.core.parser.BeetlParser.MuldivmodExpContext;
 import org.beetl.core.parser.BeetlParser.ParExpContext;
@@ -78,6 +83,8 @@ import org.beetl.core.statement.FormatExpression;
 import org.beetl.core.statement.FunctionExpression;
 import org.beetl.core.statement.IGoto;
 import org.beetl.core.statement.IfStatement;
+import org.beetl.core.statement.JsonArrayExpression;
+import org.beetl.core.statement.JsonMapExpression;
 import org.beetl.core.statement.Literal;
 import org.beetl.core.statement.PlaceholderST;
 import org.beetl.core.statement.ProgramMetaData;
@@ -572,9 +579,72 @@ public class AntlrProgramBuilder
 			FunctionCallExpContext fceCtx = (FunctionCallExpContext) ctx;
 			return this.parseFunExp(fceCtx.functionCall());
 		}
+		else if (ctx instanceof JsonExpContext)
+		{
+			JsonContext jc = ((JsonExpContext) ctx).json();
+			return this.parseJson(jc);
+		}
 		else
 		{
 			throw new UnsupportedOperationException();
+		}
+	}
+
+	protected Expression parseJson(JsonContext ctx)
+	{
+		if (ctx.LEFT_SQBR() != null)
+		{
+
+			//array
+			JsonArrayExpression json = null;
+			List<ExpressionContext> listCtx = ctx.expression();
+			if (listCtx.size() == 0)
+			{
+				json = new JsonArrayExpression(Collections.EMPTY_LIST, this.getBTToken(ctx.LEFT_SQBR().getSymbol()));
+			}
+			else
+			{
+				List<Expression> list = new ArrayList<Expression>(listCtx.size());
+				for (ExpressionContext expCtx : listCtx)
+				{
+					list.add(this.parseExpress(expCtx));
+				}
+				json = new JsonArrayExpression(list, this.getBTToken(ctx.LEFT_BRACE().getSymbol()));
+
+			}
+			return json;
+		}
+		else
+		{
+			//array
+			JsonMapExpression json = null;
+			List<JsonKeyValueContext> listCtx = ctx.jsonKeyValue();
+			if (listCtx.size() == 0)
+			{
+				json = new JsonMapExpression(Collections.EMPTY_MAP, this.getBTToken(ctx.LEFT_BRACE().getSymbol()));
+			}
+			else
+			{
+				Map<String, Expression> map = new HashMap<String, Expression>(listCtx.size());
+				for (JsonKeyValueContext kvCtx : listCtx)
+				{
+					String key = null;
+					if (kvCtx.StringLiteral() != null)
+					{
+						key = this.getStringValue(kvCtx.StringLiteral().getText());
+					}
+					else
+					{
+						key = kvCtx.Identifier().getSymbol().getText();
+					}
+					Expression exp = this.parseExpress(kvCtx.expression());
+					map.put(key, exp);
+				}
+				json = new JsonMapExpression(map, this.getBTToken(ctx.LEFT_BRACE().getSymbol()));
+
+			}
+			return json;
+
 		}
 	}
 

@@ -18,7 +18,7 @@ public class DefaultTemplateEngine implements TemplateEngine
 {
 
 	@Override
-	public Program createProgram(String id, Reader reader, Map<Integer, String> textMap, GroupTemplate gt)
+	public Program createProgram(String id, Reader reader, Map<Integer, String> textMap, String cr, GroupTemplate gt)
 	{
 		ANTLRInputStream input;
 		try
@@ -43,6 +43,7 @@ public class DefaultTemplateEngine implements TemplateEngine
 		program.gt = gt;
 
 		program.metaData.staticTextArray = new Object[textMap.size()];
+		program.metaData.lineSeparator = cr;
 		int i = 0;
 
 		for (Entry<Integer, String> entry : textMap.entrySet())

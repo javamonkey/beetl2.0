@@ -162,6 +162,8 @@ class BlockEnvContext
 	BlockEnvContext parent = null;
 	int gotoValue = IGoto.NORMAL;
 
+	boolean canStopContinueBreakFlag = false;
+
 	public Map<String, VarDescrption> getVars()
 	{
 		return vars;

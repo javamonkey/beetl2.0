@@ -87,7 +87,7 @@ import org.beetl.core.statement.Statement;
 import org.beetl.core.statement.StatementExpression;
 import org.beetl.core.statement.StaticTextASTNode;
 import org.beetl.core.statement.TernaryExpression;
-import org.beetl.core.statement.TryStatement;
+import org.beetl.core.statement.TryCatchStatement;
 import org.beetl.core.statement.Type;
 import org.beetl.core.statement.VarAssignStatement;
 import org.beetl.core.statement.VarAssignStatementSeq;
@@ -164,16 +164,19 @@ public class AntlrProgramBuilder
 		else if (node instanceof ReturnStContext)
 		{
 			ReturnStatement st = new ReturnStatement(null);
+			pbCtx.current.gotoValue = IGoto.RETURN;
 			return st;
 		}
 		else if (node instanceof BreakStContext)
 		{
 			BreakStatement st = new BreakStatement(null);
+			pbCtx.current.gotoValue = IGoto.BREAK;
 			return st;
 		}
 		else if (node instanceof ContinueStContext)
 		{
 			ContinueStatement st = new ContinueStatement(null);
+			pbCtx.current.gotoValue = IGoto.CONTINUE;
 			return st;
 		}
 		else if (node instanceof ForStContext)
@@ -227,11 +230,12 @@ public class AntlrProgramBuilder
 
 	}
 
-	protected TryStatement parseTryCatch(TryStContext tryStCtx)
+	protected TryCatchStatement parseTryCatch(TryStContext tryStCtx)
 	{
 
 		BlockContext tryBlockCtx = tryStCtx.block(0);
-		BlockStatement tryPart = (BlockStatement) this.parseStatment(tryBlockCtx);
+
+		BlockStatement tryPart = (BlockStatement) this.parseBlock(tryBlockCtx.statement(), tryBlockCtx);
 		BlockStatement catchPart = null;
 		VarDefineNode errorNode = null;
 		if (tryStCtx.Catch() != null)
@@ -241,12 +245,12 @@ public class AntlrProgramBuilder
 			errorNode = new VarDefineNode(this.getBTToken(errorToken));
 			this.pbCtx.addVarAndPostion(errorNode);
 			BlockContext catchBlockCtx = tryStCtx.block(1);
-			catchPart = (BlockStatement) this.parseStatment(catchBlockCtx);
+			catchPart = (BlockStatement) this.parseBlock(catchBlockCtx.statement(), catchBlockCtx);
 			this.pbCtx.exitBlock();
 
 		}
-		TryStatement statement = new TryStatement(tryPart, catchPart, errorNode, this.getBTToken(tryStCtx.Try()
-				.getSymbol()));
+		TryCatchStatement statement = new TryCatchStatement(tryPart, catchPart, errorNode, this.getBTToken(tryStCtx
+				.Try().getSymbol()));
 		return statement;
 	}
 
@@ -417,6 +421,8 @@ public class AntlrProgramBuilder
 	protected ForStatement parseForSt(ForStContext ctx)
 	{
 		pbCtx.enterBlock();
+		//break，continue语句到此为止
+		pbCtx.current.canStopContinueBreakFlag = true;
 		ForControlContext forCtx = ctx.forControl();
 		VarDefineNode forVar = new VarDefineNode(this.getBTToken(forCtx.Identifier().getSymbol()));
 
@@ -818,10 +824,15 @@ public class AntlrProgramBuilder
 			case IGoto.CONTINUE:
 			case IGoto.BREAK:
 				block.setGoto(true);
+				if (!pbCtx.current.parent.canStopContinueBreakFlag)
+				{
+					//传递给上一级，除非碰到for while这样能停止传递的
+					pbCtx.current.parent.gotoValue = pbCtx.current.gotoValue;
+				}
 				break;
 			case IGoto.RETURN:
 				block.setGoto(true);
-				if (pbCtx.current.parent != null)
+				if (pbCtx.current.parent != pbCtx.root)
 				{
 					pbCtx.current.parent.gotoValue = IGoto.RETURN;
 				}

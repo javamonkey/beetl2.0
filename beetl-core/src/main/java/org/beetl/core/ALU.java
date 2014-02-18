@@ -434,6 +434,11 @@ public class ALU
 				case DOUBLE:
 				case FLOAT:
 				case SHORT:
+					double c = ((Number) o2).doubleValue();
+					if (c == 0)
+					{
+						throw new ArithmeticException(c + "");
+					}
 					double a = ((Number) o1).doubleValue() / ((Number) o2).doubleValue();
 					return trim(a, (Number) o1, (Number) o2);
 				case HS:

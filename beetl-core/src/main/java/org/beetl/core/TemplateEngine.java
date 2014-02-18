@@ -7,6 +7,6 @@ import org.beetl.core.statement.Program;
 
 public interface TemplateEngine
 {
-	public Program createProgram(String id, Reader input, Map<Integer, String> textMap, GroupTemplate gt);
+	public Program createProgram(String id, Reader input, Map<Integer, String> textMap, String cr, GroupTemplate gt);
 
 }

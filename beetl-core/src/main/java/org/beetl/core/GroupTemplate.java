@@ -234,10 +234,8 @@ public class GroupTemplate
 			throw new TempException(e.getMessage());
 		}
 
-		Program program = engine.createProgram(res.getId(), scriptReader, sf.textMap, this);
-		program.metaData.lineSeparator = sf.lineSeparator;
+		Program program = engine.createProgram(res.getId(), scriptReader, sf.textMap, sf.lineSeparator, this);
 		return program;
-
 	}
 
 	/**

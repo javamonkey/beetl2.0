@@ -2,15 +2,16 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
+import org.beetl.core.exception.TempException;
 
-public class TryStatement extends Statement
+public class TryCatchStatement extends Statement
 {
 
 	BlockStatement tryPart;
 	BlockStatement catchPart;
 	VarDefineNode error;
 
-	public TryStatement(BlockStatement tryPart, BlockStatement catchPart, VarDefineNode error, Token token)
+	public TryCatchStatement(BlockStatement tryPart, BlockStatement catchPart, VarDefineNode error, Token token)
 	{
 		super(token);
 		this.tryPart = tryPart;
@@ -32,6 +33,17 @@ public class TryStatement extends Statement
 			{
 				ctx.vars[error.varIndex] = ex;
 				catchPart.execute(ctx);
+			}
+			else
+			{
+				if (ex instanceof RuntimeException)
+				{
+					throw (RuntimeException) ex;
+				}
+				else
+				{
+					throw new TempException(ex.getMessage());
+				}
 			}
 		}
 

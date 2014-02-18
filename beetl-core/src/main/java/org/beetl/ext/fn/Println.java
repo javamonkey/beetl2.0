@@ -47,6 +47,7 @@ public class Println implements Function
 		ByteWriter w = ctx.byteWriter;
 		//@todo
 		//String cr = csr.getCR();
+
 		if (o != null)
 		{
 			try

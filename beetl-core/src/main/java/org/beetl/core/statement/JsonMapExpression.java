@@ -45,6 +45,7 @@ public class JsonMapExpression extends Expression
 		{
 			exp.infer(inferCtx);
 		}
+		this.type = Type.MapType;
 
 	}
 

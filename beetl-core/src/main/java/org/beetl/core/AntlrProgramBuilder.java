@@ -609,7 +609,7 @@ public class AntlrProgramBuilder
 				{
 					list.add(this.parseExpress(expCtx));
 				}
-				json = new JsonArrayExpression(list, this.getBTToken(ctx.LEFT_BRACE().getSymbol()));
+				json = new JsonArrayExpression(list, this.getBTToken(ctx.LEFT_SQBR().getSymbol()));
 
 			}
 			return json;

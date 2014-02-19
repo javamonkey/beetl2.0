@@ -39,11 +39,12 @@ public class JsonArrayExpression extends Expression
 	@Override
 	public void infer(InferContext inferCtx)
 	{
-		List values = new ArrayList(list.size());
+
 		for (Expression exp : list)
 		{
 			exp.infer(inferCtx);
 		}
+		this.type = Type.ListType;
 
 	}
 

@@ -8,6 +8,12 @@ import java.util.List;
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
 import org.beetl.core.exception.TempException;
+import org.beetl.core.statement.nat.ClassNode;
+import org.beetl.core.statement.nat.InstanceNode;
+import org.beetl.core.statement.nat.NativeArrayNode;
+import org.beetl.core.statement.nat.NativeAtrributeNode;
+import org.beetl.core.statement.nat.NativeMethodNode;
+import org.beetl.core.statement.nat.NativeNode;
 
 /**
  * @xxx.xx()[0].xxx
@@ -30,6 +36,8 @@ public class NativeCallExpression extends Expression
 	public NativeCallExpression(ClassNode clsNode, List<NativeNode> chain, Token token)
 	{
 		super(token);
+		//可以做某些优化，如提前得到final 属性
+
 		this.clsNode = clsNode;
 	}
 
@@ -45,8 +53,10 @@ public class NativeCallExpression extends Expression
 		}
 		else
 		{
-			targetObj = ctx.gt.loadClassBySimpleName(this.clsNode.cls);
+			targetCls = ctx.gt.loadClassBySimpleName(this.clsNode.cls);
+
 		}
+
 		for (NativeNode node : chain)
 		{
 			if (node instanceof NativeAtrributeNode)
@@ -56,14 +66,8 @@ public class NativeCallExpression extends Expression
 				{
 					Field f = targetCls.getField(attr);
 					targetObj = f.get(targetObj);
-					if (targetObj != null)
-					{
-						targetCls = targetObj.getClass();
-					}
-					else
-					{
-						targetCls = null;
-					}
+					targetCls = f.getDeclaringClass();
+
 				}
 				catch (SecurityException e)
 				{
@@ -130,14 +134,7 @@ public class NativeCallExpression extends Expression
 				{
 					Method m = targetCls.getMethod(method, argTypes);
 					targetObj = m.invoke(targetObj, args);
-					if (targetObj != null)
-					{
-						targetCls = targetObj.getClass();
-					}
-					else
-					{
-						targetCls = null;
-					}
+					targetCls = m.getDeclaringClass();
 
 				}
 				catch (SecurityException e)
@@ -170,70 +167,86 @@ public class NativeCallExpression extends Expression
 	public void infer(InferContext inferCtx)
 	{
 
-	}
-
-	public class NativeNode
-	{
-
-	}
-
-	public class NativeAtrributeNode extends NativeNode
-	{
-		public String attribute;
-
-		public NativeAtrributeNode(String attriute)
+		Type type = null;
+		if (insNode != null)
 		{
-			this.attribute = attribute;
+			insNode.ref.infer(inferCtx);
+			type = insNode.ref.type;
+		}
+		else
+		{
+			Class cls = inferCtx.gt.loadClassBySimpleName(this.clsNode.cls);
+			type = new Type(cls);
+
 		}
 
-		public String attribute()
+		for (NativeNode node : chain)
 		{
-			return this.attribute;
+			if (type.cls == Object.class)
+			{
+				this.type = type;
+				// do not infer since it's object
+				return;
+			}
+			if (node instanceof NativeAtrributeNode)
+			{
+				String attr = ((NativeAtrributeNode) node).attribute;
+				try
+				{
+					Field f = type.cls.getField(attr);
+					Class c = f.getDeclaringClass();
+					type.cls = c;
+				}
+				catch (SecurityException e)
+				{
+					throw new TempException("can not access filed" + attr);
+				}
+				catch (NoSuchFieldException e)
+				{
+					throw new TempException(" no such filed" + attr);
+				}
+
+			}
+			else if (node instanceof NativeArrayNode)
+			{
+				if (!type.cls.isArray())
+				{
+					throw new TempException(" must be array");
+				}
+				type.cls = type.cls.getComponentType();
+			}
+			else if (node instanceof NativeMethodNode)
+			{
+				NativeMethodNode methodNode = (NativeMethodNode) node;
+				String method = methodNode.method;
+				Expression[] expList = methodNode.paras;
+
+				Class[] argTypes = expList.length == 0 ? null : new Class[expList.length];
+
+				for (int i = 0; i < expList.length; i++)
+				{
+					expList[i].infer(inferCtx);
+					argTypes[i] = expList[i].type.cls;
+
+				}
+				try
+				{
+					Method m = type.cls.getMethod(method, argTypes);
+					type.cls = m.getDeclaringClass();
+				}
+				catch (SecurityException e)
+				{
+					throw new TempException(" can not get method" + e.getMessage());
+				}
+				catch (NoSuchMethodException e)
+				{
+					throw new TempException(" no such method" + e.getMessage());
+				}
+
+			}
+
 		}
-	}
-
-	public class NativeArrayNode extends NativeNode
-	{
-		public Expression exp;
-
-		public NativeArrayNode(Expression expression)
-		{
-			this.exp = expression;
-		}
-
-	}
-
-	public class NativeMethodNode extends NativeNode
-	{
-		public String method;
-		public Expression[] paras;
-
-		public NativeMethodNode(String method, Expression[] paras)
-		{
-			this.method = method;
-			this.paras = paras;
-		}
-
-	}
-
-	public class InstanceNode
-	{
-		public VarRef ref;
-
-		public InstanceNode(VarRef ref)
-		{
-			this.ref = ref;
-		}
-	}
-
-	public class ClassNode
-	{
-		public String cls = null;
-
-		public ClassNode(String cls)
-		{
-			this.cls = cls;
-		}
+		this.type = type;
 
 	}
 

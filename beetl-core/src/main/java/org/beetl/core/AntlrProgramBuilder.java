@@ -46,6 +46,11 @@ import org.beetl.core.parser.BeetlParser.JsonExpContext;
 import org.beetl.core.parser.BeetlParser.JsonKeyValueContext;
 import org.beetl.core.parser.BeetlParser.LiteralExpContext;
 import org.beetl.core.parser.BeetlParser.MuldivmodExpContext;
+import org.beetl.core.parser.BeetlParser.NativeArrayContext;
+import org.beetl.core.parser.BeetlParser.NativeCallContext;
+import org.beetl.core.parser.BeetlParser.NativeCallExpContext;
+import org.beetl.core.parser.BeetlParser.NativeMethodContext;
+import org.beetl.core.parser.BeetlParser.NativeVarRefChainContext;
 import org.beetl.core.parser.BeetlParser.ParExpContext;
 import org.beetl.core.parser.BeetlParser.ParExpressionContext;
 import org.beetl.core.parser.BeetlParser.ReturnStContext;
@@ -86,6 +91,7 @@ import org.beetl.core.statement.IfStatement;
 import org.beetl.core.statement.JsonArrayExpression;
 import org.beetl.core.statement.JsonMapExpression;
 import org.beetl.core.statement.Literal;
+import org.beetl.core.statement.NativeCallExpression;
 import org.beetl.core.statement.PlaceholderST;
 import org.beetl.core.statement.ProgramMetaData;
 import org.beetl.core.statement.ReturnStatement;
@@ -103,6 +109,12 @@ import org.beetl.core.statement.VarDefineNode;
 import org.beetl.core.statement.VarRef;
 import org.beetl.core.statement.VarSquareAttribute;
 import org.beetl.core.statement.VarVirtualAttribute;
+import org.beetl.core.statement.nat.ClassNode;
+import org.beetl.core.statement.nat.InstanceNode;
+import org.beetl.core.statement.nat.NativeArrayNode;
+import org.beetl.core.statement.nat.NativeAtrributeNode;
+import org.beetl.core.statement.nat.NativeMethodNode;
+import org.beetl.core.statement.nat.NativeNode;
 
 public class AntlrProgramBuilder
 {
@@ -584,10 +596,142 @@ public class AntlrProgramBuilder
 			JsonContext jc = ((JsonExpContext) ctx).json();
 			return this.parseJson(jc);
 		}
+		else if (ctx instanceof NativeCallExpContext)
+		{
+			NativeCallContext ncc = ((NativeCallExpContext) ctx).nativeCall();
+			NativeCallExpression nativeCall = this.parseNativeCallExpression(ncc);
+			return nativeCall;
+		}
 		else
 		{
 			throw new UnsupportedOperationException();
 		}
+	}
+
+	protected NativeCallExpression parseNativeCallExpression(NativeCallContext ncc)
+	{
+		NativeCallExpression nativeExp = null;
+		List<ParseTree> list = ncc.children;
+		//nativeCall: nativeVarRefChain (nativeMethod|nativeArray| PERIOD nativeVarRefChain)*;
+
+		NativeVarRefChainContext first = (NativeVarRefChainContext) list.get(0);
+		List<TerminalNode> ids = first.Identifier();
+		StringBuilder clsSb = new StringBuilder();
+		boolean isCls = false;
+		int i = 0;
+		for (; i < ids.size(); i++)
+		{
+			String text = ids.get(i).getText();
+			clsSb.append(text).append(".");
+			char c = text.charAt(0);
+			if (c >= 'A' && c <= 'Z')
+			{
+				clsSb.append(text);
+				isCls = true;
+				break;
+
+			}
+		}
+
+		ClassNode clsNode = null;
+		InstanceNode insNode = null;
+
+		if (isCls)
+		{
+			clsNode = new ClassNode(clsSb.toString());
+		}
+		else
+		{
+			//变量的属性引用
+			String varName = ids.get(i).getText();
+			VarRef ref = new VarRef(new VarAttribute[0], false, null, this.getBTToken("varName", ncc.start.getLine()));
+			this.pbCtx.addVarAndPostion(ref);
+			insNode = new InstanceNode(ref);
+			i = 1;
+		}
+		List<NativeNode> nativeList = new ArrayList<NativeNode>();
+
+		for (int j = i; j < ids.size(); j++)
+		{
+			//剩下的是属性
+			NativeAtrributeNode attribute = new NativeAtrributeNode(ids.get(j).getText());
+			nativeList.add(attribute);
+		}
+
+		for (int z = 1; z < list.size(); z++)
+		{
+			ParseTree tree = list.get(z);
+			if (tree instanceof NativeMethodContext)
+			{
+				NativeMethodContext methodCtx = (NativeMethodContext) tree;
+				NativeMethodNode methodNode = null;
+				String method = null;
+				NativeNode lastNode = nativeList.get(nativeList.size() - 1);
+				if (lastNode instanceof NativeAtrributeNode)
+				{
+					method = ((NativeAtrributeNode) lastNode).attribute;
+					//
+					nativeList.remove(nativeList.size() - 1);
+
+				}
+				else
+				{
+					throw new TempException("错误定义");
+				}
+				//解析参数
+				List<ExpressionContext> expCtxList = methodCtx.expression();
+				Expression[] exp = this.parseExpressionCtxList(expCtxList);
+				methodNode = new NativeMethodNode(method, exp);
+				nativeList.add(methodNode);
+			}
+			else if (tree instanceof NativeArrayContext)
+			{
+				ExpressionContext expCtx = ((NativeArrayContext) tree).expression();
+				Expression exp = this.parseExpress(expCtx);
+				NativeArrayNode arrayNode = new NativeArrayNode(exp);
+				nativeList.add(arrayNode);
+			}
+			else if (tree instanceof NativeVarRefChainContext)
+			{
+				List<TerminalNode> nodes = ((NativeVarRefChainContext) tree).Identifier();
+				for (TerminalNode node : nodes)
+				{
+					NativeAtrributeNode attributeNode = new NativeAtrributeNode(node.getText());
+					nativeList.add(attributeNode);
+				}
+			}
+			else
+			{
+				//其他节点，这段语法写的不好，造成解析困难，但先这样了
+				continue;
+			}
+		}
+
+		if (clsNode != null)
+		{
+			nativeExp = new NativeCallExpression(clsNode, nativeList, this.getBTToken(ncc.start));
+		}
+		else
+		{
+			nativeExp = new NativeCallExpression(insNode, nativeList, this.getBTToken(ncc.start));
+		}
+		return nativeExp;
+
+	}
+
+	protected Expression[] parseExpressionCtxList(List<ExpressionContext> list)
+	{
+		if (list == null || list.size() == 0)
+		{
+			return new Expression[0];
+		}
+		List<Expression> expList = new ArrayList<Expression>(list.size());
+		for (ExpressionContext ec : list)
+		{
+			expList.add(this.parseExpress(ec));
+		}
+		return expList.toArray(new Expression[0]);
+
 	}
 
 	protected Expression parseJson(JsonContext ctx)

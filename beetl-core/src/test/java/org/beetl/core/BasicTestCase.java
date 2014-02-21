@@ -25,6 +25,8 @@ public class BasicTestCase extends TestCase
 		cf.setStatementStart("<%");
 		cf.setStatementEnd("%>");
 		cf.addPkg("org.beetl.core");
+		cf.addPkg("org.beetl.core.nativecall");
+
 		// FileResourceLoader rs = new FileResourceLoader(home,
 		// cf.getCharset());
 		rs = new ClasspathResourceLoader("template");

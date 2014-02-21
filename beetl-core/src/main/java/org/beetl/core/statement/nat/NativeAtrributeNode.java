@@ -4,7 +4,7 @@ public class NativeAtrributeNode extends NativeNode
 {
 	public String attribute;
 
-	public NativeAtrributeNode(String attriute)
+	public NativeAtrributeNode(String attribute)
 	{
 		this.attribute = attribute;
 	}

@@ -3,7 +3,6 @@ package org.beetl.core.statement;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
 
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
@@ -25,20 +24,22 @@ public class NativeCallExpression extends Expression
 
 	InstanceNode insNode;
 	ClassNode clsNode;
-	List<NativeNode> chain;
+	NativeNode[] chain;
 
-	public NativeCallExpression(InstanceNode insNode, List<NativeNode> chain, Token token)
+	public NativeCallExpression(InstanceNode insNode, NativeNode[] chain, Token token)
 	{
 		super(token);
 		this.insNode = insNode;
+		this.chain = chain;
 	}
 
-	public NativeCallExpression(ClassNode clsNode, List<NativeNode> chain, Token token)
+	public NativeCallExpression(ClassNode clsNode, NativeNode[] chain, Token token)
 	{
 		super(token);
 		//可以做某些优化，如提前得到final 属性
 
 		this.clsNode = clsNode;
+		this.chain = chain;
 	}
 
 	public Object evaluate(Context ctx)
@@ -66,7 +67,7 @@ public class NativeCallExpression extends Expression
 				{
 					Field f = targetCls.getField(attr);
 					targetObj = f.get(targetObj);
-					targetCls = f.getDeclaringClass();
+					targetCls = f.getType();
 
 				}
 				catch (SecurityException e)
@@ -134,7 +135,7 @@ public class NativeCallExpression extends Expression
 				{
 					Method m = targetCls.getMethod(method, argTypes);
 					targetObj = m.invoke(targetObj, args);
-					targetCls = m.getDeclaringClass();
+					targetCls = m.getReturnType();
 
 				}
 				catch (SecurityException e)
@@ -194,7 +195,7 @@ public class NativeCallExpression extends Expression
 				try
 				{
 					Field f = type.cls.getField(attr);
-					Class c = f.getDeclaringClass();
+					Class c = f.getType();
 					type.cls = c;
 				}
 				catch (SecurityException e)
@@ -232,7 +233,7 @@ public class NativeCallExpression extends Expression
 				try
 				{
 					Method m = type.cls.getMethod(method, argTypes);
-					type.cls = m.getDeclaringClass();
+					type.cls = m.getReturnType();
 				}
 				catch (SecurityException e)
 				{

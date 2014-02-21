@@ -622,7 +622,7 @@ public class AntlrProgramBuilder
 		for (; i < ids.size(); i++)
 		{
 			String text = ids.get(i).getText();
-			clsSb.append(text).append(".");
+
 			char c = text.charAt(0);
 			if (c >= 'A' && c <= 'Z')
 			{
@@ -630,6 +630,10 @@ public class AntlrProgramBuilder
 				isCls = true;
 				break;
 
+			}
+			else
+			{
+				clsSb.append(text).append(".");
 			}
 		}
 
@@ -639,13 +643,15 @@ public class AntlrProgramBuilder
 		if (isCls)
 		{
 			clsNode = new ClassNode(clsSb.toString());
+			//指向下一个属性或者静态方法
+			i++;
 		}
 		else
 		{
-			//变量的属性引用
-			String varName = ids.get(i).getText();
+			//变量的属性引用,回到第一个
+			String varName = ids.get(0).getText();
 			VarRef ref = new VarRef(new VarAttribute[0], false, null, this.getBTToken("varName", ncc.start.getLine()));
-			this.pbCtx.addVarAndPostion(ref);
+			this.pbCtx.setVarPosition(varName, ref);
 			insNode = new InstanceNode(ref);
 			i = 1;
 		}
@@ -707,13 +713,14 @@ public class AntlrProgramBuilder
 			}
 		}
 
+		NativeNode[] chain = nativeList.toArray(new NativeNode[0]);
 		if (clsNode != null)
 		{
-			nativeExp = new NativeCallExpression(clsNode, nativeList, this.getBTToken(ncc.start));
+			nativeExp = new NativeCallExpression(clsNode, chain, this.getBTToken(ncc.start));
 		}
 		else
 		{
-			nativeExp = new NativeCallExpression(insNode, nativeList, this.getBTToken(ncc.start));
+			nativeExp = new NativeCallExpression(insNode, chain, this.getBTToken(ncc.start));
 		}
 		return nativeExp;
 

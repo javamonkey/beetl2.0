@@ -1,5 +1,7 @@
 package org.beetl.core.nativecall;
 
+import java.util.List;
+
 import org.beetl.core.BasicTestCase;
 import org.beetl.core.Template;
 import org.beetl.core.User;
@@ -27,5 +29,55 @@ public class NativeTest extends BasicTestCase
 		this.bind(t, "test", test);
 		str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/nat/nat_attr_expected.html"), str);
+	}
+
+	@Test
+	public void testMethod() throws Exception
+	{
+		NativeTest test = new NativeTest();
+		Template t = gt.getTemplate("/nat/nat_method_template.html");
+		this.bind(t, "test", test);
+		String str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/nat/nat_method_expected.html"), str);
+
+		t = gt.getTemplate("/nat/nat_method_template.html");
+		this.bind(t, "test", test);
+		str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/nat/nat_method_expected.html"), str);
+	}
+
+	@Test
+	public void testArray() throws Exception
+	{
+		NativeTest test = new NativeTest();
+		Template t = gt.getTemplate("/nat/nat_array_template.html");
+		this.bind(t, "test", test);
+		String str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/nat/nat_array_expected.html"), str);
+
+		t = gt.getTemplate("/nat/nat_array_template.html");
+		this.bind(t, "test", test);
+		str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/nat/nat_array_expected.html"), str);
+	}
+
+	public String getText()
+	{
+		return "text";
+	}
+
+	public static String getDefaultText()
+	{
+		return "defaultText";
+	}
+
+	public User[] getMyFriends()
+	{
+		return users;
+	}
+
+	public static List<User> getUsers()
+	{
+		return User.getTestUsers();
 	}
 }

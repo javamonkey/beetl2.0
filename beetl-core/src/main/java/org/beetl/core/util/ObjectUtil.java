@@ -13,6 +13,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
@@ -28,6 +29,8 @@ import org.beetl.core.resolver.PojoMethodInvoker;
 public class ObjectUtil
 {
 	static Map<String, MethodInvoker> methodInvokerCache = new ConcurrentHashMap<String, MethodInvoker>();
+	static Map<Class, Method[]> cacheClassMethodMap = new ConcurrentHashMap<Class, Method[]>();
+	public static Object[] EMPTY_OBJECT_ARRAY = new Object[0];
 
 	public static Object copy(Object o)
 	{
@@ -321,6 +324,128 @@ public class ObjectUtil
 			return null;
 		}
 
+	}
+
+	public static Object invoke(Object o, String methodName, Object[] paras) throws IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException
+	{
+		Class target = o.getClass();
+		Class[] parameterType = new Class[paras.length];
+		int i = 0;
+		for (Object para : paras)
+		{
+			parameterType[i++] = para.getClass();
+		}
+		MethodMatchConf mf = findMethod(target, methodName, parameterType);
+		Object result = invoke(o, mf, paras);
+		return result;
+	}
+
+	public static Object invokeStatic(Class target, String methodName, Object[] paras) throws IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException
+	{
+
+		Class[] parameterType = new Class[paras.length];
+		int i = 0;
+		for (Object para : paras)
+		{
+			parameterType[i++] = para.getClass();
+		}
+		MethodMatchConf mf = findMethod(target, methodName, parameterType);
+		Object result = invoke(null, mf, paras);
+		return result;
+	}
+
+	private static Object invoke(Object o, MethodMatchConf conf, Object[] paras) throws IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException
+	{
+
+		Object[] targets = null;
+		if (conf.isNeedConvert)
+		{
+			targets = new Object[paras.length];
+			for (int i = 0; i < paras.length; i++)
+			{
+				if (conf.convert[i] != 0)
+				{
+					targets[i] = conf.convert(paras[i], i);
+				}
+				else
+				{
+					targets[i] = paras[i];
+				}
+			}
+
+			return conf.method.invoke(o, targets);
+
+		}
+		else
+		{
+			targets = paras;
+		}
+		return conf.method.invoke(o, targets);
+	}
+
+	/**
+	 * 找到某个类的某个方法，方法名是methodName,参数是parameterType。该方法尽可能找到接口方法，同时，该方法
+	 * 试图考虑到带有原始类型或者wrap类型的参数
+	 * 
+	 * @param target
+	 * @param methodName
+	 * @param parameterType
+	 * @return
+	 */
+	public static MethodMatchConf findMethod(Class target, String methodName, Class[] parameterType)
+	{
+
+		Method[] ms = cacheClassMethodMap.get(target);
+		if (ms == null)
+		{
+			ms = target.getMethods();
+
+		}
+		Method temp = null;
+		for (int i = 0; i < ms.length; i++)
+		{
+			temp = ms[i];
+			if (temp.getName().equals(methodName))
+			{
+				MethodMatchConf selfMc = match(temp, parameterType, parameterType.length);
+				if (selfMc != null && selfMc.isExactMatch)
+				{
+					Class[] interfaces = target.getInterfaces();
+					// 优先返回接口
+					for (Class inf : interfaces)
+					{
+						if (inf.equals(java.io.Serializable.class))
+						{
+							continue;
+						}
+						MethodMatchConf interfaceMc = findMethod(inf, methodName, parameterType);
+						if (interfaceMc != null)
+						{
+							return interfaceMc;
+						}
+					}
+					// 在返回父类
+					Class parent = target.getSuperclass();
+					if (parent != null && !parent.equals(Object.class))
+					{
+						MethodMatchConf parentMc = findMethod(parent, methodName, parameterType);
+						if (parentMc != null)
+						{
+							return parentMc;
+						}
+					}
+					// 最后返回自己
+					return selfMc;
+
+				}
+			}
+
+		}
+
+		return null;
 	}
 
 	//	public void call(long c, Object k)

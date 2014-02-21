@@ -13,6 +13,7 @@ import org.beetl.core.statement.nat.NativeArrayNode;
 import org.beetl.core.statement.nat.NativeAtrributeNode;
 import org.beetl.core.statement.nat.NativeMethodNode;
 import org.beetl.core.statement.nat.NativeNode;
+import org.beetl.core.util.ObjectUtil;
 
 /**
  * @xxx.xx()[0].xxx
@@ -120,32 +121,41 @@ public class NativeCallExpression extends Expression
 				NativeMethodNode methodNode = (NativeMethodNode) node;
 				String method = methodNode.method;
 				Expression[] expList = methodNode.paras;
-				Object[] args = expList.length == 0 ? null : new Object[expList.length];
-				Class[] argTypes = expList.length == 0 ? null : new Class[expList.length];
+				//use 
+				Object[] args = expList.length == 0 ? ObjectUtil.EMPTY_OBJECT_ARRAY : new Object[expList.length];
 
 				for (int i = 0; i < expList.length; i++)
 				{
 					args[i] = expList[i].evaluate(ctx);
-					if (args[i] != null)
-					{
-						argTypes[i] = args[i].getClass();
-					}
+
 				}
+
 				try
 				{
-					Method m = targetCls.getMethod(method, argTypes);
-					targetObj = m.invoke(targetObj, args);
-					targetCls = m.getReturnType();
+					if (targetObj != null)
+					{
+						targetObj = ObjectUtil.invoke(targetObj, method, args);
+					}
+					else
+					{
+						targetObj = ObjectUtil.invokeStatic(targetCls, method, args);
+					}
+
+					if (targetObj != null)
+					{
+						targetCls = targetObj.getClass();
+					}
+					else
+					{
+						targetCls = null;
+					}
 
 				}
 				catch (SecurityException e)
 				{
 					throw new TempException(" can not get method" + e.getMessage());
 				}
-				catch (NoSuchMethodException e)
-				{
-					throw new TempException(" no such method" + e.getMessage());
-				}
+
 				catch (IllegalArgumentException e)
 				{
 					throw new TempException(" illegal parameter for  method" + e.getMessage());

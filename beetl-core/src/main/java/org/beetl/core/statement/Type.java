@@ -128,4 +128,21 @@ public class Type implements java.io.Serializable
 		return sb.toString();
 
 	}
+
+	public Type copy()
+	{
+		Type type = new Type(this.cls);
+
+		if (types != null)
+		{
+			Type[] copyTypes = new Type[types.length];
+			for (int i = 0; i < types.length; i++)
+			{
+				copyTypes[i] = new Type(types[i].cls);
+			}
+			type.types = copyTypes;
+		}
+		return type;
+
+	}
 }

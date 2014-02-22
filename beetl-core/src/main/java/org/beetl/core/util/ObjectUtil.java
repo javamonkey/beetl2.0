@@ -31,6 +31,7 @@ public class ObjectUtil
 	static Map<String, MethodInvoker> methodInvokerCache = new ConcurrentHashMap<String, MethodInvoker>();
 	static Map<Class, Method[]> cacheClassMethodMap = new ConcurrentHashMap<Class, Method[]>();
 	public static Object[] EMPTY_OBJECT_ARRAY = new Object[0];
+	public static Class[] EMPTY_CLASS_ARRAY = new Class[0];
 
 	public static Object copy(Object o)
 	{
@@ -410,7 +411,7 @@ public class ObjectUtil
 			temp = ms[i];
 			if (temp.getName().equals(methodName))
 			{
-				MethodMatchConf selfMc = match(temp, parameterType, parameterType.length);
+				MethodMatchConf selfMc = match(temp, parameterType, -1);
 				if (selfMc != null && selfMc.isExactMatch)
 				{
 					Class[] interfaces = target.getInterfaces();

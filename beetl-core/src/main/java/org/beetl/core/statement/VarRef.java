@@ -78,6 +78,7 @@ public class VarRef extends Expression implements IVarIndex
 	@Override
 	public void infer(InferContext inferCtx)
 	{
+
 		Type type = inferCtx.types[this.varIndex];
 		Type lastType = type;
 		Type t = null;

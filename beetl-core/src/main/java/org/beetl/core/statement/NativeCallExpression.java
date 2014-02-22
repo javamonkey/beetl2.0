@@ -2,7 +2,6 @@ package org.beetl.core.statement;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
@@ -13,6 +12,7 @@ import org.beetl.core.statement.nat.NativeArrayNode;
 import org.beetl.core.statement.nat.NativeAtrributeNode;
 import org.beetl.core.statement.nat.NativeMethodNode;
 import org.beetl.core.statement.nat.NativeNode;
+import org.beetl.core.util.MethodMatchConf;
 import org.beetl.core.util.ObjectUtil;
 
 /**
@@ -182,7 +182,7 @@ public class NativeCallExpression extends Expression
 		if (insNode != null)
 		{
 			insNode.ref.infer(inferCtx);
-			type = insNode.ref.type;
+			type = insNode.ref.type.copy();
 		}
 		else
 		{
@@ -232,7 +232,7 @@ public class NativeCallExpression extends Expression
 				String method = methodNode.method;
 				Expression[] expList = methodNode.paras;
 
-				Class[] argTypes = expList.length == 0 ? null : new Class[expList.length];
+				Class[] argTypes = expList.length == 0 ? ObjectUtil.EMPTY_CLASS_ARRAY : new Class[expList.length];
 
 				for (int i = 0; i < expList.length; i++)
 				{
@@ -240,18 +240,23 @@ public class NativeCallExpression extends Expression
 					argTypes[i] = expList[i].type.cls;
 
 				}
+
 				try
 				{
-					Method m = type.cls.getMethod(method, argTypes);
-					type.cls = m.getReturnType();
+					MethodMatchConf conf = ObjectUtil.findMethod(type.cls, method, argTypes);
+					if (conf == null)
+					{
+						throw new TempException(" can not get method " + method);
+					}
+					else
+					{
+						type.cls = conf.method.getReturnType();
+					}
+
 				}
 				catch (SecurityException e)
 				{
 					throw new TempException(" can not get method" + e.getMessage());
-				}
-				catch (NoSuchMethodException e)
-				{
-					throw new TempException(" no such method" + e.getMessage());
 				}
 
 			}

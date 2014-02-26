@@ -32,11 +32,21 @@ import java.io.IOException;
 public abstract class ByteWriter
 {
 
-	char[] buffer = new char[64];
+	protected char[] buffer = null;
 
 	public abstract void write(char[] cbuf) throws IOException;
 
 	public abstract void write(char[] cbuf, int len) throws IOException;
+
+	public ByteWriter()
+	{
+		buffer = new char[64];
+	}
+
+	public ByteWriter(char[] buffer)
+	{
+		this.buffer = buffer;
+	}
 
 	public final void write(String str) throws IOException
 	{
@@ -61,23 +71,21 @@ public abstract class ByteWriter
 
 	public abstract void write(byte[] bs) throws IOException;
 
-	public abstract void write(SuperVar sv) throws IOException;
+	public abstract void write(byte[] bs, int count) throws IOException;
+
+	//	public abstract void write(BodyContent bc) throws IOException;
 
 	public abstract ByteWriter getTempWriter();
 
-	/* 将来也许能优化，避免数组的copy */
-	public abstract Object getTempContent();
-
-	public abstract void flush() throws IOException;
-
-	public abstract ByteWriter getParent();
+	public abstract BodyContent getTempConent();
 
 	/**
-	 * 将临时流flush到父流
-	 * 
-	 * @throws IOException
+	 * 将内容填充到bw里
+	 * @param bw
 	 */
-	public abstract void flushToParent() throws IOException;
+	public abstract void fill(ByteWriter bw) throws IOException;
+
+	public abstract void flush() throws IOException;
 
 	public void write(Object o) throws IOException
 	{

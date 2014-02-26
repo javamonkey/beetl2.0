@@ -33,18 +33,52 @@ import java.io.Writer;
 public class NoLockStringWriter extends Writer
 {
 
-	StringBuilder buf = new StringBuilder(512);
+	//todo reuse parent writer buf??
+	protected char buf[];
+	protected int count;
+
+	public NoLockStringWriter()
+	{
+		this.buf = new char[64];
+	}
 
 	@Override
 	public void write(char[] cbuf, int off, int len) throws IOException
 	{
-		buf.append(cbuf, off, len);
-
+		int newcount = count + len;
+		if (newcount > buf.length)
+		{
+			buf = copyOf(buf, Math.max(buf.length << 1, newcount));
+		}
+		System.arraycopy(cbuf, off, buf, count, len);
+		count = newcount;
 	}
 
-	public void write(String str)
+	public static char[] copyOf(char[] original, int newLength)
 	{
-		buf.append(str);
+		char[] copy = new char[newLength];
+		System.arraycopy(original, 0, copy, 0, Math.min(original.length, newLength));
+		return copy;
+	}
+
+	public void write(String str) throws IOException
+	{
+		if (str != null)
+		{
+			int len = str.length();
+			if (len < buf.length)
+			{
+				str.getChars(0, len, buf, 0);
+				this.write(buf, 0, len);
+
+			}
+			else
+			{
+
+				this.write(str.toCharArray());
+			}
+
+		}
 	}
 
 	@Override
@@ -62,7 +96,7 @@ public class NoLockStringWriter extends Writer
 
 	public String toString()
 	{
-		return buf.toString();
+		return new String(buf, 0, count);
 	}
 
 }

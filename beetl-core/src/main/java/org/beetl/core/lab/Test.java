@@ -8,10 +8,11 @@ public class Test
 	 */
 	public static void main(String[] args)
 	{
-		Integer a = new Integer(1);
-		Integer b = new Integer(0);
-		double c = 5 / 0;
-		System.out.println(c);
+		//		Integer a = new Integer(1);
+		//		Integer b = new Integer(0);
+		//		double c = 5 / 0;
+		//		System.out.println(c);
+		System.out.println(System.currentTimeMillis());
 
 	}
 

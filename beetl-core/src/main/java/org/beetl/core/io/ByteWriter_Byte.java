@@ -30,26 +30,19 @@ package org.beetl.core.io;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.beetl.core.BodyContent;
 import org.beetl.core.ByteWriter;
-import org.beetl.core.SuperVar;
 
 public class ByteWriter_Byte extends ByteWriter
 {
 
-	private OutputStream os;
-	private String cs;
-	private ByteWriter parent = null;
+	protected OutputStream os;
+	protected String cs;
 
 	public ByteWriter_Byte(OutputStream os, String cs)
 	{
 		this.os = os;
 		this.cs = cs;
-	}
-
-	protected ByteWriter_Byte(OutputStream os, String cs, ByteWriter parent)
-	{
-		this(os, cs);
-		this.parent = parent;
 	}
 
 	@Override
@@ -76,7 +69,7 @@ public class ByteWriter_Byte extends ByteWriter
 
 	}
 
-	protected void write(byte[] bs, int count) throws IOException
+	public void write(byte[] bs, int count) throws IOException
 	{
 		os.write(bs, 0, count);
 
@@ -85,14 +78,7 @@ public class ByteWriter_Byte extends ByteWriter
 	@Override
 	public ByteWriter getTempWriter()
 	{
-		return new ByteWriter_Byte(new NoLockByteArrayOutputStream(), cs, this);
-	}
-
-	@Override
-	public Object getTempContent()
-	{
-		NoLockByteArrayOutputStream bos = (NoLockByteArrayOutputStream) os;
-		return bos.toByteArray();
+		return new ByteWriter_Byte(new NoLockByteArrayOutputStream(), cs);
 	}
 
 	@Override
@@ -103,29 +89,32 @@ public class ByteWriter_Byte extends ByteWriter
 	}
 
 	@Override
-	public ByteWriter getParent()
+	public void fill(ByteWriter bw) throws IOException
 	{
-		return parent;
-	}
-
-	@Override
-	public void write(SuperVar sv) throws IOException
-	{
-		this.os.write(sv.toByte());
+		ByteWriter_Byte bwb = (ByteWriter_Byte) bw;
+		NoLockByteArrayOutputStream byteArray = (NoLockByteArrayOutputStream) bwb.os;
+		this.write(byteArray.buf, byteArray.count);
 
 	}
 
 	@Override
-	public void flushToParent() throws IOException
+	public BodyContent getTempConent()
 	{
-		if (this.parent == null)
-		{
-			throw new NullPointerException("Parent is null");
-		}
-		os.flush();
-		NoLockByteArrayOutputStream bos = (NoLockByteArrayOutputStream) os;
-		((ByteWriter_Byte) this.parent).write(bos.buf, bos.count);
-
+		NoLockByteArrayOutputStream byteArray = (NoLockByteArrayOutputStream) this.os;
+		return new ByteBodyContent(byteArray.buf, byteArray.count, this.cs);
 	}
+
+	//	@Override
+	//	public void flushToParent() throws IOException
+	//	{
+	//		if (this.parent == null)
+	//		{
+	//			throw new NullPointerException("Parent is null");
+	//		}
+	//		os.flush();
+	//		NoLockByteArrayOutputStream bos = (NoLockByteArrayOutputStream) os;
+	//		((ByteWriter_Byte) this.parent).write(bos.buf, bos.count);
+	//
+	//	}
 
 }

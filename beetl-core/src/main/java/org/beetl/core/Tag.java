@@ -27,6 +27,8 @@
  */
 package org.beetl.core;
 
+import org.beetl.core.statement.BlockStatement;
+
 /**
  * 请使用GeneralBeetlTag
  * 
@@ -48,51 +50,44 @@ package org.beetl.core;
 public abstract class Tag
 {
 	protected Object[] args = null;
-	protected ByteWriter tagBody;
 	protected GroupTemplate group;
 	protected Context ctx;
+	protected ByteWriter bw;
+	protected BlockStatement bs;
 
 	public void setParas(Object[] args)
 	{
 		this.args = args;
 	}
 
-	/**
-	 * 是否需要解析运行标签体，有些情况是不用输入文本的，譬如{@link org.bee.tl.ext.includeFileTemplate
-	 * includeFileTemplate}标签， 有些情况下是要用，如{@link org.bee.tl.ext.LayoutTag layout}
-	 * 标签
-	 */
-	public boolean requriedInput()
+	protected void setBodySt(BlockStatement st)
 	{
-		return true;
+		this.bs = st;
 	}
 
-	/**
-	 * @param input
-	 *            标签体的内容
-	 */
-	public void setInput(ByteWriter tagBody)
+	protected void doBodyRender()
 	{
-		this.tagBody = tagBody;
+		bs.execute(ctx);
 	}
 
-	/**
-	 * @param ctx
-	 *            上下文，可以通过__this获取template，通过__pw获取Writer， __group
-	 *            获取GroupTemplate
-	 */
+	protected BodyContent getBodyContent()
+	{
+		ByteWriter writer = ctx.byteWriter;
+		ByteWriter tempWriter = ctx.byteWriter.getTempWriter();
+		ctx.byteWriter = tempWriter;
+		doBodyRender();
+		ctx.byteWriter = writer;
+		return tempWriter.getTempConent();
+	}
+
+	public abstract void render();
+
 	public void setContext(Context ctx)
 	{
 
 		this.ctx = ctx;
+		this.bw = ctx.byteWriter;
 
 	}
-
-	/**
-	 * 将标签内容输出到里
-	 * 
-	 * @return
-	 */
-	public abstract void writeTo(ByteWriter writer);
 
 }

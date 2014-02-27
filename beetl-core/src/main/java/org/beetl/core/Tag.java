@@ -87,6 +87,7 @@ public abstract class Tag
 
 		this.ctx = ctx;
 		this.bw = ctx.byteWriter;
+		this.group = ctx.gt;
 
 	}
 

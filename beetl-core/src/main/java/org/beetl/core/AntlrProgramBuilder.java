@@ -40,6 +40,8 @@ import org.beetl.core.parser.BeetlParser.ForStContext;
 import org.beetl.core.parser.BeetlParser.FunctionCallContext;
 import org.beetl.core.parser.BeetlParser.FunctionCallExpContext;
 import org.beetl.core.parser.BeetlParser.FunctionNsContext;
+import org.beetl.core.parser.BeetlParser.FunctionTagCallContext;
+import org.beetl.core.parser.BeetlParser.FunctionTagStContext;
 import org.beetl.core.parser.BeetlParser.IfStContext;
 import org.beetl.core.parser.BeetlParser.JsonContext;
 import org.beetl.core.parser.BeetlParser.JsonExpContext;
@@ -99,6 +101,7 @@ import org.beetl.core.statement.SafePlaceholderST;
 import org.beetl.core.statement.Statement;
 import org.beetl.core.statement.StatementExpression;
 import org.beetl.core.statement.StaticTextASTNode;
+import org.beetl.core.statement.TagStatement;
 import org.beetl.core.statement.TernaryExpression;
 import org.beetl.core.statement.TryCatchStatement;
 import org.beetl.core.statement.Type;
@@ -242,11 +245,28 @@ public class AntlrProgramBuilder
 
 			return parseTryCatch((TryStContext) node);
 		}
+		else if (node instanceof FunctionTagStContext)
+		{
+			FunctionTagStContext fc = (FunctionTagStContext) node;
+			return this.parseTag(fc.functionTagCall());
+		}
 		else
 		{
 			throw new UnsupportedOperationException();
 		}
 
+	}
+
+	protected TagStatement parseTag(FunctionTagCallContext fc)
+	{
+		String id = this.getID(fc.functionNs().Identifier());
+		List<ExpressionContext> list = fc.expressionList().expression();
+		Expression[] expList = this.parseExpressionCtxList(list);
+		BlockContext blockCtx = fc.block();
+		Statement block = parseBlock(blockCtx.statement(), blockCtx);
+		TagStatement tag = new TagStatement(this.gt.getTagFactory(id), expList, block, this.getBTToken(id, fc
+				.functionNs().getStart().getLine()));
+		return tag;
 	}
 
 	protected TryCatchStatement parseTryCatch(TryStContext tryStCtx)

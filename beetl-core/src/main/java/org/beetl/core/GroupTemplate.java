@@ -30,6 +30,7 @@ import org.beetl.ext.fn.QuestionMark;
 import org.beetl.ext.fn.TruncFunction;
 import org.beetl.ext.format.DateFormat;
 import org.beetl.ext.format.NumberFormat;
+import org.beetl.ext.tag.IncludeTag;
 
 public class GroupTemplate
 {
@@ -47,6 +48,7 @@ public class GroupTemplate
 	Map<Class, Format> defaultFormatMap = new HashMap<Class, Format>(0);
 	List<VirtualAttributeEval> virtualAttributeList = new ArrayList<VirtualAttributeEval>();
 	Map<Class, VirtualClassAttribute> virtualClass = new HashMap<Class, VirtualClassAttribute>();
+	Map<String, TagFactory> tagFactoryMap = new HashMap<String, TagFactory>();
 	ClassSearch classSearch = null;
 
 	/**
@@ -116,6 +118,11 @@ public class GroupTemplate
 		this.registerDefaultFormat(java.math.BigDecimal.class, numberFormat);
 		this.registerDefaultFormat(java.util.concurrent.atomic.AtomicLong.class, numberFormat);
 		this.registerDefaultFormat(java.util.concurrent.atomic.AtomicInteger.class, numberFormat);
+
+		DefaultTagFactory includeTagFactory = new DefaultTagFactory(IncludeTag.class);
+		this.registerTagFactory("include", includeTagFactory);
+		//兼容1.x，但不会出现在2.x文档里
+		this.registerTagFactory("includeFile", includeTagFactory);
 
 	}
 
@@ -340,6 +347,21 @@ public class GroupTemplate
 	public void registerDefaultFormat(Class type, Format format)
 	{
 		this.defaultFormatMap.put(type, format);
+	}
+
+	public void registerTag(String name, Class tagCls)
+	{
+		this.tagFactoryMap.put(name, new DefaultTagFactory(tagCls));
+	}
+
+	public void registerTagFactory(String name, TagFactory tagFactory)
+	{
+		this.tagFactoryMap.put(name, tagFactory);
+	}
+
+	public TagFactory getTagFactory(String name)
+	{
+		return this.tagFactoryMap.get(name);
 	}
 
 	public Function getFunction(String name)

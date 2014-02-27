@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
+import java.util.Set;
 
 import org.beetl.core.exception.BeetlException;
 import org.beetl.core.exception.TempException;
@@ -65,7 +66,7 @@ public class Template
 		this.renderTo(byteWriter);
 	}
 
-	private void renderTo(ByteWriter byteWriter)
+	public void renderTo(ByteWriter byteWriter)
 	{
 		ctx.byteWriter = byteWriter;
 		ctx.byteOutputMode = cf.directByteOutput;
@@ -116,6 +117,16 @@ public class Template
 		this.binding(varName, o, false);
 	}
 
+	public void dynamic(Set<String> objectKeys)
+	{
+		this.ctx.objectKeys = objectKeys;
+	}
+
+	public void dynamic(String key)
+	{
+		this.ctx.objectKeys.add(key);
+	}
+
 	/**
 	 * 为模板绑定多个变量，map的key，value对应了变量名称和变量值。key必须符合javascript命名规范
 	 * 
@@ -147,4 +158,5 @@ public class Template
 		}
 
 	}
+
 }

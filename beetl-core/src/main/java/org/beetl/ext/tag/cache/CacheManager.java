@@ -25,60 +25,53 @@
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.beetl.core;
-
-import org.beetl.core.statement.Statement;
+package org.beetl.ext.tag.cache;
 
 /**
- * 请使用GeneralBeetlTag
- * 
- * 
- * <p/>
- * &lt;% cache(key){ %>
- * <p/>
- * ip=10.1.1.1
- * <p/>
- * port=9090
- * <p/>
- * &lt;%}%>
- * 
- * <p/>
- * 
- * @author joeli
- * @create 2011-5-31
+ *  cache标签的接口，默认使用SimpleCacheManager，用户可以实现自定义的CacheManager
+ *  并调用CacheTag.cacheManager = yourCacheManager来实现
+ *    
+ * @author joelli
+ *
  */
-public abstract class Tag
+public interface CacheManager
 {
-	protected Object[] args = null;
-	protected GroupTemplate group;
-	protected Context ctx;
-	protected ByteWriter bw;
-	protected Statement bs;
+	/**
+	 * 获取key值对应的对象
+	 * @param key
+	 * @return
+	 */
+	public Object getObject(String key);
 
-	protected void doBodyRender()
-	{
-		bs.execute(ctx);
-	}
+	/**
+	 * @param key
+	 * @param value
+	 * @param period 多少秒后过期
+	 */
+	public void setObject(String key, Object value, long period);
 
-	protected BodyContent getBodyContent()
-	{
-		ByteWriter writer = ctx.byteWriter;
-		ByteWriter tempWriter = ctx.byteWriter.getTempWriter();
-		ctx.byteWriter = tempWriter;
-		doBodyRender();
-		ctx.byteWriter = writer;
-		return tempWriter.getTempConent();
-	}
+	/**
+	 * 查看key值对应的对象是否存在
+	 * @param key
+	 * @return
+	 */
+	public boolean isDisable(String key);
 
-	public abstract void render();
+	/**
+	 * 清除cache
+	 */
+	public void clearAll();
 
-	public void init(Context ctx, Object[] args, Statement st)
-	{
-		this.ctx = ctx;
-		this.bw = ctx.byteWriter;
-		this.group = ctx.gt;
-		this.args = args;
-		this.bs = st;
-	}
+	/**
+	 * 删除key对应的对象
+	 * @param key
+	 */
+	public void clearAll(String key);
+
+	/**
+	 * 删除keys对应的所有缓存对象
+	 * @param keys
+	 */
+	public void clearAll(String... keys);
 
 }

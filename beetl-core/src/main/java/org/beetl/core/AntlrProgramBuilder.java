@@ -260,7 +260,18 @@ public class AntlrProgramBuilder
 	protected TagStatement parseTag(FunctionTagCallContext fc)
 	{
 		String id = this.getID(fc.functionNs().Identifier());
-		List<ExpressionContext> list = fc.expressionList().expression();
+		ExpressionListContext expListCtx = fc.expressionList();
+		List<ExpressionContext> list = null;
+		if (expListCtx != null)
+		{
+			list = fc.expressionList().expression();
+		}
+		else
+		{
+			list = Collections.EMPTY_LIST;
+
+		}
+
 		Expression[] expList = this.parseExpressionCtxList(list);
 		BlockContext blockCtx = fc.block();
 		Statement block = parseBlock(blockCtx.statement(), blockCtx);

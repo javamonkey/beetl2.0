@@ -40,8 +40,7 @@ public class TagStatement extends Statement
 
 		}
 
-		tag.setContext(ctx);
-		tag.setParas(args);
+		tag.init(ctx, args, block);
 		tag.render();
 
 	}
@@ -49,7 +48,11 @@ public class TagStatement extends Statement
 	@Override
 	public void infer(InferContext inferCtx)
 	{
-		// TODO Auto-generated method stub
+		for (Expression exp : paras)
+		{
+			exp.infer(inferCtx);
+		}
+		block.infer(inferCtx);
 
 	}
 

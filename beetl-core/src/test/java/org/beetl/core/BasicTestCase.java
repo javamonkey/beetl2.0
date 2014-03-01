@@ -26,6 +26,7 @@ public class BasicTestCase extends TestCase
 		cf.setStatementEnd("%>");
 		cf.addPkg("org.beetl.core");
 		cf.addPkg("org.beetl.core.nativecall");
+		cf.setHtmlTagSupport(true);
 
 		// FileResourceLoader rs = new FileResourceLoader(home,
 		// cf.getCharset());

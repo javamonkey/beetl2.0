@@ -30,7 +30,10 @@ import org.beetl.ext.fn.QuestionMark;
 import org.beetl.ext.fn.TruncFunction;
 import org.beetl.ext.format.DateFormat;
 import org.beetl.ext.format.NumberFormat;
+import org.beetl.ext.tag.DeleteTag;
+import org.beetl.ext.tag.HTMLTagSupportWrapper;
 import org.beetl.ext.tag.IncludeTag;
+import org.beetl.ext.tag.LayoutTag;
 
 public class GroupTemplate
 {
@@ -119,16 +122,18 @@ public class GroupTemplate
 		this.registerDefaultFormat(java.util.concurrent.atomic.AtomicLong.class, numberFormat);
 		this.registerDefaultFormat(java.util.concurrent.atomic.AtomicInteger.class, numberFormat);
 
+	}
+
+	protected void initTag()
+	{
 		DefaultTagFactory includeTagFactory = new DefaultTagFactory(IncludeTag.class);
 		this.registerTagFactory("include", includeTagFactory);
 		//兼容1.x，但不会出现在2.x文档里
 		this.registerTagFactory("includeFile", includeTagFactory);
 
-	}
-
-	protected void initTag()
-	{
-
+		this.registerTag("layout", LayoutTag.class);
+		this.registerTag("delete", DeleteTag.class);
+		this.registerTag("htmltag", HTMLTagSupportWrapper.class);
 	}
 
 	protected void initVirtual()
@@ -226,6 +231,10 @@ public class GroupTemplate
 		Reader reader = res.openReader();
 		Transformator sf = new Transformator(conf.placeholderStart, conf.placeholderEnd, conf.statementStart,
 				conf.statementEnd);
+		if (this.conf.isHtmlTagSupport())
+		{
+			sf.enableHtmlTagSupport(conf.getHtmlTagStart(), conf.getHtmlTagEnd());
+		}
 		Reader scriptReader;
 		try
 		{

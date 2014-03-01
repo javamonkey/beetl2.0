@@ -113,12 +113,12 @@ public class User
 		joelli.setAge(36);
 		joelli.setSalary(10000.01);
 		User lucy = new User("lucy");
-		joelli.setAge(35);
-		joelli.setSalary(6000.5);
+		lucy.setAge(35);
+		lucy.setSalary(6000.5);
 
 		User lyy = new User("lyy");
-		joelli.setAge(37);
-		joelli.setSalary(12000.01);
+		lyy.setAge(37);
+		lyy.setSalary(12000.01);
 
 		List all = new ArrayList();
 

@@ -85,6 +85,11 @@ public abstract class ByteWriter
 	 */
 	public abstract void fill(ByteWriter bw) throws IOException;
 
+	public void write(BodyContent bodyContent) throws IOException
+	{
+		bodyContent.fill(this);
+	}
+
 	public abstract void flush() throws IOException;
 
 	public void write(Object o) throws IOException

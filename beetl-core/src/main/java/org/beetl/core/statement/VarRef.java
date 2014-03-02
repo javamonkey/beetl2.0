@@ -27,7 +27,7 @@ public class VarRef extends Expression implements IVarIndex
 	{
 
 		Object value = ctx.vars[varIndex];
-		if (value == null || value == Context.NOT_EXIST_OBJECT)
+		if (value == Context.NOT_EXIST_OBJECT)
 		{
 			if (hasSafe)
 			{
@@ -51,12 +51,12 @@ public class VarRef extends Expression implements IVarIndex
 		for (VarAttribute attr : attributes)
 		{
 
-			value = attr.evaluate(ctx, value);
-
 			if (value == null && hasSafe)
 			{
 				return safe == null ? null : safe.evaluate(ctx);
 			}
+			value = attr.evaluate(ctx, value);
+
 		}
 		return value;
 

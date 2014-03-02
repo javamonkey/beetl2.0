@@ -54,6 +54,7 @@ public class ArthExpression extends Expression
 	{
 		a.infer(inferCtx);
 		b.infer(inferCtx);
+		//should check it ?
 		this.type = new Type(ALU.getBaseTypeClass(a.type.cls, b.type.cls));
 	}
 

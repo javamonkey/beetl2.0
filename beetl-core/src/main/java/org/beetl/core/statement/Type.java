@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.beetl.core.BodyContent;
 import org.beetl.core.IteratorStatus;
 import org.beetl.core.exception.TempException;
 import org.beetl.core.resolver.MethodInvoker;
@@ -24,6 +25,8 @@ public class Type implements java.io.Serializable
 	public static final Type StringType = new Type(String.class);
 	public static final Type ListType = new Type(List.class);
 	public static final Type MapType = new Type(Map.class);
+	public static final Type NULLType = new Type(NULLClass.class);
+	public static final Type BodyContentType = new Type(BodyContent.class);
 
 	public static final Class[] StringPara = new Class[]
 	{ String.class };
@@ -143,6 +146,11 @@ public class Type implements java.io.Serializable
 			type.types = copyTypes;
 		}
 		return type;
+
+	}
+
+	public class NULLClass
+	{
 
 	}
 }

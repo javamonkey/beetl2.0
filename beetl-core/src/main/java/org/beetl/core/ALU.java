@@ -2,6 +2,12 @@ package org.beetl.core;
 
 import java.math.BigDecimal;
 
+/**
+ * 用于算数表达式，对于加法，允许null值，但其他则不允许，将抛出异常
+ * @todo 抛出异常..
+ * @author joelli
+ *
+ */
 public class ALU
 {
 
@@ -69,6 +75,7 @@ public class ALU
 
 	public static int getBaseType(Class cls1, Class cls2)
 	{
+
 		if ((cls1 == String.class || (cls2 == String.class)))
 		{
 			return STRING;
@@ -117,6 +124,8 @@ public class ALU
 		{
 			case INTEGER:
 				return Integer.class;
+			case STRING:
+				return String.class;
 			case LONG:
 				return Long.class;
 			case DOUBLE:
@@ -282,6 +291,12 @@ public class ALU
 	// ///////////////////////////
 	// +
 
+	/**不同于js，数字类型允许一个为null，beetl中，如果数字相加，有一个是null，则抛出异常
+	 * 
+	 * @param o1
+	 * @param o2
+	 * @return
+	 */
 	public static Object plus(final Object o1, final Object o2)
 	{
 		if (o1 != null && o2 != null)
@@ -310,6 +325,30 @@ public class ALU
 
 				default:
 					throw UnsupportedTypeException(o1, o2);
+			}
+		}
+		else if (o1 != null)
+		{
+			switch (getBaseType(o1))
+			{
+				case STRING:
+					return o1;
+				default:
+				{
+					throw ValueIsNullException(o1, o2);
+				}
+			}
+		}
+		else if (o2 != null)
+		{
+			switch (getBaseType(o2))
+			{
+				case STRING:
+					return o2;
+				default:
+				{
+					throw ValueIsNullException(o1, o2);
+				}
 			}
 		}
 		else

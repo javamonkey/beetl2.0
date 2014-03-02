@@ -7,6 +7,7 @@ public class Literal extends Expression
 {
 
 	public Object obj = null;
+	public static final Literal NULLLiteral = new Literal(null, null);
 
 	public Literal(Object value, Token token)
 	{
@@ -24,7 +25,15 @@ public class Literal extends Expression
 
 	public void infer(InferContext inferCtx)
 	{
-		this.type = new Type(obj.getClass());
+		if (obj != null)
+		{
+			this.type = new Type(obj.getClass());
+		}
+		else
+		{
+			this.type = Type.NULLType;
+		}
+
 	}
 
 }

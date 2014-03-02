@@ -18,6 +18,7 @@ import org.beetl.core.exception.TempException;
 import org.beetl.core.parser.BeetlParser;
 import org.beetl.core.parser.BeetlParser.AddminExpContext;
 import org.beetl.core.parser.BeetlParser.AssignGeneralContext;
+import org.beetl.core.parser.BeetlParser.AssignIdContext;
 import org.beetl.core.parser.BeetlParser.AssignMentContext;
 import org.beetl.core.parser.BeetlParser.BlockContext;
 import org.beetl.core.parser.BeetlParser.BlockStContext;
@@ -577,6 +578,16 @@ public class AntlrProgramBuilder
 				pbCtx.addVar(vas.token.text);
 				pbCtx.setVarPosition(vas.token.text, vas);
 			}
+			else if (amc instanceof AssignIdContext)
+			{
+				AssignIdContext idCtx = (AssignIdContext) amc;
+				VarAssignStatement vas = new VarAssignStatement(Literal.NULLLiteral, getBTToken(idCtx.Identifier()
+						.getSymbol()));
+				listNode.add(vas);
+				pbCtx.addVar(vas.token.text);
+				pbCtx.setVarPosition(vas.token.text, vas);
+
+			}
 			// 其他还有Identifier,Identifier ASSIN block
 		}
 		VarAssignStatementSeq seq = new VarAssignStatementSeq(listNode.toArray(new Statement[0]), null);
@@ -1036,9 +1047,15 @@ public class AntlrProgramBuilder
 			String strValue = blc.getChild(0).getText();
 			value = Boolean.parseBoolean(strValue);
 		}
-
-		Literal literal = new Literal(value, this.getBTToken(ctx.getStart()));
-		return literal;
+		if (value == null)
+		{
+			return Literal.NULLLiteral;
+		}
+		else
+		{
+			Literal literal = new Literal(value, this.getBTToken(ctx.getStart()));
+			return literal;
+		}
 
 	}
 

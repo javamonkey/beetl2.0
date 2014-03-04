@@ -41,7 +41,9 @@ public class Configuration
 
 	// 关于引擎的设置
 
-	String engine = "org.beetl.core.DefaultTemplateEngine";
+	//	String engine = "org.beetl.core.DefaultTemplateEngine";
+	String engine = "org.beetl.core.FastRuntimeEngine";
+	String nativeSecurity = "org.beetl.core.DefaultNativeSecurityManager";
 
 	public GroupTemplate make()
 	{
@@ -193,6 +195,26 @@ public class Configuration
 	public void setPkgList(Set<String> pkgList)
 	{
 		this.pkgList = pkgList;
+	}
+
+	public String getEngine()
+	{
+		return engine;
+	}
+
+	public void setEngine(String engine)
+	{
+		this.engine = engine;
+	}
+
+	public String getNativeSecurity()
+	{
+		return nativeSecurity;
+	}
+
+	public void setNativeSecurity(String nativeSecurity)
+	{
+		this.nativeSecurity = nativeSecurity;
 	}
 
 }

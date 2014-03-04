@@ -16,6 +16,7 @@ import org.beetl.core.exception.HTMLTagParserException;
 import org.beetl.core.exception.TempException;
 import org.beetl.core.statement.Program;
 import org.beetl.core.util.ClassSearch;
+import org.beetl.core.util.ObjectUtil;
 import org.beetl.ext.fn.AssertFunction;
 import org.beetl.ext.fn.CheckExistFunction;
 import org.beetl.ext.fn.DateFunction;
@@ -53,6 +54,7 @@ public class GroupTemplate
 	Map<Class, VirtualClassAttribute> virtualClass = new HashMap<Class, VirtualClassAttribute>();
 	Map<String, TagFactory> tagFactoryMap = new HashMap<String, TagFactory>();
 	ClassSearch classSearch = null;
+	NativeSecurityManager nativeSecurity = null;
 
 	/**
 	 * 使用loader 和 conf初始化GroupTempalte
@@ -67,12 +69,13 @@ public class GroupTemplate
 	{
 		this.resourceLoader = loader;
 		this.conf = conf;
-		engine = TemplateEngineFactory.getEngine();
+		engine = TemplateEngineFactory.getEngine(conf.getEngine());
 		this.initFunction();
 		this.initFormatter();
 		this.initTag();
 		this.initVirtual();
 		classSearch = new ClassSearch(conf.getPkgList());
+		nativeSecurity = (NativeSecurityManager) ObjectUtil.instnace(conf.getNativeSecurity());
 	}
 
 	protected void initFunction()
@@ -426,6 +429,11 @@ public class GroupTemplate
 	public Class loadClassBySimpleName(String simpleName)
 	{
 		return this.classSearch.getClassByName(simpleName);
+	}
+
+	public NativeSecurityManager getNativeSecurity()
+	{
+		return nativeSecurity;
 	}
 
 }

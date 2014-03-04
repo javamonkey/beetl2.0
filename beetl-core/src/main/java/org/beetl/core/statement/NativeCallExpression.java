@@ -132,6 +132,10 @@ public class NativeCallExpression extends Expression
 
 				try
 				{
+					if (!ctx.gt.getNativeSecurity().permit(ctx.template.program.id, targetCls, targetObj, method))
+					{
+						throw new TempException("不允许调用Native方法" + method + " of " + targetCls);
+					}
 					if (targetObj != null)
 					{
 						targetObj = ObjectUtil.invoke(targetObj, method, args);

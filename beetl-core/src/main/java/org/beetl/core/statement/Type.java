@@ -23,6 +23,8 @@ public class Type implements java.io.Serializable
 	public static final Type ObjectType = new Type(Object.class);
 	public static final Type BooleanType = new Type(Boolean.class);
 	public static final Type StringType = new Type(String.class);
+	public static final Type NumberType = new Type(Number.class);
+
 	public static final Type ListType = new Type(List.class);
 	public static final Type MapType = new Type(Map.class);
 	public static final Type NULLType = new Type(NULLClass.class);
@@ -130,6 +132,20 @@ public class Type implements java.io.Serializable
 		}
 		return sb.toString();
 
+	}
+
+	public boolean equals(Object o)
+	{
+		Type t = (Type) o;
+		if (t.cls == this.cls)
+		{
+			//还需要考虑x,y?
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	public Type copy()

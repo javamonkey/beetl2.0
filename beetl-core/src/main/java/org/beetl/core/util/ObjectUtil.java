@@ -449,6 +449,25 @@ public class ObjectUtil
 		return null;
 	}
 
+	public static Object instnace(String clsName)
+	{
+		try
+		{
+			return Class.forName(clsName).newInstance();
+		}
+		catch (InstantiationException e)
+		{
+			throw new RuntimeException(e);
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new RuntimeException(e);
+		}
+		catch (ClassNotFoundException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
 	//	public void call(long c, Object k)
 	//	{
 	//		System.out.println(c + "" + k);

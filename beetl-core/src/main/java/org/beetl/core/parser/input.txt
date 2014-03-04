@@ -1,5 +1,5 @@
-var b = c ;
-
-/*@type(List<User> users ,String str)*/
-
-var u = d;
+switch(a){
+	case 1:
+	case 2: println(ok);break;
+	default:break;
+}

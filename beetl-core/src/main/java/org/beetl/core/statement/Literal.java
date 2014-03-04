@@ -27,7 +27,15 @@ public class Literal extends Expression
 	{
 		if (obj != null)
 		{
-			this.type = new Type(obj.getClass());
+			if (obj instanceof Number)
+			{
+				this.type = Type.NumberType;
+			}
+			else
+			{
+				this.type = new Type(obj.getClass());
+			}
+
 		}
 		else
 		{

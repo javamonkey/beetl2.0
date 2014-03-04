@@ -20,6 +20,8 @@ import org.beetl.core.parser.BeetlParser.AddminExpContext;
 import org.beetl.core.parser.BeetlParser.AssignGeneralContext;
 import org.beetl.core.parser.BeetlParser.AssignIdContext;
 import org.beetl.core.parser.BeetlParser.AssignMentContext;
+import org.beetl.core.parser.BeetlParser.AssignStContext;
+import org.beetl.core.parser.BeetlParser.AssignTemplateVarContext;
 import org.beetl.core.parser.BeetlParser.BlockContext;
 import org.beetl.core.parser.BeetlParser.BlockStContext;
 import org.beetl.core.parser.BeetlParser.BooleanLiteralContext;
@@ -58,10 +60,13 @@ import org.beetl.core.parser.BeetlParser.ParExpContext;
 import org.beetl.core.parser.BeetlParser.ParExpressionContext;
 import org.beetl.core.parser.BeetlParser.ReturnStContext;
 import org.beetl.core.parser.BeetlParser.Safe_outputContext;
+import org.beetl.core.parser.BeetlParser.SiwchStContext;
 import org.beetl.core.parser.BeetlParser.StatementContext;
 import org.beetl.core.parser.BeetlParser.StatementExpressionContext;
 import org.beetl.core.parser.BeetlParser.StaticOutputStContext;
 import org.beetl.core.parser.BeetlParser.StatmentExpStContext;
+import org.beetl.core.parser.BeetlParser.SwitchBlockStatementGroupContext;
+import org.beetl.core.parser.BeetlParser.SwitchLabelContext;
 import org.beetl.core.parser.BeetlParser.TernaryExpContext;
 import org.beetl.core.parser.BeetlParser.TextOutputStContext;
 import org.beetl.core.parser.BeetlParser.TextStatmentContext;
@@ -77,12 +82,14 @@ import org.beetl.core.parser.BeetlParser.VarAttributeVirtualContext;
 import org.beetl.core.parser.BeetlParser.VarRefContext;
 import org.beetl.core.parser.BeetlParser.VarRefExpContext;
 import org.beetl.core.parser.BeetlParser.VarStContext;
+import org.beetl.core.parser.BeetlParser.WhileStContext;
 import org.beetl.core.resolver.ObjectAA;
 import org.beetl.core.statement.ASTNode;
 import org.beetl.core.statement.ArthExpression;
 import org.beetl.core.statement.BlockStatement;
 import org.beetl.core.statement.BreakStatement;
 import org.beetl.core.statement.CompareExpression;
+import org.beetl.core.statement.ContentBodyExpression;
 import org.beetl.core.statement.ContinueStatement;
 import org.beetl.core.statement.DirectiveStatement;
 import org.beetl.core.statement.Expression;
@@ -102,6 +109,7 @@ import org.beetl.core.statement.SafePlaceholderST;
 import org.beetl.core.statement.Statement;
 import org.beetl.core.statement.StatementExpression;
 import org.beetl.core.statement.StaticTextASTNode;
+import org.beetl.core.statement.SwitchStatement;
 import org.beetl.core.statement.TagStatement;
 import org.beetl.core.statement.TernaryExpression;
 import org.beetl.core.statement.TryCatchStatement;
@@ -113,6 +121,7 @@ import org.beetl.core.statement.VarDefineNode;
 import org.beetl.core.statement.VarRef;
 import org.beetl.core.statement.VarSquareAttribute;
 import org.beetl.core.statement.VarVirtualAttribute;
+import org.beetl.core.statement.WhileStatement;
 import org.beetl.core.statement.nat.ClassNode;
 import org.beetl.core.statement.nat.InstanceNode;
 import org.beetl.core.statement.nat.NativeArrayNode;
@@ -193,13 +202,23 @@ public class AntlrProgramBuilder
 		else if (node instanceof BreakStContext)
 		{
 			BreakStatement st = new BreakStatement(null);
-			pbCtx.current.gotoValue = IGoto.BREAK;
+			if (pbCtx.current.gotoValue != IGoto.RETURN)
+			{
+				pbCtx.current.gotoValue = IGoto.BREAK;
+
+			}
+
 			return st;
 		}
 		else if (node instanceof ContinueStContext)
 		{
 			ContinueStatement st = new ContinueStatement(null);
-			pbCtx.current.gotoValue = IGoto.CONTINUE;
+			if (pbCtx.current.gotoValue != IGoto.RETURN)
+			{
+				pbCtx.current.gotoValue = IGoto.CONTINUE;
+
+			}
+
 			return st;
 		}
 		else if (node instanceof ForStContext)
@@ -251,11 +270,154 @@ public class AntlrProgramBuilder
 			FunctionTagStContext fc = (FunctionTagStContext) node;
 			return this.parseTag(fc.functionTagCall());
 		}
+		else if (node instanceof WhileStContext)
+		{
+			return this.parseWhile((WhileStContext) node);
+		}
+		else if (node instanceof AssignStContext)
+		{
+			VarAssignStatement vas = this.parseAssign(((AssignStContext) node).assignMent());
+			pbCtx.setVarPosition(vas.token.text, vas);
+			return vas;
+		}
+		else if (node instanceof SiwchStContext)
+		{
+			return this.parseSwitch((SiwchStContext) node);
+		}
 		else
 		{
 			throw new UnsupportedOperationException();
 		}
 
+	}
+
+	protected SwitchStatement parseSwitch(SiwchStContext sctx)
+	{
+		this.pbCtx.enterBlock();
+		this.pbCtx.current.canStopContinueBreakFlag = true;
+
+		ExpressionContext ect = sctx.parExpression().expression();
+		Expression exp = this.parseExpress(ect);
+		List<SwitchBlockStatementGroupContext> list = sctx.switchBlock().switchBlockStatementGroup();
+		Map<Expression, BlockStatement> condtionsStatementsMap = new HashMap<Expression, BlockStatement>();
+		List<Expression> conditionList = new ArrayList<Expression>();
+		BlockStatement defaultBlock = null;
+		for (SwitchBlockStatementGroupContext group : list)
+		{
+			List<SwitchLabelContext> labels = group.switchLabel();
+			List<StatementContext> stats = group.statement();
+			BlockStatement block = stats != null ? this.parseBlock(stats, group) : null;
+			for (SwitchLabelContext label : labels)
+			{
+				Expression caseExp = this.parseExpress(label.expression());
+				if (caseExp == null)
+				{
+					//default
+					defaultBlock = block;
+					break;
+
+				}
+				else
+				{
+					conditionList.add(caseExp);
+					condtionsStatementsMap.put(caseExp, block);
+				}
+
+			}
+
+		}
+
+		SwitchStatement switchStat = new SwitchStatement(exp, conditionList.toArray(new Expression[0]),
+				condtionsStatementsMap, defaultBlock, this.getBTToken(sctx.getStart()));
+		return switchStat;
+	}
+
+	protected VarAssignStatement parseAssign(AssignMentContext amc)
+	{
+
+		VarAssignStatement vas = null;
+		if (amc instanceof AssignGeneralContext)
+		{
+			AssignGeneralContext agc = (AssignGeneralContext) amc;
+			ExpressionContext expCtx = agc.expression();
+			Expression exp = parseExpress(expCtx);
+			vas = new VarAssignStatement(exp, getBTToken(agc.Identifier().getSymbol()));
+
+			return vas;
+		}
+		else if (amc instanceof AssignIdContext)
+		{
+			AssignIdContext idCtx = (AssignIdContext) amc;
+			vas = new VarAssignStatement(Literal.NULLLiteral, getBTToken(idCtx.Identifier().getSymbol()));
+
+			return vas;
+
+		}
+		else if (amc instanceof AssignTemplateVarContext)
+		{
+			AssignTemplateVarContext templateVarCtx = (AssignTemplateVarContext) amc;
+			BlockContext blockCtx = templateVarCtx.block();
+
+			BlockStatement block = this.parseBlock(blockCtx.statement(), blockCtx);
+			ContentBodyExpression bodyExp = new ContentBodyExpression(block, getBTToken(templateVarCtx.Identifier()
+					.getSymbol()));
+
+			vas = new VarAssignStatement(bodyExp, getBTToken(templateVarCtx.Identifier().getSymbol()));
+
+		}
+		else
+		{
+			throw new RuntimeException("不支持");
+		}
+
+		return vas;
+	}
+
+	protected void checkGoto(IGoto gotoHandleStat)
+	{
+
+		switch (pbCtx.current.gotoValue)
+		{
+			case IGoto.NORMAL:
+				return;
+			case IGoto.CONTINUE:
+			case IGoto.BREAK:
+				if (!pbCtx.current.canStopContinueBreakFlag)
+				{
+					//传递给上一级，除非碰到for while这样能停止传递的
+					pbCtx.current.parent.gotoValue = pbCtx.current.gotoValue;
+				}
+				gotoHandleStat.setGoto(true);
+				return;
+			case IGoto.RETURN:
+				if (pbCtx.current.parent != pbCtx.root)
+				{
+					//上一级必须检测return
+					pbCtx.current.parent.gotoValue = IGoto.RETURN;
+				}
+				else
+				{
+					//整个程序都需要检测return
+					this.data.hasGoto = true;
+				}
+				gotoHandleStat.setGoto(true);
+
+		}
+	}
+
+	protected WhileStatement parseWhile(WhileStContext wc)
+	{
+		pbCtx.enterBlock();
+		//break，continue语句到此为止
+		pbCtx.current.canStopContinueBreakFlag = true;
+		ExpressionContext condtionCtx = wc.parExpression().expression();
+		StatementContext bodyCtx = wc.statement();
+		Expression condtion = this.parseExpress(condtionCtx);
+		Statement body = this.parseStatment(bodyCtx);
+		WhileStatement whileStat = new WhileStatement(condtion, body, this.getBTToken(wc.getStart()));
+
+		pbCtx.exitBlock();
+		return whileStat;
 	}
 
 	protected TagStatement parseTag(FunctionTagCallContext fc)
@@ -502,7 +664,7 @@ public class AntlrProgramBuilder
 
 		Expression exp = this.parseExpress(forCtx.expression());
 		ForStatement forStatement = new ForStatement(forVar, exp, forPart, elseForPart, forVar.token);
-
+		this.checkGoto(forStatement);
 		pbCtx.exitBlock();
 		return forStatement;
 
@@ -568,27 +730,11 @@ public class AntlrProgramBuilder
 		List<ASTNode> listNode = new ArrayList<ASTNode>();
 		for (AssignMentContext amc : list)
 		{
-			if (amc instanceof AssignGeneralContext)
-			{
-				AssignGeneralContext agc = (AssignGeneralContext) amc;
-				ExpressionContext expCtx = agc.expression();
-				Expression exp = parseExpress(expCtx);
-				VarAssignStatement vas = new VarAssignStatement(exp, getBTToken(agc.Identifier().getSymbol()));
-				listNode.add(vas);
-				pbCtx.addVar(vas.token.text);
-				pbCtx.setVarPosition(vas.token.text, vas);
-			}
-			else if (amc instanceof AssignIdContext)
-			{
-				AssignIdContext idCtx = (AssignIdContext) amc;
-				VarAssignStatement vas = new VarAssignStatement(Literal.NULLLiteral, getBTToken(idCtx.Identifier()
-						.getSymbol()));
-				listNode.add(vas);
-				pbCtx.addVar(vas.token.text);
-				pbCtx.setVarPosition(vas.token.text, vas);
+			VarAssignStatement vas = this.parseAssign(amc);
+			listNode.add(vas);
+			pbCtx.addVar(vas.token.text);
+			pbCtx.setVarPosition(vas.token.text, vas);
 
-			}
-			// 其他还有Identifier,Identifier ASSIN block
 		}
 		VarAssignStatementSeq seq = new VarAssignStatementSeq(listNode.toArray(new Statement[0]), null);
 		return seq;
@@ -1083,6 +1229,7 @@ public class AntlrProgramBuilder
 		pbCtx.enterBlock();
 		ASTNode[] statements = new ASTNode[list.size()];
 		List<Statement> nodes = new ArrayList<Statement>();
+		boolean hasGoto = false;
 		for (int i = 0; i < statements.length; i++)
 		{
 			nodes.add(parseStatment((ParserRuleContext) list.get(i)));
@@ -1090,31 +1237,7 @@ public class AntlrProgramBuilder
 		}
 
 		BlockStatement block = new BlockStatement(nodes.toArray(new Statement[0]), this.getBTToken(ctx.getStart()));
-		switch (pbCtx.current.gotoValue)
-		{
-			case IGoto.NORMAL:
-				break;
-			case IGoto.CONTINUE:
-			case IGoto.BREAK:
-				block.setGoto(true);
-				if (!pbCtx.current.parent.canStopContinueBreakFlag)
-				{
-					//传递给上一级，除非碰到for while这样能停止传递的
-					pbCtx.current.parent.gotoValue = pbCtx.current.gotoValue;
-				}
-				break;
-			case IGoto.RETURN:
-				block.setGoto(true);
-				if (pbCtx.current.parent != pbCtx.root)
-				{
-					pbCtx.current.parent.gotoValue = IGoto.RETURN;
-				}
-				else
-				{
-					this.data.hasGoto = true;
-				}
-
-		}
+		this.checkGoto(block);
 		pbCtx.exitBlock();
 		return block;
 	}

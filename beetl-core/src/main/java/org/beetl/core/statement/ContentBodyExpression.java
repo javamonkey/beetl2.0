@@ -4,44 +4,34 @@ import org.beetl.core.ByteWriter;
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
 
-public class VarAssignBlockStatement extends Statement implements IVarIndex
+public class ContentBodyExpression extends Expression
 {
-	protected int varIndex;
+
 	public BlockStatement block;
 
-	public VarAssignBlockStatement(BlockStatement block, Token token)
+	public ContentBodyExpression(BlockStatement block, Token token)
 	{
 		super(token);
-		this.block = block;
 		// TODO Auto-generated constructor stub
 	}
 
-	public void execute(Context ctx)
+	public Object evaluate(Context ctx)
 	{
-
 		ByteWriter real = ctx.byteWriter;
 		ByteWriter temp = real.getTempWriter();
 		ctx.byteWriter = temp;
 		block.execute(ctx);
-		ctx.vars[varIndex] = temp.getTempConent();
 		ctx.byteWriter = real;
+		return temp.getTempConent();
 
 	}
 
-	public int getVarIndex()
-	{
-		return varIndex;
-	}
-
-	public void setVarIndex(int varIndex)
-	{
-		this.varIndex = varIndex;
-	}
-
+	@Override
 	public void infer(InferContext inferCtx)
 	{
 		block.infer(inferCtx);
-		inferCtx.types[varIndex] = Type.BodyContentType;
+		this.type = Type.BodyContentType;
+
 	}
 
 }

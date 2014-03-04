@@ -20,10 +20,6 @@ public final class ForStatement extends Statement implements IGoto
 		this.exp = exp;
 		this.elseforPart = elseforPart;
 		this.forPart = forPart;
-		if (this.forPart instanceof BlockStatement)
-		{
-			this.hasGoto = ((BlockStatement) forPart).hasGoto;
-		}
 
 	}
 

@@ -78,7 +78,7 @@ assignMent
 ;
 
 switchBlock
-    :   LEFT_BRACE switchBlockStatementGroup* switchLabel* RIGHT_BRACE
+    :   LEFT_BRACE switchBlockStatementGroup* RIGHT_BRACE
     ;
 
 switchBlockStatementGroup

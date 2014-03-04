@@ -70,4 +70,34 @@ public class GoTest extends BasicTestCase
 
 	}
 
+	@Test
+	public void testReturn() throws Exception
+	{
+		Template t = gt.getTemplate("/control/go/return_template.html");
+		this.bind(t, "dataList", data);
+		String str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/control/go/return_expected.html"), str);
+
+		t = gt.getTemplate("/control/go/return_template.html");
+		this.bind(t, "dataList", data);
+		str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/control/go/return_expected.html"), str);
+
+	}
+
+	@Test
+	public void testContinueAndReturn() throws Exception
+	{
+		Template t = gt.getTemplate("/control/go/continue_return_template.html");
+		this.bind(t, "dataList", data);
+		String str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/control/go/continue_return_expected.html"), str);
+
+		t = gt.getTemplate("/control/go/continue_return_template.html");
+		this.bind(t, "dataList", data);
+		str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/control/go/continue_return_expected.html"), str);
+
+	}
+
 }

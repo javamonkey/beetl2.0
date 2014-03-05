@@ -293,8 +293,8 @@ public class AntlrProgramBuilder
 
 	protected SwitchStatement parseSwitch(SiwchStContext sctx)
 	{
-		this.pbCtx.enterBlock();
-		this.pbCtx.current.canStopContinueBreakFlag = true;
+		//		this.pbCtx.enterBlock();
+		//		this.pbCtx.current.canStopContinueBreakFlag = true;
 
 		ExpressionContext ect = sctx.parExpression().expression();
 		Expression exp = this.parseExpress(ect);

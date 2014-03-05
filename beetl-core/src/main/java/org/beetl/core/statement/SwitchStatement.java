@@ -21,6 +21,7 @@ public class SwitchStatement extends Statement
 		this.map = map;
 		this.value = value;
 		this.condtionsList = condtionsList;
+		this.defaultBlock = defaultBlock;
 	}
 
 	@Override

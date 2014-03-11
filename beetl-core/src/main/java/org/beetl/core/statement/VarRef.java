@@ -9,8 +9,8 @@ public class VarRef extends Expression implements IVarIndex
 
 	public VarAttribute[] attributes;
 	public Expression safe;
-	int varIndex;
-	boolean hasSafe;
+	public int varIndex;
+	public boolean hasSafe;
 
 	public VarRef(VarAttribute[] attributes, boolean hasSafe, Expression safe, Token token)
 	{

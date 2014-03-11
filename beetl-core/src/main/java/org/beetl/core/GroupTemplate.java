@@ -22,6 +22,7 @@ import org.beetl.ext.fn.CheckExistFunction;
 import org.beetl.ext.fn.DateFunction;
 import org.beetl.ext.fn.DebugFunction;
 import org.beetl.ext.fn.DecodeFunction;
+import org.beetl.ext.fn.EmptyExpressionFunction;
 import org.beetl.ext.fn.EmptyFunction;
 import org.beetl.ext.fn.NVLFunction;
 import org.beetl.ext.fn.Print;
@@ -93,6 +94,8 @@ public class GroupTemplate
 		this.registerFunction("trunc", new TruncFunction());
 		this.registerFunction("empty", new EmptyFunction());
 		this.registerFunction("qmark", new QuestionMark());
+		this.registerFunction("isEmpty", new EmptyExpressionFunction());
+
 	}
 
 	protected void initFormatter()

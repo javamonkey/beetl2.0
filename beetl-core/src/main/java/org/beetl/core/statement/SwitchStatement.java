@@ -1,7 +1,7 @@
 package org.beetl.core.statement;
 
-import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
@@ -10,17 +10,21 @@ import org.beetl.core.exception.TempException;
 public class SwitchStatement extends Statement
 {
 	Expression value;
-	Map<Expression, BlockStatement> map;
+	TreeMap<Expression, BlockStatement> map;
+	//为了类型推测方便，实际上只要map就可以了
 	Expression[] condtionsList;
+	BlockStatement[] blocks;
+	//------------
 	BlockStatement defaultBlock;
 
-	public SwitchStatement(Expression value, Expression[] condtionsList, Map<Expression, BlockStatement> map,
-			BlockStatement defaultBlock, Token token)
+	public SwitchStatement(Expression value, TreeMap<Expression, BlockStatement> map, BlockStatement defaultBlock,
+			Token token)
 	{
 		super(token);
 		this.map = map;
 		this.value = value;
-		this.condtionsList = condtionsList;
+		this.condtionsList = map.keySet().toArray(new Expression[0]);
+		this.blocks = map.values().toArray(new BlockStatement[0]);
 		this.defaultBlock = defaultBlock;
 	}
 
@@ -53,7 +57,7 @@ public class SwitchStatement extends Statement
 				}
 				else
 				{
-					// 匹配下一个
+					// 匹配下一个Block
 					continue;
 				}
 			}

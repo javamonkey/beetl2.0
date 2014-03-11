@@ -6,9 +6,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -45,6 +47,9 @@ import org.beetl.core.parser.BeetlParser.FunctionCallExpContext;
 import org.beetl.core.parser.BeetlParser.FunctionNsContext;
 import org.beetl.core.parser.BeetlParser.FunctionTagCallContext;
 import org.beetl.core.parser.BeetlParser.FunctionTagStContext;
+import org.beetl.core.parser.BeetlParser.G_caseStatmentContext;
+import org.beetl.core.parser.BeetlParser.G_defaultStatmentContext;
+import org.beetl.core.parser.BeetlParser.G_switchStatmentContext;
 import org.beetl.core.parser.BeetlParser.IfStContext;
 import org.beetl.core.parser.BeetlParser.JsonContext;
 import org.beetl.core.parser.BeetlParser.JsonExpContext;
@@ -60,6 +65,7 @@ import org.beetl.core.parser.BeetlParser.ParExpContext;
 import org.beetl.core.parser.BeetlParser.ParExpressionContext;
 import org.beetl.core.parser.BeetlParser.ReturnStContext;
 import org.beetl.core.parser.BeetlParser.Safe_outputContext;
+import org.beetl.core.parser.BeetlParser.SelectStContext;
 import org.beetl.core.parser.BeetlParser.SiwchStContext;
 import org.beetl.core.parser.BeetlParser.StatementContext;
 import org.beetl.core.parser.BeetlParser.StatementExpressionContext;
@@ -106,6 +112,7 @@ import org.beetl.core.statement.PlaceholderST;
 import org.beetl.core.statement.ProgramMetaData;
 import org.beetl.core.statement.ReturnStatement;
 import org.beetl.core.statement.SafePlaceholderST;
+import org.beetl.core.statement.SelectStatement;
 import org.beetl.core.statement.Statement;
 import org.beetl.core.statement.StatementExpression;
 import org.beetl.core.statement.StaticTextASTNode;
@@ -284,11 +291,58 @@ public class AntlrProgramBuilder
 		{
 			return this.parseSwitch((SiwchStContext) node);
 		}
+		else if (node instanceof SelectStContext)
+		{
+			SelectStContext selectCtx = (SelectStContext) node;
+
+			return this.parseSelect(selectCtx);
+		}
+
 		else
 		{
 			throw new UnsupportedOperationException();
 		}
 
+	}
+
+	protected SelectStatement parseSelect(SelectStContext selectCtx)
+	{
+		//		this.pbCtx.enterBlock();
+		//		this.pbCtx.current.canStopContinueBreakFlag = true;
+		G_switchStatmentContext ctx = selectCtx.g_switchStatment();
+		ExpressionContext exp = ctx.expression();
+		Expression base = exp != null ? this.parseExpress(exp) : null;
+		List<G_caseStatmentContext> caseCtxList = ctx.g_caseStatment();
+		List<Expression> condtionList = new LinkedList<Expression>();
+		List<BlockStatement> blockList = new LinkedList<BlockStatement>();
+		for (G_caseStatmentContext caseCtx : caseCtxList)
+		{
+			List<ExpressionContext> expCtxList = caseCtx.expression();
+			List<StatementContext> statCtxList = caseCtx.statement();
+			BlockStatement block = this.parseBlock(statCtxList, caseCtx);
+			for (ExpressionContext expCtx : expCtxList)
+			{
+				Expression condition = this.parseExpress(expCtx);
+				//select case 的条件是||的关系，只要任何一个条件满足，都可以执行block
+				condtionList.add(condition);
+				blockList.add(block);
+			}
+
+		}
+
+		BlockStatement defaultStatement = null;
+		G_defaultStatmentContext defaultCtx = ctx.g_defaultStatment();
+		if (defaultCtx != null)
+		{
+			List<StatementContext> defaultCtxList = ctx.g_defaultStatment().statement();
+			defaultStatement = this.parseBlock(defaultCtxList, ctx);
+		}
+
+		SelectStatement select = new SelectStatement(base, condtionList.toArray(new Expression[0]),
+				blockList.toArray(new BlockStatement[0]), defaultStatement, this.getBTToken(selectCtx.Select()
+						.getSymbol()));
+
+		return select;
 	}
 
 	protected SwitchStatement parseSwitch(SiwchStContext sctx)
@@ -299,7 +353,7 @@ public class AntlrProgramBuilder
 		ExpressionContext ect = sctx.parExpression().expression();
 		Expression exp = this.parseExpress(ect);
 		List<SwitchBlockStatementGroupContext> list = sctx.switchBlock().switchBlockStatementGroup();
-		Map<Expression, BlockStatement> condtionsStatementsMap = new HashMap<Expression, BlockStatement>();
+		TreeMap<Expression, BlockStatement> condtionsStatementsMap = new TreeMap<Expression, BlockStatement>();
 		List<Expression> conditionList = new ArrayList<Expression>();
 		BlockStatement defaultBlock = null;
 		for (SwitchBlockStatementGroupContext group : list)
@@ -327,8 +381,8 @@ public class AntlrProgramBuilder
 
 		}
 
-		SwitchStatement switchStat = new SwitchStatement(exp, conditionList.toArray(new Expression[0]),
-				condtionsStatementsMap, defaultBlock, this.getBTToken(sctx.getStart()));
+		SwitchStatement switchStat = new SwitchStatement(exp, condtionsStatementsMap, defaultBlock,
+				this.getBTToken(sctx.getStart()));
 		return switchStat;
 	}
 
@@ -589,6 +643,28 @@ public class AntlrProgramBuilder
 		List<TerminalNode> idList = ctx.functionNs().Identifier();
 		String nsId = this.getID(idList);
 		org.beetl.core.statement.Token btToken = new org.beetl.core.statement.Token(nsId, ctx.start.getLine(), 0);
+		if (nsId.equals("isEmpty"))
+		{
+			if (exps.length == 1)
+			{
+				Expression one = exps[0];
+				if (one instanceof VarRef)
+				{
+					//强制为变量引用增加一个安全输出
+					VarRef ref = (VarRef) one;
+					if (!ref.hasSafe)
+					{
+						ref.hasSafe = true;
+						ref.safe = null;
+					}
+				}
+			}
+			else
+			{
+				throw new TempException("必须有一个参数 isEmpty");
+			}
+
+		}
 		FunctionExpression fe = new FunctionExpression(nsId, exps, vs, btToken);
 		return fe;
 

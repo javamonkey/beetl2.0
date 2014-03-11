@@ -41,4 +41,17 @@ public class FunctionTest extends BasicTestCase
 		AssertJUnit.assertEquals(this.getFileContent("/function/function_package_expected.html"), str);
 
 	}
+
+	public void testIsEmpty() throws Exception
+	{
+		gt.registerFunctionPackage("test", new SampleFunctionPackage());
+		Template t = gt.getTemplate("/function/isEmpty_template.html");
+		String str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/function/isEmpty_expected.html"), str);
+
+		t = gt.getTemplate("/function/isEmpty_template.html");
+		str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/function/isEmpty_expected.html"), str);
+
+	}
 }

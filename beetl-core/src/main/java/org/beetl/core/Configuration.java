@@ -1,6 +1,13 @@
 package org.beetl.core;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -11,8 +18,6 @@ import java.util.Set;
  */
 public class Configuration
 {
-
-	// 关于模板的设置
 
 	/* 模板字符集 */
 	String charset = "UTF-8";
@@ -35,8 +40,12 @@ public class Configuration
 	/* 严格mvc应用，只有变态的的人才打开此选项 */
 	boolean isStrict = false;
 
+	String errorHandlerClass = "org.beetl.core.DefaultErrorHandler";
+
 	String htmlTagStart = "<" + htmlTagFlag;
 	String htmlTagEnd = "</" + htmlTagFlag;
+
+	//类搜索的包名列表
 	Set<String> pkgList = new HashSet<String>();
 
 	// 关于引擎的设置
@@ -45,16 +54,274 @@ public class Configuration
 	String engine = "org.beetl.core.FastRuntimeEngine";
 	String nativeSecurity = "org.beetl.core.DefaultNativeSecurityManager";
 
-	public GroupTemplate make()
-	{
-		return null;
-	}
+	//扩展资源
+	Map<String, String> fnMap = new HashMap<String, String>();
+	Map<String, String> fnPkgMap = new HashMap<String, String>();
 
-	public Configuration()
+	Map<String, String> formatMap = new HashMap<String, String>();
+	Map<String, String> defaultFormatMap = new HashMap<String, String>(0);
+	Set<String> generalVirtualAttributeSet = new HashSet<String>();
+	Map<String, String> virtualClass = new HashMap<String, String>();
+	Map<String, String> tagFactoryMap = new HashMap<String, String>();
+	Map<String, String> tagMap = new HashMap<String, String>();
+
+	public static String DELIMITER_PLACEHOLDER_START = "DELIMITER_PLACEHOLDER_START";
+	public static String DELIMITER_PLACEHOLDER_END = "DELIMITER_PLACEHOLDER_END";
+	public static String DELIMITER_STATEMENT_START = "DELIMITER_STATEMENT_START";
+	public static String DELIMITER_STATEMENT_END = "DELIMITER_STATEMENT_END";
+	public static String NATIVE_CALL = "NATIVE_CALL";
+	//	public static String COMPILE_CLASS = "COMPILE_CLASS";
+	public static String DIRECT_BYTE_OUTPUT = "DIRECT_BYTE_OUTPUT";
+	public static String TEMPLATE_ROOT = "TEMPLATE_ROOT";
+	public static String TEMPLATE_CHARSET = "TEMPLATE_CHARSET";
+	//	public static String TEMPLATE_CACHE_CHECK_PERIOD = "TEMPLATE_CACHE_CHECK_PERIOD";
+	//	public static String TEMPLATE_CLASS_FOLDER = "TEMPLATE_CLASS_FOLDER";
+	public static String ERROR_HANDLER = "ERROR_HANDLER";
+	public static String MVC_STRICT = "MVC_STRICT";
+	//	public static String DEBUG = "DEBUG";
+	//	public static String COMPILE_CLASS_KEEP_SOURCE = "COMPILE_CLASS_KEEP_SOURCE";
+	//	public static String BIG_NUMBER_SUPPORT = "BIG_NUMBER_SUPPORT";
+	public static String HTML_TAG_SUPPORT = "HTML_TAG_SUPPORT";
+	public static String HTML_TAG_FLAG = "HTML_TAG_FLAG";
+	public static String IMPORT_PACKAGE = "IMPORT_PACKAGE";
+	public static String ENGINE = "ENGINE";
+	public static String NATIVE_SECUARTY_MANAGER = "NATIVE_SECUARTY_MANAGER";
+
+	public Configuration() throws IOException
 	{
+		//总是添加这俩个
 		pkgList.add("java.util.");
 		pkgList.add("java.lang.");
+		//beetl默认
+		Properties ps = new Properties();
+		ps.load(Configuration.class.getResourceAsStream("/org/beetl/core/beetl-default.properties"));
+		parseProperties(ps);
+		//应用默认
 
+		InputStream ins = Configuration.class.getResourceAsStream("/beetl.properties");
+		if (ins != null)
+		{
+			ps.clear();
+			ps.load(ins);
+		}
+		parseProperties(ps);
+
+	}
+
+	public Configuration(Properties ps) throws IOException
+	{
+		this();
+		parseProperties(ps);
+
+	}
+
+	public void add(File path) throws IOException
+	{
+		Properties ps = new Properties();
+		ps.load(new FileReader(path));
+		parseProperties(ps);
+	}
+
+	public void add(String path) throws IOException
+	{
+
+		Properties ps = new Properties();
+		ps.load(Configuration.class.getResourceAsStream(path));
+		parseProperties(ps);
+
+	}
+
+	protected void parseProperties(Properties ps)
+	{
+		Set<Map.Entry<Object, Object>> set = ps.entrySet();
+		for (Map.Entry<Object, Object> entry : set)
+		{
+			String key = (String) entry.getKey();
+			String value = (String) entry.getValue();
+			setValue(key, value);
+		}
+	}
+
+	protected void setValue(String key, String value)
+	{
+		if (key.equalsIgnoreCase(TEMPLATE_CHARSET))
+		{
+			this.charset = value;
+		}
+		else if (key.equalsIgnoreCase(DELIMITER_PLACEHOLDER_START))
+		{
+			this.placeholderStart = value;
+
+		}
+		else if (key.equalsIgnoreCase(DELIMITER_PLACEHOLDER_END))
+		{
+			if (value == null | value.length() == 0 || value.equals("null"))
+			{
+				this.placeholderEnd = null;
+			}
+			else
+			{
+				this.placeholderEnd = value;
+			}
+		}
+		else if (key.equalsIgnoreCase(DELIMITER_STATEMENT_START))
+		{
+			this.statementStart = value;
+		}
+		else if (key.equalsIgnoreCase(DELIMITER_STATEMENT_END))
+		{
+			this.statementEnd = value;
+		}
+		else if (key.equalsIgnoreCase(NATIVE_CALL))
+		{
+			this.nativeCall = isBoolean(value, false);
+		}
+		else if (key.equalsIgnoreCase(DIRECT_BYTE_OUTPUT))
+		{
+			this.directByteOutput = isBoolean(value, false);
+		}
+		else if (key.equalsIgnoreCase(ERROR_HANDLER))
+		{
+			this.errorHandlerClass = value;
+		}
+		else if (key.equalsIgnoreCase(MVC_STRICT))
+		{
+			this.isStrict = isBoolean(value, false);
+		}
+		else if (key.equalsIgnoreCase(HTML_TAG_SUPPORT))
+		{
+			this.isHtmlTagSupport = isBoolean(value, false);
+		}
+		else if (key.equalsIgnoreCase(HTML_TAG_FLAG))
+		{
+			this.htmlTagFlag = value;
+			htmlTagStart = "<" + htmlTagFlag;
+			htmlTagEnd = "</" + htmlTagFlag;
+
+		}
+		else if (key.equalsIgnoreCase(IMPORT_PACKAGE))
+		{
+			String[] strs = value.split(";");
+			for (String pkg : strs)
+			{
+				this.pkgList.add(pkg);
+			}
+		}
+		else if (key.equalsIgnoreCase(ENGINE))
+		{
+			this.engine = value;
+		}
+		else if (key.equalsIgnoreCase(NATIVE_SECUARTY_MANAGER))
+		{
+			this.nativeSecurity = value;
+		}
+
+		//扩展
+
+		if (value.startsWith("fn.") || value.startsWith("FN."))
+		{
+			addFunction(key, value);
+		}
+		else if (value.startsWith("fnp.") || value.startsWith("FNP."))
+		{
+			addFunctionPackage(key, value);
+		}
+		else if (value.startsWith("ft.") || value.startsWith("FT."))
+		{
+			addFormat(key, value);
+		}
+		else if (value.startsWith("ftc.") || value.startsWith("FTC."))
+		{
+			addDefaultFormat(key, value);
+		}
+		else if (value.startsWith("virtual.") || value.startsWith("VIRTUAL."))
+		{
+			addVirtual(key, value);
+		}
+		else if (value.startsWith("general_virtual.") || value.startsWith("GENERAL_VIRTUAL."))
+		{
+			String[] allCls = value.split(";");
+			for (String cls : allCls)
+			{
+				this.generalVirtualAttributeSet.add(cls);
+			}
+		}
+		else if (value.startsWith("tag.") || value.startsWith("TAG."))
+		{
+			addTag(key, value);
+		}
+		else if (value.startsWith("tagf.") || value.startsWith("TAGF."))
+		{
+			addTagFactory(key, value);
+		}
+
+	}
+
+	private void addTagFactory(String key, String value)
+	{
+		String name = this.getExtName(key);
+		this.tagFactoryMap.put(name, value);
+	}
+
+	private void addTag(String key, String value)
+	{
+		String name = this.getExtName(key);
+		this.tagMap.put(name, value);
+	}
+
+	private void addVirtual(String key, String value)
+	{
+		String name = this.getExtName(key);
+		this.virtualClass.put(name, value);
+	}
+
+	private void addDefaultFormat(String key, String value)
+	{
+		String name = this.getExtName(key);
+		this.defaultFormatMap.put(name, value);
+	}
+
+	private void addFormat(String key, String value)
+	{
+		String name = this.getExtName(key);
+		this.formatMap.put(name, value);
+	}
+
+	private void addFunction(String key, String value)
+	{
+		String name = this.getExtName(key);
+		this.fnMap.put(name, value);
+	}
+
+	private void addFunctionPackage(String key, String value)
+	{
+		String name = this.getExtName(key);
+		this.fnPkgMap.put(name, value);
+	}
+
+	private String getExtName(String key)
+	{
+		int index = key.indexOf(".");
+		String name = key.substring(index);
+		return name;
+	}
+
+	private boolean isBoolean(String value, boolean defaultValue)
+	{
+
+		if (isNotEmpty(value))
+		{
+			return Boolean.parseBoolean(value);
+		}
+		else
+		{
+			return defaultValue;
+		}
+	}
+
+	public boolean isNotEmpty(String str)
+	{
+		return str != null && str.length() != 0;
 	}
 
 	public String getCharset()
@@ -62,7 +329,7 @@ public class Configuration
 		return charset;
 	}
 
-	public static Configuration defaultConfiguration()
+	public static Configuration defaultConfiguration() throws IOException
 	{
 		return new Configuration();
 	}

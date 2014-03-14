@@ -449,6 +449,19 @@ public class ObjectUtil
 		return null;
 	}
 
+	public static Class getClassByName(String clsName)
+	{
+		try
+		{
+			return Class.forName(clsName);
+		}
+
+		catch (ClassNotFoundException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+
 	public static Object instnace(String clsName)
 	{
 		try

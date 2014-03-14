@@ -1,5 +1,7 @@
 package org.beetl.core.lab;
 
+import org.beetl.core.util.ObjectUtil;
+
 public class Test
 {
 
@@ -8,11 +10,11 @@ public class Test
 	 */
 	public static void main(String[] args)
 	{
-		//		Integer a = new Integer(1);
-		//		Integer b = new Integer(0);
-		//		double c = 5 / 0;
-		//		System.out.println(c);
-		System.out.println(System.currentTimeMillis());
+		Class c = short.class;
+		System.out.println(c);
+		String clsName = "java.util.concurrent.atomic.AtomicLong";
+		Class c1 = ObjectUtil.getClassByName(clsName);
+		System.out.println(c1);
 
 	}
 

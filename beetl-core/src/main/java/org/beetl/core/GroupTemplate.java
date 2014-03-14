@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.beetl.core.cache.Cache;
 import org.beetl.core.cache.ProgramCacheFactory;
@@ -17,25 +18,6 @@ import org.beetl.core.exception.TempException;
 import org.beetl.core.statement.Program;
 import org.beetl.core.util.ClassSearch;
 import org.beetl.core.util.ObjectUtil;
-import org.beetl.ext.fn.AssertFunction;
-import org.beetl.ext.fn.CheckExistFunction;
-import org.beetl.ext.fn.DateFunction;
-import org.beetl.ext.fn.DebugFunction;
-import org.beetl.ext.fn.DecodeFunction;
-import org.beetl.ext.fn.EmptyExpressionFunction;
-import org.beetl.ext.fn.EmptyFunction;
-import org.beetl.ext.fn.NVLFunction;
-import org.beetl.ext.fn.Print;
-import org.beetl.ext.fn.Printf;
-import org.beetl.ext.fn.Println;
-import org.beetl.ext.fn.QuestionMark;
-import org.beetl.ext.fn.TruncFunction;
-import org.beetl.ext.format.DateFormat;
-import org.beetl.ext.format.NumberFormat;
-import org.beetl.ext.tag.DeleteTag;
-import org.beetl.ext.tag.HTMLTagSupportWrapper;
-import org.beetl.ext.tag.IncludeTag;
-import org.beetl.ext.tag.LayoutTag;
 
 public class GroupTemplate
 {
@@ -81,65 +63,73 @@ public class GroupTemplate
 
 	protected void initFunction()
 	{
-		this.registerFunction("date", new DateFunction());
-		this.registerFunction("nvl", new NVLFunction());
-		this.registerFunction("debug", new DebugFunction());
-		this.registerFunction("exist", new CheckExistFunction());
-		this.registerFunction("printf", new Printf());
-		this.registerFunction("decode", new DecodeFunction());
-		this.registerFunction("assert", new AssertFunction());
-		this.registerFunction("print", new Print());
-		this.registerFunction("println", new Println());
-		this.registerFunction("prinf", new Printf());
-		this.registerFunction("trunc", new TruncFunction());
-		this.registerFunction("empty", new EmptyFunction());
-		this.registerFunction("qmark", new QuestionMark());
-		this.registerFunction("isEmpty", new EmptyExpressionFunction());
+
+		Map<String, String> fnMap = this.conf.fnMap;
+		for (Entry<String, String> entry : fnMap.entrySet())
+		{
+			String name = entry.getKey();
+			String clsName = entry.getValue();
+			System.out.println(name);
+			this.registerFunction(name, (Function) ObjectUtil.instnace(clsName));
+		}
 
 	}
 
 	protected void initFormatter()
 	{
-		// format
-		Format dateForamt = new DateFormat();
-		Format numberFormat = new NumberFormat();
 
-		this.registerFormat("dateFormat", dateForamt);
-		this.registerFormat("numberFormat", numberFormat);
+		Map<String, String> formatMap = this.conf.formatMap;
+		for (Entry<String, String> entry : formatMap.entrySet())
+		{
+			String name = entry.getKey();
+			String clsName = entry.getValue();
+			this.registerFormat(name, (Format) ObjectUtil.instnace(clsName));
+		}
 
-		this.registerDefaultFormat(java.util.Date.class, dateForamt);
-		this.registerDefaultFormat(java.sql.Date.class, dateForamt);
-		this.registerDefaultFormat(java.sql.Time.class, dateForamt);
-		this.registerDefaultFormat(java.sql.Timestamp.class, dateForamt);
+		Map<String, String> defaultFormatMap = this.conf.defaultFormatMap;
+		Map<String, Format> temp = new HashMap<String, Format>();
+		for (Entry<String, String> entry : defaultFormatMap.entrySet())
+		{
+			String defaultType = entry.getKey();
+			String formatClass = entry.getValue();
+			Format format = temp.get(formatClass);
+			if (format == null)
+			{
+				format = (Format) ObjectUtil.instnace(formatClass);
+				temp.put(formatClass, format);
+			}
+			this.registerDefaultFormat(ObjectUtil.getClassByName(defaultType), format);
+		}
 
-		this.registerDefaultFormat(java.lang.Short.class, numberFormat);
-		this.registerDefaultFormat(java.lang.Long.class, numberFormat);
-		this.registerDefaultFormat(java.lang.Integer.class, numberFormat);
-		this.registerDefaultFormat(java.lang.Float.class, numberFormat);
-		this.registerDefaultFormat(java.lang.Double.class, numberFormat);
+		//原始类型无法通过反射获取，因此不再配置文件里
+		Format numberFormat = temp.get("org.beetl.ext.format.NumberFormat");
 		this.registerDefaultFormat(short.class, numberFormat);
 		this.registerDefaultFormat(long.class, numberFormat);
 		this.registerDefaultFormat(int.class, numberFormat);
 		this.registerDefaultFormat(float.class, numberFormat);
 		this.registerDefaultFormat(double.class, numberFormat);
 
-		this.registerDefaultFormat(java.math.BigInteger.class, numberFormat);
-		this.registerDefaultFormat(java.math.BigDecimal.class, numberFormat);
-		this.registerDefaultFormat(java.util.concurrent.atomic.AtomicLong.class, numberFormat);
-		this.registerDefaultFormat(java.util.concurrent.atomic.AtomicInteger.class, numberFormat);
-
 	}
 
 	protected void initTag()
 	{
-		DefaultTagFactory includeTagFactory = new DefaultTagFactory(IncludeTag.class);
-		this.registerTagFactory("include", includeTagFactory);
-		//兼容1.x，但不会出现在2.x文档里
-		this.registerTagFactory("includeFile", includeTagFactory);
 
-		this.registerTag("layout", LayoutTag.class);
-		this.registerTag("delete", DeleteTag.class);
-		this.registerTag("htmltag", HTMLTagSupportWrapper.class);
+		Map<String, String> tagMap = this.conf.tagMap;
+		for (Entry<String, String> entry : tagMap.entrySet())
+		{
+			String name = entry.getKey();
+			String clsName = entry.getValue();
+			this.registerTag(name, ObjectUtil.getClassByName(clsName));
+		}
+
+		Map<String, String> tagFactoryMap = this.conf.tagFactoryMap;
+		for (Entry<String, String> entry : tagFactoryMap.entrySet())
+		{
+			String name = entry.getKey();
+			String clsName = entry.getValue();
+			this.registerTagFactory(name, (TagFactory) ObjectUtil.instnace(clsName));
+		}
+
 	}
 
 	protected void initVirtual()

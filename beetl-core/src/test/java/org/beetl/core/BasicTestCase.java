@@ -21,7 +21,15 @@ public class BasicTestCase extends TestCase
 	static
 	{
 
-		Configuration cf = Configuration.defaultConfiguration();
+		Configuration cf;
+		try
+		{
+			cf = new Configuration();
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException(e);
+		}
 		cf.setStatementStart("<%");
 		cf.setStatementEnd("%>");
 		cf.addPkg("org.beetl.core");

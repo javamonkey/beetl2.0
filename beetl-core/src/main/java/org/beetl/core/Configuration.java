@@ -97,14 +97,14 @@ public class Configuration
 		ps.load(Configuration.class.getResourceAsStream("/org/beetl/core/beetl-default.properties"));
 		parseProperties(ps);
 		//应用默认
-
+		//有问题，在eclipse环境下
 		InputStream ins = Configuration.class.getResourceAsStream("/beetl.properties");
 		if (ins != null)
 		{
 			ps.clear();
 			ps.load(ins);
+			parseProperties(ps);
 		}
-		parseProperties(ps);
 
 	}
 
@@ -215,44 +215,46 @@ public class Configuration
 		{
 			this.nativeSecurity = value;
 		}
+		else
+		{
+			//扩展
 
-		//扩展
-
-		if (value.startsWith("fn.") || value.startsWith("FN."))
-		{
-			addFunction(key, value);
-		}
-		else if (value.startsWith("fnp.") || value.startsWith("FNP."))
-		{
-			addFunctionPackage(key, value);
-		}
-		else if (value.startsWith("ft.") || value.startsWith("FT."))
-		{
-			addFormat(key, value);
-		}
-		else if (value.startsWith("ftc.") || value.startsWith("FTC."))
-		{
-			addDefaultFormat(key, value);
-		}
-		else if (value.startsWith("virtual.") || value.startsWith("VIRTUAL."))
-		{
-			addVirtual(key, value);
-		}
-		else if (value.startsWith("general_virtual.") || value.startsWith("GENERAL_VIRTUAL."))
-		{
-			String[] allCls = value.split(";");
-			for (String cls : allCls)
+			if (key.startsWith("fn.") || key.startsWith("FN."))
 			{
-				this.generalVirtualAttributeSet.add(cls);
+				addFunction(key, value);
 			}
-		}
-		else if (value.startsWith("tag.") || value.startsWith("TAG."))
-		{
-			addTag(key, value);
-		}
-		else if (value.startsWith("tagf.") || value.startsWith("TAGF."))
-		{
-			addTagFactory(key, value);
+			else if (key.startsWith("fnp.") || key.startsWith("FNP."))
+			{
+				addFunctionPackage(key, value);
+			}
+			else if (key.startsWith("ft.") || key.startsWith("FT."))
+			{
+				addFormat(key, value);
+			}
+			else if (key.startsWith("ftc.") || key.startsWith("FTC."))
+			{
+				addDefaultFormat(key, value);
+			}
+			else if (key.startsWith("virtual.") || key.startsWith("VIRTUAL."))
+			{
+				addVirtual(key, value);
+			}
+			else if (key.startsWith("general_virtual.") || key.startsWith("GENERAL_VIRTUAL."))
+			{
+				String[] allCls = value.split(";");
+				for (String cls : allCls)
+				{
+					this.generalVirtualAttributeSet.add(cls);
+				}
+			}
+			else if (key.startsWith("tag.") || key.startsWith("TAG."))
+			{
+				addTag(key, value);
+			}
+			else if (key.startsWith("tagf.") || key.startsWith("TAGF."))
+			{
+				addTagFactory(key, value);
+			}
 		}
 
 	}
@@ -302,7 +304,7 @@ public class Configuration
 	private String getExtName(String key)
 	{
 		int index = key.indexOf(".");
-		String name = key.substring(index);
+		String name = key.substring(index + 1);
 		return name;
 	}
 

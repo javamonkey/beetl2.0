@@ -13,7 +13,7 @@ public final class ForStatement extends Statement implements IGoto
 	public boolean hasGoto = false;
 	public short itType = 0;
 
-	public ForStatement(VarDefineNode idNode, Expression exp, Statement forPart, Statement elseforPart, Token token)
+	public ForStatement(VarDefineNode idNode, Expression exp, Statement forPart, Statement elseforPart, GrammarToken token)
 	{
 		super(token);
 		this.idNode = idNode;

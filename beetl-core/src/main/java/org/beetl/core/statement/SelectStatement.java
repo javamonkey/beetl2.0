@@ -14,7 +14,7 @@ public class SelectStatement extends Statement
 	BlockStatement defaultBlock;
 
 	public SelectStatement(Expression value, Expression[] conditions, BlockStatement[] blocks,
-			BlockStatement defaultBlock, Token token)
+			BlockStatement defaultBlock, GrammarToken token)
 	{
 		super(token);
 		this.value = value;

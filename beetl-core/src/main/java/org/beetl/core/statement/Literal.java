@@ -9,7 +9,7 @@ public class Literal extends Expression
 	public Object obj = null;
 	public static final Literal NULLLiteral = new Literal(null, null);
 
-	public Literal(Object value, Token token)
+	public Literal(Object value, GrammarToken token)
 	{
 		super(token);
 		this.obj = value;

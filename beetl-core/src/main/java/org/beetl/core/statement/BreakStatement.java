@@ -6,7 +6,7 @@ import org.beetl.core.InferContext;
 public class BreakStatement extends Statement
 {
 
-	public BreakStatement(Token token)
+	public BreakStatement(GrammarToken token)
 	{
 		super(token);
 		// TODO Auto-generated constructor stub

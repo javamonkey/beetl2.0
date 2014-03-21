@@ -6,7 +6,7 @@ import org.beetl.core.InferContext;
 public class ContinueStatement extends Statement
 {
 
-	public ContinueStatement(Token token)
+	public ContinueStatement(GrammarToken token)
 	{
 		super(token);
 		// TODO Auto-generated constructor stub

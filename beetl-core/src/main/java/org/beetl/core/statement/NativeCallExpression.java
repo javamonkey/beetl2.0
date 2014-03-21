@@ -27,14 +27,14 @@ public class NativeCallExpression extends Expression
 	ClassNode clsNode;
 	NativeNode[] chain;
 
-	public NativeCallExpression(InstanceNode insNode, NativeNode[] chain, Token token)
+	public NativeCallExpression(InstanceNode insNode, NativeNode[] chain, GrammarToken token)
 	{
 		super(token);
 		this.insNode = insNode;
 		this.chain = chain;
 	}
 
-	public NativeCallExpression(ClassNode clsNode, NativeNode[] chain, Token token)
+	public NativeCallExpression(ClassNode clsNode, NativeNode[] chain, GrammarToken token)
 	{
 		super(token);
 		//可以做某些优化，如提前得到final 属性

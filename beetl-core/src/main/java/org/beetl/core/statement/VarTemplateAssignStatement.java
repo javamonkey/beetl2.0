@@ -8,7 +8,7 @@ public class VarTemplateAssignStatement extends Expression
 
 	public BlockStatement block = null;
 
-	public VarTemplateAssignStatement(BlockStatement block, Token token)
+	public VarTemplateAssignStatement(BlockStatement block, GrammarToken token)
 	{
 		super(token);
 		this.block = block;

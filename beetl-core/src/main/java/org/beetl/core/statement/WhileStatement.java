@@ -11,7 +11,7 @@ public class WhileStatement extends Statement implements IGoto
 	Statement whileBody;
 	public boolean hasGoto = false;
 
-	public WhileStatement(Expression exp, Statement whileBody, Token token)
+	public WhileStatement(Expression exp, Statement whileBody, GrammarToken token)
 	{
 		super(token);
 		this.exp = exp;

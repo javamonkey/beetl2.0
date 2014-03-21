@@ -6,7 +6,7 @@ import org.beetl.core.InferContext;
 public class ReturnStatement extends Statement
 {
 
-	public ReturnStatement(Token token)
+	public ReturnStatement(GrammarToken token)
 	{
 		super(token);
 		// TODO Auto-generated constructor stub

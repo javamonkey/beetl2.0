@@ -9,7 +9,7 @@ public class ContentBodyExpression extends Expression
 
 	public BlockStatement block;
 
-	public ContentBodyExpression(BlockStatement block, Token token)
+	public ContentBodyExpression(BlockStatement block, GrammarToken token)
 	{
 		super(token);
 		// TODO Auto-generated constructor stub

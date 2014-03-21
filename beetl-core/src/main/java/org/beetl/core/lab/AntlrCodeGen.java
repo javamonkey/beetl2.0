@@ -1,5 +1,5 @@
 /*
- [The "BSD license"]
+bee [The "BSD license"]
  Copyright (c) 2011-2013 Joel Li (李家智)
  All rights reserved.
 
@@ -25,31 +25,46 @@
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.beetl.core.exception;
+package org.beetl.core.lab;
 
-import org.beetl.core.statement.GrammarToken;
+import org.antlr.v4.Tool;
 
 /**
- * html解析支持
+ * 开发辅助用，用于根据bee.g语法文件生成解析代码
  * 
  * @author joelli
+ * @sinace 0.5
+ * 
  * 
  */
-public class HTMLTagParserException extends BeetlException
+public class AntlrCodeGen
 {
 
-	public GrammarToken token = null;
-	public int line = 0;
-
-	public HTMLTagParserException(String message)
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) throws Exception
 	{
-		super(message);
-		this.detailCode = BeetlException.PARSER_HTML_TAG_ERROR;
 
-	}
+		String root = "E:\\lijz\\javamonkey\\bee\\github\\beetl2.0\\beetl-core\\src\\main\\java\\org\\beetl\\core\\parser\\";
+		String lexer = root + "BeetlLexer.g4";
+		String parser = root + "BeetlParser.g4";
+		String dest = root;
 
-	public String getHtmlTagErrorMsg()
-	{
-		return super.getMessage();
+		Tool lexerGen = new Tool(new String[]
+		{ "-o", dest, "-package", "org.beetl.core.parser", "-no-listener", "-no-visitor", lexer });
+		lexerGen.processGrammarsOnCommandLine();
+
+		Tool parserGen = new Tool(new String[]
+		{ "-o", dest, "-package", "org.beetl.core.parser", "-no-listener", "-no-visitor", parser });
+		parserGen.processGrammarsOnCommandLine();
+
+		System.out.println("success! don't forget to refresh project :)");
+
+		//
+		// Tool treeGen = new Tool(new String[]{"-o",dest, tree});
+		// // Tool treeGen = new Tool(new String[]{"-o",dest, tree});
+		// treeGen.process();
+
 	}
 }

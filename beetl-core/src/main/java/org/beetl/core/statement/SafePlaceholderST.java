@@ -9,7 +9,7 @@ public class SafePlaceholderST extends Statement
 	public Expression exp;
 	FormatExpression format;
 
-	public SafePlaceholderST(Expression exp, FormatExpression format, Token token)
+	public SafePlaceholderST(Expression exp, FormatExpression format, GrammarToken token)
 	{
 		super(token);
 		this.exp = exp;

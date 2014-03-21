@@ -10,7 +10,7 @@ public class VarAttribute extends Expression
 	public AA aa = null;
 	String name = null;
 
-	public VarAttribute(Token token)
+	public VarAttribute(GrammarToken token)
 	{
 		super(token);
 		name = token.text;

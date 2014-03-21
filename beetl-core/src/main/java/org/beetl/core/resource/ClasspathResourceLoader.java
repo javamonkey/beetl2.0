@@ -40,7 +40,7 @@ public class ClasspathResourceLoader implements ResourceLoader
 	public Resource getResource(String key)
 	{
 
-		Resource resource = new ClasspathResource(key, prefix + key);
+		Resource resource = new ClasspathResource(key, prefix + key, this);
 		return resource;
 	}
 
@@ -54,6 +54,13 @@ public class ClasspathResourceLoader implements ResourceLoader
 	{
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public boolean isModified(String key)
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

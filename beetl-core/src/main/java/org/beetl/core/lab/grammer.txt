@@ -1,3 +1,6 @@
-for(user in userList){
-<<user.name>>
+<%
+if(a==1){
+var c =1;
+}elsif{
 }
+%>

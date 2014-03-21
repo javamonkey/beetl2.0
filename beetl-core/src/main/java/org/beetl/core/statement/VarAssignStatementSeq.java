@@ -7,7 +7,7 @@ public class VarAssignStatementSeq extends Statement
 {
 	public Statement[] sts;
 
-	public VarAssignStatementSeq(Statement[] sts, Token token)
+	public VarAssignStatementSeq(Statement[] sts, GrammarToken token)
 	{
 		super(token);
 		this.sts = sts;

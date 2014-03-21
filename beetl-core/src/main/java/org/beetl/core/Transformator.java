@@ -39,7 +39,7 @@ import java.util.Stack;
 import java.util.TreeMap;
 
 import org.beetl.core.exception.HTMLTagParserException;
-import org.beetl.core.statement.Token;
+import org.beetl.core.statement.GrammarToken;
 
 /**
  * 将模版转化为beetl script的代码，此为核心代码之一.似乎有一1.x有个小bug，换行导致输出乱了
@@ -180,7 +180,7 @@ public class Transformator
 		{
 
 			String tagName = (String) htmlTagStack.peek();
-			Token token = Token.createToken(tagName, this.totalLineCount + 1);
+			GrammarToken token = GrammarToken.createToken(tagName, this.totalLineCount + 1);
 
 			HTMLTagParserException ex = new HTMLTagParserException("解析html tag 标签出错,未找到匹配结束标签 " + tagName);
 			ex.token = token;
@@ -208,7 +208,7 @@ public class Transformator
 		if (this.isSupportHtmlTag && this.htmlTagStack.size() != 0)
 		{
 			String tagName = (String) htmlTagStack.peek();
-			Token token = Token.createToken(tagName, this.totalLineCount + 1);
+			GrammarToken token = GrammarToken.createToken(tagName, this.totalLineCount + 1);
 
 			HTMLTagParserException ex = new HTMLTagParserException("解析html tag 标签出错,未找到匹配结束标签 " + tagName);
 			ex.token = token;
@@ -352,7 +352,7 @@ public class Transformator
 			{
 				tagName = "未知标签";
 			}
-			Token token = Token.createToken(tagName, this.totalLineCount + 1);
+			GrammarToken token = GrammarToken.createToken(tagName, this.totalLineCount + 1);
 			HTMLTagParserException ex = new HTMLTagParserException(re.getMessage());
 			ex.token = token;
 			ex.line = totalLineCount + 1;
@@ -395,7 +395,7 @@ public class Transformator
 			{
 				tagName = "未知标签";
 			}
-			Token token = Token.createToken(tagName, this.totalLineCount + 1);
+			GrammarToken token = GrammarToken.createToken(tagName, this.totalLineCount + 1);
 			HTMLTagParserException ex = new HTMLTagParserException(re.getMessage());
 			ex.token = token;
 			ex.line = totalLineCount + 1;

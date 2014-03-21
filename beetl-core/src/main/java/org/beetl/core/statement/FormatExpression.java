@@ -15,7 +15,7 @@ public class FormatExpression extends Expression
 	String name;
 	String pattern;
 
-	public FormatExpression(String name, String pattern, Token token)
+	public FormatExpression(String name, String pattern, GrammarToken token)
 	{
 		super(token);
 		this.name = name;

@@ -13,7 +13,7 @@ public final class PlaceholderST extends Statement
 	public Type type = null;
 	FormatExpression format;
 
-	public PlaceholderST(Expression exp, FormatExpression format, Token token)
+	public PlaceholderST(Expression exp, FormatExpression format, GrammarToken token)
 	{
 		super(token);
 		this.format = format;

@@ -9,7 +9,7 @@ public class VarAssignStatement extends Statement implements IVarIndex
 	protected int varIndex;
 	public Expression exp;
 
-	public VarAssignStatement(Expression exp, Token token)
+	public VarAssignStatement(Expression exp, GrammarToken token)
 	{
 		super(token);
 		this.exp = exp;

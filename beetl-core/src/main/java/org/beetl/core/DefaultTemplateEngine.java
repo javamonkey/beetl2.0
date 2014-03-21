@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.beetl.core.parser.BeetlAntlrErrorStrategy;
 import org.beetl.core.parser.BeetlLexer;
 import org.beetl.core.parser.BeetlParser;
 import org.beetl.core.parser.BeetlParser.ProgContext;
@@ -16,6 +17,8 @@ import org.beetl.core.statement.ProgramMetaData;
 
 public class DefaultTemplateEngine implements TemplateEngine
 {
+
+	BeetlAntlrErrorStrategy antlrErrorStrategy = new BeetlAntlrErrorStrategy();
 
 	@Override
 	public Program createProgram(String id, Reader reader, Map<Integer, String> textMap, String cr, GroupTemplate gt)
@@ -34,7 +37,13 @@ public class DefaultTemplateEngine implements TemplateEngine
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 
 		BeetlParser parser = new BeetlParser(tokens);
-		ProgContext tree = parser.prog(); // begin parsing at init rule
+		//测试代码
+		parser.setErrorHandler(antlrErrorStrategy);
+		//
+
+		ProgContext tree = parser.prog();
+
+		// begin parsing at init rule
 		AntlrProgramBuilder pb = new AntlrProgramBuilder(gt);
 		ProgramMetaData data = pb.build(tree);
 		Program program = new Program();

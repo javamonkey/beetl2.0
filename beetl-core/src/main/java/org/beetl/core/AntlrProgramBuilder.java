@@ -642,7 +642,7 @@ public class AntlrProgramBuilder
 		VarAttribute[] vs = this.parseVarAttribute(vaListCtx);
 		List<TerminalNode> idList = ctx.functionNs().Identifier();
 		String nsId = this.getID(idList);
-		org.beetl.core.statement.Token btToken = new org.beetl.core.statement.Token(nsId, ctx.start.getLine(), 0);
+		org.beetl.core.statement.GrammarToken btToken = new org.beetl.core.statement.GrammarToken(nsId, ctx.start.getLine(), 0);
 		if (nsId.equals("isEmpty"))
 		{
 			if (exps.length == 1)
@@ -719,7 +719,7 @@ public class AntlrProgramBuilder
 		ForControlContext forCtx = ctx.forControl();
 		VarDefineNode forVar = new VarDefineNode(this.getBTToken(forCtx.Identifier().getSymbol()));
 
-		VarDefineNode loopStatusVar = new VarDefineNode(new org.beetl.core.statement.Token(forCtx.Identifier()
+		VarDefineNode loopStatusVar = new VarDefineNode(new org.beetl.core.statement.GrammarToken(forCtx.Identifier()
 				.getSymbol().getText()
 				+ "LP", forCtx.Identifier().getSymbol().getLine(), 0));
 
@@ -781,7 +781,7 @@ public class AntlrProgramBuilder
 				line = listId.get(0).getSymbol().getLine();
 
 			}
-			format = new FormatExpression(formatName, pattern, org.beetl.core.statement.Token.createToken(tokenName,
+			format = new FormatExpression(formatName, pattern, org.beetl.core.statement.GrammarToken.createToken(tokenName,
 					line));
 
 		}
@@ -1318,16 +1318,16 @@ public class AntlrProgramBuilder
 		return block;
 	}
 
-	public org.beetl.core.statement.Token getBTToken(Token t)
+	public org.beetl.core.statement.GrammarToken getBTToken(Token t)
 	{
-		org.beetl.core.statement.Token token = new org.beetl.core.statement.Token(t.getText(), t.getLine(),
+		org.beetl.core.statement.GrammarToken token = new org.beetl.core.statement.GrammarToken(t.getText(), t.getLine(),
 				t.getCharPositionInLine());
 		return token;
 	}
 
-	public org.beetl.core.statement.Token getBTToken(String text, int line)
+	public org.beetl.core.statement.GrammarToken getBTToken(String text, int line)
 	{
-		org.beetl.core.statement.Token token = org.beetl.core.statement.Token.createToken(text, line);
+		org.beetl.core.statement.GrammarToken token = org.beetl.core.statement.GrammarToken.createToken(text, line);
 		return token;
 	}
 

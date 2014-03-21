@@ -7,16 +7,16 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 
 import org.beetl.core.Resource;
+import org.beetl.core.ResourceLoader;
 import org.beetl.core.exception.TempException;
 
 public class ClasspathResource extends Resource
 {
-	private String id;
 	String path = null;
 
-	public ClasspathResource(String key, String path)
+	public ClasspathResource(String key, String path, ResourceLoader loader)
 	{
-		this.id = key;
+		super(key, loader);
 		this.path = path;
 	}
 
@@ -38,13 +38,6 @@ public class ClasspathResource extends Resource
 		{
 			return null;
 		}
-	}
-
-	@Override
-	public String getContent(int startLine, int endLine)
-	{
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

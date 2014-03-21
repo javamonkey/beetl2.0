@@ -40,7 +40,7 @@ public class Configuration
 	/* 严格mvc应用，只有变态的的人才打开此选项 */
 	boolean isStrict = false;
 
-	String errorHandlerClass = "org.beetl.core.DefaultErrorHandler";
+	String errorHandlerClass = "org.beetl.core.ConsoleErrorHandler";
 
 	String htmlTagStart = "<" + htmlTagFlag;
 	String htmlTagEnd = "</" + htmlTagFlag;

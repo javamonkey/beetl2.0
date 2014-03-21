@@ -21,7 +21,7 @@ public class FileResourceLoader implements ResourceLoader
 	public Resource getResource(String key)
 	{
 		File file = new File(root, key);
-		Resource resource = new FileResource(file, key);
+		Resource resource = new FileResource(file, key, this);
 		resource.setResourceLoader(this);
 		return resource;
 
@@ -32,6 +32,13 @@ public class FileResourceLoader implements ResourceLoader
 	{
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public boolean isModified(String key)
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

@@ -1,6 +1,12 @@
 package org.beetl.core.lab;
 
-import org.beetl.core.util.ObjectUtil;
+import java.io.IOException;
+
+import org.beetl.core.Configuration;
+import org.beetl.core.GroupTemplate;
+import org.beetl.core.ResourceLoader;
+import org.beetl.core.Template;
+import org.beetl.core.resource.ClasspathResourceLoader;
 
 public class Test
 {
@@ -8,13 +14,14 @@ public class Test
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args)
+	public static void main(String[] args) throws IOException
 	{
-		Class c = short.class;
-		System.out.println(c);
-		String clsName = "java.util.concurrent.atomic.AtomicLong";
-		Class c1 = ObjectUtil.getClassByName(clsName);
-		System.out.println(c1);
+		ResourceLoader rs = new ClasspathResourceLoader("/org/beetl/core/lab/");
+		Configuration cf = new Configuration();
+		GroupTemplate gt = new GroupTemplate(rs, cf);
+		Template t = gt.getTemplate("/grammer.txt");
+		String result = t.render();
+		System.out.println(result);
 
 	}
 

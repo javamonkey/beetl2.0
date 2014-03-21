@@ -13,7 +13,7 @@ public class JsonMapExpression extends Expression
 
 	Map<String, Expression> map;
 
-	public JsonMapExpression(Map<String, Expression> map, Token token)
+	public JsonMapExpression(Map<String, Expression> map, GrammarToken token)
 	{
 		super(token);
 		this.map = map;

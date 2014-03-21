@@ -7,7 +7,7 @@ public abstract class Expression extends ASTNode
 
 	public Type type = null;
 
-	public Expression(Token token)
+	public Expression(GrammarToken token)
 	{
 		super(token);
 		// TODO Auto-generated constructor stub

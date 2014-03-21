@@ -11,7 +11,7 @@ public class VarVirtualAttribute extends VarAttribute
 {
 	protected String name = null;
 
-	public VarVirtualAttribute(Token token)
+	public VarVirtualAttribute(GrammarToken token)
 	{
 		super(token);
 		this.name = token.text;

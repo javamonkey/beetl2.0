@@ -11,7 +11,7 @@ public final class StaticTextASTNode extends Statement
 
 	int textIndex;
 
-	public StaticTextASTNode(int textIndex, Token token)
+	public StaticTextASTNode(int textIndex, GrammarToken token)
 	{
 		super(token);
 		this.textIndex = textIndex;

@@ -12,7 +12,7 @@ public class JsonArrayExpression extends Expression
 
 	List<Expression> list;
 
-	public JsonArrayExpression(List<Expression> list, Token token)
+	public JsonArrayExpression(List<Expression> list, GrammarToken token)
 	{
 		super(token);
 		this.list = list;

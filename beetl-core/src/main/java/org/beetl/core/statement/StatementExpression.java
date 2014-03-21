@@ -8,7 +8,7 @@ public class StatementExpression extends Statement
 
 	Expression exp;
 
-	public StatementExpression(Expression exp, Token token)
+	public StatementExpression(Expression exp, GrammarToken token)
 	{
 		super(token);
 		this.exp = exp;

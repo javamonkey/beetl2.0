@@ -8,7 +8,7 @@ public class VarAssignNullStatment extends Statement
 
 	protected int varIndex;
 
-	public VarAssignNullStatment(int varIndex, Token token)
+	public VarAssignNullStatment(int varIndex, GrammarToken token)
 	{
 		super(token);
 		this.varIndex = varIndex;

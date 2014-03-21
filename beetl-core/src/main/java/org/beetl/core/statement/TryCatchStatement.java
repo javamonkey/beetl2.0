@@ -11,7 +11,7 @@ public class TryCatchStatement extends Statement
 	BlockStatement catchPart;
 	VarDefineNode error;
 
-	public TryCatchStatement(BlockStatement tryPart, BlockStatement catchPart, VarDefineNode error, Token token)
+	public TryCatchStatement(BlockStatement tryPart, BlockStatement catchPart, VarDefineNode error, GrammarToken token)
 	{
 		super(token);
 		this.tryPart = tryPart;

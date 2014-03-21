@@ -9,7 +9,7 @@ public class BlockStatement extends Statement implements IGoto
 	public Statement[] nodes = null;
 	boolean hasGoto = false;
 
-	public BlockStatement(Statement[] nodes, Token token)
+	public BlockStatement(Statement[] nodes, GrammarToken token)
 	{
 		super(token);
 		this.nodes = nodes;

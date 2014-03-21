@@ -9,18 +9,18 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 
 import org.beetl.core.Resource;
+import org.beetl.core.ResourceLoader;
 import org.beetl.core.exception.TempException;
 
 public class FileResource extends Resource
 {
 
 	File file = null;
-	String id = null;
 
-	public FileResource(File file, String id)
+	public FileResource(File file, String id, ResourceLoader loader)
 	{
+		super(id, loader);
 		this.file = file;
-		this.id = id;
 
 	}
 
@@ -46,23 +46,10 @@ public class FileResource extends Resource
 	}
 
 	@Override
-	public String getContent(int startLine, int endLine)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public boolean isModified()
 	{
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	public String getId()
-	{
-		return this.id;
 	}
 
 }

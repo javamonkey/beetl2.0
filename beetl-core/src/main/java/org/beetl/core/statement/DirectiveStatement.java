@@ -13,7 +13,7 @@ public class DirectiveStatement extends Statement
 	static final String SAFE_OUTPUT_OPEN = "safe_output_open".intern();
 	static final String SAFE_OUTPUT_CLOSE = "safe_output_close".intern();
 
-	public DirectiveStatement(String directive, Set<String> idList, Token token)
+	public DirectiveStatement(String directive, Set<String> idList, GrammarToken token)
 	{
 		super(token);
 		this.directive = directive;

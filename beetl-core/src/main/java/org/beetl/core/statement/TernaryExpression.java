@@ -10,7 +10,7 @@ public class TernaryExpression extends Expression
 	public Expression a;
 	public Expression b;
 
-	public TernaryExpression(Expression condtion, Expression a, Expression b, Token token)
+	public TernaryExpression(Expression condtion, Expression a, Expression b, GrammarToken token)
 	{
 		super(token);
 		this.condtion = condtion;

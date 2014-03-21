@@ -18,7 +18,7 @@ public class FunctionExpression extends Expression
 	Expression[] exps;
 	VarAttribute[] vas;
 
-	public FunctionExpression(String name, Expression[] exps, VarAttribute[] vas, Token token)
+	public FunctionExpression(String name, Expression[] exps, VarAttribute[] vas, GrammarToken token)
 	{
 		super(token);
 		this.name = name;

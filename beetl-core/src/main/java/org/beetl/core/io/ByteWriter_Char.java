@@ -107,4 +107,25 @@ public final class ByteWriter_Char extends ByteWriter
 		NoLockStringWriter blw = (NoLockStringWriter) w;
 		return new StringBodyContent(blw.buf, blw.count);
 	}
+
+	public Writer getW()
+	{
+		return w;
+	}
+
+	public void setW(Writer w)
+	{
+		this.w = w;
+	}
+
+	public String getCs()
+	{
+		return cs;
+	}
+
+	public void setCs(String cs)
+	{
+		this.cs = cs;
+	}
+
 }

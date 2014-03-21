@@ -12,7 +12,7 @@ public class VarRef extends Expression implements IVarIndex
 	public int varIndex;
 	public boolean hasSafe;
 
-	public VarRef(VarAttribute[] attributes, boolean hasSafe, Expression safe, Token token)
+	public VarRef(VarAttribute[] attributes, boolean hasSafe, Expression safe, GrammarToken token)
 	{
 		super(token);
 

@@ -12,7 +12,7 @@ public class TagStatement extends Statement
 	Expression[] paras;
 	Statement block;
 
-	public TagStatement(TagFactory tagFactory, Expression[] paras, Statement block, Token token)
+	public TagStatement(TagFactory tagFactory, Expression[] paras, Statement block, GrammarToken token)
 	{
 		super(token);
 		this.tagFactory = tagFactory;

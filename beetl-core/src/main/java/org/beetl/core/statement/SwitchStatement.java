@@ -18,7 +18,7 @@ public class SwitchStatement extends Statement
 	BlockStatement defaultBlock;
 
 	public SwitchStatement(Expression value, TreeMap<Expression, BlockStatement> map, BlockStatement defaultBlock,
-			Token token)
+			GrammarToken token)
 	{
 		super(token);
 		this.map = map;

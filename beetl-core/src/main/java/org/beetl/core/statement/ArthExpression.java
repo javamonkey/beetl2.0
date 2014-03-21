@@ -18,7 +18,7 @@ public class ArthExpression extends Expression
 	public Expression a;
 	public Expression b;
 
-	public ArthExpression(Expression a, Expression b, short mode, Token token)
+	public ArthExpression(Expression a, Expression b, short mode, GrammarToken token)
 	{
 		super(token);
 		this.a = a;

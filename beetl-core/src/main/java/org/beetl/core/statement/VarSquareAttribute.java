@@ -13,7 +13,7 @@ public class VarSquareAttribute extends VarAttribute
 {
 	public Expression exp;
 
-	public VarSquareAttribute(Expression exp, Token token)
+	public VarSquareAttribute(Expression exp, GrammarToken token)
 	{
 		super(token);
 		this.exp = exp;

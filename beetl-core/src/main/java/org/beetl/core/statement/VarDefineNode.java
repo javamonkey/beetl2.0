@@ -8,7 +8,7 @@ public class VarDefineNode extends Expression implements IVarIndex
 
 	int varIndex = 0;
 
-	public VarDefineNode(Token token)
+	public VarDefineNode(GrammarToken token)
 	{
 		super(token);
 		// TODO Auto-generated constructor stub

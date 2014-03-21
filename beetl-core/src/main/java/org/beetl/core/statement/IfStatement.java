@@ -10,7 +10,7 @@ public class IfStatement extends Statement
 	public Statement ifStatement;
 	public Statement elseStatement;
 
-	public IfStatement(Expression condtion, Statement ifStatement, Statement elseStatement, Token token)
+	public IfStatement(Expression condtion, Statement ifStatement, Statement elseStatement, GrammarToken token)
 	{
 		super(token);
 		this.condtion = condtion;

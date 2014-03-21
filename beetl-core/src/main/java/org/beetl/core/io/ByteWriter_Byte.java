@@ -104,17 +104,24 @@ public class ByteWriter_Byte extends ByteWriter
 		return new ByteBodyContent(byteArray.buf, byteArray.count, this.cs);
 	}
 
-	//	@Override
-	//	public void flushToParent() throws IOException
-	//	{
-	//		if (this.parent == null)
-	//		{
-	//			throw new NullPointerException("Parent is null");
-	//		}
-	//		os.flush();
-	//		NoLockByteArrayOutputStream bos = (NoLockByteArrayOutputStream) os;
-	//		((ByteWriter_Byte) this.parent).write(bos.buf, bos.count);
-	//
-	//	}
+	public OutputStream getOs()
+	{
+		return os;
+	}
+
+	public void setOs(OutputStream os)
+	{
+		this.os = os;
+	}
+
+	public String getCs()
+	{
+		return cs;
+	}
+
+	public void setCs(String cs)
+	{
+		this.cs = cs;
+	}
 
 }

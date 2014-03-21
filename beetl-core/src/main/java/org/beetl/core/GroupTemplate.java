@@ -13,8 +13,10 @@ import org.beetl.core.cache.Cache;
 import org.beetl.core.cache.ProgramCacheFactory;
 import org.beetl.core.event.Event;
 import org.beetl.core.event.Listener;
+import org.beetl.core.exception.BeetlException;
 import org.beetl.core.exception.HTMLTagParserException;
 import org.beetl.core.exception.TempException;
+import org.beetl.core.statement.ErrorGrammarProgram;
 import org.beetl.core.statement.Program;
 import org.beetl.core.util.ClassSearch;
 import org.beetl.core.util.ObjectUtil;
@@ -38,6 +40,7 @@ public class GroupTemplate
 	Map<String, TagFactory> tagFactoryMap = new HashMap<String, TagFactory>();
 	ClassSearch classSearch = null;
 	NativeSecurityManager nativeSecurity = null;
+	ErrorHandler errorHandler = null;
 
 	/**
 	 * 使用loader 和 conf初始化GroupTempalte
@@ -59,6 +62,7 @@ public class GroupTemplate
 		this.initVirtual();
 		classSearch = new ClassSearch(conf.getPkgList());
 		nativeSecurity = (NativeSecurityManager) ObjectUtil.instnace(conf.getNativeSecurity());
+		errorHandler = (ErrorHandler) ObjectUtil.instnace(conf.errorHandlerClass);
 	}
 
 	protected void initFunction()
@@ -69,7 +73,6 @@ public class GroupTemplate
 		{
 			String name = entry.getKey();
 			String clsName = entry.getValue();
-			System.out.println(name);
 			this.registerFunction(name, (Function) ObjectUtil.instnace(clsName));
 		}
 
@@ -239,15 +242,27 @@ public class GroupTemplate
 		}
 		catch (HTMLTagParserException e)
 		{
-			throw new TempException(e.getMessage());
+			ErrorGrammarProgram ep = new ErrorGrammarProgram(res.getId(), this, sf.lineSeparator);
+			ep.setException(e);
+			return ep;
 		}
 		catch (IOException e)
 		{
 			throw new TempException(e.getMessage());
 		}
 
-		Program program = engine.createProgram(res.getId(), scriptReader, sf.textMap, sf.lineSeparator, this);
-		return program;
+		try
+		{
+			Program program = engine.createProgram(res.getId(), scriptReader, sf.textMap, sf.lineSeparator, this);
+			return program;
+		}
+		catch (BeetlException ex)
+		{
+			ErrorGrammarProgram ep = new ErrorGrammarProgram(res.getId(), this, sf.lineSeparator);
+			ep.setException(ex);
+			return ep;
+		}
+
 	}
 
 	/**
@@ -427,6 +442,11 @@ public class GroupTemplate
 	public NativeSecurityManager getNativeSecurity()
 	{
 		return nativeSecurity;
+	}
+
+	public ErrorHandler getErrorHandler()
+	{
+		return errorHandler;
 	}
 
 }

@@ -31,7 +31,7 @@ import java.io.IOException;
 
 import org.beetl.core.BodyContent;
 import org.beetl.core.Tag;
-import org.beetl.core.exception.TempException;
+import org.beetl.core.exception.BeetlException;
 
 /**
  * cache标签，模板页面可以通过cache标签缓存模板内容<p>
@@ -111,7 +111,11 @@ public class CacheTag extends Tag
 		}
 		catch (IOException ex)
 		{
-			throw new TempException(ex.getMessage());
+			if (!ctx.gt.getConf().isIgnoreClientIOError())
+			{
+				throw new BeetlException(BeetlException.CLIENT_IO_ERROR_ERROR, "IO Error", ex);
+			}
+
 		}
 
 	}

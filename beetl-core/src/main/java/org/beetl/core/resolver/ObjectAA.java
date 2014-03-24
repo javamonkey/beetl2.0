@@ -3,7 +3,7 @@ package org.beetl.core.resolver;
 import java.util.List;
 import java.util.Map;
 
-import org.beetl.core.exception.TempException;
+import org.beetl.core.exception.BeetlException;
 import org.beetl.core.util.ObjectUtil;
 
 /**
@@ -49,11 +49,13 @@ public class ObjectAA extends AA
 			MethodInvoker invoker = ObjectUtil.getInvokder(c, (String) name);
 			if (invoker != null)
 			{
+
 				return invoker.get(o);
 			}
 			else
 			{
-				throw new TempException("not found attribute " + name);
+				BeetlException ex = new BeetlException(BeetlException.ATTRIBUTE_NOT_FOUND, (String) name);
+				throw ex;
 			}
 
 		}

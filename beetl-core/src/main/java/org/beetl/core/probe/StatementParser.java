@@ -9,7 +9,7 @@ import java.util.Stack;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.event.Listener;
 import org.beetl.core.event.NodeEvent;
-import org.beetl.core.exception.TempException;
+import org.beetl.core.exception.BeetlException;
 import org.beetl.core.statement.ASTNode;
 import org.beetl.core.statement.BlockStatement;
 import org.beetl.core.statement.Statement;
@@ -156,7 +156,9 @@ public class StatementParser
 									}
 									catch (Exception ex)
 									{
-										throw new TempException(ex.getMessage());
+										BeetlException be = new BeetlException(BeetlException.ERROR, "替换ASTNode错", ex);
+										be.token = ((ASTNode) newASTNode).token;
+										throw be;
 									}
 
 									values = newASTNode;

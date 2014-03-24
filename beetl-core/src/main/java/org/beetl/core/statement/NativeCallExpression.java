@@ -5,7 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
-import org.beetl.core.exception.TempException;
+import org.beetl.core.exception.BeetlException;
 import org.beetl.core.statement.nat.ClassNode;
 import org.beetl.core.statement.nat.InstanceNode;
 import org.beetl.core.statement.nat.NativeArrayNode;
@@ -73,19 +73,27 @@ public class NativeCallExpression extends Expression
 				}
 				catch (SecurityException e)
 				{
-					throw new TempException("can not access filed" + attr);
+					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "不能调用属性", e);
+					be.token = GrammarToken.createToken(attr, token.line);
+					throw be;
 				}
 				catch (NoSuchFieldException e)
 				{
-					throw new TempException(" no such filed" + attr);
+					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "无此属性", e);
+					be.token = GrammarToken.createToken(attr, token.line);
+					throw be;
 				}
 				catch (IllegalArgumentException e)
 				{
-					throw new TempException(" can not get attribute" + attr);
+					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "访问属性出错", e);
+					be.token = GrammarToken.createToken(attr, token.line);
+					throw be;
 				}
 				catch (IllegalAccessException e)
 				{
-					throw new TempException(" can not access attribute" + attr);
+					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "访问属性出错", e);
+					be.token = GrammarToken.createToken(attr, token.line);
+					throw be;
 				}
 
 			}
@@ -93,7 +101,10 @@ public class NativeCallExpression extends Expression
 			{
 				if (!targetCls.isArray())
 				{
-					throw new TempException(" must be array");
+					BeetlException be = new BeetlException(BeetlException.ARRAY_TYPE_ERROR);
+					//最好是把上一个字符显示出来
+					be.token = GrammarToken.createToken("[]", token.line);
+					throw be;
 				}
 				Expression exp = ((NativeArrayNode) node).exp;
 				Object value = exp.evaluate(ctx);
@@ -113,7 +124,9 @@ public class NativeCallExpression extends Expression
 				}
 				else
 				{
-					throw new TempException(" array index mustbe number");
+					BeetlException be = new BeetlException(BeetlException.ARRAY_INDEX_ERROR, "数组指针必须是Number类型");
+					be.token = GrammarToken.createToken("[]", token.line);
+					throw be;
 				}
 			}
 			else if (node instanceof NativeMethodNode)
@@ -134,7 +147,9 @@ public class NativeCallExpression extends Expression
 				{
 					if (!ctx.gt.getNativeSecurity().permit(ctx.template.program.id, targetCls, targetObj, method))
 					{
-						throw new TempException("不允许调用Native方法" + method + " of " + targetCls);
+						BeetlException be = new BeetlException(BeetlException.NATIVE_SECUARITY_EXCEPTION);
+						be.token = GrammarToken.createToken(method, token.line);
+						throw be;
 					}
 					if (targetObj != null)
 					{
@@ -157,20 +172,29 @@ public class NativeCallExpression extends Expression
 				}
 				catch (SecurityException e)
 				{
-					throw new TempException(" can not get method" + e.getMessage());
+					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "不能调用方法", e);
+					be.token = GrammarToken.createToken(method, token.line);
+					throw be;
 				}
 
 				catch (IllegalArgumentException e)
 				{
-					throw new TempException(" illegal parameter for  method" + e.getMessage());
+					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "无法访问方法", e);
+					be.token = GrammarToken.createToken(method, token.line);
+					throw be;
 				}
 				catch (IllegalAccessException e)
 				{
-					throw new TempException(" illegal access  method" + e.getMessage());
+					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "无法访问方法", e);
+					be.token = GrammarToken.createToken(method, token.line);
+					throw be;
 				}
 				catch (InvocationTargetException e)
 				{
-					throw new TempException("native call message" + e.getTargetException().getMessage());
+					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "内部调用报错",
+							e.getTargetException());
+					be.token = GrammarToken.createToken(method, token.line);
+					throw be;
 				}
 			}
 
@@ -214,11 +238,15 @@ public class NativeCallExpression extends Expression
 				}
 				catch (SecurityException e)
 				{
-					throw new TempException("can not access filed" + attr);
+					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "无法访问属性", e);
+					be.token = GrammarToken.createToken(attr, token.line);
+					throw be;
 				}
 				catch (NoSuchFieldException e)
 				{
-					throw new TempException(" no such filed" + attr);
+					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "无此属性", e);
+					be.token = GrammarToken.createToken(attr, token.line);
+					throw be;
 				}
 
 			}
@@ -226,7 +254,10 @@ public class NativeCallExpression extends Expression
 			{
 				if (!type.cls.isArray())
 				{
-					throw new TempException(" must be array");
+					BeetlException be = new BeetlException(BeetlException.ARRAY_TYPE_ERROR);
+					//最好是把上一个字符显示出来
+					be.token = GrammarToken.createToken("[]", token.line);
+					throw be;
 				}
 				type.cls = type.cls.getComponentType();
 			}
@@ -250,7 +281,9 @@ public class NativeCallExpression extends Expression
 					MethodMatchConf conf = ObjectUtil.findMethod(type.cls, method, argTypes);
 					if (conf == null)
 					{
-						throw new TempException(" can not get method " + method);
+						BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION);
+						be.token = GrammarToken.createToken(method, token.line);
+						throw be;
 					}
 					else
 					{
@@ -260,7 +293,9 @@ public class NativeCallExpression extends Expression
 				}
 				catch (SecurityException e)
 				{
-					throw new TempException(" can not get method" + e.getMessage());
+					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "不能调用方法");
+					be.token = GrammarToken.createToken(method, token.line);
+					throw be;
 				}
 
 			}

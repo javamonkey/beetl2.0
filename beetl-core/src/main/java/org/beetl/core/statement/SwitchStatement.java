@@ -5,7 +5,7 @@ import java.util.TreeMap;
 
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
-import org.beetl.core.exception.TempException;
+import org.beetl.core.exception.BeetlException;
 
 public class SwitchStatement extends Statement
 {
@@ -33,7 +33,12 @@ public class SwitchStatement extends Statement
 	{
 		Object o = value.evaluate(ctx);
 		if (o == null)
-			throw new TempException("不能为空");
+		{
+			BeetlException ex = new BeetlException(BeetlException.NULL);
+			ex.token = value.token;
+			throw ex;
+		}
+
 		boolean isMatch = false;
 		for (Expression exp : condtionsList)
 		{

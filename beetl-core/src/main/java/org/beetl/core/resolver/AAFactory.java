@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.beetl.core.exception.TempException;
+import org.beetl.core.exception.BeetlException;
 import org.beetl.core.util.ObjectUtil;
 
 public class AAFactory
@@ -88,7 +88,8 @@ public class AAFactory
 				else
 				{
 					// 还是没有找到，抛错吧
-					throw new TempException("未找到属性访问方法");
+					BeetlException be = new BeetlException(BeetlException.ATTRIBUTE_NOT_FOUND, name);
+					throw be;
 				}
 			}
 

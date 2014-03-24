@@ -4,6 +4,7 @@ import org.beetl.core.Context;
 import org.beetl.core.InferContext;
 import org.beetl.core.Tag;
 import org.beetl.core.TagFactory;
+import org.beetl.core.exception.BeetlException;
 import org.beetl.core.util.ObjectUtil;
 
 public class TagStatement extends Statement
@@ -24,7 +25,23 @@ public class TagStatement extends Statement
 	@Override
 	public void execute(Context ctx)
 	{
-		Tag tag = this.tagFactory.createTag();
+		Tag tag = null;
+		try
+		{
+			tag = this.tagFactory.createTag();
+		}
+		catch (BeetlException ex)
+		{
+			ex.token = this.token;
+			throw ex;
+		}
+		catch (RuntimeException ex)
+		{
+			BeetlException bex = new BeetlException(BeetlException.TAG_INSTANCE_ERROR, ex.getMessage(), ex);
+			bex.token = this.token;
+			throw bex;
+		}
+
 		Object[] args = null;
 		if (paras.length == 0)
 		{
@@ -41,7 +58,21 @@ public class TagStatement extends Statement
 		}
 
 		tag.init(ctx, args, block);
-		tag.render();
+		try
+		{
+			tag.render();
+		}
+		catch (BeetlException ex)
+		{
+			ex.token = this.token;
+			throw ex;
+		}
+		catch (RuntimeException ex)
+		{
+			BeetlException be = new BeetlException(BeetlException.ERROR, "tag执行抛错", ex);
+			be.token = this.token;
+			throw be;
+		}
 
 	}
 

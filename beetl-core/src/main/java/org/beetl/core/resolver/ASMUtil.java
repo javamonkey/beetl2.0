@@ -1,6 +1,6 @@
 package org.beetl.core.resolver;
 
-import org.beetl.core.exception.TempException;
+import org.beetl.core.exception.BeetlException;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -111,8 +111,8 @@ public class ASMUtil implements Opcodes
 		}
 		catch (Exception ex)
 		{
-			ex.printStackTrace();
-			throw new TempException(ex.getMessage());
+			BeetlException be = new BeetlException(BeetlException.OPT_ERROR, "不能创建一个属性访问类", ex);
+			throw be;
 		}
 
 	}

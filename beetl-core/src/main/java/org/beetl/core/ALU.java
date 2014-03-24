@@ -2,6 +2,10 @@ package org.beetl.core;
 
 import java.math.BigDecimal;
 
+import org.beetl.core.exception.BeetlException;
+import org.beetl.core.statement.ASTNode;
+import org.beetl.core.statement.GrammarToken;
+
 /**
  * 用于算数表达式，对于加法，允许null值，但其他则不允许，将抛出异常
  * @todo 抛出异常..
@@ -221,72 +225,72 @@ public class ALU
 	}
 
 	// +1
-	public static Object plusOne(final Object o1)
-	{
-		if (o1 != null)
-		{
-			if (o1 instanceof Number)
-			{
-				final Number num;
-				switch (getNumberType(num = (Number) o1))
-				{
-					case INTEGER:
-						return Integer.valueOf(num.intValue() + 1);
-					case LONG:
-						return Long.valueOf(num.longValue() + 1L);
-					case DOUBLE:
-						return Double.valueOf(num.doubleValue() + 1D);
-					case FLOAT:
-						return Float.valueOf(num.floatValue() + 1F);
-					case SHORT:
-						return Short.valueOf((short) (num.intValue() + 1));
-					case HS:
-						BigDecimal bd = (BigDecimal) o1;
-						return bd.add(BigDecimal.ONE);
-
-				}
-			}
-			else
-			{
-				throw new RuntimeException("value not a number");
-			}
-		}
-		throw ValueIsNullException(o1);
-	}
+	//	public static Object plusOne(final Object o1)
+	//	{
+	//		if (o1 != null)
+	//		{
+	//			if (o1 instanceof Number)
+	//			{
+	//				final Number num;
+	//				switch (getNumberType(num = (Number) o1))
+	//				{
+	//					case INTEGER:
+	//						return Integer.valueOf(num.intValue() + 1);
+	//					case LONG:
+	//						return Long.valueOf(num.longValue() + 1L);
+	//					case DOUBLE:
+	//						return Double.valueOf(num.doubleValue() + 1D);
+	//					case FLOAT:
+	//						return Float.valueOf(num.floatValue() + 1F);
+	//					case SHORT:
+	//						return Short.valueOf((short) (num.intValue() + 1));
+	//					case HS:
+	//						BigDecimal bd = (BigDecimal) o1;
+	//						return bd.add(BigDecimal.ONE);
+	//
+	//				}
+	//			}
+	//			else
+	//			{
+	//				throw new RuntimeException("value not a number");
+	//			}
+	//		}
+	//		throw ValueIsNullException(o1);
+	//	}
 
 	// -1
 
-	public static Object minusOne(final Object o1)
-	{
-		if (o1 != null)
-		{
-			if (o1 instanceof Number)
-			{
-				final Number num;
-				switch (getNumberType(num = (Number) o1))
-				{
-					case INTEGER:
-						return Integer.valueOf(num.intValue() - 1);
-					case LONG:
-						return Long.valueOf(num.longValue() - 1l);
-					case DOUBLE:
-						return Double.valueOf(num.doubleValue() - 1d);
-					case FLOAT:
-						return Float.valueOf(num.floatValue() - 1f);
-					case SHORT:
-						return Short.valueOf((short) (num.intValue() - 1));
-					case HS:
-						BigDecimal bd = (BigDecimal) o1;
-						return bd.min(BigDecimal.ONE);
-				}
-			}
-			else
-			{
-				throw new RuntimeException("value not a number");
-			}
-		}
-		throw ValueIsNullException(o1);
-	}
+	//	public static Object minusOne(final Object o1)
+	//	{
+	//		if (o1 != null)
+	//		{
+	//			if (o1 instanceof Number)
+	//			{
+	//				final Number num;
+	//				switch (getNumberType(num = (Number) o1))
+	//				{
+	//					case INTEGER:
+	//						return Integer.valueOf(num.intValue() - 1);
+	//					case LONG:
+	//						return Long.valueOf(num.longValue() - 1l);
+	//					case DOUBLE:
+	//						return Double.valueOf(num.doubleValue() - 1d);
+	//					case FLOAT:
+	//						return Float.valueOf(num.floatValue() - 1f);
+	//					case SHORT:
+	//						return Short.valueOf((short) (num.intValue() - 1));
+	//					case HS:
+	//						BigDecimal bd = (BigDecimal) o1;
+	//						return bd.min(BigDecimal.ONE);
+	//				}
+	//			}
+	//			else
+	//			{
+	//				throw new RuntimeException("value not a number");
+	//			}
+	//		}
+	//		throw ValueIsNullException(o1);
+	//	}
 
 	// ///////////////////////////
 	// +
@@ -297,7 +301,7 @@ public class ALU
 	 * @param o2
 	 * @return
 	 */
-	public static Object plus(final Object o1, final Object o2)
+	public static Object plus(final Object o1, final Object o2, final ASTNode node1, final ASTNode node2)
 	{
 		if (o1 != null && o2 != null)
 		{
@@ -324,7 +328,7 @@ public class ALU
 					return b1.add(b2);
 
 				default:
-					throw UnsupportedTypeException(o1, o2);
+					throw UnsupportedTypeException(o1, o2, node1, node2, "+");
 			}
 		}
 		else if (o1 != null)
@@ -335,7 +339,7 @@ public class ALU
 					return o1;
 				default:
 				{
-					throw ValueIsNullException(o1, o2);
+					throw valueIsNullException(o1, o2, node1, node2);
 				}
 			}
 		}
@@ -347,7 +351,7 @@ public class ALU
 					return o2;
 				default:
 				{
-					throw ValueIsNullException(o1, o2);
+					throw valueIsNullException(o1, o2, node1, node2);
 				}
 			}
 		}
@@ -359,7 +363,7 @@ public class ALU
 
 	// -
 
-	public static Object minus(final Object o1, final Object o2)
+	public static Object minus(final Object o1, final Object o2, final ASTNode node1, final ASTNode node2)
 	{
 		if (o1 != null && o2 != null)
 		{
@@ -384,17 +388,17 @@ public class ALU
 					b2 = getBigDecimal(o2);
 					return b1.subtract(b2);
 				default:
-					throw UnsupportedTypeException(o1, o2);
+					throw UnsupportedTypeException(o1, o2, node1, node2, "-");
 			}
 		}
 		else
 		{
-			throw ValueIsNullException(o1, o2);
+			throw valueIsNullException(o1, o2, node1, node2);
 		}
 	}
 
 	// 负
-	public static Object negative(final Object o1)
+	public static Object negative(final Object o1, ASTNode node)
 	{
 		if (o1 != null)
 		{
@@ -414,7 +418,7 @@ public class ALU
 					return -((Number) o1).shortValue();
 				case HS:
 					BigDecimal bd = (BigDecimal) o1;
-					return bd.negate();
+					return bd;
 
 				default:
 					throw new RuntimeException("value not a number");
@@ -422,13 +426,13 @@ public class ALU
 		}
 		else
 		{
-			throw ValueIsNullException(o1);
+			throw valueIsNullException(o1, node);
 		}
 	}
 
 	// *
 
-	public static Object mult(final Object o1, final Object o2)
+	public static Object mult(final Object o1, final Object o2, final ASTNode node1, final ASTNode node2)
 	{
 		if (o1 != null && o2 != null)
 		{
@@ -451,18 +455,18 @@ public class ALU
 					b2 = getBigDecimal(o2);
 					return b1.multiply(b2);
 				default:
-					throw UnsupportedTypeException(o1, o2);
+					throw UnsupportedTypeException(o1, o2, node1, node2, "*");
 			}
 		}
 		else
 		{
-			throw ValueIsNullException(o1, o2);
+			throw valueIsNullException(o1, o2, node1, node2);
 		}
 	}
 
 	// /
 	// @todo: 对0的判断
-	public static Object div(final Object o1, final Object o2)
+	public static Object div(final Object o1, final Object o2, final ASTNode node1, final ASTNode node2)
 	{
 		if (o1 != null && o2 != null)
 		{
@@ -485,12 +489,12 @@ public class ALU
 					b2 = getBigDecimal(o2);
 					return b1.divide(b2);
 				default:
-					throw UnsupportedTypeException(o1, o2);
+					throw UnsupportedTypeException(o1, o2, node1, node2, "/");
 			}
 		}
 		else
 		{
-			throw ValueIsNullException(o1, o2);
+			throw valueIsNullException(o1, o2, node1, node2);
 		}
 	}
 
@@ -550,7 +554,7 @@ public class ALU
 
 	// %
 
-	public static Object mod(final Object o1, final Object o2)
+	public static Object mod(final Object o1, final Object o2, final ASTNode node1, final ASTNode node2)
 	{
 		if (o1 != null && o2 != null)
 		{
@@ -573,37 +577,15 @@ public class ALU
 					b2 = getBigDecimal(o2);
 					return b1.divide(b2);
 				default:
-					throw UnsupportedTypeException(o1, o2);
+					throw UnsupportedTypeException(o1, o2, node1, node2, "%");
 			}
 		}
 		else
 		{
-			throw ValueIsNullException(o1, o2);
+			throw valueIsNullException(o1, o2, node1, node2);
 		}
 	}
 
-	// /////////////////////////
-
-	// ///////////////
-	// &&
-	public static Object and(final Object o1, final Object o2)
-	{
-		return isTrue(o1) ? o2 : o1;
-	}
-
-	// ||
-	public static Object or(final Object o1, final Object o2)
-	{
-		return isTrue(o1) ? o1 : o2;
-	}
-
-	// !
-	public static boolean not(final Object o1)
-	{
-		return !isTrue(o1);
-	}
-
-	// ==
 	public static boolean equals(final Object o1, final Object o2)
 	{
 		if (o1 == o2)
@@ -653,7 +635,7 @@ public class ALU
 	}
 
 	// >
-	public static boolean greater(final Object o1, final Object o2)
+	public static boolean greater(final Object o1, final Object o2, final ASTNode node1, final ASTNode node2)
 	{
 		if (o1 != null && o2 != null)
 		{
@@ -678,18 +660,18 @@ public class ALU
 					b2 = getBigDecimal(o2);
 					return b1.compareTo(b2) > 0;
 				default:
-					throw UnsupportedTypeException(o1, o2);
+					throw UnsupportedTypeException(o1, o2, node1, node2, ">");
 			}
 		}
 		else
 		{
-			throw ValueIsNullException(o1, o2);
+			throw valueIsNullException(o1, o2, node1, node2);
 		}
 	}
 
 	// >=
 
-	public static boolean greaterEquals(final Object o1, final Object o2)
+	public static boolean greaterEquals(final Object o1, final Object o2, final ASTNode node1, final ASTNode node2)
 	{
 		if (o1 != null && o2 != null)
 		{
@@ -714,18 +696,18 @@ public class ALU
 					b2 = getBigDecimal(o2);
 					return b1.compareTo(b2) >= 0;
 				default:
-					throw UnsupportedTypeException(o1, o2);
+					throw UnsupportedTypeException(o1, o2, node1, node2, ">=");
 			}
 		}
 		else
 		{
-			throw ValueIsNullException(o1, o2);
+			throw valueIsNullException(o1, o2, node1, node2);
 		}
 	}
 
 	// <
 
-	public static boolean less(final Object o1, final Object o2)
+	public static boolean less(final Object o1, final Object o2, final ASTNode node1, final ASTNode node2)
 	{
 		if (o1 != null && o2 != null)
 		{
@@ -750,18 +732,18 @@ public class ALU
 					b2 = getBigDecimal(o2);
 					return b1.compareTo(b2) < 0;
 				default:
-					throw UnsupportedTypeException(o1, o2);
+					throw UnsupportedTypeException(o1, o2, node1, node2, "<");
 			}
 		}
 		else
 		{
-			throw ValueIsNullException(o1, o2);
+			throw valueIsNullException(o1, o2, node1, node2);
 		}
 	}
 
 	// <=
 
-	public static boolean lessEquals(final Object o1, final Object o2)
+	public static boolean lessEquals(final Object o1, final Object o2, final ASTNode node1, final ASTNode node2)
 	{
 		if (o1 != null && o2 != null)
 		{
@@ -786,48 +768,50 @@ public class ALU
 					b2 = getBigDecimal(o2);
 					return b1.compareTo(b2) <= 0;
 				default:
-					throw UnsupportedTypeException(o1, o2);
+					throw UnsupportedTypeException(o1, o2, node1, node2, "<=");
 			}
 		}
 		else
 		{
-			throw ValueIsNullException(o1, o2);
+			throw valueIsNullException(o1, o2, node1, node2);
 		}
 	}
 
 	// *******************
 
-	private static RuntimeException UnsupportedTypeException(final Object o1, final Object o2)
+	private static RuntimeException UnsupportedTypeException(final Object o1, final Object o2, final ASTNode node1,
+			final ASTNode node2, String type)
 	{
-		throw new RuntimeException("error");
+		BeetlException ex = new BeetlException(BeetlException.EXPRESSION_NOT_COMPATIBLE, o1.getClass() + type
+				+ o2.getClass());
+		GrammarToken token = GrammarToken.createToken(node1.token.text + type + node2.token.text, node1.token.line);
+		ex.token = token;
+		throw ex;
 	}
 
-	private static RuntimeException ValueIsNullException(final Object o1)
+	private static RuntimeException valueIsNullException(final Object o1, ASTNode node1)
 	{
-		return new RuntimeException("value is null");
+		BeetlException ex = new BeetlException(BeetlException.NULL);
+		ex.token = node1.token;
+		throw ex;
 	}
 
-	private static RuntimeException ValueIsNullException(final Object o1, final Object o2)
+	private static BeetlException valueIsNullException(final Object o1, final Object o2, final ASTNode node1,
+			final ASTNode node2)
 	{
+		BeetlException ex = null;
 		if (o1 == null)
 		{
-			if (o2 == null)
-			{
-				return new RuntimeException("left & right values are null");
-			}
-			else
-			{
-				return new RuntimeException("left value is null");
-			}
-		}
-		else if (o2 == null)
-		{
-			return new RuntimeException("right value is null");
+			ex = new BeetlException(BeetlException.NULL);
+			ex.token = node1.token;
 		}
 		else
 		{
-			return new RuntimeException("left & right values are not null");
+			ex = new BeetlException(BeetlException.NULL);
+			ex.token = node2.token;
 		}
+		throw ex;
+
 	}
 
 	private static BigDecimal getBigDecimal(Object o)
@@ -842,23 +826,38 @@ public class ALU
 		}
 	}
 
-	public static boolean isTrue(final Object o)
+	/** 
+	 * @param o
+	 * @param node
+	 * @return
+	 */
+	public static Boolean isTrue(final Object o, ASTNode node)
 	{
+
+		if (o == null)
+		{
+			BeetlException be = new BeetlException(BeetlException.NULL);
+			be.token = node.token;
+			throw be;
+		}
+
 		if (Boolean.TRUE == o)
 		{
-			return true;
+			return Boolean.TRUE;
 		}
-		else if (Boolean.FALSE == o || o == null)
+		else if (Boolean.FALSE == o)
 		{
-			return false;
+			return Boolean.FALSE;
 		}
 		else if (o instanceof Boolean)
 		{
-			return ((Boolean) o).booleanValue();
+			return ((Boolean) o);
 		}
 		else
 		{
-			throw new RuntimeException("error");
+			BeetlException ex = new BeetlException(BeetlException.BOOLEAN_EXPECTED_ERROR, o.getClass().toString());
+			ex.token = node.token;
+			throw ex;
 		}
 	}
 }

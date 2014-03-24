@@ -16,9 +16,10 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.beetl.core.exception.TempException;
+import org.beetl.core.exception.BeetlException;
 import org.beetl.core.parser.BeetlParser;
 import org.beetl.core.parser.BeetlParser.AddminExpContext;
+import org.beetl.core.parser.BeetlParser.AndExpContext;
 import org.beetl.core.parser.BeetlParser.AssignGeneralContext;
 import org.beetl.core.parser.BeetlParser.AssignIdContext;
 import org.beetl.core.parser.BeetlParser.AssignMentContext;
@@ -61,6 +62,9 @@ import org.beetl.core.parser.BeetlParser.NativeCallContext;
 import org.beetl.core.parser.BeetlParser.NativeCallExpContext;
 import org.beetl.core.parser.BeetlParser.NativeMethodContext;
 import org.beetl.core.parser.BeetlParser.NativeVarRefChainContext;
+import org.beetl.core.parser.BeetlParser.NegExpContext;
+import org.beetl.core.parser.BeetlParser.NotExpContext;
+import org.beetl.core.parser.BeetlParser.OrExpContext;
 import org.beetl.core.parser.BeetlParser.ParExpContext;
 import org.beetl.core.parser.BeetlParser.ParExpressionContext;
 import org.beetl.core.parser.BeetlParser.ReturnStContext;
@@ -91,6 +95,7 @@ import org.beetl.core.parser.BeetlParser.VarStContext;
 import org.beetl.core.parser.BeetlParser.WhileStContext;
 import org.beetl.core.resolver.ObjectAA;
 import org.beetl.core.statement.ASTNode;
+import org.beetl.core.statement.AndExpression;
 import org.beetl.core.statement.ArthExpression;
 import org.beetl.core.statement.BlockStatement;
 import org.beetl.core.statement.BreakStatement;
@@ -102,12 +107,16 @@ import org.beetl.core.statement.Expression;
 import org.beetl.core.statement.ForStatement;
 import org.beetl.core.statement.FormatExpression;
 import org.beetl.core.statement.FunctionExpression;
+import org.beetl.core.statement.GrammarToken;
 import org.beetl.core.statement.IGoto;
 import org.beetl.core.statement.IfStatement;
 import org.beetl.core.statement.JsonArrayExpression;
 import org.beetl.core.statement.JsonMapExpression;
 import org.beetl.core.statement.Literal;
 import org.beetl.core.statement.NativeCallExpression;
+import org.beetl.core.statement.NegExpression;
+import org.beetl.core.statement.NotBooleanExpression;
+import org.beetl.core.statement.OrExpression;
 import org.beetl.core.statement.PlaceholderST;
 import org.beetl.core.statement.ProgramMetaData;
 import org.beetl.core.statement.ReturnStatement;
@@ -545,7 +554,10 @@ public class AntlrProgramBuilder
 		Class cls = gt.loadClassBySimpleName(className);
 		if (cls == null)
 		{
-			throw new TempException(className + " not found");
+
+			BeetlException ex = new BeetlException(BeetlException.TYPE_SEARCH_ERROR, className);
+			ex.token = this.getBTToken(ctx.getStart());
+			throw ex;
 		}
 		Type classType = new Type(cls);
 		TypeArgumentsContext typeArgCtx = ctx.typeArguments();
@@ -642,10 +654,11 @@ public class AntlrProgramBuilder
 		VarAttribute[] vs = this.parseVarAttribute(vaListCtx);
 		List<TerminalNode> idList = ctx.functionNs().Identifier();
 		String nsId = this.getID(idList);
-		org.beetl.core.statement.GrammarToken btToken = new org.beetl.core.statement.GrammarToken(nsId, ctx.start.getLine(), 0);
+		GrammarToken btToken = new org.beetl.core.statement.GrammarToken(nsId, ctx.start.getLine(), 0);
 		if (nsId.equals("isEmpty"))
 		{
-			if (exps.length == 1)
+
+			if (exps.length != 0)
 			{
 				Expression one = exps[0];
 				if (one instanceof VarRef)
@@ -658,10 +671,6 @@ public class AntlrProgramBuilder
 						ref.safe = null;
 					}
 				}
-			}
-			else
-			{
-				throw new TempException("必须有一个参数 isEmpty");
 			}
 
 		}
@@ -781,8 +790,8 @@ public class AntlrProgramBuilder
 				line = listId.get(0).getSymbol().getLine();
 
 			}
-			format = new FormatExpression(formatName, pattern, org.beetl.core.statement.GrammarToken.createToken(tokenName,
-					line));
+			format = new FormatExpression(formatName, pattern, org.beetl.core.statement.GrammarToken.createToken(
+					tokenName, line));
 
 		}
 
@@ -866,10 +875,73 @@ public class AntlrProgramBuilder
 			NativeCallExpression nativeCall = this.parseNativeCallExpression(ncc);
 			return nativeCall;
 		}
+		else if (ctx instanceof AndExpContext)
+		{
+			AndExpContext andCtx = (AndExpContext) ctx;
+			return this.parseAndExpression(andCtx);
+		}
+		else if (ctx instanceof OrExpContext)
+		{
+			OrExpContext orExp = (OrExpContext) ctx;
+			return this.parseOrExpression(orExp);
+		}
+		else if (ctx instanceof NotExpContext)
+		{
+			NotExpContext notCtx = (NotExpContext) ctx;
+			return this.parseNotExpression(notCtx);
+		}
+		else if (ctx instanceof NegExpContext)
+		{
+			NegExpContext negCtx = (NegExpContext) ctx;
+			return this.parseNegExpression(negCtx);
+		}
 		else
 		{
 			throw new UnsupportedOperationException();
 		}
+	}
+
+	protected Expression parseNegExpression(NegExpContext ctx)
+	{
+		Expression exp = this.parseExpress(ctx.expression());
+		if (ctx.MIN() != null)
+		{
+			//负数
+			NegExpression negExp = new NegExpression(exp, this.getBTToken(ctx.MIN().getSymbol()));
+			return negExp;
+
+		}
+		else
+		{
+			return exp;
+		}
+
+	}
+
+	protected NotBooleanExpression parseNotExpression(NotExpContext ctx)
+	{
+		Expression exp = this.parseExpress(ctx.expression());
+		NotBooleanExpression notExp = new NotBooleanExpression(exp, this.getBTToken(ctx.NOT().getSymbol()));
+		return notExp;
+
+	}
+
+	protected OrExpression parseOrExpression(OrExpContext ctx)
+	{
+		Expression exp1 = this.parseExpress(ctx.expression(0));
+		Expression exp2 = this.parseExpress(ctx.expression(1));
+		OrExpression orExp = new OrExpression(exp1, exp2, this.getBTToken(ctx.OR().getSymbol()));
+		return orExp;
+
+	}
+
+	protected AndExpression parseAndExpression(AndExpContext ctx)
+	{
+		Expression exp1 = this.parseExpress(ctx.expression(0));
+		Expression exp2 = this.parseExpress(ctx.expression(1));
+		AndExpression andExp = new AndExpression(exp1, exp2, this.getBTToken(ctx.AND().getSymbol()));
+		return andExp;
+
 	}
 
 	protected NativeCallExpression parseNativeCallExpression(NativeCallContext ncc)
@@ -881,6 +953,7 @@ public class AntlrProgramBuilder
 		NativeVarRefChainContext first = (NativeVarRefChainContext) list.get(0);
 		List<TerminalNode> ids = first.Identifier();
 		StringBuilder clsSb = new StringBuilder();
+		//是类静态调用还是实例调用
 		boolean isCls = false;
 		int i = 0;
 		for (; i < ids.size(); i++)
@@ -912,7 +985,7 @@ public class AntlrProgramBuilder
 		}
 		else
 		{
-			//变量的属性引用,回到第一个
+			//变量的属性引用,回到第一个，构造一个变量
 			String varName = ids.get(0).getText();
 			VarRef ref = new VarRef(new VarAttribute[0], false, null, this.getBTToken("varName", ncc.start.getLine()));
 			this.pbCtx.setVarPosition(varName, ref);
@@ -946,7 +1019,19 @@ public class AntlrProgramBuilder
 				}
 				else
 				{
-					throw new TempException("错误定义");
+
+					String msg = null;
+					if (lastNode instanceof NativeArrayNode)
+					{
+						msg = "[]()";
+					}
+					else
+					{
+						msg = "()()";
+					}
+					BeetlException ex = new BeetlException(BeetlException.PARSER__NATIVE__ERROR, msg);
+					ex.token = this.getBTToken(methodCtx.getStart());
+					throw ex;
 				}
 				//解析参数
 				List<ExpressionContext> expCtxList = methodCtx.expression();
@@ -1320,8 +1405,8 @@ public class AntlrProgramBuilder
 
 	public org.beetl.core.statement.GrammarToken getBTToken(Token t)
 	{
-		org.beetl.core.statement.GrammarToken token = new org.beetl.core.statement.GrammarToken(t.getText(), t.getLine(),
-				t.getCharPositionInLine());
+		org.beetl.core.statement.GrammarToken token = new org.beetl.core.statement.GrammarToken(t.getText(),
+				t.getLine(), t.getCharPositionInLine());
 		return token;
 	}
 

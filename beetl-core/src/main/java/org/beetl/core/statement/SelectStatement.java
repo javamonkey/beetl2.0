@@ -3,7 +3,7 @@ package org.beetl.core.statement;
 import org.beetl.core.ALU;
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
-import org.beetl.core.exception.TempException;
+import org.beetl.core.exception.BeetlException;
 
 public class SelectStatement extends Statement
 {
@@ -31,7 +31,12 @@ public class SelectStatement extends Statement
 		{
 			base = value.evaluate(ctx);
 			if (base == null)
-				throw new TempException("不能为空");
+			{
+				BeetlException ex = new BeetlException(BeetlException.NULL);
+				ex.token = value.token;
+				throw ex;
+			}
+
 		}
 
 		boolean isMatch = false;
@@ -48,7 +53,9 @@ public class SelectStatement extends Statement
 				}
 				else
 				{
-					throw new TempException("Case 必须是boolean值");
+					BeetlException be = new BeetlException(BeetlException.BOOLEAN_EXPECTED_ERROR);
+					be.token = exp.token;
+					throw be;
 				}
 			}
 			else

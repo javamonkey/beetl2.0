@@ -24,34 +24,33 @@ public class ConsoleErrorHandler implements ErrorHandler
 		println(writer, sb.toString());
 		ResourceLoader resLoader = ex.gt.getResourceLoader();
 		//潜在问题，此时可能得到是一个新的模板，不过可能性很小，忽略！
-		Resource res = resLoader.getResource(ex.resourceId);
-		//显示前后三行的内容
-		int[] range = this.getRange(line);
 
 		String content = null;
 		;
 		try
 		{
+			Resource res = resLoader.getResource(ex.resourceId);
+			//显示前后三行的内容
+			int[] range = this.getRange(line);
 			content = res.getContent(range[0], range[1]);
+			if (content != null)
+			{
+				String[] strs = content.split(ex.cr);
+				int lineNumber = range[0];
+				for (int i = 0; i < strs.length; i++)
+				{
+					print(writer, "" + lineNumber);
+					print(writer, "|");
+					println(writer, strs[i]);
+					lineNumber++;
+				}
+
+			}
 		}
 		catch (IOException e)
 		{
 
-			//todo:如何处理这种情况？
-			e.printStackTrace();
-
-		}
-		if (content != null)
-		{
-			String[] strs = content.split(ex.cr);
-			int lineNumber = range[0];
-			for (int i = 0; i < strs.length; i++)
-			{
-				print(writer, "" + lineNumber);
-				print(writer, "|");
-				println(writer, strs[i]);
-				lineNumber++;
-			}
+			//ingore
 
 		}
 
@@ -59,6 +58,10 @@ public class ConsoleErrorHandler implements ErrorHandler
 		if (t != null)
 		{
 			printThrowable(writer, t);
+		}
+		else
+		{
+			printThrowable(writer, ex);
 		}
 
 	}

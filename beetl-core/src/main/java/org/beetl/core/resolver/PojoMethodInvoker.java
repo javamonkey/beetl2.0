@@ -3,8 +3,6 @@ package org.beetl.core.resolver;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.beetl.core.exception.TempException;
-
 public class PojoMethodInvoker implements MethodInvoker
 {
 
@@ -24,15 +22,15 @@ public class PojoMethodInvoker implements MethodInvoker
 		}
 		catch (IllegalArgumentException e)
 		{
-			throw new TempException(e.getMessage());
+			throw new RuntimeException(e.getMessage());
 		}
 		catch (IllegalAccessException e)
 		{
-			throw new TempException(e.getMessage());
+			throw new RuntimeException(e.getMessage());
 		}
 		catch (InvocationTargetException e)
 		{
-			throw new TempException(e.getMessage());
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 

@@ -2,6 +2,7 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
+import org.beetl.core.exception.BeetlException;
 import org.beetl.core.resolver.AA;
 
 public class VarAttribute extends Expression
@@ -37,7 +38,16 @@ public class VarAttribute extends Expression
 	{
 		Type type = (Type) inferCtx.temp;
 		String attrName = token.text;
-		this.type = type.getType(attrName);
+		try
+		{
+			this.type = type.getType(attrName);
+		}
+		catch (BeetlException be)
+		{
+			be.token = token;
+			throw be;
+		}
+
 	}
 
 }

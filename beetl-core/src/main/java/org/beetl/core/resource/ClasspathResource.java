@@ -8,7 +8,7 @@ import java.io.UnsupportedEncodingException;
 
 import org.beetl.core.Resource;
 import org.beetl.core.ResourceLoader;
-import org.beetl.core.exception.TempException;
+import org.beetl.core.exception.BeetlException;
 
 public class ClasspathResource extends Resource
 {
@@ -26,7 +26,9 @@ public class ClasspathResource extends Resource
 		InputStream is = ClasspathResource.class.getResourceAsStream(path);
 		if (is == null)
 		{
-			throw new TempException("classpath resource not found:" + id);
+			BeetlException be = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR, "classpath resource not found:"
+					+ id);
+			throw be;
 		}
 		Reader br;
 		try

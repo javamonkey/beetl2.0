@@ -54,6 +54,8 @@ public class EmptyExpressionFunction implements Function
 	public Boolean call(Object[] paras, Context ctx)
 	{
 
+		if (paras.length == 0)
+			return true;
 		Object result = paras[0];
 		if (result == null)
 			return true;

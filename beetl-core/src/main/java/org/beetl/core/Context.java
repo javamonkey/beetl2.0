@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.beetl.core.exception.TempException;
 import org.beetl.core.statement.IGoto;
 
 public class Context
@@ -43,47 +42,47 @@ public class Context
 	// 当前所有变量是否都是安全输出
 	public boolean safeOutput;
 
-	/**
-	 * 得到临时模板变量
-	 * 
-	 * @param i
-	 * @return
-	 */
-	protected Object getVar(int i)
-	{
-		if (i >= this.tempVarStartIndex)
-			return vars[i];
-		else
-		{
-			Object object = vars[i];
-			if (object == NOT_EXIST_OBJECT)
-			{
-				throw new TempException("变量不存在");
-			}
-			else
-			{
-				return object;
-			}
-		}
+	//	/**
+	//	 * 得到临时模板变量
+	//	 * 
+	//	 * @param i
+	//	 * @return
+	//	 */
+	//	protected Object getVar(int i)
+	//	{
+	//		if (i >= this.tempVarStartIndex)
+	//			return vars[i];
+	//		else
+	//		{
+	//			Object object = vars[i];
+	//			if (object == NOT_EXIST_OBJECT)
+	//			{
+	//				throw new TempException("变量不存在");
+	//			}
+	//			else
+	//			{
+	//				return object;
+	//			}
+	//		}
+	//
+	//	}
 
-	}
-
-	/**
-	 * 设置临时模板变量
-	 * 
-	 * @param i
-	 * @param object
-	 */
-	protected void setVar(int i, Object value)
-	{
-		if (i >= this.tempVarStartIndex)
-			vars[i] = value;
-		else
-		{
-			// 可以赋值么？既然没有改变模型和controller
-			throw new TempException("全局变量，不能赋值");
-		}
-	}
+	//	/**
+	//	 * 设置临时模板变量
+	//	 * 
+	//	 * @param i
+	//	 * @param object
+	//	 */
+	//	protected void setVar(int i, Object value)
+	//	{
+	//		if (i >= this.tempVarStartIndex)
+	//			vars[i] = value;
+	//		else
+	//		{
+	//			// 可以赋值么？既然没有改变模型和controller
+	//			throw new TempException("全局变量，不能赋值");
+	//		}
+	//	}
 
 	/**
 	 * 判断全局变量是否存在

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.beetl.core.exception.TempException;
+import org.beetl.core.exception.BeetlException;
 import org.beetl.core.util.MethodMatchConf;
 import org.beetl.core.util.ObjectUtil;
 
@@ -49,7 +49,8 @@ public class MutipleFunctionWrapper extends FunctionWrapper
 		List<MethodContext> list = map.get(paras.length);
 		if (list == null)
 		{
-			throw new TempException("没有发现方法");
+			BeetlException ex = new BeetlException(BeetlException.NATIVE_CALL_INVALID, "未发现方法 " + this.functionName);
+			throw ex;
 		}
 
 		try
@@ -139,18 +140,27 @@ public class MutipleFunctionWrapper extends FunctionWrapper
 		}
 		catch (IllegalArgumentException e)
 		{
-			throw new TempException("参数不匹配" + e.getMessage());
+
+			BeetlException ex = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "参数不匹配 " + this.functionName,
+					e);
+			throw ex;
 		}
 		catch (IllegalAccessException e)
 		{
-			throw new TempException("不能调用方法" + e.getMessage());
+			BeetlException ex = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "非法访问方法 " + this.functionName,
+					e);
+			throw ex;
+
 		}
 		catch (InvocationTargetException e)
 		{
-			throw new TempException("不可能发生" + e.getMessage());
-		}
+			BeetlException ex = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "调用方法出错 " + this.functionName,
+					e);
+			throw ex;
 
-		throw new TempException("找不到方法");
+		}
+		BeetlException ex = new BeetlException(BeetlException.NATIVE_CALL_INVALID, "找不到方法 " + this.functionName);
+		throw ex;
 
 	}
 

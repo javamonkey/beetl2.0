@@ -10,7 +10,7 @@ import java.io.UnsupportedEncodingException;
 
 import org.beetl.core.Resource;
 import org.beetl.core.ResourceLoader;
-import org.beetl.core.exception.TempException;
+import org.beetl.core.exception.BeetlException;
 
 public class FileResource extends Resource
 {
@@ -39,7 +39,8 @@ public class FileResource extends Resource
 		}
 		catch (FileNotFoundException e)
 		{
-			throw new TempException(e.getMessage());
+			BeetlException be = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR, "未找到模板文件 " + id);
+			throw be;
 
 		}
 		return br;

@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.beetl.core.BodyContent;
 import org.beetl.core.IteratorStatus;
-import org.beetl.core.exception.TempException;
+import org.beetl.core.exception.BeetlException;
 import org.beetl.core.resolver.MethodInvoker;
 import org.beetl.core.util.ObjectUtil;
 
@@ -70,7 +70,7 @@ public class Type implements java.io.Serializable
 
 	}
 
-	public Type getType(String attrName)
+	public Type getType(String attrName) throws BeetlException
 	{
 		if (Map.class.isAssignableFrom(cls))
 		{
@@ -110,7 +110,10 @@ public class Type implements java.io.Serializable
 			MethodInvoker invoker = ObjectUtil.getInvokder(cls, attrName);
 			if (invoker == null)
 			{
-				throw new TempException(cls + " 无" + attrName + "方法");
+
+				BeetlException be = new BeetlException(BeetlException.GET_CALL_ERROR);
+				throw be;
+
 			}
 			Class returnCls = invoker.getReturnType();
 			return new Type(returnCls);

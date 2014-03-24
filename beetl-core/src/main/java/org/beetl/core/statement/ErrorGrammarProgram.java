@@ -1,14 +1,12 @@
 package org.beetl.core.statement;
 
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 import org.beetl.core.Context;
 import org.beetl.core.ErrorHandler;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.exception.BeetlException;
-import org.beetl.core.io.ByteWriter_Byte;
-import org.beetl.core.io.ByteWriter_Char;
+import org.beetl.core.util.BeetlUtil;
 
 /**
  * 语法错的时候处理错误
@@ -41,25 +39,8 @@ public class ErrorGrammarProgram extends Program
 
 	public void execute(Context ctx)
 	{
-		Writer w = null;
-		if (ctx.byteWriter instanceof ByteWriter_Char)
-		{
-			ByteWriter_Char bw = (ByteWriter_Char) ctx.byteWriter;
-			w = bw.getW();
-		}
-		else
-		{
-			ByteWriter_Byte bw = (ByteWriter_Byte) ctx.byteWriter;
-			try
-			{
-				w = new OutputStreamWriter(bw.getOs(), bw.getCs());
-			}
-			catch (Exception ex)
-			{
-				throw new RuntimeException(ex);
-			}
+		Writer w = BeetlUtil.getWriterByByteWriter(ctx.byteWriter);
 
-		}
 		ErrorHandler errorHandler = this.gt.getErrorHandler();
 
 		errorHandler.processExcption(exception, w);

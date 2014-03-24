@@ -8,10 +8,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.beetl.core.exception.BeetlException;
-import org.beetl.core.exception.TempException;
 import org.beetl.core.io.ByteWriter_Byte;
 import org.beetl.core.io.ByteWriter_Char;
 import org.beetl.core.statement.Program;
+import org.beetl.core.util.BeetlUtil;
 
 public class Template
 {
@@ -68,20 +68,34 @@ public class Template
 
 	public void renderTo(ByteWriter byteWriter)
 	{
-		ctx.byteWriter = byteWriter;
-		ctx.byteOutputMode = cf.directByteOutput;
-		ctx.gt = this.gt;
-		ctx.template = this;
-		program.metaData.initContext(ctx);
-		program.execute(ctx);
 
 		try
 		{
+			ctx.byteWriter = byteWriter;
+			ctx.byteOutputMode = cf.directByteOutput;
+			ctx.gt = this.gt;
+			ctx.template = this;
+			program.metaData.initContext(ctx);
+			program.execute(ctx);
 			byteWriter.flush();
+		}
+		catch (BeetlException e)
+		{
+			Writer w = BeetlUtil.getWriterByByteWriter(ctx.byteWriter);
+			ErrorHandler errorHandler = this.gt.getErrorHandler();
+			errorHandler.processExcption(e, w);
 		}
 		catch (IOException e)
 		{
-			throw new TempException("ioexception");
+			if (!ctx.gt.conf.isIgnoreClientIOError)
+			{
+				throw new RuntimeException(e);
+			}
+			else
+			{
+				//do  nothing ,just ignore
+			}
+
 		}
 
 	}

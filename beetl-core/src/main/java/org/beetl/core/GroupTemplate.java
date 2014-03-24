@@ -15,7 +15,6 @@ import org.beetl.core.event.Event;
 import org.beetl.core.event.Listener;
 import org.beetl.core.exception.BeetlException;
 import org.beetl.core.exception.HTMLTagParserException;
-import org.beetl.core.exception.TempException;
 import org.beetl.core.statement.ErrorGrammarProgram;
 import org.beetl.core.statement.Program;
 import org.beetl.core.util.ClassSearch;
@@ -227,17 +226,19 @@ public class GroupTemplate
 	private Program loadTemplate(Resource res)
 	{
 
-		Reader reader = res.openReader();
-		Transformator sf = new Transformator(conf.placeholderStart, conf.placeholderEnd, conf.statementStart,
-				conf.statementEnd);
-		if (this.conf.isHtmlTagSupport())
-		{
-			sf.enableHtmlTagSupport(conf.getHtmlTagStart(), conf.getHtmlTagEnd());
-		}
-		Reader scriptReader;
+		Transformator sf = null;
 		try
 		{
+			Reader reader = res.openReader();
+			sf = new Transformator(conf.placeholderStart, conf.placeholderEnd, conf.statementStart, conf.statementEnd);
+			if (this.conf.isHtmlTagSupport())
+			{
+				sf.enableHtmlTagSupport(conf.getHtmlTagStart(), conf.getHtmlTagEnd());
+			}
+			Reader scriptReader;
 			scriptReader = sf.transform(reader);
+			Program program = engine.createProgram(res.getId(), scriptReader, sf.textMap, sf.lineSeparator, this);
+			return program;
 
 		}
 		catch (HTMLTagParserException e)
@@ -248,13 +249,10 @@ public class GroupTemplate
 		}
 		catch (IOException e)
 		{
-			throw new TempException(e.getMessage());
-		}
-
-		try
-		{
-			Program program = engine.createProgram(res.getId(), scriptReader, sf.textMap, sf.lineSeparator, this);
-			return program;
+			ErrorGrammarProgram ep = new ErrorGrammarProgram(res.getId(), this, sf.lineSeparator);
+			BeetlException ex = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR);
+			ep.setException(ex);
+			return ep;
 		}
 		catch (BeetlException ex)
 		{

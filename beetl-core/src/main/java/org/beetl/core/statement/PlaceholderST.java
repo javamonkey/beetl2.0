@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
-import org.beetl.core.exception.TempException;
+import org.beetl.core.exception.BeetlException;
 
 public final class PlaceholderST extends Statement
 {
@@ -35,7 +35,9 @@ public final class PlaceholderST extends Statement
 		}
 		catch (IOException e)
 		{
-			throw new TempException(e.getMessage());
+			BeetlException be = new BeetlException(BeetlException.CLIENT_IO_ERROR_ERROR, "Client IO Error", e);
+			be.token = this.token;
+			throw be;
 		}
 
 	}

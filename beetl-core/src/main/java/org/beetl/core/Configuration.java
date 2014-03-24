@@ -40,6 +40,8 @@ public class Configuration
 	/* 严格mvc应用，只有变态的的人才打开此选项 */
 	boolean isStrict = false;
 
+	boolean isIgnoreClientIOError = true;
+
 	String errorHandlerClass = "org.beetl.core.ConsoleErrorHandler";
 
 	String htmlTagStart = "<" + htmlTagFlag;
@@ -70,17 +72,12 @@ public class Configuration
 	public static String DELIMITER_STATEMENT_START = "DELIMITER_STATEMENT_START";
 	public static String DELIMITER_STATEMENT_END = "DELIMITER_STATEMENT_END";
 	public static String NATIVE_CALL = "NATIVE_CALL";
-	//	public static String COMPILE_CLASS = "COMPILE_CLASS";
+	public static String IGNORE_CLIENT_IO_ERROR = "IGNORE_CLIENT_IO_ERROR";
 	public static String DIRECT_BYTE_OUTPUT = "DIRECT_BYTE_OUTPUT";
 	public static String TEMPLATE_ROOT = "TEMPLATE_ROOT";
 	public static String TEMPLATE_CHARSET = "TEMPLATE_CHARSET";
-	//	public static String TEMPLATE_CACHE_CHECK_PERIOD = "TEMPLATE_CACHE_CHECK_PERIOD";
-	//	public static String TEMPLATE_CLASS_FOLDER = "TEMPLATE_CLASS_FOLDER";
 	public static String ERROR_HANDLER = "ERROR_HANDLER";
 	public static String MVC_STRICT = "MVC_STRICT";
-	//	public static String DEBUG = "DEBUG";
-	//	public static String COMPILE_CLASS_KEEP_SOURCE = "COMPILE_CLASS_KEEP_SOURCE";
-	//	public static String BIG_NUMBER_SUPPORT = "BIG_NUMBER_SUPPORT";
 	public static String HTML_TAG_SUPPORT = "HTML_TAG_SUPPORT";
 	public static String HTML_TAG_FLAG = "HTML_TAG_FLAG";
 	public static String IMPORT_PACKAGE = "IMPORT_PACKAGE";
@@ -175,6 +172,10 @@ public class Configuration
 		else if (key.equalsIgnoreCase(NATIVE_CALL))
 		{
 			this.nativeCall = isBoolean(value, false);
+		}
+		else if (key.equalsIgnoreCase(IGNORE_CLIENT_IO_ERROR))
+		{
+			this.isIgnoreClientIOError = isBoolean(value, false);
 		}
 		else if (key.equalsIgnoreCase(DIRECT_BYTE_OUTPUT))
 		{
@@ -484,6 +485,106 @@ public class Configuration
 	public void setNativeSecurity(String nativeSecurity)
 	{
 		this.nativeSecurity = nativeSecurity;
+	}
+
+	public boolean isIgnoreClientIOError()
+	{
+		return isIgnoreClientIOError;
+	}
+
+	public void setIgnoreClientIOError(boolean isIgnoreClientIOError)
+	{
+		this.isIgnoreClientIOError = isIgnoreClientIOError;
+	}
+
+	public String getErrorHandlerClass()
+	{
+		return errorHandlerClass;
+	}
+
+	public void setErrorHandlerClass(String errorHandlerClass)
+	{
+		this.errorHandlerClass = errorHandlerClass;
+	}
+
+	public Map<String, String> getFnMap()
+	{
+		return fnMap;
+	}
+
+	public void setFnMap(Map<String, String> fnMap)
+	{
+		this.fnMap = fnMap;
+	}
+
+	public Map<String, String> getFnPkgMap()
+	{
+		return fnPkgMap;
+	}
+
+	public void setFnPkgMap(Map<String, String> fnPkgMap)
+	{
+		this.fnPkgMap = fnPkgMap;
+	}
+
+	public Map<String, String> getFormatMap()
+	{
+		return formatMap;
+	}
+
+	public void setFormatMap(Map<String, String> formatMap)
+	{
+		this.formatMap = formatMap;
+	}
+
+	public Map<String, String> getDefaultFormatMap()
+	{
+		return defaultFormatMap;
+	}
+
+	public void setDefaultFormatMap(Map<String, String> defaultFormatMap)
+	{
+		this.defaultFormatMap = defaultFormatMap;
+	}
+
+	public Set<String> getGeneralVirtualAttributeSet()
+	{
+		return generalVirtualAttributeSet;
+	}
+
+	public void setGeneralVirtualAttributeSet(Set<String> generalVirtualAttributeSet)
+	{
+		this.generalVirtualAttributeSet = generalVirtualAttributeSet;
+	}
+
+	public Map<String, String> getVirtualClass()
+	{
+		return virtualClass;
+	}
+
+	public void setVirtualClass(Map<String, String> virtualClass)
+	{
+		this.virtualClass = virtualClass;
+	}
+
+	public Map<String, String> getTagFactoryMap()
+	{
+		return tagFactoryMap;
+	}
+
+	public void setTagFactoryMap(Map<String, String> tagFactoryMap)
+	{
+		this.tagFactoryMap = tagFactoryMap;
+	}
+
+	public Map<String, String> getTagMap()
+	{
+		return tagMap;
+	}
+
+	public void setTagMap(Map<String, String> tagMap)
+	{
+		this.tagMap = tagMap;
 	}
 
 }

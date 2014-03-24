@@ -2,7 +2,7 @@ package org.beetl.core;
 
 import java.lang.reflect.Method;
 
-import org.beetl.core.exception.TempException;
+import org.beetl.core.exception.BeetlException;
 
 /**
  * 
@@ -43,7 +43,9 @@ public class SingleFunctionWrapper extends FunctionWrapper
 		}
 		catch (Exception ex)
 		{
-			throw new TempException(ex.getMessage());
+			BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "调用方法出错 " + this.functionName,
+					ex);
+			throw be;
 		}
 
 	}

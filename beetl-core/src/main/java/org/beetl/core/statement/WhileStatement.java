@@ -2,7 +2,7 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
-import org.beetl.core.exception.TempException;
+import org.beetl.core.exception.BeetlException;
 
 public class WhileStatement extends Statement implements IGoto
 {
@@ -57,7 +57,9 @@ public class WhileStatement extends Statement implements IGoto
 				}
 				else
 				{
-					throw new TempException("期望是布尔表达式，但" + result);
+					BeetlException be = new BeetlException(BeetlException.BOOLEAN_EXPECTED_ERROR);
+					be.token = exp.token;
+					throw be;
 				}
 
 			}
@@ -83,7 +85,9 @@ public class WhileStatement extends Statement implements IGoto
 				}
 				else
 				{
-					throw new TempException("期望是布尔表达式，但" + result);
+					BeetlException be = new BeetlException(BeetlException.BOOLEAN_EXPECTED_ERROR);
+					be.token = exp.token;
+					throw be;
 				}
 			}
 

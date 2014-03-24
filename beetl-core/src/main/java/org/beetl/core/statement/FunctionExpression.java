@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import org.beetl.core.Context;
 import org.beetl.core.Function;
 import org.beetl.core.InferContext;
-import org.beetl.core.exception.TempException;
+import org.beetl.core.exception.BeetlException;
 
 /**
  * 
@@ -31,7 +31,9 @@ public class FunctionExpression extends Expression
 		Function fn = ctx.gt.getFunction(name);
 		if (fn == null)
 		{
-			throw new TempException("fn:" + name + " is Null");
+			BeetlException ex = new BeetlException(BeetlException.FUNCTION_NOT_FOUND);
+			ex.token = token;
+			throw ex;
 		}
 
 		Object[] paras = new Object[exps.length];
@@ -39,7 +41,23 @@ public class FunctionExpression extends Expression
 		{
 			paras[i] = exps[i].evaluate(ctx);
 		}
-		Object value = fn.call(paras, ctx);
+		Object value = null;
+		try
+		{
+			value = fn.call(paras, ctx);
+		}
+		catch (BeetlException ex)
+		{
+			ex.token = this.token;
+			throw ex;
+		}
+		catch (RuntimeException ex)
+		{
+			BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "调用方法出错 " + name, ex);
+			be.token = this.token;
+			throw be;
+		}
+
 		if (vas == null)
 		{
 			return value;
@@ -50,10 +68,28 @@ public class FunctionExpression extends Expression
 			for (VarAttribute attr : vas)
 			{
 
-				value = attr.evaluate(ctx, value);
+				try
+				{
+					value = attr.evaluate(ctx, value);
+				}
+				catch (BeetlException ex)
+				{
+					ex.token = attr.token;
+					throw ex;
+
+				}
+				catch (RuntimeException ex)
+				{
+					BeetlException be = new BeetlException(BeetlException.ATTRIBUTE_INVALID, "属性访问出错", ex);
+					be.token = attr.token;
+					throw be;
+				}
+
 				if (value == null)
 				{
-					throw new TempException("null" + attr.name);
+					BeetlException be = new BeetlException(BeetlException.ERROR, "空指针 ");
+					be.token = attr.token;
+					throw be;
 				}
 
 			}
@@ -65,6 +101,12 @@ public class FunctionExpression extends Expression
 	public void infer(InferContext inferCtx)
 	{
 		Function fn = inferCtx.gt.getFunction(name);
+		if (fn == null)
+		{
+			BeetlException ex = new BeetlException(BeetlException.FUNCTION_NOT_FOUND);
+			ex.token = token;
+			throw ex;
+		}
 		for (Expression exp : exps)
 		{
 			exp.infer(inferCtx);
@@ -78,11 +120,15 @@ public class FunctionExpression extends Expression
 		}
 		catch (NoSuchMethodException e)
 		{
-			throw new TempException(fn.getClass() + "没有找到call方法 ");
+			BeetlException ex = new BeetlException(BeetlException.FUNCTION_INVALID);
+			ex.token = token;
+			throw ex;
 		}
 		catch (SecurityException e)
 		{
-			throw new TempException(fn.getClass() + "call方法不允许反射调用 ");
+			BeetlException ex = new BeetlException(BeetlException.FUNCTION_INVALID);
+			ex.token = token;
+			throw ex;
 		}
 
 		Class c = call.getReturnType();

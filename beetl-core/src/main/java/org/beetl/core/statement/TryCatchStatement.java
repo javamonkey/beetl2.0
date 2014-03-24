@@ -2,7 +2,7 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
-import org.beetl.core.exception.TempException;
+import org.beetl.core.exception.BeetlException;
 
 public class TryCatchStatement extends Statement
 {
@@ -33,13 +33,13 @@ public class TryCatchStatement extends Statement
 			{
 				if (error != null)
 				{
-					if (ex instanceof TempException)
+					if (ex instanceof BeetlException)
 					{
 						ctx.vars[error.varIndex] = ex;
 					}
 					else
 					{
-						ctx.vars[error.varIndex] = new TempException(ex.getMessage());
+						ctx.vars[error.varIndex] = new BeetlException(BeetlException.ERROR, ex.getMessage(), ex);
 					}
 
 				}
@@ -48,13 +48,16 @@ public class TryCatchStatement extends Statement
 			}
 			else
 			{
-				if (ex instanceof RuntimeException)
+
+				if (ex instanceof BeetlException)
 				{
-					throw (RuntimeException) ex;
+					throw (BeetlException) ex;
 				}
 				else
 				{
-					throw new TempException(ex.getMessage());
+					BeetlException be = new BeetlException(BeetlException.ERROR, ex.getMessage(), ex);
+					be.token = tryPart.token;
+					throw be;
 				}
 			}
 		}

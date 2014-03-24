@@ -1,5 +1,12 @@
 package org.beetl.core.util;
 
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+
+import org.beetl.core.ByteWriter;
+import org.beetl.core.io.ByteWriter_Byte;
+import org.beetl.core.io.ByteWriter_Char;
+
 public class BeetlUtil
 {
 	public static boolean isOutsideOfRoot(String child)
@@ -56,5 +63,29 @@ public class BeetlUtil
 			return true;
 		}
 
+	}
+
+	public static Writer getWriterByByteWriter(ByteWriter byteWriter)
+	{
+		Writer w = null;
+		if (byteWriter instanceof ByteWriter_Char)
+		{
+			ByteWriter_Char bw = (ByteWriter_Char) byteWriter;
+			w = bw.getW();
+		}
+		else
+		{
+			ByteWriter_Byte bw = (ByteWriter_Byte) byteWriter;
+			try
+			{
+				w = new OutputStreamWriter(bw.getOs(), bw.getCs());
+			}
+			catch (Exception ex)
+			{
+				throw new RuntimeException(ex);
+			}
+
+		}
+		return w;
 	}
 }

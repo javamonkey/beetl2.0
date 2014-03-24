@@ -3,7 +3,6 @@ package org.beetl.core.statement;
 import org.beetl.core.ALU;
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
-import org.beetl.core.exception.TempException;
 
 public class ArthExpression extends Expression
 {
@@ -33,18 +32,18 @@ public class ArthExpression extends Expression
 		switch (arthMode)
 		{
 			case PLUS:
-				return ALU.plus(x, y);
+				return ALU.plus(x, y, a, b);
 			case MIN:
-				return ALU.minus(x, y);
+				return ALU.minus(x, y, a, b);
 			case MUL:
-				return ALU.mult(x, y);
+				return ALU.mult(x, y, a, b);
 			case DIV:
-				return ALU.div(x, y);
+				return ALU.div(x, y, a, b);
 			case MOD:
-				return ALU.mod(x, y);
+				return ALU.mod(x, y, a, b);
 
 			default:
-				throw new TempException("不可能发生");
+				throw new RuntimeException("不可能发生");
 
 		}
 

@@ -1,6 +1,6 @@
 package org.beetl.core;
 
-import org.beetl.core.exception.TempException;
+import org.beetl.core.exception.BeetlException;
 
 public class DefaultTagFactory implements TagFactory
 {
@@ -21,11 +21,13 @@ public class DefaultTagFactory implements TagFactory
 		}
 		catch (InstantiationException e)
 		{
-			throw new TempException(e.getMessage());
+			BeetlException bex = new BeetlException(BeetlException.TAG_INSTANCE_ERROR, "实例化 " + tagCls + " 出错");
+			throw bex;
 		}
 		catch (IllegalAccessException e)
 		{
-			throw new TempException(e.getMessage());
+			BeetlException bex = new BeetlException(BeetlException.TAG_INSTANCE_ERROR, "不能实例化 " + tagCls);
+			throw bex;
 		}
 	}
 }

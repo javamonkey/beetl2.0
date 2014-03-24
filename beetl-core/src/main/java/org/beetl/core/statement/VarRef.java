@@ -2,7 +2,7 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
-import org.beetl.core.exception.TempException;
+import org.beetl.core.exception.BeetlException;
 
 public class VarRef extends Expression implements IVarIndex
 {
@@ -39,7 +39,9 @@ public class VarRef extends Expression implements IVarIndex
 			}
 			else
 			{
-				throw new TempException("未定义或者是空" + this.token.text);
+				BeetlException ex = new BeetlException(BeetlException.VAR_NOT_DEFINED);
+				ex.token = this.token;
+				throw ex;
 			}
 		}
 
@@ -55,7 +57,23 @@ public class VarRef extends Expression implements IVarIndex
 			{
 				return safe == null ? null : safe.evaluate(ctx);
 			}
-			value = attr.evaluate(ctx, value);
+
+			try
+			{
+				value = attr.evaluate(ctx, value);
+			}
+			catch (BeetlException ex)
+			{
+				ex.token = attr.token;
+				throw ex;
+
+			}
+			catch (RuntimeException ex)
+			{
+				BeetlException be = new BeetlException(BeetlException.ATTRIBUTE_INVALID, "属性访问出错", ex);
+				be.token = attr.token;
+				throw be;
+			}
 
 		}
 		return value;

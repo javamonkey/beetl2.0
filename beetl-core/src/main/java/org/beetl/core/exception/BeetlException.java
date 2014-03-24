@@ -33,10 +33,20 @@ public class BeetlException extends RuntimeException
 	 * 函数未定义错误
 	 */
 	public static final String FUNCTION_NOT_FOUND = "FUNCTION_NOT_FOUND";
+
+	/**
+	 * 函数定义错误
+	 */
+	public static final String FUNCTION_INVALID = "FUNCTION_INVALID";
 	/**
 	 * 标签未定义错误
 	 */
 	public static final String TAG_NOT_FOUND = "TAG_NOT_FOUND";
+
+	/**
+	 * 标签实例化错误
+	 */
+	public static final String TAG_INSTANCE_ERROR = "TAG_INSTANCE_ERROR";
 
 	/**
 	 * 本地调用错误，如classnotfound等
@@ -46,7 +56,10 @@ public class BeetlException extends RuntimeException
 	 * 被调用的class抛出了异常
 	 */
 	public static final String NATIVE_CALL_EXCEPTION = "NATIVE_CALL_EXCEPTION";
-
+	/**
+	 * 不允许本地调用
+	 */
+	public static final String NATIVE_SECUARITY_EXCEPTION = "NATIVE_SECUARITY_EXCEPTION";
 	/**
 	 * 格式化函数不存在错误
 	 */
@@ -61,6 +74,7 @@ public class BeetlException extends RuntimeException
 	 * 引用属性错误
 	 */
 	public static final String ATTRIBUTE_INVALID = "ATTRIBUTE_INVALID";
+	public static final String ATTRIBUTE_NOT_FOUND = "ATTRIBUTE_NOT_FOUND";
 	/**
 	 * 模板里使用了[]指示应该是Map或者List，但实际上不是此类型
 	 */
@@ -75,9 +89,14 @@ public class BeetlException extends RuntimeException
 	 */
 	public static final String DIV_ZERO_ERROR = "DIV_ZERO_ERROR";
 	/**
-	 * 数组越界错误
+	 * 数组index错
 	 */
 	public static final String ARRAY_INDEX_ERROR = "ARRAY_INDEX_ERROR";
+
+	/**
+	 * 必须是数组
+	 */
+	public static final String ARRAY_TYPE_ERROR = "ARRAY_TYPE_ERROR";
 	/**
 	 * 期望表达式返回bool值，但却是其他类型
 	 */
@@ -95,17 +114,35 @@ public class BeetlException extends RuntimeException
 
 	//语法错误
 	public static final String ERROR = "ERROR";
+	public static final String OPT_ERROR = "OPT_ERROR";
+
 	public static final String PARSER_UNKNOW_ERROR = "PARSER_UNKNOW_ERROR";
 	public static final String PARSER_VIABLE_ERROR = "PARSER_VIABLE_ERROR";
 	public static final String PARSER_MISS_ERROR = "PARSER_MISS_ERROR";
 	public static final String PARSER_PREDICATE_ERROR = "PARSER_PREDICATE_ERROR";
 	//HTML TAG 解析出错
 	public static final String PARSER_HTML_TAG_ERROR = "PARSER_HTML_TAG_ERROR";
+	//类型识别错误
+	public static final String TYPE_SEARCH_ERROR = "TYPE_SEARCH_ERROR";
+
+	//本地调用格式错误,如a[0](1,2)
+	public static final String PARSER__NATIVE__ERROR = "PARSER__NATIVE__ERROR";
+
+	//模板加载失败
+	public static final String TEMPLATE_LOAD_ERROR = "TEMPLATE_LOAD_ERROR";
+
+	//Client IO 
+	public static final String CLIENT_IO_ERROR_ERROR = "CLIENT_IO_ERROR_ERROR";
+
+	//表达式类型不一致，无法运算,如俩个字符串相乘
+	public static final String EXPRESSION_NOT_COMPATIBLE = "EXPRESSION_NOT_COMPATIBLE";
 
 	public BeetlException(String detailCode, String msg)
 	{
 		super(msg);
+
 		this.detailCode = detailCode;
+
 	}
 
 	public BeetlException(String detailCode)

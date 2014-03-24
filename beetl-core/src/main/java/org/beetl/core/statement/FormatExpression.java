@@ -3,7 +3,7 @@ package org.beetl.core.statement;
 import org.beetl.core.Context;
 import org.beetl.core.Format;
 import org.beetl.core.InferContext;
-import org.beetl.core.exception.TempException;
+import org.beetl.core.exception.BeetlException;
 
 /**
  * 
@@ -44,7 +44,9 @@ public class FormatExpression extends Expression
 
 		if (format == null)
 		{
-			throw new TempException("format is null");
+			BeetlException ex = new BeetlException(BeetlException.FORMAT_NOT_FOUND);
+			ex.token = token;
+			throw ex;
 		}
 
 		return format.format(o, pattern);

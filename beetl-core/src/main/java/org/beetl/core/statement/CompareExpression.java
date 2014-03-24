@@ -3,7 +3,6 @@ package org.beetl.core.statement;
 import org.beetl.core.ALU;
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
-import org.beetl.core.exception.TempException;
 
 public class CompareExpression extends Expression
 {
@@ -41,50 +40,19 @@ public class CompareExpression extends Expression
 			case NOT_EQUAL:
 				return !ALU.equals(x, y);
 			case LARGE_EQUAL:
-				return ALU.less(y, x);
+				return ALU.less(y, x, a, b);
 
 			case LARGE:
-				return ALU.lessEquals(y, x);
+				return ALU.lessEquals(y, x, a, b);
 			case LESS:
-				return ALU.less(x, y);
+				return ALU.less(x, y, a, b);
 			case LESS_EQUAL:
-				return ALU.lessEquals(x, y);
+				return ALU.lessEquals(x, y, a, b);
 			default:
-				throw new TempException("不可能发生");
+				throw new RuntimeException("不可能发生");
 
 		}
 
-	}
-
-	protected int compare(Object x, Object y)
-	{
-		try
-		{
-			Comparable a1 = (Comparable) x;
-			Comparable a2 = (Comparable) y;
-			return a1.compareTo(a2);
-		}
-		catch (ClassCastException cce)
-		{
-			throw new TempException("不能做比较");
-		}
-
-	}
-
-	protected boolean equal(Object x, Object y)
-	{
-		if (x != null)
-		{
-			return x.equals(y);
-		}
-		else if (y == null)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
 	}
 
 	public void infer(InferContext inferCtx)

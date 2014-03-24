@@ -1,5 +1,6 @@
 package org.beetl.core.statement;
 
+import org.beetl.core.ALU;
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
 
@@ -24,7 +25,8 @@ public class IfStatement extends Statement
 	{
 		// TODO Auto-generated method stub
 		Object value = condtion.evaluate(ctx);
-		if (ASTNodeUtil.isTrue(value, this))
+
+		if (ALU.isTrue(value, this))
 		{
 			ifStatement.execute(ctx);
 		}

@@ -29,7 +29,7 @@ public class ASMUtil implements Opcodes
 		return util;
 	}
 
-	public AA createAAClass(Class c, String name, String methodName, Class returnType)
+	public AttributeAccess createAAClass(Class c, String name, String methodName, Class returnType)
 	{
 		String cPath = c.getName().replace('.', '/');
 		String newClsName = c.getName() + "$_" + name;
@@ -40,13 +40,13 @@ public class ASMUtil implements Opcodes
 
 		MethodVisitor mv;
 
-		cw.visit(V1_5, ACC_PUBLIC + ACC_SUPER, newClsPath, null, "org/beetl/core/resolver/AA", null);
+		cw.visit(V1_5, ACC_PUBLIC + ACC_SUPER, newClsPath, null, "org/beetl/core/resolver/AttributeAccess", null);
 
 		{
 			mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
 			mv.visitCode();
 			mv.visitVarInsn(ALOAD, 0);
-			mv.visitMethodInsn(INVOKESPECIAL, "org/beetl/core/resolver/AA", "<init>", "()V");
+			mv.visitMethodInsn(INVOKESPECIAL, "org/beetl/core/resolver/AttributeAccess", "<init>", "()V");
 			mv.visitInsn(RETURN);
 			mv.visitMaxs(1, 1);
 			mv.visitEnd();
@@ -107,7 +107,7 @@ public class ASMUtil implements Opcodes
 		Class cls = loader.defineClass(newClsName, bs);
 		try
 		{
-			return (AA) cls.newInstance();
+			return (AttributeAccess) cls.newInstance();
 		}
 		catch (Exception ex)
 		{

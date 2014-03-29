@@ -6,14 +6,10 @@ import java.io.Reader;
 import junit.framework.TestCase;
 
 import org.beetl.core.resource.ClasspathResourceLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class BasicTestCase extends TestCase
 {
 	// 日志对象
-	@SuppressWarnings("unused")
-	private static final Logger LOG = LoggerFactory.getLogger(BasicTestCase.class);
 
 	private static ClasspathResourceLoader rs;
 	public static boolean enableOptimize = true;

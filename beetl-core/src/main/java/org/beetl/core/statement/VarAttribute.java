@@ -3,12 +3,12 @@ package org.beetl.core.statement;
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
-import org.beetl.core.resolver.AA;
+import org.beetl.core.resolver.AttributeAccess;
 
 public class VarAttribute extends Expression
 {
 	public int aaIndex = -1;
-	public AA aa = null;
+	public AttributeAccess aa = null;
 	String name = null;
 
 	public VarAttribute(GrammarToken token)
@@ -28,7 +28,7 @@ public class VarAttribute extends Expression
 		return aa.value(o, name);
 	}
 
-	public void setAA(AA aa)
+	public void setAA(AttributeAccess aa)
 	{
 		this.aa = aa;
 	}

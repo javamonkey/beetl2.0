@@ -29,35 +29,68 @@ package org.beetl.core.io;
  */
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 import org.beetl.core.BodyContent;
 import org.beetl.core.ByteWriter;
+
+import sun.nio.cs.StreamEncoder;
 
 public class ByteWriter_Byte extends ByteWriter
 {
 
 	protected OutputStream os;
 	protected String cs;
+	protected Charset charset = null;
+	StreamEncoder se = null;
 
 	public ByteWriter_Byte(OutputStream os, String cs)
 	{
 		this.os = os;
 		this.cs = cs;
+		charset = Charset.forName(cs);
+		try
+		{
+			se = StreamEncoder.forOutputStreamWriter(os, this, cs);
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
 	public void write(char[] cbuf) throws IOException
 	{
-		byte[] bs = new String(cbuf).getBytes(cs);
-		write(bs);
+		//		byte[] bs = new String(cbuf).getBytes(cs);
+		//		write(bs);
+		//		
+		//todo:性能如何？
+
+		//		byte[] bs = charset.encode(CharBuffer.wrap(cbuf)).array();
+		//		//		byte[] bs = new String(cbuf).getBytes(cs);
+		//		write(bs);
+		se.write(cbuf, 0, cbuf.length);
 
 	}
 
 	@Override
 	public void write(char[] cbuf, int len) throws IOException
 	{
-		byte[] bs = new String(cbuf, 0, len).getBytes(cs);
-		write(bs);
+		se.write(cbuf, 0, cbuf.length);
+
+	}
+
+	public void write(String str) throws IOException
+	{
+
+		se.write(str);
+		//		if (str != null)
+		//		{
+		//			byte[] bs = charset.encode(str).array();
+		//			write(bs);
+		//		}
 
 	}
 
@@ -84,7 +117,8 @@ public class ByteWriter_Byte extends ByteWriter
 	@Override
 	public void flush() throws IOException
 	{
-		this.os.flush();
+		//		this.os.flush();
+		se.flush();
 
 	}
 

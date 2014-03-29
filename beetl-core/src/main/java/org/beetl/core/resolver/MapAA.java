@@ -2,7 +2,7 @@ package org.beetl.core.resolver;
 
 import java.util.Map;
 
-public class MapAA extends AA
+public class MapAA extends AttributeAccess
 {
 
 	@Override

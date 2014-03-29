@@ -1,6 +1,6 @@
 package org.beetl.core.resolver;
 
-public class ArrayAA extends AA
+public class ArrayAA extends AttributeAccess
 {
 
 	@Override

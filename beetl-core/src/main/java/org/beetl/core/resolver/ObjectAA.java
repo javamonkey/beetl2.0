@@ -12,7 +12,7 @@ import org.beetl.core.util.ObjectUtil;
  * @author joelli
  * 
  */
-public class ObjectAA extends AA
+public class ObjectAA extends AttributeAccess
 {
 
 	private Class[] getParasType = new Class[]

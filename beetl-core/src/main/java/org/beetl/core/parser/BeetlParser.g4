@@ -40,7 +40,7 @@ statement
     |   statementExpression END   #statmentExpSt 
       
     ;
-//◊¢Ω‚:@type User user,List<User> userList
+//Ê≥®Ëß£:@type User user,List<User> userList
 commentTypeTag: LEFT_PAR1 commentTypeItemTag (COMMA1 commentTypeItemTag)* RIGHT_PAR1;
 commentTypeItemTag:    classOrInterfaceType   Identifier1    
                   ;
@@ -52,7 +52,7 @@ typeArgument
     :   classOrInterfaceType 
     ;
 
-//÷∏¡Ó  directive object xx,xx,xx                 
+//Êåá‰ª§  directive object xx,xx,xx                 
 directiveExp:  Identifier (StringLiteral|directiveExpIDList)? END;
 directiveExpIDList: Identifier (COMMA Identifier)* ;
 
@@ -91,8 +91,19 @@ switchLabel
     ;
 
 forControl
-    :    Var?   Identifier FOR_IN expression ;
+    :    forInControl
+    |    generalForControl
+    ;
    
+forInControl: Var?   Identifier FOR_IN expression ;
+generalForControl:forInit? ';' expression? ';' forUpdate?;
+forInit
+    :   Var varDeclareList
+    |   expressionList
+    ;
+forUpdate
+    :   expressionList
+    ;
 
 
 
@@ -109,7 +120,7 @@ expressionList
 statementExpression
     :   expression
     ;
-textStatment:   //±Ì¥Ô Ω ‰≥ˆ
+textStatment:   //Ë°®ËææÂºèËæìÂá∫
        LEFT_TOKEN textVar RIGHT_TOKEN
       |      LEFT_TOKEN NOT LEFT_PAR textVar RIGHT_PAR RIGHT_TOKEN ;
 textVar	
@@ -120,7 +131,7 @@ textformat:
         | StringLiteral  ;
 
 constantsTextStatment
-	:	LEFT_TEXT_TOKEN  DecimalLiteral RIGHT_TOKEN   ; // ≥£¡ø ‰≥ˆ,¥˙±Ì ˝◊ÈÀ—”¶
+	:	LEFT_TEXT_TOKEN  DecimalLiteral RIGHT_TOKEN   ; // Â∏∏ÈáèËæìÂá∫,‰ª£Ë°®Êï∞ÁªÑÊêúÂ∫î
 
 
 constantExpression
@@ -133,7 +144,9 @@ constantExpression
     |   functionCall    #functionCallExp
     |   varRef          #varRefExp
     |   json        #jsonExp  
+    |   Identifier (INCREASE|DECREASE) #oneIncDec
     |   (ADD|MIN) expression    #negExp
+    |   (INCREASE|DECREASE)  Identifier #incDecOne
     |   NOT expression      #notExp
     |   expression (MUlTIP|DIV|MOD) expression #muldivmodExp
     |   expression (ADD|MIN) expression #addminExp

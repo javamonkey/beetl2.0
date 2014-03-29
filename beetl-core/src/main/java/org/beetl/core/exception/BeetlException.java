@@ -106,6 +106,11 @@ public class BeetlException extends RuntimeException
 	 */
 	public static final String STRICK_MVC = "STRICK_MVC";
 
+	/**
+	 * 不允许调用本地方法
+	 */
+	public static final String NATIVE_NOT_ALLOWED = "NATIVE_NOT_ALLOWED";
+
 	//对象的属性get方法出错
 	public static final String GET_CALL_ERROR = "GET_CALL_ERROR";
 
@@ -126,7 +131,7 @@ public class BeetlException extends RuntimeException
 	public static final String TYPE_SEARCH_ERROR = "TYPE_SEARCH_ERROR";
 
 	//本地调用格式错误,如a[0](1,2)
-	public static final String PARSER__NATIVE__ERROR = "PARSER__NATIVE__ERROR";
+	public static final String PARSER_NATIVE_ERROR = "PARSER_NATIVE_ERROR";
 
 	//模板加载失败
 	public static final String TEMPLATE_LOAD_ERROR = "TEMPLATE_LOAD_ERROR";

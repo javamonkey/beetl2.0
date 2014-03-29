@@ -8,8 +8,8 @@ import java.util.Stack;
 
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
-import org.beetl.core.resolver.AA;
-import org.beetl.core.resolver.AAFactory;
+import org.beetl.core.resolver.AttributeAccess;
+import org.beetl.core.resolver.AttributeAccessFactory;
 import org.beetl.core.statement.Expression;
 import org.beetl.core.statement.Literal;
 import org.beetl.core.statement.Type;
@@ -40,7 +40,7 @@ public class VarAttributeNodeListener implements Listener
 
 					String name = attr.token != null ? attr.token.text : null;
 					// 换成速度较快的属性访问类
-					AA aa = AAFactory.buildFiledAccessor(type.cls, name);
+					AttributeAccess aa = AttributeAccessFactory.buildFiledAccessor(type.cls, name);
 					attr.aa = aa;
 
 				}
@@ -50,16 +50,16 @@ public class VarAttributeNodeListener implements Listener
 					Class c = type.cls;
 					if (Map.class.isAssignableFrom(c))
 					{
-						attr.setAA(AAFactory.mapAA);
+						attr.setAA(AttributeAccessFactory.mapAA);
 					}
 					else if (List.class.isAssignableFrom(c) || Set.class.isAssignableFrom(c))
 					{
-						attr.setAA(AAFactory.listAA);
+						attr.setAA(AttributeAccessFactory.listAA);
 					}
 
 					else if (c.isArray())
 					{
-						attr.setAA(AAFactory.arrayAA);
+						attr.setAA(AttributeAccessFactory.arrayAA);
 					}
 					else
 					{
@@ -70,7 +70,7 @@ public class VarAttributeNodeListener implements Listener
 							if (literal.obj instanceof String)
 							{
 								String attributeName = (String) literal.obj;
-								AA aa = AAFactory.buildFiledAccessor(c, attributeName);
+								AttributeAccess aa = AttributeAccessFactory.buildFiledAccessor(c, attributeName);
 								ref.attributes[i] = new VarSquareAttribute2((VarSquareAttribute) attrs[i],
 										attributeName, aa);
 							}
@@ -181,7 +181,7 @@ public class VarAttributeNodeListener implements Listener
 	{
 		String name;
 
-		public VarSquareAttribute2(VarSquareAttribute var, String name, AA aa)
+		public VarSquareAttribute2(VarSquareAttribute var, String name, AttributeAccess aa)
 		{
 			super(var.exp, var.token);
 			this.name = name;

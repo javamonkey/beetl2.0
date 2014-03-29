@@ -2,12 +2,12 @@ package org.beetl.core.exception;
 
 import org.beetl.core.statement.GrammarToken;
 
-public class MVCStrictException extends BeetlException
+public class NativeNotAllowedException extends BeetlException
 {
 
-	public MVCStrictException(GrammarToken token)
+	public NativeNotAllowedException(GrammarToken token)
 	{
-		super(BeetlException.STRICK_MVC);
+		super(BeetlException.NATIVE_NOT_ALLOWED);
 		this.token = token;
 		// TODO Auto-generated constructor stub
 	}

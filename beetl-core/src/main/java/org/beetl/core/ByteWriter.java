@@ -48,7 +48,7 @@ public abstract class ByteWriter
 		this.buffer = buffer;
 	}
 
-	public final void write(String str) throws IOException
+	public void write(String str) throws IOException
 	{
 
 		if (str != null)

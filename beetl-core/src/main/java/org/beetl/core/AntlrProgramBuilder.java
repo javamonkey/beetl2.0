@@ -17,6 +17,8 @@ import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.beetl.core.exception.BeetlException;
+import org.beetl.core.exception.MVCStrictException;
+import org.beetl.core.exception.NativeNotAllowedException;
 import org.beetl.core.parser.BeetlParser;
 import org.beetl.core.parser.BeetlParser.AddminExpContext;
 import org.beetl.core.parser.BeetlParser.AndExpContext;
@@ -42,7 +44,10 @@ import org.beetl.core.parser.BeetlParser.DirectiveStContext;
 import org.beetl.core.parser.BeetlParser.ExpressionContext;
 import org.beetl.core.parser.BeetlParser.ExpressionListContext;
 import org.beetl.core.parser.BeetlParser.ForControlContext;
+import org.beetl.core.parser.BeetlParser.ForInControlContext;
+import org.beetl.core.parser.BeetlParser.ForInitContext;
 import org.beetl.core.parser.BeetlParser.ForStContext;
+import org.beetl.core.parser.BeetlParser.ForUpdateContext;
 import org.beetl.core.parser.BeetlParser.FunctionCallContext;
 import org.beetl.core.parser.BeetlParser.FunctionCallExpContext;
 import org.beetl.core.parser.BeetlParser.FunctionNsContext;
@@ -51,6 +56,7 @@ import org.beetl.core.parser.BeetlParser.FunctionTagStContext;
 import org.beetl.core.parser.BeetlParser.G_caseStatmentContext;
 import org.beetl.core.parser.BeetlParser.G_defaultStatmentContext;
 import org.beetl.core.parser.BeetlParser.G_switchStatmentContext;
+import org.beetl.core.parser.BeetlParser.GeneralForControlContext;
 import org.beetl.core.parser.BeetlParser.IfStContext;
 import org.beetl.core.parser.BeetlParser.JsonContext;
 import org.beetl.core.parser.BeetlParser.JsonExpContext;
@@ -89,6 +95,7 @@ import org.beetl.core.parser.BeetlParser.VarAttributeArrayOrMapContext;
 import org.beetl.core.parser.BeetlParser.VarAttributeContext;
 import org.beetl.core.parser.BeetlParser.VarAttributeGeneralContext;
 import org.beetl.core.parser.BeetlParser.VarAttributeVirtualContext;
+import org.beetl.core.parser.BeetlParser.VarDeclareListContext;
 import org.beetl.core.parser.BeetlParser.VarRefContext;
 import org.beetl.core.parser.BeetlParser.VarRefExpContext;
 import org.beetl.core.parser.BeetlParser.VarStContext;
@@ -107,6 +114,7 @@ import org.beetl.core.statement.Expression;
 import org.beetl.core.statement.ForStatement;
 import org.beetl.core.statement.FormatExpression;
 import org.beetl.core.statement.FunctionExpression;
+import org.beetl.core.statement.GeneralForStatement;
 import org.beetl.core.statement.GrammarToken;
 import org.beetl.core.statement.IGoto;
 import org.beetl.core.statement.IfStatement;
@@ -196,7 +204,12 @@ public class AntlrProgramBuilder
 
 		if (node instanceof VarStContext)
 		{
-			return parseVarSt((VarStContext) node);
+			VarAssignStatementSeq varSeq = parseVarSt((VarStContext) node);
+			if (gt.conf.isStrict)
+			{
+				throw new MVCStrictException(varSeq.token);
+			}
+			return varSeq;
 
 		}
 		else if (node instanceof BlockStContext)
@@ -239,8 +252,8 @@ public class AntlrProgramBuilder
 		}
 		else if (node instanceof ForStContext)
 		{
-			ForStatement forStatement = parseForSt((ForStContext) node);
-			return forStatement;
+			return parseForSt((ForStContext) node);
+
 		}
 		else if (node instanceof StaticOutputStContext)
 		{
@@ -720,25 +733,17 @@ public class AntlrProgramBuilder
 		return exps;
 	}
 
-	protected ForStatement parseForSt(ForStContext ctx)
+	protected Statement parseForSt(ForStContext ctx)
 	{
+
 		pbCtx.enterBlock();
 		//break，continue语句到此为止
 		pbCtx.current.canStopContinueBreakFlag = true;
-		ForControlContext forCtx = ctx.forControl();
-		VarDefineNode forVar = new VarDefineNode(this.getBTToken(forCtx.Identifier().getSymbol()));
-
-		VarDefineNode loopStatusVar = new VarDefineNode(new org.beetl.core.statement.GrammarToken(forCtx.Identifier()
-				.getSymbol().getText()
-				+ "LP", forCtx.Identifier().getSymbol().getLine(), 0));
-
-		pbCtx.addVarAndPostion(forVar);
-
-		pbCtx.addVarAndPostion(loopStatusVar);
 
 		StatementContext forContext = ctx.statement(0);
 		StatementContext elseContext = null;
 		Statement forPart = this.parseStatment(forContext);
+		//elsefor
 		Statement elseForPart = null;
 		if (ctx.Elsefor() != null)
 		{
@@ -747,11 +752,71 @@ public class AntlrProgramBuilder
 
 		}
 
-		Expression exp = this.parseExpress(forCtx.expression());
-		ForStatement forStatement = new ForStatement(forVar, exp, forPart, elseForPart, forVar.token);
-		this.checkGoto(forStatement);
-		pbCtx.exitBlock();
-		return forStatement;
+		ForControlContext forTypeCtx = ctx.forControl();
+		if (forTypeCtx.forInControl() != null)
+		{
+			//for(a in list)...
+			ForInControlContext forCtx = forTypeCtx.forInControl();
+			VarDefineNode forVar = new VarDefineNode(this.getBTToken(forCtx.Identifier().getSymbol()));
+
+			VarDefineNode loopStatusVar = new VarDefineNode(new org.beetl.core.statement.GrammarToken(forCtx
+					.Identifier().getSymbol().getText()
+					+ "LP", forCtx.Identifier().getSymbol().getLine(), 0));
+
+			pbCtx.addVarAndPostion(forVar);
+
+			pbCtx.addVarAndPostion(loopStatusVar);
+
+			Expression exp = this.parseExpress(forCtx.expression());
+			ForStatement forStatement = new ForStatement(forVar, exp, forPart, elseForPart, forVar.token);
+			this.checkGoto(forStatement);
+			pbCtx.exitBlock();
+			return forStatement;
+		}
+		else
+		{
+			GeneralForControlContext forCtx = forTypeCtx.generalForControl();
+			Expression[] initExp = null;
+			VarAssignStatementSeq varInitSeq = null;
+			Expression condtion = null;
+			Expression[] updateExp = null;
+			if (forCtx.forInit() != null)
+			{
+				ForInitContext forInitCtx = forCtx.forInit();
+				if (forInitCtx.Var() == null)
+				{
+					//for( a=1,b=3;
+					List<ExpressionContext> list = forInitCtx.expressionList().expression();
+					initExp = this.parseExpressionCtxList(list);
+
+				}
+				else
+				{
+					//for( var a=1,b=3;
+					VarDeclareListContext varDeclare = forInitCtx.varDeclareList();
+					varInitSeq = this.parseVarDeclareList(varDeclare);
+
+				}
+			}
+
+			if (forCtx.expression() != null)
+			{
+				condtion = this.parseExpress(forCtx.expression());
+
+			}
+
+			if (forCtx.forUpdate() != null)
+			{
+				ForUpdateContext updateCtx = forCtx.forUpdate();
+				List<ExpressionContext> list = updateCtx.expressionList().expression();
+				updateExp = this.parseExpressionCtxList(list);
+			}
+
+			GeneralForStatement forStat = new GeneralForStatement(varInitSeq, initExp, condtion, updateExp, forPart,
+					elseForPart, varInitSeq.token);
+			return forStat;
+
+		}
 
 	}
 
@@ -811,7 +876,14 @@ public class AntlrProgramBuilder
 	private VarAssignStatementSeq parseVarSt(VarStContext node)
 	{
 		VarStContext varSt = (VarStContext) node;
-		List<AssignMentContext> list = varSt.varDeclareList().assignMent();
+		VarDeclareListContext ctx = varSt.varDeclareList();
+		return parseVarDeclareList(ctx);
+
+	}
+
+	private VarAssignStatementSeq parseVarDeclareList(VarDeclareListContext ctx)
+	{
+		List<AssignMentContext> list = ctx.assignMent();
 		List<ASTNode> listNode = new ArrayList<ASTNode>();
 		for (AssignMentContext amc : list)
 		{
@@ -840,7 +912,12 @@ public class AntlrProgramBuilder
 		}
 		else if (ctx instanceof CompareExpContext)
 		{
-			return this.parseCompareExpression((CompareExpContext) ctx);
+			CompareExpression compare = parseCompareExpression((CompareExpContext) ctx);
+			if (gt.conf.isStrict)
+			{
+				throw new MVCStrictException(compare.token);
+			}
+			return compare;
 		}
 		else if (ctx instanceof TernaryExpContext)
 		{
@@ -848,7 +925,12 @@ public class AntlrProgramBuilder
 		}
 		else if (ctx instanceof MuldivmodExpContext)
 		{
-			return this.parseMuldivmodExpression((MuldivmodExpContext) ctx);
+			ArthExpression arth = this.parseMuldivmodExpression((MuldivmodExpContext) ctx);
+			if (gt.conf.isStrict)
+			{
+				throw new MVCStrictException(arth.token);
+			}
+			return arth;
 		}
 		else if (ctx instanceof AddminExpContext)
 		{
@@ -862,7 +944,12 @@ public class AntlrProgramBuilder
 		else if (ctx instanceof FunctionCallExpContext)
 		{
 			FunctionCallExpContext fceCtx = (FunctionCallExpContext) ctx;
-			return this.parseFunExp(fceCtx.functionCall());
+			FunctionExpression fun = parseFunExp(fceCtx.functionCall());
+			if (gt.conf.isStrict)
+			{
+				throw new MVCStrictException(fun.token);
+			}
+			return fun;
 		}
 		else if (ctx instanceof JsonExpContext)
 		{
@@ -873,6 +960,10 @@ public class AntlrProgramBuilder
 		{
 			NativeCallContext ncc = ((NativeCallExpContext) ctx).nativeCall();
 			NativeCallExpression nativeCall = this.parseNativeCallExpression(ncc);
+			if (!gt.conf.nativeCall || gt.conf.isStrict)
+			{
+				throw new NativeNotAllowedException(nativeCall.token);
+			}
 			return nativeCall;
 		}
 		else if (ctx instanceof AndExpContext)
@@ -1029,7 +1120,7 @@ public class AntlrProgramBuilder
 					{
 						msg = "()()";
 					}
-					BeetlException ex = new BeetlException(BeetlException.PARSER__NATIVE__ERROR, msg);
+					BeetlException ex = new BeetlException(BeetlException.PARSER_NATIVE_ERROR, msg);
 					ex.token = this.getBTToken(methodCtx.getStart());
 					throw ex;
 				}
@@ -1148,7 +1239,7 @@ public class AntlrProgramBuilder
 		}
 	}
 
-	protected Expression parseMuldivmodExpression(MuldivmodExpContext ctx)
+	protected ArthExpression parseMuldivmodExpression(MuldivmodExpContext ctx)
 	{
 		Expression a = this.parseExpress(ctx.expression(0));
 		Expression b = this.parseExpress(ctx.expression(1));
@@ -1198,7 +1289,7 @@ public class AntlrProgramBuilder
 
 	}
 
-	protected Expression parseCompareExpression(CompareExpContext ctx)
+	protected CompareExpression parseCompareExpression(CompareExpContext ctx)
 	{
 		Expression a = this.parseExpress(ctx.expression(0));
 		Expression b = this.parseExpress(ctx.expression(1));
@@ -1403,17 +1494,22 @@ public class AntlrProgramBuilder
 		return block;
 	}
 
-	public org.beetl.core.statement.GrammarToken getBTToken(Token t)
+	public GrammarToken getBTToken(Token t)
 	{
 		org.beetl.core.statement.GrammarToken token = new org.beetl.core.statement.GrammarToken(t.getText(),
 				t.getLine(), t.getCharPositionInLine());
 		return token;
 	}
 
-	public org.beetl.core.statement.GrammarToken getBTToken(String text, int line)
+	public GrammarToken getBTToken(String text, int line)
 	{
 		org.beetl.core.statement.GrammarToken token = org.beetl.core.statement.GrammarToken.createToken(text, line);
 		return token;
 	}
+
+	//	protected boolean isMVCStrictNode(ASTNode node)
+	//	{
+	//
+	//	}
 
 }

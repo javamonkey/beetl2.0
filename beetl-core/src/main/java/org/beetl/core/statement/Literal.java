@@ -3,7 +3,7 @@ package org.beetl.core.statement;
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
 
-public class Literal extends Expression
+public class Literal extends Expression implements Comparable
 {
 
 	public Object obj = null;
@@ -44,4 +44,12 @@ public class Literal extends Expression
 
 	}
 
+	@Override
+	public int compareTo(Object o)
+	{
+		Literal l = (Literal) o;
+		Comparable a = (Comparable) this.obj;
+		return a.compareTo(l.obj);
+
+	}
 }

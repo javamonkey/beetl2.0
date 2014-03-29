@@ -8,19 +8,19 @@ import java.util.Map;
 import org.beetl.core.exception.BeetlException;
 import org.beetl.core.util.ObjectUtil;
 
-public class AAFactory
+public class AttributeAccessFactory
 {
 
 	// 已经为属性生成的访问代理类
-	static Map<String, AA> pojoCache = new HashMap<String, AA>();
-	static Map<String, AA> generalGetCache = new HashMap<String, AA>();
+	static Map<String, AttributeAccess> pojoCache = new HashMap<String, AttributeAccess>();
+	static Map<String, AttributeAccess> generalGetCache = new HashMap<String, AttributeAccess>();
 
 	public static MapAA mapAA = new MapAA();
 	public static ListAA listAA = new ListAA();
 	public static ArrayAA arrayAA = new ArrayAA();
 	public static ObjectAA objectAA = new ObjectAA();
 
-	static public AA buildFiledAccessor(Class c, String attrExp)
+	static public AttributeAccess buildFiledAccessor(Class c, String attrExp)
 	{
 
 		if (c == Object.class)
@@ -44,7 +44,7 @@ public class AAFactory
 		}
 		String name = (String) attrExp;
 		String className = c + "$_$" + name;
-		AA aa = pojoCache.get(className);
+		AttributeAccess aa = pojoCache.get(className);
 		if (aa != null)
 			return aa;
 

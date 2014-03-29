@@ -9,6 +9,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<packaging>jar</packaging>
+	
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.ow2.asm</groupId>
@@ -18,26 +20,49 @@
 		<dependency>
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm-util</artifactId>
+			<scope>provided</scope>
 		</dependency>
-		<!-- 日志 -->
+		
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<scope>runtime</scope>
-		</dependency>
+            <groupId>antlr</groupId>
+            <artifactId>complete</artifactId>
+            <version>4.2</version>
+            <systemPath>${basedir}/lib/antlr-4.2-complete.jar</systemPath>
+            <scope>system</scope>
+        </dependency>        
+	
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr4-runtime</artifactId>
+			<version>4.2</version>
+		</dependency>
 	</dependencies>
+	
+	<build>
+    <plugins>
+     <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id> <!-- this is used for inheritance merges -->
+            <phase>package</phase> <!-- bind to the packaging phase -->
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>     
+    </plugins>
+  </build>
 </project>

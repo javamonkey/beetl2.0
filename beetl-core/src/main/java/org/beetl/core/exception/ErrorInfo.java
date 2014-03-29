@@ -14,22 +14,30 @@ public class ErrorInfo
 	static
 	{
 		errorLocalMap.put(BeetlException.ERROR, "错误");
-		errorLocalMap.put(BeetlException.PARSER_UNKNOW_ERROR, "语法错误");
-		errorLocalMap.put(BeetlException.PARSER_VIABLE_ERROR, "语法错误");
-		errorLocalMap.put(BeetlException.PARSER_MISS_ERROR, "缺少符号");
-		errorLocalMap.put(BeetlException.PARSER_PREDICATE_ERROR, "语法错误");
-		errorLocalMap.put(BeetlException.PARSER_PREDICATE_ERROR, "语法错误");
-		errorLocalMap.put(BeetlException.TYPE_SEARCH_ERROR, "未找到指定类型，请配置类搜索路径或者增加类包名");
-		errorLocalMap.put(BeetlException.PARSER__NATIVE__ERROR, "本地调用格式出错，不允许此格式");
-		errorLocalMap.put(BeetlException.TAG_INSTANCE_ERROR, "创建Tag错");
-		errorLocalMap.put(BeetlException.TEMPLATE_LOAD_ERROR, "加载模板错");
-		errorLocalMap.put(BeetlException.OPT_ERROR, "优化失败");
-		errorLocalMap.put(BeetlException.NULL, "变量为空");
-		errorLocalMap.put(BeetlException.BOOLEAN_EXPECTED_ERROR, "期望为Boolean类型");
-		errorLocalMap.put(BeetlException.FORMAT_NOT_FOUND, "未找到格式化函数");
-		errorLocalMap.put(BeetlException.FUNCTION_INVALID, "方法定义错误");
-		errorLocalMap.put(BeetlException.FUNCTION_NOT_FOUND, "未找到方法");
+		errorLocalMap.put(BeetlException.PARSER_UNKNOW_ERROR, concat("语法错误", BeetlException.PARSER_UNKNOW_ERROR));
+		errorLocalMap.put(BeetlException.PARSER_VIABLE_ERROR, concat("语法错误", BeetlException.PARSER_VIABLE_ERROR));
+		errorLocalMap.put(BeetlException.PARSER_MISS_ERROR, concat("缺少符号", BeetlException.PARSER_MISS_ERROR));
+		errorLocalMap.put(BeetlException.PARSER_PREDICATE_ERROR, concat("语法错误", BeetlException.PARSER_PREDICATE_ERROR));
+		errorLocalMap.put(BeetlException.TYPE_SEARCH_ERROR,
+				concat("未找到指定类型，请配置类搜索路径或者增加类包名", BeetlException.TYPE_SEARCH_ERROR));
+		errorLocalMap.put(BeetlException.PARSER_NATIVE_ERROR,
+				concat("本地调用格式出错，不允许此格式", BeetlException.PARSER_NATIVE_ERROR));
+		errorLocalMap.put(BeetlException.TAG_INSTANCE_ERROR, concat("创建Tag错", BeetlException.TAG_INSTANCE_ERROR));
+		errorLocalMap.put(BeetlException.TEMPLATE_LOAD_ERROR, concat("加载模板错", BeetlException.TEMPLATE_LOAD_ERROR));
+		errorLocalMap.put(BeetlException.OPT_ERROR, concat("优化失败", BeetlException.OPT_ERROR));
+		errorLocalMap.put(BeetlException.NULL, concat("变量为空", BeetlException.NULL));
+		errorLocalMap.put(BeetlException.BOOLEAN_EXPECTED_ERROR,
+				concat("期望为Boolean类型", BeetlException.BOOLEAN_EXPECTED_ERROR));
+		errorLocalMap.put(BeetlException.FORMAT_NOT_FOUND, concat("未找到格式化函数", BeetlException.FORMAT_NOT_FOUND));
+		errorLocalMap.put(BeetlException.FUNCTION_INVALID, concat("方法定义错误", BeetlException.FUNCTION_INVALID));
+		errorLocalMap.put(BeetlException.FUNCTION_NOT_FOUND, concat("未找到方法", BeetlException.FUNCTION_NOT_FOUND));
+		errorLocalMap.put(BeetlException.STRICK_MVC, concat("严格MVC，不允许在模板里直接调用本地类", BeetlException.STRICK_MVC));
 
+	}
+
+	static String concat(String info, String code)
+	{
+		return info.concat("(").concat(code).concat("");
 	}
 
 	public ErrorInfo(BeetlException ex)
@@ -54,6 +62,10 @@ public class ErrorInfo
 		this.msg = ex.getMessage();
 		this.errorTokenLine = ex.token.line;
 		this.type = errorLocalMap.get(detailCode);
+		if (type == null)
+		{
+			type = detailCode;
+		}
 
 	}
 

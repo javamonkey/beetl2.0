@@ -2,7 +2,7 @@ package org.beetl.core.resolver;
 
 import java.util.List;
 
-public class ListAA extends AA
+public class ListAA extends AttributeAccess
 {
 
 	@Override

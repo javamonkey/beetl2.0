@@ -224,73 +224,71 @@ public class ALU
 		return NULL;
 	}
 
-	// +1
-	//	public static Object plusOne(final Object o1)
-	//	{
-	//		if (o1 != null)
-	//		{
-	//			if (o1 instanceof Number)
-	//			{
-	//				final Number num;
-	//				switch (getNumberType(num = (Number) o1))
-	//				{
-	//					case INTEGER:
-	//						return Integer.valueOf(num.intValue() + 1);
-	//					case LONG:
-	//						return Long.valueOf(num.longValue() + 1L);
-	//					case DOUBLE:
-	//						return Double.valueOf(num.doubleValue() + 1D);
-	//					case FLOAT:
-	//						return Float.valueOf(num.floatValue() + 1F);
-	//					case SHORT:
-	//						return Short.valueOf((short) (num.intValue() + 1));
-	//					case HS:
-	//						BigDecimal bd = (BigDecimal) o1;
-	//						return bd.add(BigDecimal.ONE);
-	//
-	//				}
-	//			}
-	//			else
-	//			{
-	//				throw new RuntimeException("value not a number");
-	//			}
-	//		}
-	//		throw ValueIsNullException(o1);
-	//	}
+	public static Object plusOne(final Object o1, ASTNode node)
+	{
+		if (o1 != null)
+		{
+			if (o1 instanceof Number)
+			{
+				final Number num;
+				switch (getNumberType(num = (Number) o1))
+				{
+					case INTEGER:
+						return Integer.valueOf(num.intValue() + 1);
+					case LONG:
+						return Long.valueOf(num.longValue() + 1L);
+					case DOUBLE:
+						return Double.valueOf(num.doubleValue() + 1D);
+					case FLOAT:
+						return Float.valueOf(num.floatValue() + 1F);
+					case SHORT:
+						return Short.valueOf((short) (num.intValue() + 1));
+					case HS:
+						BigDecimal bd = (BigDecimal) o1;
+						return bd.add(BigDecimal.ONE);
 
-	// -1
+				}
+			}
+			else
+			{
 
-	//	public static Object minusOne(final Object o1)
-	//	{
-	//		if (o1 != null)
-	//		{
-	//			if (o1 instanceof Number)
-	//			{
-	//				final Number num;
-	//				switch (getNumberType(num = (Number) o1))
-	//				{
-	//					case INTEGER:
-	//						return Integer.valueOf(num.intValue() - 1);
-	//					case LONG:
-	//						return Long.valueOf(num.longValue() - 1l);
-	//					case DOUBLE:
-	//						return Double.valueOf(num.doubleValue() - 1d);
-	//					case FLOAT:
-	//						return Float.valueOf(num.floatValue() - 1f);
-	//					case SHORT:
-	//						return Short.valueOf((short) (num.intValue() - 1));
-	//					case HS:
-	//						BigDecimal bd = (BigDecimal) o1;
-	//						return bd.min(BigDecimal.ONE);
-	//				}
-	//			}
-	//			else
-	//			{
-	//				throw new RuntimeException("value not a number");
-	//			}
-	//		}
-	//		throw ValueIsNullException(o1);
-	//	}
+				throw numberExpectedException(o1, node);
+			}
+		}
+		throw valueIsNullException(o1, node);
+	}
+
+	public static Object minusOne(final Object o1, ASTNode node)
+	{
+		if (o1 != null)
+		{
+			if (o1 instanceof Number)
+			{
+				final Number num;
+				switch (getNumberType(num = (Number) o1))
+				{
+					case INTEGER:
+						return Integer.valueOf(num.intValue() - 1);
+					case LONG:
+						return Long.valueOf(num.longValue() - 1l);
+					case DOUBLE:
+						return Double.valueOf(num.doubleValue() - 1d);
+					case FLOAT:
+						return Float.valueOf(num.floatValue() - 1f);
+					case SHORT:
+						return Short.valueOf((short) (num.intValue() - 1));
+					case HS:
+						BigDecimal bd = (BigDecimal) o1;
+						return bd.min(BigDecimal.ONE);
+				}
+			}
+			else
+			{
+				throw numberExpectedException(o1, node);
+			}
+		}
+		throw valueIsNullException(o1, node);
+	}
 
 	// ///////////////////////////
 	// +
@@ -786,6 +784,13 @@ public class ALU
 				+ o2.getClass());
 		GrammarToken token = GrammarToken.createToken(node1.token.text + type + node2.token.text, node1.token.line);
 		ex.token = token;
+		throw ex;
+	}
+
+	private static RuntimeException numberExpectedException(final Object o1, ASTNode node1)
+	{
+		BeetlException ex = new BeetlException(BeetlException.NUMBER_EXPECTED_ERROR);
+		ex.token = node1.token;
 		throw ex;
 	}
 

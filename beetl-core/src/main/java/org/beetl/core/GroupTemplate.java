@@ -256,7 +256,7 @@ public class GroupTemplate
 		}
 		catch (BeetlException ex)
 		{
-			ErrorGrammarProgram ep = new ErrorGrammarProgram(res.getId(), this, sf.lineSeparator);
+			ErrorGrammarProgram ep = new ErrorGrammarProgram(res.getId(), this, sf != null ? sf.lineSeparator : null);
 			ep.setException(ex);
 			return ep;
 		}

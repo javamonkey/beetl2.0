@@ -68,10 +68,19 @@ public final class GeneralForStatement extends Statement implements IGoto
 						ctx.gotoFlag = IGoto.NORMAL;
 						return;
 				}
+
 			}
 			else
 			{
 				break;
+			}
+
+			if (this.expUpdate != null)
+			{
+				for (Expression exp : expUpdate)
+				{
+					exp.evaluate(ctx);
+				}
 			}
 
 		}

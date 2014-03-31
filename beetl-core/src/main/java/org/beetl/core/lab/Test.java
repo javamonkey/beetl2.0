@@ -16,6 +16,8 @@ public class Test
 		//		Template t = gt.getTemplate("/grammer.txt");
 		//		String result = t.render();
 		//		System.out.println(result);
+		int a = 10;
+		System.out.println(++a);
 
 	}
 }

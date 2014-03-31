@@ -10,6 +10,7 @@ public class ErrorInfo
 	int errorTokenLine = 0;
 	String msg;
 	Throwable cause;
+	String errorCode = null;
 	static Map<String, String> errorLocalMap = new HashMap<String, String>();
 	static
 	{
@@ -43,14 +44,14 @@ public class ErrorInfo
 	public ErrorInfo(BeetlException ex)
 	{
 		cause = ex.getCause();
-		String detailCode = ex.detailCode;
-		if (detailCode.startsWith("TEMPLATE"))
+		errorCode = ex.detailCode;
+		if (errorCode.startsWith("TEMPLATE"))
 		{
 			this.msg = ex.getMessage();
-			this.type = errorLocalMap.get(detailCode);
+			this.type = errorLocalMap.get(errorCode);
 			return;
 		}
-		else if (detailCode.startsWith("PARSER"))
+		else if (errorCode.startsWith("PARSER"))
 		{
 			this.errorTokenText = ex.getMessage();
 		}
@@ -61,10 +62,10 @@ public class ErrorInfo
 
 		this.msg = ex.getMessage();
 		this.errorTokenLine = ex.token.line;
-		this.type = errorLocalMap.get(detailCode);
+		this.type = errorLocalMap.get(errorCode);
 		if (type == null)
 		{
-			type = detailCode;
+			type = errorCode;
 		}
 
 	}
@@ -107,6 +108,16 @@ public class ErrorInfo
 	public void setMsg(String msg)
 	{
 		this.msg = msg;
+	}
+
+	public String getErrorCode()
+	{
+		return errorCode;
+	}
+
+	public void setErrorCode(String errorCode)
+	{
+		this.errorCode = errorCode;
 	}
 
 	public Throwable getCause()

@@ -58,6 +58,7 @@ import org.beetl.core.parser.BeetlParser.G_defaultStatmentContext;
 import org.beetl.core.parser.BeetlParser.G_switchStatmentContext;
 import org.beetl.core.parser.BeetlParser.GeneralForControlContext;
 import org.beetl.core.parser.BeetlParser.IfStContext;
+import org.beetl.core.parser.BeetlParser.IncDecOneContext;
 import org.beetl.core.parser.BeetlParser.JsonContext;
 import org.beetl.core.parser.BeetlParser.JsonExpContext;
 import org.beetl.core.parser.BeetlParser.JsonKeyValueContext;
@@ -70,6 +71,7 @@ import org.beetl.core.parser.BeetlParser.NativeMethodContext;
 import org.beetl.core.parser.BeetlParser.NativeVarRefChainContext;
 import org.beetl.core.parser.BeetlParser.NegExpContext;
 import org.beetl.core.parser.BeetlParser.NotExpContext;
+import org.beetl.core.parser.BeetlParser.OneIncDecContext;
 import org.beetl.core.parser.BeetlParser.OrExpContext;
 import org.beetl.core.parser.BeetlParser.ParExpContext;
 import org.beetl.core.parser.BeetlParser.ParExpressionContext;
@@ -118,6 +120,7 @@ import org.beetl.core.statement.GeneralForStatement;
 import org.beetl.core.statement.GrammarToken;
 import org.beetl.core.statement.IGoto;
 import org.beetl.core.statement.IfStatement;
+import org.beetl.core.statement.IncDecExpression;
 import org.beetl.core.statement.JsonArrayExpression;
 import org.beetl.core.statement.JsonMapExpression;
 import org.beetl.core.statement.Literal;
@@ -986,10 +989,53 @@ public class AntlrProgramBuilder
 			NegExpContext negCtx = (NegExpContext) ctx;
 			return this.parseNegExpression(negCtx);
 		}
+		else if (ctx instanceof IncDecOneContext)
+		{
+			IncDecOneContext oneCtx = (IncDecOneContext) ctx;
+			IncDecExpression exp = this.parseIncDecOneContext(oneCtx);
+			if (gt.conf.isStrict)
+			{
+				throw new NativeNotAllowedException(exp.token);
+			}
+			return exp;
+		}
+		else if (ctx instanceof OneIncDecContext)
+		{
+			OneIncDecContext oneCtx = (OneIncDecContext) ctx;
+			IncDecExpression exp = this.parseOneIncDecContext(oneCtx);
+			if (gt.conf.isStrict)
+			{
+				throw new NativeNotAllowedException(exp.token);
+			}
+			return exp;
+
+		}
 		else
 		{
 			throw new UnsupportedOperationException();
 		}
+	}
+
+	protected IncDecExpression parseIncDecOneContext(IncDecOneContext ctx)
+	{
+		IncDecExpression exp = null;
+		boolean isInc = ctx.INCREASE() != null;
+		GrammarToken t = this.getBTToken(ctx.Identifier().getSymbol());
+		exp = new IncDecExpression(isInc, false, t);
+		this.pbCtx.setVarPosition(t.text, exp);
+		return exp;
+
+	}
+
+	protected IncDecExpression parseOneIncDecContext(OneIncDecContext ctx)
+	{
+		IncDecExpression exp = null;
+		boolean isInc = ctx.INCREASE() != null;
+		GrammarToken t = this.getBTToken(ctx.Identifier().getSymbol());
+		exp = new IncDecExpression(isInc, true, t);
+		this.pbCtx.setVarPosition(t.text, exp);
+		return exp;
+
 	}
 
 	protected Expression parseNegExpression(NegExpContext ctx)

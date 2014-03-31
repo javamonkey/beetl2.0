@@ -101,6 +101,12 @@ public class BeetlException extends RuntimeException
 	 * 期望表达式返回bool值，但却是其他类型
 	 */
 	public static final String BOOLEAN_EXPECTED_ERROR = "BOOLEAN_EXPECTED_ERROR";
+
+	/**
+	 * 期望是数字类型，但却是其他类型
+	 */
+	public static final String NUMBER_EXPECTED_ERROR = "NUMBER_EXPECTED_ERROR";
+
 	/**
 	 * 严格MVC错误，模板使用严格MVC，但模板内容含有不允许的语法
 	 */

@@ -745,15 +745,6 @@ public class AntlrProgramBuilder
 
 		StatementContext forContext = ctx.statement(0);
 		StatementContext elseContext = null;
-		Statement forPart = this.parseStatment(forContext);
-		//elsefor
-		Statement elseForPart = null;
-		if (ctx.Elsefor() != null)
-		{
-			elseContext = ctx.statement(1);
-			elseForPart = this.parseStatment(elseContext);
-
-		}
 
 		ForControlContext forTypeCtx = ctx.forControl();
 		if (forTypeCtx.forInControl() != null)
@@ -771,6 +762,17 @@ public class AntlrProgramBuilder
 			pbCtx.addVarAndPostion(loopStatusVar);
 
 			Expression exp = this.parseExpress(forCtx.expression());
+
+			Statement forPart = this.parseStatment(forContext);
+			//elsefor
+			Statement elseForPart = null;
+			if (ctx.Elsefor() != null)
+			{
+				elseContext = ctx.statement(1);
+				elseForPart = this.parseStatment(elseContext);
+
+			}
+
 			ForStatement forStatement = new ForStatement(forVar, exp, forPart, elseForPart, forVar.token);
 			this.checkGoto(forStatement);
 			pbCtx.exitBlock();
@@ -815,8 +817,18 @@ public class AntlrProgramBuilder
 				updateExp = this.parseExpressionCtxList(list);
 			}
 
+			Statement forPart = this.parseStatment(forContext);
+			//elsefor
+			Statement elseForPart = null;
+			if (ctx.Elsefor() != null)
+			{
+				elseContext = ctx.statement(1);
+				elseForPart = this.parseStatment(elseContext);
+
+			}
 			GeneralForStatement forStat = new GeneralForStatement(varInitSeq, initExp, condtion, updateExp, forPart,
 					elseForPart, varInitSeq.token);
+			pbCtx.exitBlock();
 			return forStat;
 
 		}

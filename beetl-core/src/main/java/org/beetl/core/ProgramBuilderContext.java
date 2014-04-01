@@ -49,6 +49,9 @@ public class ProgramBuilderContext
 		this.setVarPosition(first.token.text, first);
 	}
 
+	/**在当前context定义变量
+	 * @param varName
+	 */
 	public void addVar(String varName)
 	{
 		VarDescrption varDesc = new VarDescrption();
@@ -252,7 +255,7 @@ class VarDescrption
 		;
 		for (ASTNode w : where)
 		{
-			sb.append(((IVarIndex) w).getVarIndex()).append(",").append(w.token.line);
+			sb.append("索引：").append(((IVarIndex) w).getVarIndex()).append(",").append(w.token.line).append("行");
 			sb.append(";");
 		}
 		sb.append("\n");

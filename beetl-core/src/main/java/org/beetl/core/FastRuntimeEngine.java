@@ -30,6 +30,8 @@ public class FastRuntimeEngine extends DefaultTemplateEngine
 		{
 			this.metaData = program.metaData;
 			this.filter = filter;
+			this.id = program.id;
+			this.gt = program.gt;
 
 		}
 

@@ -82,6 +82,9 @@ public class Template
 		catch (BeetlException e)
 		{
 			Writer w = BeetlUtil.getWriterByByteWriter(ctx.byteWriter);
+			e.resourceId = this.program.id;
+			e.gt = this.program.gt;
+			e.cr = this.program.metaData.lineSeparator;
 			ErrorHandler errorHandler = this.gt.getErrorHandler();
 			errorHandler.processExcption(e, w);
 		}

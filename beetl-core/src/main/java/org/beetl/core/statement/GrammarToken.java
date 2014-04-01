@@ -31,4 +31,9 @@ public class GrammarToken implements Cloneable, java.io.Serializable
 		}
 
 	}
+
+	public String toString()
+	{
+		return text;
+	}
 }

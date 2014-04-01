@@ -26,6 +26,7 @@ public class ConsoleErrorHandler implements ErrorHandler
 		println(writer, sb.toString());
 		if (error.getType().equals(BeetlException.TEMPLATE_LOAD_ERROR))
 		{
+			printCause(error, writer);
 			return;
 		}
 		ResourceLoader resLoader = ex.gt.getResourceLoader();
@@ -60,14 +61,16 @@ public class ConsoleErrorHandler implements ErrorHandler
 
 		}
 
+		printCause(error, writer);
+
+	}
+
+	protected void printCause(ErrorInfo error, Writer writer)
+	{
 		Throwable t = error.getCause();
 		if (t != null)
 		{
 			printThrowable(writer, t);
-		}
-		else
-		{
-			printThrowable(writer, ex);
 		}
 
 	}

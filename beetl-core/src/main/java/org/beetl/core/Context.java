@@ -133,4 +133,9 @@ public class Context
 		this.gotoFlag = IGoto.NORMAL;
 	}
 
+	public String getResourceId()
+	{
+		return this.template.program.id;
+	}
+
 }

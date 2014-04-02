@@ -65,6 +65,47 @@ public class BeetlUtil
 
 	}
 
+	public static String getRelPath(String siblings, String resourceId)
+	{
+
+		String relResourceId = null;
+		if (resourceId != null && resourceId.length() != 0)
+		{
+			char cs = resourceId.charAt(0);
+			if (!(cs == '\\' || cs == '/'))
+			{
+				//相对路径
+				int i = siblings.length() - 1;
+				for (; i > 0; i--)
+				{
+					char c = siblings.charAt(i);
+					if (c == '\\' || c == '/')
+					{
+						break;
+					}
+				}
+
+				String parent = siblings.substring(0, i + 1);
+
+				relResourceId = parent.concat(resourceId);
+			}
+			else
+			{
+				relResourceId = resourceId;
+			}
+			if (BeetlUtil.isOutsideOfRoot(relResourceId))
+			{
+				throw new RuntimeException("不能访问外部文件或者模板");
+			}
+			return relResourceId;
+		}
+		else
+		{
+			throw new RuntimeException("资源ID为空，参数错");
+		}
+
+	}
+
 	public static Writer getWriterByByteWriter(ByteWriter byteWriter)
 	{
 		Writer w = null;

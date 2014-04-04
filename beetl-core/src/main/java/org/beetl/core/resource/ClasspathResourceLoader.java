@@ -5,13 +5,19 @@ import org.beetl.core.ResourceLoader;
 
 /**
  * 
- * @author 郭玉昆(<a href="mailto:gyk001@gmail.com">gyk001@gmail.com</a>)
+ * @author joelli
  * @version 2012-10-30
  * 
  */
 public class ClasspathResourceLoader implements ResourceLoader
 {
 	private String prefix;
+	boolean checkModified = false;
+
+	public ClasspathResourceLoader()
+	{
+		this("");
+	}
 
 	public ClasspathResourceLoader(String prefix)
 	{
@@ -57,10 +63,36 @@ public class ClasspathResourceLoader implements ResourceLoader
 	}
 
 	@Override
-	public boolean isModified(String key)
+	public boolean isModified(Resource key)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		if (this.checkModified)
+		{
+			return key.isModified();
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public boolean isCheckModified()
+	{
+		return checkModified;
+	}
+
+	public void setCheckModified(boolean checkModified)
+	{
+		this.checkModified = checkModified;
+	}
+
+	public String getPrefix()
+	{
+		return prefix;
+	}
+
+	public void setPrefix(String prefix)
+	{
+		this.prefix = prefix;
 	}
 
 }

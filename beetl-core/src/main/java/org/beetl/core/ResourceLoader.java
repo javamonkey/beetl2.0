@@ -19,7 +19,7 @@ public interface ResourceLoader
 	 */
 	public Resource getResource(String key);
 
-	public boolean isModified(String key);
+	public boolean isModified(Resource key);
 
 	/**
 	 * 关闭ResouceLoader，通常是GroupTemplate关闭的时候也关闭对应的ResourceLoader

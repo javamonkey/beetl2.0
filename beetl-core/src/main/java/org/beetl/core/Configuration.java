@@ -55,6 +55,7 @@ public class Configuration
 	//	String engine = "org.beetl.core.DefaultTemplateEngine";
 	String engine = "org.beetl.core.FastRuntimeEngine";
 	String nativeSecurity = "org.beetl.core.DefaultNativeSecurityManager";
+	String resourceLoader = "org.beetl.core.resource.FileResourceLoader";
 
 	//扩展资源
 	Map<String, String> fnMap = new HashMap<String, String>();
@@ -66,6 +67,8 @@ public class Configuration
 	Map<String, String> virtualClass = new HashMap<String, String>();
 	Map<String, String> tagFactoryMap = new HashMap<String, String>();
 	Map<String, String> tagMap = new HashMap<String, String>();
+	//资源loader配置
+	Map<String, String> resourceMap = new HashMap<String, String>();
 
 	public static String DELIMITER_PLACEHOLDER_START = "DELIMITER_PLACEHOLDER_START";
 	public static String DELIMITER_PLACEHOLDER_END = "DELIMITER_PLACEHOLDER_END";
@@ -83,6 +86,7 @@ public class Configuration
 	public static String IMPORT_PACKAGE = "IMPORT_PACKAGE";
 	public static String ENGINE = "ENGINE";
 	public static String NATIVE_SECUARTY_MANAGER = "NATIVE_SECUARTY_MANAGER";
+	public static String RESOURCE_LOADER = "RESOURCE_LOADER";
 
 	public Configuration() throws IOException
 	{
@@ -216,6 +220,11 @@ public class Configuration
 		{
 			this.nativeSecurity = value;
 		}
+
+		else if (key.equalsIgnoreCase(RESOURCE_LOADER))
+		{
+			this.resourceLoader = value;
+		}
 		else
 		{
 			//扩展
@@ -256,8 +265,18 @@ public class Configuration
 			{
 				addTagFactory(key, value);
 			}
+			else if (key.startsWith("resource.") || key.startsWith("RESOURCE."))
+			{
+				addResource(key, value);
+			}
 		}
 
+	}
+
+	private void addResource(String key, String value)
+	{
+		String name = this.getExtName(key);
+		this.resourceMap.put(name, value);
 	}
 
 	private void addTagFactory(String key, String value)

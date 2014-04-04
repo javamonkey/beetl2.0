@@ -1,6 +1,7 @@
 package org.beetl.core.lab;
 
 import java.io.IOException;
+import java.net.URL;
 
 public class Test
 {
@@ -16,8 +17,12 @@ public class Test
 		//		Template t = gt.getTemplate("/grammer.txt");
 		//		String result = t.render();
 		//		System.out.println(result);
-		int a = 10;
-		System.out.println(++a);
+
+		URL url = Test.class.getResource("/org/beetl/core/lab/test.class");
+		//url = Test.class.getResource("/org/antlr/runtime/ANTLRFileStream.class");
+
+		System.out.println(url.getFile());
+		System.out.println(url.getProtocol());
 
 	}
 }

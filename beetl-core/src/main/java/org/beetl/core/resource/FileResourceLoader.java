@@ -10,6 +10,12 @@ public class FileResourceLoader implements ResourceLoader
 
 	String root = null;
 	String charset = null;
+	boolean autouCheck = false;
+
+	public FileResourceLoader()
+	{
+
+	}
 
 	public FileResourceLoader(String root, String charset)
 	{
@@ -35,10 +41,46 @@ public class FileResourceLoader implements ResourceLoader
 	}
 
 	@Override
-	public boolean isModified(String key)
+	public boolean isModified(Resource key)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		if (this.autouCheck)
+		{
+			return key.isModified();
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public boolean isAutouCheck()
+	{
+		return autouCheck;
+	}
+
+	public void setAutouCheck(boolean autouCheck)
+	{
+		this.autouCheck = autouCheck;
+	}
+
+	public String getRoot()
+	{
+		return root;
+	}
+
+	public void setRoot(String root)
+	{
+		this.root = root;
+	}
+
+	public String getCharset()
+	{
+		return charset;
+	}
+
+	public void setCharset(String charset)
+	{
+		this.charset = charset;
 	}
 
 }

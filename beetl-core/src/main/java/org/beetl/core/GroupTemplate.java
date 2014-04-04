@@ -41,6 +41,48 @@ public class GroupTemplate
 	NativeSecurityManager nativeSecurity = null;
 	ErrorHandler errorHandler = null;
 
+	public GroupTemplate()
+	{
+		try
+		{
+			this.conf = Configuration.defaultConfiguration();
+			initResourceLoader();
+			init();
+		}
+		catch (Exception ex)
+		{
+			throw new RuntimeException("初始化失败", ex);
+		}
+
+	}
+
+	public GroupTemplate(Configuration conf)
+	{
+
+		try
+		{
+			this.conf = conf;
+			initResourceLoader();
+			init();
+		}
+		catch (Exception ex)
+		{
+			throw new RuntimeException("初始化失败", ex);
+		}
+
+	}
+
+	protected void initResourceLoader()
+	{
+		this.resourceLoader = (ResourceLoader) ObjectUtil.instnace(conf.resourceLoader);
+		for (Entry<String, String> entry : conf.resourceMap.entrySet())
+		{
+			String key = entry.getKey();
+			String value = entry.getValue();
+			ObjectUtil.setSimpleValue(resourceLoader, key, value);
+		}
+	}
+
 	/**
 	 * 使用loader 和 conf初始化GroupTempalte
 	 * 
@@ -52,8 +94,22 @@ public class GroupTemplate
 
 	public GroupTemplate(ResourceLoader loader, Configuration conf)
 	{
-		this.resourceLoader = loader;
-		this.conf = conf;
+
+		try
+		{
+			this.resourceLoader = loader;
+			this.conf = conf;
+			init();
+		}
+		catch (Exception ex)
+		{
+			throw new RuntimeException("初始化失败", ex);
+		}
+
+	}
+
+	protected void init()
+	{
 		engine = TemplateEngineFactory.getEngine(conf.getEngine());
 		this.initFunction();
 		this.initFormatter();

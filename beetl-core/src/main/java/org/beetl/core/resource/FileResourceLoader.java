@@ -9,12 +9,17 @@ public class FileResourceLoader implements ResourceLoader
 {
 
 	String root = null;
-	String charset = null;
+	String charset = "UTF-8";
 	boolean autouCheck = false;
 
 	public FileResourceLoader()
 	{
+		this.root = System.getProperty("user.dir");
+	}
 
+	public FileResourceLoader(String root)
+	{
+		this.root = root;
 	}
 
 	public FileResourceLoader(String root, String charset)

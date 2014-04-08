@@ -24,7 +24,7 @@ public class ConsoleErrorHandler implements ErrorHandler
 				.append(ex.resourceId);
 		;
 		println(writer, sb.toString());
-		if (error.getType().equals(BeetlException.TEMPLATE_LOAD_ERROR))
+		if (error.getErrorCode().equals(BeetlException.TEMPLATE_LOAD_ERROR))
 		{
 			printCause(error, writer);
 			return;

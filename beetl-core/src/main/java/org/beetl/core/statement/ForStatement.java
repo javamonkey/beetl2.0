@@ -13,7 +13,16 @@ public final class ForStatement extends Statement implements IGoto
 	public boolean hasGoto = false;
 	public short itType = 0;
 
-	public ForStatement(VarDefineNode idNode, Expression exp, Statement forPart, Statement elseforPart, GrammarToken token)
+	/**
+	 * for(idNode in exp) {forPath}elsefor{elseforPart}
+	 * @param idNode
+	 * @param exp
+	 * @param forPart
+	 * @param elseforPart
+	 * @param token
+	 */
+	public ForStatement(VarDefineNode idNode, Expression exp, Statement forPart, Statement elseforPart,
+			GrammarToken token)
 	{
 		super(token);
 		this.idNode = idNode;
@@ -93,7 +102,15 @@ public final class ForStatement extends Statement implements IGoto
 	public void infer(InferContext inferCtx)
 	{
 		exp.infer(inferCtx);
-		idNode.type = exp.getType().types[0];
+		if (exp.getType().types != null)
+		{
+			idNode.type = exp.getType().types[0];
+		}
+		else
+		{
+			idNode.type = Type.ObjectType;
+		}
+
 		int index = ((IVarIndex) idNode).getVarIndex();
 		inferCtx.types[index] = idNode.type;
 		inferCtx.types[index + 1] = new Type(IteratorStatus.class, idNode.type.cls);

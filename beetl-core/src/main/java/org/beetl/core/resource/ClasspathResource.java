@@ -30,8 +30,14 @@ public class ClasspathResource extends Resource
 	public Reader openReader()
 	{
 
-		URL url = ClasspathResource.class.getResource(path);
+		URL url = resourceLoader.getClass().getResource(path);
 
+		if (url == null)
+		{
+			BeetlException be = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR, "classpath resource not found:"
+					+ id);
+			throw be;
+		}
 		InputStream is;
 		try
 		{
@@ -59,7 +65,7 @@ public class ClasspathResource extends Resource
 		Reader br;
 		try
 		{
-			br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+			br = new BufferedReader(new InputStreamReader(is, ((ClasspathResourceLoader) this.resourceLoader).charset));
 			return br;
 		}
 		catch (UnsupportedEncodingException e)

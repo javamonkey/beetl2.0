@@ -11,30 +11,27 @@ import org.beetl.core.ResourceLoader;
  */
 public class ClasspathResourceLoader implements ResourceLoader
 {
-	private String prefix;
+	private String prefix = "";
 	boolean checkModified = false;
+	protected String charset = "UTF-8";
 
 	public ClasspathResourceLoader()
 	{
-		this("");
+
 	}
 
 	public ClasspathResourceLoader(String prefix)
 	{
-		if (prefix == null || prefix.trim().isEmpty())
-		{
-			this.prefix = "/";
-			return;
-		}
+
 		this.prefix = prefix;
-		if (!prefix.startsWith("/"))
-		{
-			this.prefix = "/" + this.prefix;
-		}
-		if (!prefix.endsWith("/"))
-		{
-			this.prefix = this.prefix + "/";
-		}
+
+	}
+
+	public ClasspathResourceLoader(String prefix, String charset)
+	{
+
+		this.prefix = prefix;
+		this.charset = charset;
 	}
 
 	/*
@@ -93,6 +90,16 @@ public class ClasspathResourceLoader implements ResourceLoader
 	public void setPrefix(String prefix)
 	{
 		this.prefix = prefix;
+	}
+
+	public String getCharset()
+	{
+		return charset;
+	}
+
+	public void setCharset(String charset)
+	{
+		this.charset = charset;
 	}
 
 }

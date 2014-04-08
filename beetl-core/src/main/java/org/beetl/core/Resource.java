@@ -16,7 +16,7 @@ public abstract class Resource
 	}
 
 	/**
-	 * 打开Reader
+	 * 打开一个新的Reader
 	 * 
 	 * @return
 	 */

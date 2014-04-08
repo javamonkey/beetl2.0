@@ -38,7 +38,7 @@ public class ErrorInfo
 
 	static String concat(String info, String code)
 	{
-		return info.concat("(").concat(code).concat("");
+		return info.concat("(").concat(code).concat(")");
 	}
 
 	public ErrorInfo(BeetlException ex)

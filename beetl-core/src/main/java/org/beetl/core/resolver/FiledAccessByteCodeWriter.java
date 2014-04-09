@@ -1,4 +1,4 @@
-package org.beetl.core.lab;
+package org.beetl.core.resolver;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.beetl.core.resolver.AttributeAccess;
+import org.beetl.core.lab.TestUser;
 
 public class FiledAccessByteCodeWriter
 {
@@ -27,8 +27,31 @@ public class FiledAccessByteCodeWriter
 	static final short INVOKE_VIRTUAL = 182;
 	static final short RETURN = 177;
 	static final short ARETURN = 176;
-	final short CHECK_CAST = 192;
-	final short INVOKE_STATIC = 184;
+	static final short CHECK_CAST = 192;
+	static final short INVOKE_STATIC = 184;
+	static final String parentCls = "org/beetl/core/resolver/AttributeAccess";
+	static final String initFunction = "<init>";
+	static final String initFunctionDesc = "()V";
+	static final String valueFunction = "value";
+	static final String valueFunctionDesc = "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;";
+	static final String code = "Code";
+
+	//outbox,inbox
+	static final String integerClass = "org/beetl/core/util/NumberUtil"; //优化过的拆箱
+	static final String valueOfFunction = "valueOf";
+	static final String intValueOfFunctionDesc = "(I)Ljava/lang/Integer;";
+
+	static final String shortClass = "java/lang/Short";
+	static final String shortValueOfFunctionDesc = "(S)Ljava/lang/Short;";
+
+	static final String booleanClass = "java/lang/Boolean";
+	static final String booleanValueOfFunctionDesc = "(Z)Ljava/lang/Boolean;";
+
+	static final String doubleClass = "java/lang/Double";
+	static final String doubleValueOfFunctionDesc = "(D)Ljava/lang/Double;";
+
+	static String longClass = "java/lang/Long";
+	static String longValueOfFunctionDesc = "(J)Ljava/lang/Long;";
 
 	byte[] cached = new byte[256];
 	List<Object[]> constPool = new ArrayList<Object[]>();
@@ -36,23 +59,14 @@ public class FiledAccessByteCodeWriter
 	Map<String, Short> classMap = new HashMap<String, Short>();
 
 	String cls = "org/beetl/sample/s01/Test1";
-	String parentCls = "org/beetl/core/resolver/AttributeAccess";
 	String targetCls = "org/beetl/core/lab/TestUser";
 	String targetFunction = "getAge";
 	String targetFunctionDesc = "()I";
-	String initFunction = "<init>";
-	String initFunctionDesc = "()V";
-	String valueFunction = "value";
-	String valueFunctionDesc = "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;";
-	String code = "Code";
+	String retByteCodeType = "I";
 
-	//其他
-	String integerClass = "java/lang/Integer";
-	String valueOfFunction = "valueOf";
-	String intValueOfFunctionDesc = "(I)Ljava/lang/Integer;";
-	ASMClassLoader loader = new ASMClassLoader();
+	static ASMClassLoader loader = new ASMClassLoader();
 
-	class ASMClassLoader extends ClassLoader
+	static class ASMClassLoader extends ClassLoader
 	{
 		public Class defineClass(String name, byte[] b)
 		{
@@ -66,15 +80,34 @@ public class FiledAccessByteCodeWriter
 	 */
 	public static void main(String[] args) throws Exception
 	{
+		Class c = TestUser.class;
+		String name = "contacts";
+		String methodName = "getContacts";
+		Class returnType = String[].class;
+		FiledAccessByteCodeWriter cw = new FiledAccessByteCodeWriter(c, name, methodName, returnType);
+		byte[] bs = cw.getClassByte();
+
 		//		OutputStream ins = new FileOutputStream("e:/Test1.class");
-		//		DataOutputStream out = new DataOutputStream(ins);
-		//		new FiledAccessByteCodeWriter().write(out);
-		//		out.close();
-		Object o = new FiledAccessByteCodeWriter().getObject();
-		AttributeAccess a = (AttributeAccess) o;
+		//		ins.write(bs);
+		//		ins.close();
 		TestUser user = new TestUser("joelli");
-		user.setAge(19);
-		System.out.println(a.value(user, "age"));
+		Class fieldAccessorClass = loader.defineClass(c.getName() + "_" + name, bs);
+		AttributeAccess ac = (AttributeAccess) fieldAccessorClass.newInstance();
+		Object result = ac.value(user, name);
+		System.out.println(result);
+
+	}
+
+	public FiledAccessByteCodeWriter(Class c, String name, String methodName, Class returnType)
+	{
+		String cname = c.getName().replace(".", "/");
+		this.targetCls = cname;
+		this.cls = cname + "_" + name;
+		this.targetFunction = methodName;
+		String[] returnArray = this.getRetrunTypeDesc(returnType);
+		String returnTypeClass = returnArray[0];
+		this.retByteCodeType = returnArray[1];
+		this.targetFunctionDesc = "()" + returnTypeClass;
 
 	}
 
@@ -86,16 +119,16 @@ public class FiledAccessByteCodeWriter
 		return bs.toByteArray();
 	}
 
-	public Object getObject() throws Exception
-	{
-		FiledAccessByteCodeWriter cw = new FiledAccessByteCodeWriter();
-		byte[] bs = cw.getClassByte();
-		Class c = loader.defineClass("org.beetl.sample.s01.Test1", bs);
-		Object o = c.newInstance();
-
-		return o;
-
-	}
+	//	public Object getObject() throws Exception
+	//	{
+	//		FiledAccessByteCodeWriter cw = new FiledAccessByteCodeWriter();
+	//		byte[] bs = cw.getClassByte();
+	//		Class c = loader.defineClass("org.beetl.sample.s01.Test1", bs);
+	//		Object o = c.newInstance();
+	//
+	//		return o;
+	//
+	//	}
 
 	public void write(DataOutputStream out) throws Exception
 	{
@@ -111,8 +144,6 @@ public class FiledAccessByteCodeWriter
 
 		byte[] initMethod = getInitMethod();
 		byte[] valueMethod = this.getProxyMethod();
-		//其他方法
-		//.............
 
 		//constpool-size
 		out.writeShort(this.constPool.size() + 1);
@@ -189,7 +220,15 @@ public class FiledAccessByteCodeWriter
 		//属性长度
 		int attrlen = 4 + 4 + codes.length + 4;
 		out.writeInt(attrlen);
-		out.writeShort(1); //stack
+		if (this.retByteCodeType.equals("D") || this.retByteCodeType.equals("J"))
+		{
+			out.writeShort(2);
+		}
+		else
+		{
+			out.writeShort(1); //stack,default 1,long or double shoud be 2.
+		}
+
 		out.writeShort(3); //local var
 		out.writeInt(codes.length);
 		out.write(codes); //codes;
@@ -213,9 +252,30 @@ public class FiledAccessByteCodeWriter
 		int methodIndex = registerMethod(this.targetCls, this.targetFunction, this.targetFunctionDesc);
 		out.writeShort(methodIndex);
 
-		out.writeByte(INVOKE_STATIC);
-		methodIndex = registerMethod(this.integerClass, this.valueOfFunction, this.intValueOfFunctionDesc);
-		out.writeShort(methodIndex);
+		if (this.retByteCodeType.equals("I"))
+		{
+			out.writeByte(INVOKE_STATIC);
+			methodIndex = registerMethod(this.integerClass, this.valueOfFunction, this.intValueOfFunctionDesc);
+			out.writeShort(methodIndex);
+		}
+		else if (this.retByteCodeType.equals("S"))
+		{
+			out.writeByte(INVOKE_STATIC);
+			methodIndex = registerMethod(this.shortClass, this.valueOfFunction, this.shortValueOfFunctionDesc);
+			out.writeShort(methodIndex);
+		}
+		else if (this.retByteCodeType.equals("D"))
+		{
+			out.writeByte(INVOKE_STATIC);
+			methodIndex = registerMethod(this.doubleClass, this.valueOfFunction, this.doubleValueOfFunctionDesc);
+			out.writeShort(methodIndex);
+		}
+		else if (this.retByteCodeType.equals("J"))
+		{
+			out.writeByte(INVOKE_STATIC);
+			methodIndex = registerMethod(this.longClass, this.valueOfFunction, this.longValueOfFunctionDesc);
+			out.writeShort(methodIndex);
+		}
 
 		out.writeByte(ARETURN - 256);
 		return bs.toByteArray();
@@ -334,5 +394,57 @@ public class FiledAccessByteCodeWriter
 	public short getCurrentIndex()
 	{
 		return (short) (this.constPool.size());
+	}
+
+	private String[] getRetrunTypeDesc(Class c)
+	{
+		StringBuilder sb = new StringBuilder();
+		String returnType = "";
+		if (c.isArray())
+		{
+			sb.append(c.getName().replace(".", "/"));
+		}
+		else if (c == int.class)
+		{
+			sb.append("I");
+			returnType = "I";
+		}
+		else if (c == boolean.class)
+		{
+			sb.append("Z");
+			returnType = "Z";
+		}
+		else if (c == char.class)
+		{
+			sb.append("C");
+			returnType = "C";
+		}
+		else if (c == short.class)
+		{
+			sb.append("S");
+			returnType = "S";
+		}
+		else if (c == float.class)
+		{
+			sb.append("F");
+			returnType = "F";
+		}
+		else if (c == long.class)
+		{
+			sb.append("J");
+			returnType = "J";
+		}
+		else if (c == double.class)
+		{
+			sb.append("D");
+			returnType = "D";
+		}
+		else
+		{
+			sb.append("L").append(c.getName().replace(".", "/")).append(";");
+			returnType = "L";
+		}
+		return new String[]
+		{ sb.toString(), returnType };
 	}
 }

@@ -18,6 +18,9 @@ public class TestUser
 	double salary = 890.12;
 	TestUser lover = null;
 	List friends = new ArrayList();
+	long speed = 128999;
+	String[] contacts = new String[]
+	{ "1", "2" };
 
 	public TestUser(String name)
 	{
@@ -90,6 +93,26 @@ public class TestUser
 	public void setFriends(List friends)
 	{
 		this.friends = friends;
+	}
+
+	public long getSpeed()
+	{
+		return speed;
+	}
+
+	public void setSpeed(long speed)
+	{
+		this.speed = speed;
+	}
+
+	public String[] getContacts()
+	{
+		return contacts;
+	}
+
+	public void setContacts(String[] contacts)
+	{
+		this.contacts = contacts;
 	}
 
 	public static TestUser getTestUser()

@@ -7,10 +7,10 @@ import java.util.Map;
 
 /**
  * beetl小工具,加载classpath下的beetl.properties 来配置模板引擎，通常用于测试，或者 性能要求不高的场景 * @author
- * joelli
+ * 
  * 
  */
-public class BeetlKit
+class BeetlKit
 {
 
 	/**

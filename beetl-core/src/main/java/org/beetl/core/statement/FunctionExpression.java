@@ -1,3 +1,30 @@
+/*
+ [The "BSD license"]
+ Copyright (c) 2011-2014 Joel Li (李家智)
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+ 3. The name of the author may not be used to endorse or promote products
+     derived from this software without specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package org.beetl.core.statement;
 
 import java.lang.reflect.Method;
@@ -6,9 +33,11 @@ import org.beetl.core.Context;
 import org.beetl.core.Function;
 import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
+import org.beetl.core.fun.MutipleFunctionWrapper;
+import org.beetl.core.fun.SingleFunctionWrapper;
 
 /**
- * 
+ * call();
  * @author joelli
  *
  */
@@ -111,27 +140,55 @@ public class FunctionExpression extends Expression
 		{
 			exp.infer(inferCtx);
 		}
-
-		Method call = null;
-
-		try
+		//return type;
+		Class c = null;
+		if (fn instanceof SingleFunctionWrapper)
 		{
-			call = fn.getClass().getMethod("call", Object[].class, Context.class);
+			SingleFunctionWrapper singleWrapper = (SingleFunctionWrapper) fn;
+			c = singleWrapper.getReturnType();
 		}
-		catch (NoSuchMethodException e)
+		else if (fn instanceof MutipleFunctionWrapper)
 		{
-			BeetlException ex = new BeetlException(BeetlException.FUNCTION_INVALID);
-			ex.token = token;
-			throw ex;
+			try
+			{
+				Class[] parasType = new Class[exps.length];
+				int i = 0;
+				for (Expression exp : exps)
+				{
+					parasType[i++] = exp.getType().getClass();
+				}
+				c = ((MutipleFunctionWrapper) fn).getReturnType(parasType);
+			}
+			catch (BeetlException ex)
+			{
+				ex.token = this.token;
+				throw ex;
+			}
+
 		}
-		catch (SecurityException e)
+		else
 		{
-			BeetlException ex = new BeetlException(BeetlException.FUNCTION_INVALID);
-			ex.token = token;
-			throw ex;
+
+			Method call = null;
+			try
+			{
+				call = fn.getClass().getMethod("call", Object[].class, Context.class);
+				c = call.getReturnType();
+			}
+			catch (NoSuchMethodException e)
+			{
+				BeetlException ex = new BeetlException(BeetlException.FUNCTION_INVALID);
+				ex.token = token;
+				throw ex;
+			}
+			catch (SecurityException e)
+			{
+				BeetlException ex = new BeetlException(BeetlException.FUNCTION_INVALID);
+				ex.token = token;
+				throw ex;
+			}
 		}
 
-		Class c = call.getReturnType();
 		Type lastType = new Type(c);
 		if (vas != null)
 		{

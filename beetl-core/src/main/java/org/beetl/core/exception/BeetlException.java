@@ -1,18 +1,66 @@
+/*
+ [The "BSD license"]
+ Copyright (c) 2011-2014 Joel Li (李家智)
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+ 3. The name of the author may not be used to endorse or promote products
+     derived from this software without specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package org.beetl.core.exception;
 
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.statement.GrammarToken;
 
+/**
+ * Beetl异常基类，此异常包含了错误码，错误符号，所属的模板文件，以及错误详情，错误栈
+ * @author joelli
+ *
+ */
 public class BeetlException extends RuntimeException
 {
+	/**
+	 * 错误的Token
+	 */
 	public GrammarToken token = null;
+	/**
+	 * 错误码
+	 */
 	public String detailCode;
+	/**
+	 * 资源id
+	 */
 	public String resourceId = null;
+
+	/**
+	 * GroupTemplate
+	 */
 	public GroupTemplate gt = null;
+	/**
+	 * 模板换行符
+	 */
 	public String cr = null;
 
 	/**
-	 * 指示beetl现在不支持的功能
+	 * 
 	 */
 	public static final String DO_NOT_SUPPORT = "DO_NOT_SUPPORT";
 	/**

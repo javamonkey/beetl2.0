@@ -1,5 +1,0 @@
-switch(a){
-	case 1:
-	case 2: println(ok);break;
-	default:break;
-}

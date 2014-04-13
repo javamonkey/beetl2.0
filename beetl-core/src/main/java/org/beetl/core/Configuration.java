@@ -1,3 +1,30 @@
+/*
+ [The "BSD license"]
+ Copyright (c) 2011-2014 Joel Li (李家智)
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+ 3. The name of the author may not be used to endorse or promote products
+     derived from this software without specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package org.beetl.core;
 
 import java.io.File;
@@ -11,7 +38,7 @@ import java.util.Properties;
 import java.util.Set;
 
 /**
- * 模板配置
+ * 模板配置，核心文件之一
  * 
  * @author joelli
  * 
@@ -19,35 +46,50 @@ import java.util.Set;
 public class Configuration
 {
 
-	/* 模板字符集 */
+	/** 模板字符集 */
 	String charset = "UTF-8";
-	/* 模板占位起始符号 */
+	/** 模板占位起始符号 */
 	String placeholderStart = "${";
-	/* 模板占位结束符号 */
+	/** 模板占位结束符号 */
 	String placeholderEnd = "}";
-	/* 控制语句起始符号 */
+	/** 控制语句起始符号 */
 	String statementStart = "<%";
-	/* 控制语句结束符号 */
+	/** 控制语句结束符号 */
 	String statementEnd = "%>";
-	/* html tag 标示符号 */
+	/** html tag 标示符号 */
 	String htmlTagFlag = "#";
-	/* 是否允许html tag，在web编程中，有可能用到html tag，最好允许 */
+	/**是否允许html tag，在web编程中，有可能用到html tag，最好允许 */
 	boolean isHtmlTagSupport = false;
-	/* 是否允许直接调用class */
+	/** 是否允许直接调用class */
+
 	boolean nativeCall = false;
-	/* 输出模式，默认是字符集输出，改成byte输出提高性能 */
+	/** 输出模式，默认是字符集输出，改成byte输出提高性能 */
 	boolean directByteOutput = false;
-	/* 严格mvc应用，只有变态的的人才打开此选项 */
+	/** 严格mvc应用，只有变态的的人才打开此选项 */
 	boolean isStrict = false;
 
+	/**
+	 * 是否忽略客户端的网络异常
+	 */
 	boolean isIgnoreClientIOError = true;
 
+	/**
+	 * 错误处理类
+	 */
 	String errorHandlerClass = "org.beetl.core.ConsoleErrorHandler";
 
+	/**
+	 * HTML标签开始符号
+	 */
 	String htmlTagStart = "<" + htmlTagFlag;
+	/**
+	 * HTML标签结束符号
+	 */
 	String htmlTagEnd = "</" + htmlTagFlag;
 
-	//类搜索的包名列表
+	/**
+	 * 类搜索的包名列表
+	 */
 	Set<String> pkgList = new HashSet<String>();
 
 	// 关于引擎的设置
@@ -55,7 +97,7 @@ public class Configuration
 	//	String engine = "org.beetl.core.DefaultTemplateEngine";
 	String engine = "org.beetl.core.FastRuntimeEngine";
 	String nativeSecurity = "org.beetl.core.DefaultNativeSecurityManager";
-	String resourceLoader = "org.beetl.core.resource.FileResourceLoader";
+	String resourceLoader = "org.beetl.core.resource.ClasspathResourceLoader";
 
 	//扩展资源
 	Map<String, String> fnMap = new HashMap<String, String>();

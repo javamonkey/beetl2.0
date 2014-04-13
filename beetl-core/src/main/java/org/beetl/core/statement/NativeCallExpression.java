@@ -6,14 +6,14 @@ import java.lang.reflect.InvocationTargetException;
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
+import org.beetl.core.om.ObjectMethodMatchConf;
+import org.beetl.core.om.ObjectUtil;
 import org.beetl.core.statement.nat.ClassNode;
 import org.beetl.core.statement.nat.InstanceNode;
 import org.beetl.core.statement.nat.NativeArrayNode;
 import org.beetl.core.statement.nat.NativeAtrributeNode;
 import org.beetl.core.statement.nat.NativeMethodNode;
 import org.beetl.core.statement.nat.NativeNode;
-import org.beetl.core.util.MethodMatchConf;
-import org.beetl.core.util.ObjectUtil;
 
 /**
  * @xxx.xx()[0].xxx
@@ -278,7 +278,7 @@ public class NativeCallExpression extends Expression
 
 				try
 				{
-					MethodMatchConf conf = ObjectUtil.findMethod(type.cls, method, argTypes);
+					ObjectMethodMatchConf conf = ObjectUtil.findMethod(type.cls, method, argTypes);
 					if (conf == null)
 					{
 						BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION);

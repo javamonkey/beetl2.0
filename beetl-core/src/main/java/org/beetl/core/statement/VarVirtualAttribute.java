@@ -5,8 +5,13 @@ import java.lang.reflect.Method;
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
 import org.beetl.core.VirtualClassAttribute;
-import org.beetl.core.util.ObjectUtil;
+import org.beetl.core.om.ObjectUtil;
 
+/**
+ * list.~size
+ * @author joelli
+ *
+ */
 public class VarVirtualAttribute extends VarAttribute
 {
 	protected String name = null;

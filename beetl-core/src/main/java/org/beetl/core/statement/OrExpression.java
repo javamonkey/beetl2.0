@@ -1,9 +1,14 @@
 package org.beetl.core.statement;
 
-import org.beetl.core.ALU;
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
+import org.beetl.core.misc.ALU;
 
+/**
+ * exp1 or exp2
+ * @author joelli
+ *
+ */
 public class OrExpression extends Expression
 {
 

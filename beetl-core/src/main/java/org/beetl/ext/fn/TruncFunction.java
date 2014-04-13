@@ -39,7 +39,7 @@ import org.beetl.core.Function;
  * ${trunc(12.333,1)},输出是12.3
  *
  */
-@Deprecated
+
 public class TruncFunction implements Function
 {
 

@@ -1,6 +1,6 @@
 /*
  [The "BSD license"]
- Copyright (c) 2011-2013 Joel Li (李家智)
+ Copyright (c) 2011-2014 Joel Li (李家智)
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@ package org.beetl.core;
 import org.beetl.core.statement.Statement;
 
 /**
- * 请使用GeneralBeetlTag
+ * 
  * 
  * 
  * <p/>

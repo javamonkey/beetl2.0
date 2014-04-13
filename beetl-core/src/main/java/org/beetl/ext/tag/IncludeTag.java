@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 import org.beetl.core.ByteWriter;
 import org.beetl.core.Tag;
 import org.beetl.core.Template;
-import org.beetl.core.util.BeetlUtil;
+import org.beetl.core.misc.BeetlUtil;
 
 public class IncludeTag extends Tag
 {

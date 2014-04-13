@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 import org.beetl.core.BodyContent;
 import org.beetl.core.Tag;
 import org.beetl.core.Template;
-import org.beetl.core.util.BeetlUtil;
+import org.beetl.core.misc.BeetlUtil;
 
 /**
  * 提供一个布局功能，每个页面总是由一定布局，如页面头，菜单，页面脚，以及正文 layout标签允许为正文指定一个布局，如下使用方式

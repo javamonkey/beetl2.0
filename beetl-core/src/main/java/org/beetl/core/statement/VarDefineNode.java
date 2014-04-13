@@ -3,6 +3,11 @@ package org.beetl.core.statement;
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
 
+/**
+ * var c 
+ * @author joelli
+ *
+ */
 public class VarDefineNode extends Expression implements IVarIndex
 {
 

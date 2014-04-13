@@ -3,6 +3,11 @@ package org.beetl.core.statement;
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
 
+/**
+ * 表达式语句，如fun();
+ * @author joelli
+ *
+ */
 public class StatementExpression extends Statement
 {
 

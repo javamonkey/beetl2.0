@@ -30,7 +30,7 @@ package org.beetl.core.exception;
 import org.beetl.core.statement.GrammarToken;
 
 /**
- * html解析支持
+ * html解析异常
  * 
  * @author joelli
  * 

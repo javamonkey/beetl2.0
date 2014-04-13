@@ -34,7 +34,7 @@ public class BasicTestCase extends TestCase
 
 		// FileResourceLoader rs = new FileResourceLoader(home,
 		// cf.getCharset());
-		rs = new ClasspathResourceLoader("template");
+		rs = new ClasspathResourceLoader("/template");
 
 		gt = new GroupTemplate(rs, cf);
 

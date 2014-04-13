@@ -236,8 +236,18 @@ public class MutipleFunctionWrapper extends FunctionWrapper
 				parameterContextType = parameterType;
 			}
 
-			ObjectMethodMatchConf matchConf = ObjectUtil.findMethod(target.getClass(), this.functionName,
-					parameterContextType);
+			int index = functionName.lastIndexOf(".");
+			String method = null;
+			if (index != -1)
+			{
+				method = functionName.substring(index+1);
+			}
+			else
+			{
+				method = functionName;
+			}
+
+			ObjectMethodMatchConf matchConf = ObjectUtil.findMethod(target.getClass(), method, parameterContextType);
 			if (matchConf != null)
 			{
 				return matchConf.method.getReturnType();

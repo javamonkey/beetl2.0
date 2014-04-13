@@ -130,13 +130,15 @@ public class Configuration
 	public static String NATIVE_SECUARTY_MANAGER = "NATIVE_SECUARTY_MANAGER";
 	public static String RESOURCE_LOADER = "RESOURCE_LOADER";
 
+	Properties ps = null;
+
 	public Configuration() throws IOException
 	{
 		//总是添加这俩个
 		pkgList.add("java.util.");
 		pkgList.add("java.lang.");
 		//beetl默认
-		Properties ps = new Properties();
+		ps = new Properties();
 		ps.load(Configuration.class.getResourceAsStream("/org/beetl/core/beetl-default.properties"));
 		parseProperties(ps);
 		//应用默认
@@ -648,4 +650,8 @@ public class Configuration
 		this.tagMap = tagMap;
 	}
 
+	public String getProperty(String name)
+	{
+		return this.ps.getProperty(name);
+	}
 }

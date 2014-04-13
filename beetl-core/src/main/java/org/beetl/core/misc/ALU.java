@@ -505,7 +505,9 @@ public class ALU
 					double c = ((Number) o2).doubleValue();
 					if (c == 0)
 					{
-						throw new ArithmeticException(c + "");
+						BeetlException ex = new BeetlException(BeetlException.DIV_ZERO_ERROR);
+						ex.token = node2.token;
+						throw ex;
 					}
 					double a = ((Number) o1).doubleValue() / ((Number) o2).doubleValue();
 					return trim(a, (Number) o1, (Number) o2);

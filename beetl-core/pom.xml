@@ -12,16 +12,7 @@
 	
 	
 	<dependencies>
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm</artifactId>
-		</dependency>
 		
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-util</artifactId>
-			<scope>provided</scope>
-		</dependency>
 		
 		<dependency>
             <groupId>antlr</groupId>
@@ -40,6 +31,12 @@
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr4-runtime</artifactId>
 			<version>4.2</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			
 		</dependency>
 	</dependencies>
 	

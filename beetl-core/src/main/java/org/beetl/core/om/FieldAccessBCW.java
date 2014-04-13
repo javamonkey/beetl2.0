@@ -66,7 +66,7 @@ public class FieldAccessBCW implements BCW
 	static final short ARETURN = 176;
 	static final short CHECK_CAST = 192;
 	static final short INVOKE_STATIC = 184;
-	static final String parentCls = "org/beetl/core/resolver/AttributeAccess";
+	static final String parentCls = "org/beetl/core/om/AttributeAccess";
 	static final String initFunction = "<init>";
 	static final String initFunctionDesc = "()V";
 	static final String valueFunction = "value";
@@ -74,7 +74,7 @@ public class FieldAccessBCW implements BCW
 	static final String code = "Code";
 
 	//outbox,inbox
-	static final String integerClass = "org/beetl/core/util/NumberUtil"; //优化过的拆箱
+	static final String integerClass = "org/beetl/core/misc/NumberUtil"; //优化过的拆箱
 	static final String valueOfFunction = "valueOf";
 	static final String intValueOfFunctionDesc = "(I)Ljava/lang/Integer;";
 

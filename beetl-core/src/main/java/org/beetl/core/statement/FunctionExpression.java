@@ -155,7 +155,7 @@ public class FunctionExpression extends Expression
 				int i = 0;
 				for (Expression exp : exps)
 				{
-					parasType[i++] = exp.getType().getClass();
+					parasType[i++] = exp.getType().cls;
 				}
 				c = ((MutipleFunctionWrapper) fn).getReturnType(parasType);
 			}

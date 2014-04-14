@@ -25,8 +25,8 @@ public class BeetlRenderFactory implements IMainRenderFactory
 
 			Configuration cfg = Configuration.defaultConfiguration();
 			String charset = cfg.getCharset();
-			String realPath = cfg.getProperty("RESOURCE.prefix");
-			if (realPath == null)
+			String realPath = cfg.getProperty("RESOURCE.root");
+			if (realPath != null)
 			{
 				root = root + File.separator + realPath + File.separator;
 			}

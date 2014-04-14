@@ -49,7 +49,24 @@ public class DebugFunction implements Function
 	{
 		if (!enable)
 			return "";
-		System.out.println(paras[0].toString());
+		Object o = paras[0];
+		StringBuilder sb = new StringBuilder();
+		if (o != null)
+		{
+			sb.append(o.toString());
+		}
+		else
+		{
+			sb.append("null");
+		}
+
+		String line = paras[1].toString();
+
+		String resourceId = ctx.getResourceId();
+
+		sb.append(" [在").append(line).append("行@").append(resourceId).append("]");
+
+		System.out.println(sb);
 
 		return "";
 	}

@@ -44,7 +44,7 @@ import org.beetl.core.fun.FileFunctionWrapper;
  */
 public class ClasspathResourceLoader implements ResourceLoader
 {
-	private String prefix = "";
+	private String root = "";
 	boolean checkModified = false;
 	protected String charset = "UTF-8";
 	String functionRoot = "functions";
@@ -62,18 +62,18 @@ public class ClasspathResourceLoader implements ResourceLoader
 	/** 
 	 * @param prefix ，前缀，其后的resourceId对应的路径是prefix+"/"+resourceId
 	 */
-	public ClasspathResourceLoader(String prefix)
+	public ClasspathResourceLoader(String root)
 	{
 
 		this();
-		this.prefix = prefix;
+		this.root = root;
 
 	}
 
-	public ClasspathResourceLoader(String prefix, String charset)
+	public ClasspathResourceLoader(String root, String charset)
 	{
 
-		this.prefix = prefix;
+		this.root = root;
 		this.charset = charset;
 	}
 
@@ -86,7 +86,7 @@ public class ClasspathResourceLoader implements ResourceLoader
 	public Resource getResource(String key)
 	{
 
-		Resource resource = new ClasspathResource(key, prefix + key, this);
+		Resource resource = new ClasspathResource(key, root + key, this);
 		return resource;
 	}
 
@@ -125,14 +125,14 @@ public class ClasspathResourceLoader implements ResourceLoader
 		this.checkModified = checkModified;
 	}
 
-	public String getPrefix()
+	public String getRoot()
 	{
-		return prefix;
+		return root;
 	}
 
-	public void setPrefix(String prefix)
+	public void setRrefix(String root)
 	{
-		this.prefix = prefix;
+		this.root = root;
 	}
 
 	public String getCharset()

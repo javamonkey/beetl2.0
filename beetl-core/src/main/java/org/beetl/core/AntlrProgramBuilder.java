@@ -721,6 +721,17 @@ public class AntlrProgramBuilder
 			}
 
 		}
+		else if (nsId.equals("debug"))
+		{
+			// debug函数传递额外的行数
+			Literal l = new Literal(btToken.line, btToken);
+			Expression[] newExps = new Expression[exps.length + 1];
+			System.arraycopy(exps, 0, newExps, 0, exps.length);
+			newExps[exps.length] = l;
+			exps = newExps;
+			//可以通过配置查看是否支持debug，2.1再做
+
+		}
 		FunctionExpression fe = new FunctionExpression(nsId, exps, vs, btToken);
 		return fe;
 

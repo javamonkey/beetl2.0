@@ -13,7 +13,7 @@ public class Test
 		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader();
 		Configuration cfg = Configuration.defaultConfiguration();
 		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
-		Template t = gt.getTemplate("/org/beetl/sample/s01/hello.txt");
+		Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
 		String str = t.render();
 		System.out.println(str);
 

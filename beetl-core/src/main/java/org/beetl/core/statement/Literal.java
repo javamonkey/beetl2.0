@@ -83,4 +83,9 @@ public class Literal extends Expression implements Comparable
 		return a.compareTo(l.obj);
 
 	}
+
+	public String toString()
+	{
+		return obj.toString();
+	}
 }

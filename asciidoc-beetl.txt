@@ -1,23 +1,28 @@
-= Beetl2.0使用说明书 =
+Beetl2.0使用说明书
+===================
+李家智 <xiandafu@126.com>
+:toc:
+:icons:
+:numbered:
+:website: http://ibeetl.com/
+
+
 
 == 什么是Beetl ==
-Beetl目前版本是2.0，大小600K，相对于其他java模板引擎，具有功能齐全，性能超高，及其编写的模板容易维护等特点。而且，由于类似javascript语法和习俗，具有很低的学习曲线。是新一代的模板引擎。总得来说，它的特性如下：
+Beetl目前版本是2.0，大小650K，相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及及其编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
 
-- 功能完备：同主流的java模板引擎相比，Beetl具有绝大多数功能。Beetl本身也具有很多独特功能来完成模板编写和维护，这是其他模板引擎所不具有的。
-- 非常简单：类似Javascript语法和习俗，只要半小时就能通过办学半猜完全掌握用法。拒绝其他模板引擎那种非人性化的语法和习俗
-- 超高的性能：多家性能评测比较，Beetl 远超过主流java模板引擎性能，切消耗较低的CPU
-- 易于整合：Beetl能很容易的与各种web框架整合，如Spring MVC，JFinal,Struts,Nutz等。
+- 功能完备：同主流的java模板引擎相比，Beetl具有绝大多数功能。适用于各种应用场景，从对响应速度有很高要求的大网站到功能繁多的CMS管理系统都适合。Beetl本身还具有很多独特功能来完成模板编写和维护，这是其他模板引擎所不具有的。
+- 非常简单：类似Javascript语法和习俗，只要半小时就能通过半学半猜完全掌握用法。拒绝其他模板引擎那种非人性化的语法和习俗。
+- 超高的性能：Beetl 远超过主流java模板引擎性能，而且消耗较低的CPU
+- 易于整合：Beetl能很容易的与各种web框架整合，如Spring MVC，JFinal,Struts,Nutz，Jodd等。
 - 支持模板单独开发和测试，即在MVC架构中，即使没有M和C部分，也能开发和测试模板。
-- 扩展和个性化：Beetl支持自定义方法，格式化函数，虚拟属性，标签，和HTML标签. 同时Beetl也支持自定义占位符和控制语句起始符号也支持使用者完全可以打造适合自己的扩展包.
+- 扩展和个性化：Beetl支持自定义方法，格式化函数，虚拟属性，标签，和HTML标签. 同时Beetl也支持自定义占位符和控制语句起始符号也支持使用者完全可以打造适合自己的工具包.
 
 .关于性能
 **********************************************************************
-通过与主流模板引擎Freemaker，Vecloity以及JSP对比，Beetl均远高于前面三个（是freemaker4-6倍）主要通过了优化的渲染引擎，IO的二进制输出，以及ASM的属性调用等手段达到
-可以参考性能测试如下
+通过与主流模板引擎Freemaker，Vecloity以及JSP对比，Beetl均远高于前面三个，这是因为宏观上，通过了优化的渲染引擎，IO的二进制输出，字节码属性访问增强，微观上，通过一维数组保存上下文很静态文本，通过重复使用字节数组java频繁的创建和销毁数组，还使用模板缓存，运行时优化等方法。详情可以参考附录“为什么beetl这么快”
+可以参考性能测试如下Beetl2.0 3倍于Freemaker和 Velocity
 
-1. Beetl性能测试包（包含10种场景性能测试以及基准的书籍渲染模板）
-2. rythm 性能测试 （书籍模板场景）
-3. bsl性能测试 （书籍模板场景）
 
 **********************************************************************
 
@@ -29,22 +34,1609 @@ Beetl有些功能是发展了10多年的模板引擎所不具备的，这些功�
 2. 可单独测试的模板。无需真正的控制层和模型层，Beetl的模板就可以单独开发和*测试*
 3. 同时支持较为松散的MVC和严格的MVC，如果在模板语言里嵌入计算表达式，复杂条件表达式，以及函数调用有干涉业务逻辑嫌疑，你可以禁止使用这些语法。
 4. 强大的安全输出，通过安全输出符号！，能在模板变量，变量属性引用，for循环，占位符输出，try-catch中等各个地方提供安全输出，保证渲染正常
-5. 模板片段输出，可以将零碎的模板集成在一起，通过path#section,这样的方式仅仅输出模板的某一部分
-6. 模板变量：运行将模板的某一部分输出像js那样赋值个一个变量，稍后再处理。利用模板变量能完成非常复杂的页面布局（简单的布局可使用layout标签函数)
-7. 类型推测，能在运行的时候推测模板变量类型，从而优化性能，也可以通过注解的方法显示的说明模板变量属性（这是非必须的，但有助于IDE自动提示功能）
-8. 可插拔的设计，错误信息提示，模板引擎缓存机制，模板资源管理，本地调用的安全管理器都有默认的实现，但又完全可以自定义以适合特定需求
+5. 模板变量：运行将模板的某一部分输出像js那样赋值个一个变量，稍后再处理。利用模板变量能完成非常复杂的页面布局（简单的布局可使用layout标签函数)
+6. 类型推测，能在运行的时候推测模板变量类型，从而优化性能，也可以通过注解的方法显示的说明模板变量属性（这是非必须的，但有助于IDE自动提示功能）
+7. 可插拔的设计，错误信息提示，模板引擎缓存机制，模板资源管理，本地调用的安全管理器都有默认的实现，但又完全可以自定义以适合特定需求
+8. 增强的语法，如for-elsefor, select-case 等，这些语法特别适合模板开发
+9. 性能超高,具有最快的模板解释引擎，同时，又有较低的CPU消耗。适合各类模板引用，如CMS系统，超高访问量的门户系统
 **********************************************************************
 
 
-== 资料 ==
-*这回事资料* 看看
+== 基本用法 ==
+
+
+=== 从GroupTemplate开始 ===
+
+[source,java]
+----------------------------
+StringTemplateResourceLoader resourceLoader = new StringTemplateResourceLoader();		
+Configuration cfg = Configuration.defaultConfiguration();
+GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
+Template t = gt.getTemplate("hello,${name}");
+t.binding("name", "beetl");		
+String str = t.render();
+System.out.println(str);
+
+----------------------------
+
+Beetl的核心是GroupTemplate，创建GroupTemplate需要俩个参数，一个是模板资源加载器，一个是配置类，模板资源加载器Beetl内置了3总，分别是
+
+- StringTemplateResourceLoader：字符串模板加载器，用于加载字符串模板，如本例所示
+- FileResourceLoader：文件模板加载器，需要一个根目录作为参数构造，，传入getTemplate方法的String是模板文件相对于Root目录的相对路径
+- ClasspathResourceLoader：文件模板加载器，模板文件位于Classpath里
+
+代码第5行将变量name传入模板里，其值是“Beetl”。
+代码第6行是渲染模板，得到输出，template提供了多种获得渲染输出的方法，如下
+
+- tempalte.render() 返回渲染结果，如本例所示
+- template.renderTo(Writer) 渲染结果输出到Writer里
+- template.renderTo(OutputStream ) 渲染结果输出到OutputStream里
+
+*************************************************
+1. 关于如何使用模板资源加载器，请参考下一节
+2.  如何对模板进行配置，请参考下一节
+*************************************************
+
+=== 模板基础配置 ===
+
+Beetl提供不但功能齐全，而且还有你很多独特功能，通过简单的配置文件，就可以定义众多的功能，默认情况下，Configuration类总是会先加载默认的配置文件（位于/org/beetl/core/beetl-default.properties）下，其内容片断如下：
+[source,java]
+----------------------------
+#默认配置
+ENGINE=org.beetl.core.FastRuntimeEngine
+DELIMITER_PLACEHOLDER_START=${
+DELIMITER_PLACEHOLDER_END=}
+DELIMITER_STATEMENT_START=<%
+DELIMITER_STATEMENT_END=%>
+DIRECT_BYTE_OUTPUT = FALSE
+HTML_TAG_SUPPORT = true
+HTML_TAG_FLAG = #
+NATIVE_CALL = TRUE
+TEMPLATE_CHARSET = UTF-8
+ERROR_HANDLER = org.beetl.core.ConsoleErrorHandler
+NATIVE_SECUARTY_MANAGER= org.beetl.core.DefaultNativeSecurityManager
+RESOURCE_LOADER=org.beetl.core.resource.ClasspathResourceLoader
+MVC_STRICT = FALSE
+
+#资源配置，resource后的属性只限于特定ResourceLoader 
+#classpath 跟路径
+RESOURCE.root= /
+#是否检测文件变化
+RESOURCE.checkModified = true
+
+
+----------------------------
+
+第2行配置引擎实现类，默认即可.
+
+第3,4行指定了占位符号，默认是${ }.
+
+第4,5行指定了语句的定界符号，默认是<% %>,也可以为定界符指定 @ 和 空字符串，这样，模板的定界符将是@开头，回车换行结尾
+
+第6行指定IO输出模式，默认是FALSE,即通常的字符输出，再考虑高性能情况下，可以设置成true。相信请参考高级用法
+
+第7,8行指定了支持HTML标签，且符号为#，默认配置下，模板引擎识别<#tag ></#tag>这样的类似html标签，并能调用相应的标签函数。
+
+第9行指定允许本地Class直接调用
+
+第10行指定模板字符集是UTF-8
+
+第11行指定异常的解析类，默认是ConsoleErrorHandler，他将在render发生异常的时候在后台打印出错误相信信。
+
+第12行指定了本地Class调用的安全策略
+
+第13行指定了默认使用的模板资源加载器
+
+第14行配置了是否进行严格MVC，通常情况下，此处设置为false.
+
+第19行和21行配置了模板资源加载器的一些属性，如设置跟路径为/,即Classpath的顶级路径，并且总是检测模板是否更改
+
+作为新手，通常只需要关注3,4,5,6行定界符的配置，以及10行模板字符集的配置就可以了，其他配置会在后面章节陆续提到
+
+模板开发者可以创建一个beetl.properties的配置文件，此时，该配置文件将覆盖默认的配置文件属性，比如，你的定界符考虑是<!--: 和 -->,则在beetl.properties加入一行即可,并将此配置文件放入Classpath根目录下即可。 Configuration.defaultConfiguration()总是先加载系统默认的，然后再加载Beetl.properties的配置属性，如果用重复，用后者代替前者的配置
+
+[source,java]
+----------------------------
+#自定义配置
+DELIMITER_STATEMENT_START=<!--:
+DELIMITER_STATEMENT_END=-->
+
+----------------------------
+
+=== 模板资源加载器 ===
+
+资源加载器是根据String值获取Resource实例的工场类，同时资源加载器还要负责响应模板引擎询问模板是否变化的调用。对于新手来说，无需考虑模板资源加载器如何实现，只需要根据自己场景选择系统提供的三类模板资源加载器即可
+
+==== 字符串模板加载器 ====
+
+在创建GroupTemplate过程中，如果传入的是StringTemplateResourceLoader，则允许通过调用gt.getTemplate(String template)来获取模板实例对象，如2.1所示
+
+==== 文件资源模板加载器 ====
+
+更通常情况下，模板资源是以文件形式管理的，集中放在某一个文件目录下（如webapp的模板根目录就可能是WEB-INF/template里），因此，可以使用FileResourceLoader来加载模板实例，如下代码：
+
+[source,java]
+----------------------------
+String root = System.getProperty("user.dir")+File.separator+"template";
+FileResourceLoader resourceLoader = new FileResourceLoader(root,"utf-8");		
+Configuration cfg = Configuration.defaultConfiguration();
+GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
+Template t = gt.getTemplate("/s01/hello.txt");	
+String str = t.render();		
+System.out.println(str);
+
+
+----------------------------
+
+第1行代码指定了模板根目录，即位于项目工程下的template目录
+第2行构造了一个资源加载器，并指定字符集为UTF-8 (也不许指定，因为配置文件默认就是UTF-8);
+第5行通过模板的相对路径/s01/hello.txt来加载模板
+
+
+
+==== Classpath资源模板加载器 ====
+
+还有种常情况下，模板资源是打包到jar文件或者同Class放在一起，因此，可以使用ClasspathResourceLoader来加载模板实例，如下代码：
+
+[source,java]
+----------------------------
+ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader();		
+Configuration cfg = Configuration.defaultConfiguration();
+GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
+Template t = gt.getTemplate("/org/beetl/sample/s01/hello.txt");	
+String str = t.render();
+System.out.println(str);
+
+
+----------------------------
+
+第1行代码指定了模板根目录，即搜索模板的时候从根目录开始，如果new ClasspathResourceLoader("/template"),则表示搜索/template下的模板。此处用空构造函数，表示搜索路径是跟路径，且字符集默认字符集UTF-8.
+
+第4行通过模板的相对路径org/beetl/sample/s01/hello.txt来加载模板
+
+=== 注释 ===
+
+Beetl语法类似js语法，所以注释上也同js一样：
+单行注释采用//
+
+多行注视采用/**/
 
 [source,javascript]
 ----------------------------
-var a = 1 ;
-for(u in users){ // <1>	
+
+<% 
+/*此处是一个定义变量*/
+var a = 3; //定义一个变量.
+
+/* 以下内容都将被注释
+%>
+
+<% */ %>
+
+----------------------------
+
+第2行是一个多行注释
+
+第3行是一个单行注释
+
+第5行到第8行采用的是多行注释，因此里面有内容也是注释，模板将不予处理
+
+=== 控制语句定界符和占位符号 ===
+
+系统默认的的定界符是<% %> ,占位符是${}. 通常还有别的选择，如下
+
+- @ 和回车换行 (此时,模板配置DELIMITER_STATEMENT_END= 或者 DELIMITER_STATEMENT_END=null 都可以)
+- #: 和回车换行
+- <!--： 和 -->
+- <!--# 和 -->
+- <?  和  ?>
+
+你也可以根据自己喜爱来选择定界符好和占位符号
+
+
+
+=== 临时变量定义 ===
+
+在模板中定义的变量成为临时变量，这类似js中采用var 定义的变量，如下例子
+
+[source,javascript]
+----------------------------
+
+<% 
+
+var a = 3;
+var b = 3,c = "abc",d=true,e=null;
+var f = [1,2,3];
+var g = {key1:a,key2:c};
+var i = a+b;
+%>
+
+
+
+----------------------------
+
+=== 全局变量定义 ===
+
+全局变量是通过template.binding传入的变量,这些变量能在模板的任何一个地方，包括子模板都能访问到。如java代码里
+
+[source,java]
+----------------------------
+
+template.binding("list",service.getUserList());
+
+//在模板里
+<% 
+for(user in list){
+%>
+hello,${user.name};
+<%}%>
+
+----------------------------
+
+
+=== 共享变量 ===
+
+共享变量指在所有模板中都可以引用的变量，可过groupTemplate.setSharedVars(Map<String, Object> sharedVars)传入的变量,这些变量能在 *所有模板* 的任何一个地方
+
+[source,java]
+----------------------------
+
+ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader();		
+Configuration cfg = Configuration.defaultConfiguration();
+GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
+Map<String,Object> shared = new HashMap<String,Object>();
+shared.put("name", "beetl");
+gt.setSharedVars(shared);
+Template t = gt.getTemplate("/org/beetl/sample/s0208/t1.txt");	
+String str = t.render();
+System.out.println(str);
+t = gt.getTemplate("/org/beetl/sample/s0208/t2.txt");	
+str = t.render();
+System.out.println(str);
+
+----------------------------
+
+
+
+[source,javascript]
+----------------------------
+
+//t1.txt
+hi,${name}
+//t2.txt
+hello,${name}
+
+----------------------------
+
+=== 模板变量 ===
+
+模板变量是一种特殊的变量，即可以将模板中任何一段的输出赋值到改变量，并允许稍后再其他地方使用，如下代码
+
+[source,javascript]
+----------------------------
+
+<% 
+var content = {
+	var c = "1234";
+	print(c);
+%>
+模板其他内容：
+
+<%}; %>
+
+----------------------------
+
+第2行定义了一个模板变量content = { ...} ; 此变量跟临时变量一样，可以在其他地方使用，最常见的用户是用于复杂的布局。请参考高级用法布局
+
+
+=== 引用属性 ===
+
+属性引用是模板中的重要一部分，beetl支持属性引用如果javascript的支持方式一样，如下
+
+1	 Beetl支持通过”.”号来访问对象的的属性，如果javascript一样。如果User对象有个getName()方法，那么在模板中，可以通过${xxx.name}来访问
+
+2   如果模板变量是数组或者List类，这可以通过[] 来访问，如${userList[0]}
+
+3   如果模板变量是Map类，这可以通过[]来访问，如${map[“name”]},如果key值是字符串类型，也可以使用${map.name}.但不建议这么使用，因为会让模板阅读者误以为是一个Pojo对象
+
+4   Beetl也支持Generic Get方式，即如果对象有一个public Object get(String key)方法，可以通过”.”号或者[]来访问，譬如
+${activityRecord.name}或者${activityRecord[“name”] }都将调用activityRecord的 get(String key)方法。如果对象既有具体属性，又有Generic get（这种模型设计方式是不值得鼓励），则以具体属性优先级高.
+
+5  Beetl也可以通过[]来引用属性，如${user[“name”]} 相当于${user.name}.这跟javascript保持一致。但建议不这么做，因为容易让阅读模板的人误认为这是一个Map类型
+
+6 Beetl 还可以定位额外的对象属性，而无需更改java对象，这叫着虚拟属性，如，对于所有集合，数组，都有共同的虚拟熟悉size.虚拟属性是“.~”+虚拟1属性名
+
+
+[source,java]
+----------------------------
+
+template.binding("list",service.getUserList());
+template.binding("pageMap",service.getPage());
+
+//在模板里
+总共 ${list.~size}
+<% 
+for(user in list){
+%>
+hello,${user.name};
+
+
+<%}%>
+
+当前页${pageMap['page']},总共${pageMap["total"]}
+
+
+----------------------------
+
+
+=== 算数表达式 ===
+
+Beetl支持类似javascript的算术表达式和条件表达式，如+ - * / % 以及（），以及自增++，自减--
+
+[source,javascript]
+----------------------------
+<% 
+var a = 1;
+var b = "hi";
+var c = a++;
+var d = a+100.232;
+var e = (d+12)*a;
+var f = 122228833330322.1112h
+%>
+
+----------------------------
+
+Beetl里定义的临时变量类型默认对应的java是Int型或者double类型，对于模板常用情况说，已经够了.如果需要定义长精度类型（对应java的BigDecimal），则需要在数字末尾加上h以表示这是长精度BigDecimal，其后的计算和输出都将按照长精度类型来考虑。
+
+
+=== 逻辑表达式 ===
+
+Beetl支持类似Javascript,java的条件表达式 如>， <， == ，!=，>= , <= 以及 !, 还有&&和 || 。如下例子
+
+[source,javascript]
+----------------------------
+<% 
+var a = 1;
+var b=="good";
+var c = null;
+
+if(a!=1&&b=="good"&&c==null){
+	......
+}
+%>
+
+----------------------------
+
+
+=== 循环语句 ===
+
+Beetl支持丰富的循环方式，如for-in,for(exp;exp;exp)，以及while循环，以及循环控制语句break;continue; 另外，如果没有进入for循环体，还可以执行elsefor指定的语句。
+
+==== for-in ====
+
+for-in循环支持遍历集合对象，对于List和数组来说以及Iterator，对象就是集合对象，对于Map来说，对象就是Map.entry,如下俩个例子
+
+
+[source,javascript]
+----------------------------
+<% 
+for(user in userList){
+	print(userLP.index);
+	print(user.name);
+
+}
+%>
+
+----------------------------
+
+第三行代码userLP是Beetl隐含定义的变量，能在循环体内使用。其命名规范是item名称后加上LP，他提供了当前循环的信息，如
+
+- userLP.index :当前的索引，从1开始
+- userLP.size:集合的长度
+- userLP.first 是否是第一个
+- userLP.last 是否是最后一个
+- userLP.even 是否是偶数个
+- userPL.odd 是否是奇数过
+
+*************************************************
+
+如何记住后缀是LP，有俩个诀窍，英语棒的是Loop的缩写，拼音好的是老婆的拼音缩写，这可以让程序员每次写到这的时候都会想想老婆（不管有没有，哈哈）
+
+*************************************************
+
+如下是Map使用例子
+[source,javascript]
+----------------------------
+<% 
+for(entry in map){
+	var key = entry.key;
+	var value = entry.value;
+	print(value.name);
+
+}
+%>
+
+----------------------------
+
+
+
+==== for(exp;exp;exp) ====
+
+对于渲染逻辑更为常见的是精典的for循环语句，如下例子
+
+[source,javascript]
+----------------------------
+<% 
+var a = [1,2,3];
+for(var i=0;i<a.~size;i++){
+	print(a[i]);
+}
+%>
+
+----------------------------
+
+
+==== while ====
+
+对于渲染逻辑更为常见的是精典的for循环语句，如下例子
+
+[source,javascript]
+----------------------------
+<% 
+var i = 0;
+while(i<5){
+	print(i);
+	i++;
+}
+%>
+----------------------------
+
+==== elsefor ====
+
+不同于通常程序语言，如果没有进入循环体，则不需额外的处理，模板渲染逻辑更常见情况是如果没有进入循环体，还需要做点什么，因此，对于for循环来说，还有elsefor 用来表达如果循环体没有进入，则执行elsefor 后的语句
+
+[source,javascript]
+----------------------------
+<% 
+var list = [];
+for(item in list){
+	
+}elsefor{
+	print("未有记录");
+}
+%>
+
+
+----------------------------
+
+
+
+=== 条件语句 ===
+
+
+==== if else ====
+
+同js一样，支持if else,如下例子
+
+[source,javascript]
+----------------------------
+<% 
+var a =true;
+var b = 1;
+if(a&&b==1){
+	
+}else if(a){
+	
+}else{
+	
+}
+
+%>
+
+----------------------------
+
+==== switch-case ====
+
+同js一样，支持switch-case,如下例子
+
+[source,javascript]
+----------------------------
+<% 
+var b = 1;
+switch(b){
+	case 0:
+		print("it's 0");
+		break;
+	case 1:
+		print("it's 1");
+		break;
+	default:
+		print("error");
+
+}
+%>
+
+----------------------------
+
+*************************************************
+
+switch变量可以支持任何类型，而不像js那样只能是整形
+
+*************************************************
+
+==== select-case ====
+
+select-case 是switch case的增强版。他允许case 里有逻辑表达式，同时，也不需要每个case都break一下，默认遇到合乎条件的case执行后就退出。
+
+[source,javascript]
+----------------------------
+<% 
+var b = 1;
+select(b){
+	case 0,1:
+		print("it's small int");
+		break;
+	case 2,3:
+		print("it's big int");
+		break;
+	default:
+		print("error");
+
+}
+%>
+
+----------------------------
+
+select 后也不需要一个变量，这样case 后的逻辑表达式将决定执行哪个case.其格式是
+
+[source,javascript]
+----------------------------
+select(){
+	case boolExp,orBoolExp2:
+		doSomething();
+	
+}
+%>
+
+----------------------------
+
+
+
+[source,javascript]
+----------------------------
+<% 
+var b = 1;
+select(){
+	case b<1,b>10:
+		print("it's out of range");
+		break;
+	case b==1:
+		print("it's 1");
+		break;
+	default:
+		print("error");
+
+}
+%>
+
+----------------------------
+
+
+
+
+=== try-catch ===
+
+通常模板渲染逻辑很少用到try-catch 但考虑到渲染逻辑复杂性，以及模板也有不可控的地方，所以提供try catch，在渲染失败的时候仍然能保证输出正常
+
+
+[source,javascript]
+----------------------------
+<% 
+try{
+	callOtherSystemView()
+}catch(error){
+	print("暂时无数据");
+}
+
+%>
+
+----------------------------
+
+error代表了一个异常，你可以通过error.message 来获取可能的错误信息
+
+也可以省略catch部分，这样出现异常，不做任何操作
+
+
+=== 虚拟属性 ===
+
+虚拟属性也是对象的属性，但是虚拟的，非模型对象的真实属性，这样的好处是当模板需要额外的用于显示的属性的时候但又不想更改模型，便可以采用这种办法
+如beetl内置的虚拟属性.~size 针对了数组以及集合类型。
+
+[source,javascript]
+----------------------------
+${user.gender}
+${user.~genderShowName}
+
+----------------------------
+~genderShowName 是虚拟属性，其内部实现根据boolean变量gender来显示性别
+
+如何完成虚拟属性，请参考高级用法
+
+
+=== 函数调用 ===
+
+Beetl内置了少量实用函数，可以在Beetl任何地方调用。如下例子是调用date 函数，不传参数情况下，返回当前日期
+
+[source,javascript]
+----------------------------
+<%
+var date = date();
+var len = strutil.len("cbd");
+println("len="+len);
+
+%>
+
+----------------------------
+
+注意函数名支持namespace方式，因此代码第3行调用的函数是strutil.len 
+
+
+
+
+
+
+*************************************************
+
+定义beetl的方法非常容易，有三种方法
+
+-  实现Function类的call方法，并添加到配置文件里，或者显示的通过代码注册registerFunction(name,yourFunction)
+
+-  可以直接调用registerFunctionPackage(namespace,yourJavaObject),这时候yourJavaObject里的所有public方法都将注册为Beetl方法，方法名是namespace+"."+方法名
+
+- 可以直接写模板文件并且以html作为后缀，放到root/functions目录下，这样此模板文件自动注册为一个函数，其函数名是该模板文件名。
+
+详情请参考高级用法
+
+*************************************************
+
+
+Beetl内置函数请参考附录，以下列出了常用的函数
+
+- date 返回一个java.util.Date类型的变量，如 date() 返回一个当前时间; ${date('2011-1-1','yyyy-MM-dd')} 返回指定日期
+
+- print 打印一个对象  print(user.name);
+
+- println 打印一个对象以及回车换行符号，回车换号符号使用的是模板本身的，而不是本地系统的.
+
+- nvl 函数nvl，如果对象为null，则返回第二个参数，否则，返回自己  nvl(user,"不存在")
+
+- isEmpty 判断变量或者表达式是否为空，变量不存在，变量为null，变量是空字符串，变量是空集合，变量是空数组，此函数都将返回true
+
+- assert 如果表达式为false，则抛出异常
+
+- trunc 截取数字，保留指定的小数位，如trunc(12.456,2) 输出是12.45
+
+- decode  一个简化的if else 结构，如 decode(a,1,"a=1",2,"a=2","不知道了")},如果a是1，这decode输出"a=1",如果a是2，则输出"a==2",
+如果是其他值，则输出"不知道了"
+- debug 在控制台输出debug指定的对象以及所在模板文件以及模板中的行数，如debug(1),则输出1 [在3行@/org/beetl/core/lab/hello.txt]
+
+
+
+
+
+
+
+
+
+=== 安全输出 ===
+
+
+安全输出是任何一个模板引擎必须重视的问题，否则，将极大困扰模板开发者。Beetl中，如果要输出的模板变量为null，则beetl将不做输出，这点不同于JSP，JSP输出null，也不同于Feemarker，如果没有用!,它会报错.
+
+模板中还有俩中情况会导致模板输出异常
+
+- 有时候模板变量并不存在（譬如子模板里）
+- 模板变量为null，但输出的是此变量的一个属性，如${user.wife.name}
+
+
+针对前俩种种情况，可以在变量引用后加上！以提醒beetl这是一个安全输出的变量。
+
+如${{user.wife.name! },即使user不存在，或者user为null，或者user.wife为null，或者user.wife.name为null beetl都不将输出
+
+可以在!后增加一个常量（字符串，数字类型等），或者另外一个变量，方法，本地调用，作为默认输出，譬如：
+
+${user.wife.name!”单身”}，如果user为null，或者user.wife为null，或者user.wife.name为null，输出”单身”
+
+譬如
+
+${user. birthday!@System.constants.DefaultBir}， 表示如果user为null，或者user. birthday为null，输出System.constants.DefaultBir
+
+
+还有一种情况很少发生，但也有可能，输出模板变量发生的任何异常，如变量内部抛出的一个异常
+
+这需要使用格式${!(变量)},这样，在变量引用发生任何异常情况下，都不作输出，譬如
+
+${!(user.name)},，beetl将会调用user.getName()方法，如果发生异常，beetl将不会忽略此异常，继续渲染
+
+
+值得注意的是，在变量后加上!不仅仅可以应用于占位符输出(但主要是应用于占位符输出)，也可以用于表达式中，如：
+
+
+[source,javascript]
+----------------------------
+<%
+
+<%
+var k = user.name!'N/A'+user.age!;
+%>
+${k}
+
+%>
+
+----------------------------
+
+如果user为null，则k值将为N/A
+
+在有些模板里，可能整个模板都需要安全输出，也可能模板的部分需要安全输出，使用者不必为每一个表达式使用！，可以使用beetl的安全指示符号来完成安全输出
+如：
+
+
+[source,javascript]
+----------------------------
+
+<%
+DIRECTIVE SAFE_OUTPUT_OPEN;
+%>
+${user.wife.name}
+模板其他内容，均能安全输出……
+<%
+//关闭安全输出
+DIRECTIVE SAFE_OUTPUT_CLOSE;
+%>
+
+
+----------------------------
+
+
+Beetl不建议每一个页面都使用DIRECTIVE SAFE_OUTPUT_OPEN，这样，如果如果真有不期望的错误，不容易及时发现，其次，安全输出意味着beetl会有额外的代码检测值是否存在或者是否为null，性能会略差点。所以建议及时关闭安全输出（这不是必须的，但页面所有地方是安全输出，可能不容易发现错误）
+
+
+在for-in 循环中 ，也可以为集合变量增加安全输出指示符号，这样，如果集合变量为null，也可以不进入循环体，如：
+
+[source,javascript]
+----------------------------
+
+<%
+var list = null;
+for(item in list!){
+	
+}eslefor{
+	print("no data");
+}
+%>
+
+
+----------------------------
+
+
+=== 格式化 ===
+
+几乎所有的模板语言都支持格式化，Beetl也不列外，如下例子Beetl提供的内置日期格式
+
+[source,javascript]
+----------------------------
+
+<% var date = date(); %>
+Today is ${date,dateFormat="yyyy-MM-dd"}.
+Today is $date,dateFormat$
+
+----------------------------
+
+格式化函数只需要一个字符串作为参数放在=号后面，如果没有为格式化函数输入参数，则使用默认值，dateFormat格式化函数默认值是local
+
+Beetl也允许为指定的java class设定格式化函数，譬如已经内置了对java.util.Date,java.sql.Date 设置了了格式化函数，因此上面的例子可以简化为
+
+[source,javascript]
+----------------------------
+
+${date，“yyyy-MM-dd”}.
+
+----------------------------
+
+
+Beetl针对日期好数字类型提供的默认的格式化函数，在org/beetl/core/beetl-default.properties里，注册了
+
+[source,javascript]
+----------------------------
+
+##内置的格式化函数
+FT.dateFormat =  org.beetl.ext.format.DateFormat
+FT.numberFormat =  org.beetl.ext.format.NumberFormat
+##内置的默认格式化函数
+FTC.java.util.Date = org.beetl.ext.format.DateFormat
+FTC.java.sql.Date = org.beetl.ext.format.DateFormat
+FTC.java.sql.Time = org.beetl.ext.format.DateFormat
+FTC.java.sql.Timestamp = org.beetl.ext.format.DateFormat
+FTC.java.lang.Short = org.beetl.ext.format.NumberFormat
+FTC.java.lang.Long = org.beetl.ext.format.NumberFormat
+FTC.java.lang.Integer = org.beetl.ext.format.NumberFormat
+FTC.java.lang.Float = org.beetl.ext.format.NumberFormat
+FTC.java.lang.Double = org.beetl.ext.format.NumberFormat
+FTC.java.math.BigInteger = org.beetl.ext.format.NumberFormat
+FTC.java.math.BigDecimal = org.beetl.ext.format.NumberFormat
+FTC.java.util.concurrent.atomic.AtomicLong = org.beetl.ext.format.NumberFormat
+FTC.java.util.concurrent.atomic.AtomicInteger = org.beetl.ext.format.NumberFormat
+
+
+----------------------------
+
+
+=== 标签 ===
+
+所谓标签，即允许处理模板文件里的一块内容，功能等于同jsp tag。如Beetl内置的layout标签
+
+index.html
+[source,javascript]
+----------------------------
+<%
+layout("/inc/layout.html",{title:'主题'}){
+%>
+Hello,this is main part
+<%} %>
+----------------------------
+
+layout.html
+[source,javascript]
+----------------------------
+
+title is ${title}
+body content ${bodyContent}
+footer
+----------------------------
+
+第1行变量title来自于layout标签函数的参数
+
+第2行bodyContent 是layout标签体{}渲染后的结果
+
+关于layout标签，参考高级主体布局
+
+Beetl内置了另外一个标签是include,允许 include 另外一个模板文件
+
+[source,javascript]
+----------------------------
+<%
+include("/inc/header.html"){}
+%>
+----------------------------
+
+在标签中，{} 内容将依据标签的实现而执行，layout标签将执行{}中的内容，而include标签则忽略标签体内容。
+
+关于如何实现标签函数，请参考高级主体
+
+=== HTML标签 ===
+
+Beetl 也支持HTML tag形式的标签， 区分beetl的html tag 与 标准html tag。如设定tagFlag为“#”，则如下html tag将被beetl解析
+
+[source,javascript]
+----------------------------
+
+<#footer style=”simple”/>
+<#richeditor id=”rid” name=”rname”  maxlength=”${maxlength}”> ${html} …其他模板内容   </#richdeitor>
+<#html:input  id=’aaaa’ />
+
+----------------------------
+
+
+
+[source,javascript]
+----------------------------
+/*
+Beetl会寻找${root}/htmltag目录下的同名,且以tag为后缀的模板文件，并调用这些同名模板，传入的参数是html tag定义的属性. 如以上代码所示footer 标签对应的实现文件是在${root}/htmltag/footer.tag,内容如下
+*/
+<%if(style==’simple’){%>
+ 请联系我 ${session.user.name}
+<%}else{%>
+请联系我 ${session.user.name},phone:${session.user.phone}
+<%}%>
+
+
+
+----------------------------
+
+
+
+如下还包含了自定义html标签一些一些规则
+
+- HTML标签支持namespace，如html:input,则beetl将寻找${root}/html/input.tag.
+
+- 可以在自定义标签里引用标签体的内容，标签体可以是普通文本，beetl模板，以及嵌套的自定义标签等。如上<#richeditor 标签体里，可用“tagBody”来引用
+
+- HTML自定义标签 的属性值均为字符串 如<#input value=”123” />,在input.tag文件里 变量value的类型是字符串
+
+- 可以在属性标签里引用beetl变量，如<#input value=”${user.age}” />，此时在input.tag里，value的类型取决于user.age
+
+- 在属性里引用beetl变量，不支持格式化，如<#input value=”${user.date,‘yyyy-MM-dd’ }” />,如果需要格式化，需要在input.tag文件里自行格式化
+
+如果在htmltag目录下找不到同名的模板文件，则beetl再次寻找是否有同名注册的标签函数（关于如何写标签函数，参考高级用法），如果存在，则调用标签函数
+
+
+
+
+=== 直接调用java方法和属性 ===
+
+[source,javascript]
+----------------------------
+
+${@user.getMaxFriend(“lucy”)}
+${@user.maxFriend[0].getName()}
+${@com.xxxx.constants.Order.getMaxNum()}
+<%
+var max = @com.xxxx.constants.Order.MAX_NUM;
+%>
+
+----------------------------
+
+可以调用instance的public方法和属性，也可以调用静态类的属性和方法 ,需要加一个/@指示此调用是直接调用class，其后的表达式是java风格的。
+
+*************************************************
+1 GroupTemplate可以配置为不允许直接调用Class，具体请参考配置文件
+
+2 也可以通过安全管理器配置到底哪些类Beetl不允许调用，具体请参考高级用法。默认情况，java.lang.Runtime,和 java.lang.Process不允许在模板里调用
+
+3 请按照java规范写类名和方法名，属性名。这样便于beetl识别到底调用的是哪个类，哪个方法
+
+4 可以省略包名，只用类名。beetl将搜索包路径找到合适的类（需要设置配置IMPORT_PACKAGE=包名;包名，或者调用Configuration.addPkg)方法具体请参考附件配置文件说明
+
+*************************************************
+
+
+=== 严格MVC控制 ===
+
+如果在配置文件中设置了严格MVC，则以下语法将不在模板文件里允许，否则将报出STRICK_MVC 错误
+
+- 定义变量，为变量赋值,如var a = 12是非法的
+
+- 算术表达式 如${user.age+12}是非法的
+
+- 除了只允许布尔以外，不允许逻辑表达式和方法调用 如if(user.gender==1)是非法的
+
+- 方法调用，如${subString(string,1)}是非法的
+
+- Class方法和属性调用，如${@user.getName()}是非法的
+
+- 严格的MVC，非常有助于逻辑与视图的分离，特别当逻辑与视图是由俩个团队来完成的。如果你嗜好严格MVC，可以调用groupTemplate.enableStrict()
+
+
+*************************************************
+
+通过重载AntlrProgramBuilder，可以按照自己的方法控制到底哪些语法是不允许在模板引擎中出现的，但这已经超出了Beetl模板的基础使用
+
+*************************************************
+
+
+
+=== 指令 ===
+
+指令格式为： DIRECTIVE 指令名 指令参数（可选）
+Beetl目前支持安全输出指令，分别是
+
+- DIRECTIVE SAFE_OUTPUT_OPEN ; 打开安全输出功能，此指令后的所有表达式都具有安全输出功能，
+
+- DIRECTIVE SAFE_OUTPUT_CLOSE ; 关闭安全输出功能。详情参考安全输出
+
+- DIRECTIVE DYNAMIC varName1,varName2 ...指示后面的变量是动态类型，Beetl应该考虑为Object. 也可以省略后面的变量名，则表示模板里所有变量都是Object
+
+
+[source,javascript]
+----------------------------
+
+<% DIRECTIVE DYNAMIC idList;
+for(value in idList) .....
+
+----------------------------
+
+
+DYNAMIC 通常用在组件模板里，因为组件模板可以接收任何类型的对象。如列表控件，可以接收任何含有id和 value属性的对象。
+
+*************************************************
+
+1 注意 DYNAMIC 后的变量名也允许用引号，这主要是兼容Beetl1.x版本
+
+2  Beetl1.x 指令都是大写，当前版本也允许小写，如 directive dynamic idList
+
+*************************************************
+
+
+=== 类型声明 ===
+
+Beetl 本质上还是强类型的模板引擎，即模板每个变量类型是特定的，在模板运行过程中，beetl 会根据全局变量自动推测出模板中各种变量和表达式类型。
+也可以通过类型申明来说明beetl全局变量的类型，如下格式
+
+[source,javascript]
+----------------------------
+
+<% 
+/**
+*@type (List<User> idList,User user)
+*/
+for(value in idList) .....
+
+----------------------------
+
+类型申明必须放到多行注释里，格式是@type( ... ),里面的申明类似java方法的参数申明。正如你看到的类型申明是在注释里，也就表明了这在Beetl模板引擎中不是必须的，或者你只需要申明一部分即可，之所以提供可选的类型说明，是因为
+
+- 提高一点性能
+
+- 最重要的是，提高了模板的可维护性。可以让模板维护者知道变量类型，也可以让未来的ide插件根据类型声明来提供属性提示，重构等高级功能
+
+需要注意的是，如果在类型声明里提供的是类名，而不是类全路径，这样必须在配置文件里申明类的搜索路径，默认的搜索路径有java.util.* 和 java.lang.*
+
+=== 错误处理 ===
+
+Beetl能较为详细的显示错误原因，包括错误行数，错误符号，错误内容附近的模板内容，以及错误原因，如果有异常，还包括异常和异常信息。
+默认情况下，仅仅在控制台显示，如下代码：
+
+[source,javascript]
+----------------------------
+
+<%
+var a = 1;
+var b = a/0;
+%>
+
+----------------------------
+
+运行此模板后，错误提示如下：
+
+[source,javascript]
+----------------------------
+>>DIV_ZERO_ERROR:0 位于3行 资源:/org/beetl/sample/s0125/error1.txt
+1|<%
+2|var a = 1;
+3|var b = a/0;
+4|%>
+
+
+----------------------------
+
+
+[source,javascript]
+----------------------------
+
+<%
+var a = 1;
+var b = a
+var c = a+2;
+%>
+
+----------------------------
+
+运行此模板后
+
+[source,javascript]
+----------------------------
+
+>>缺少符号(PARSER_MISS_ERROR):缺少输入 ';' 在 'var' 位于4行 资源:/org/beetl/sample/s0125/error2.txt
+1|<%
+2|var a = 1;
+3|var b = a
+4|var c = a+2;
+5|%>
+
+----------------------------
+
+*************************************************
+
+1 默认的错误处理器仅仅像后台打印错误，并没有抛出异常，如果需要在render错误时候抛出异常到控制层，则可以使用org.beetl.core.ReThrowConsoleErrorHandler。不仅打印异常，还抛出BeetlException，
+
+2  可以自定义异常处理器，比如把错误输出到 作为渲染结果一部分输出，或者输出更美观的html内容等，具体参考高级用法
+
+*************************************************
+
+
+=== Beetl小工具 ===
+
+*************************************************
+
+未完
+
+*************************************************
+
+=== 琐碎功能 ===
+
+- 对齐： 我发现别的模板语言要是做到对齐，非常困难,Beetl你完全不用担心，比如velocty，stringtemlate，freemarker例子都出现了不对齐的情况，影响了美观，Beetl完全无需担心输出对齐
+
+- Escape：可以使用\ 做escape 符号，如\$monkey\$ 将作为一个普通的文本，输出为$monkey$.再如为了在钱后加上美元符号（占位符恰好又是美元符号）可以用这俩种方式hello,it's
+$money$\$, 或者Hello,it's $money+"\$"$ 。如果要输出\符号本生，则需要用俩个\\,这点与javascript，java 语义一致. 
+
+
+== 高级用法 ==
+
+*************************************************
+
+未完
+
+*************************************************
+
+=== 配置GroupTemplate ===
+
+*************************************************
+
+未完
+
+*************************************************
+
+=== 自定义方法 ===
+
+*************************************************
+
+未完
+
+*************************************************
+
+=== 自定义格式化函数 ===
+
+*************************************************
+
+未完
+
+*************************************************
+
+=== 自定义标签 ===
+
+*************************************************
+
+未完
+
+*************************************************
+
+=== 自定义虚拟属性 ===
+
+*************************************************
+
+未完
+
+*************************************************
+
+=== 自定义资源加载器 ===
+
+*************************************************
+
+未完
+
+*************************************************
+
+=== 自定义错误处理器 ===
+
+*************************************************
+
+未完
+
+*************************************************
+
+=== 自定义安全管理器 ===
+
+*************************************************
+
+未完
+
+*************************************************
+
+=== 注册全局共享变量 ===
+
+*************************************************
+
+未完
+
+*************************************************
+
+=== 布局 ===
+
+*************************************************
+
+未完
+
+*************************************************
+=== 模板测试 ===
+
+*************************************************
+
+未完
+
+*************************************************
+
+=== 性能优化 ===
+
+*************************************************
+
+未完
+
+*************************************************
+
+===  分布式缓存模板 ===
+
+*************************************************
+
+未完
+
+*************************************************
+
+
+
+
+
+== Web集成 ==
+
+=== 集成技术开发指南 ===
+
+Web集成模块需要向模板提供web标准的变量，做如下说明
+
+- session  提供了session会话，模板通过session["name"],或者session.name 引用session里的变量
+
+- request  标准的HTTPSerlvetRequest,可以在模板里引用request属性（getter），如${request.url}。
+
+- ctxPath  Web应用ContextPath
+
+- servlet  是WebVariable的实例，包含了HTTPSession,HTTPSerlvetRequest,HTTPSerlvetResponse.三个属性，模板中可以通过request.response,sessin 来引用，如 ${serlvet.request.url};
+
+-  request 中的所有attribute.在模板中可以直接通过attribute name 来引用，如在controller层 request.setAttribute("user",user),则在模板中可以直接用${user.name}
+
+- 所有的GroupTemplate的共享变量
+
+
+
+Web集成模块还需要根据是否采用二进制输出模板，来决定是否采用OutputStream 还是Writer。
+
+Beetl默认提供了WebRender用于帮助web集成开发，所有内置的集成均基于此方法。如果你认为Beetl内置的各个web框架集成功能不够，你可以继承此类，或者参考此类源码重新写，其代码如下
+
+[source,java]
+----------------------------
+
+package org.beetl.ext.web;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
+import java.util.Enumeration;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.beetl.core.GroupTemplate;
+import org.beetl.core.Template;
+import org.beetl.core.exception.BeetlException;
+
+/**
+ *  通常web渲染的类，将request变量赋值给模板，同时赋值的还有session,request,ctxPath
+ *  其他框架可以继承此类做更多的定制
+ * @author joelli
+ *
+ */
+public class WebRender
+{
+	GroupTemplate gt = null;
+
+	public WebRender(GroupTemplate gt)
+	{
+		this.gt = gt;
+	}
+
+	public void render(String key, HttpServletRequest request, HttpServletResponse response)
+	{
+		Writer writer = null;
+		OutputStream os = null;
+		try
+
+		{
+			//			response.setContentType(contentType);
+			Template template = gt.getTemplate(key);
+			Enumeration<String> attrs = request.getAttributeNames();
+
+			while (attrs.hasMoreElements())
+			{
+				String attrName = attrs.nextElement();
+				template.binding(attrName, request.getAttribute(attrName));
+
+			}
+			WebVariable webVariable = new WebVariable();
+			webVariable.setRequest(request);
+			webVariable.setResponse(response);
+			webVariable.setSession(request.getSession());
+
+			template.binding("session", new SessionWrapper(webVariable.getSession()));
+
+			template.binding("servlet", webVariable);
+			template.binding("request", request);
+			template.binding("ctxPath", request.getContextPath());
+
+			modifyTemplate(template, key, request, response);
+
+			if (gt.getConf().isDirectByteOutput())
+			{
+				os = response.getOutputStream();
+				template.renderTo(os);
+			}
+			else
+			{
+				writer = response.getWriter();
+				template.renderTo(writer);
+			}
+
+		}
+		catch (IOException e)
+		{
+			handleClientError(e);
+		}
+		catch (BeetlException e)
+		{
+			handleBeetlException(e);
+		}
+
+		finally
+		{
+			try
+			{
+				if (writer != null)
+					writer.flush();
+				if (os != null)
+				{
+					os.flush();
+				}
+			}
+			catch (IOException e)
+			{
+				handleClientError(e);
+			}
+		}
+	}
+
+	/**
+	 * 可以添加更多的绑定
+	 */
+	protected void modifyTemplate(Template template, String key, HttpServletRequest request,
+			HttpServletResponse response)
+	{
+
+	}
+
+	/**处理客户端抛出的IO异常
+	 * @param ex
+	 */
+	protected void handleClientError(IOException ex)
+	{
+		//do nothing
+	}
+
+	/**处理客户端抛出的IO异常
+	 * @param ex
+	 */
+	protected void handleBeetlException(BeetlException ex)
+	{
+		throw ex;
+	}
+}
+
+
+----------------------------
+
+
+
+=== Serlvet集成 ===
+
+*************************************************
+
+未完
+
+*************************************************
+
+=== SpringMVC集成 ===
+
+*************************************************
+
+未完
+
+*************************************************
+
+=== Jodd集成 ===
+
+*************************************************
+
+未完
+
+*************************************************
+=== JFinal集成 ===
+
+JFinal提供 BeetlRenderFactory ，通过如下注册即可使用beetl模板引擎
+
+[source,java]
+----------------------------
+import org.beetl.ext.jfinal.BeetlRenderFactory
+public class DemoConfig extends JFinalConfig
+{
+	public void configConstant(Constants me)
+	{
+		
+		me.setMainRenderFactory(new BeetlRenderFactory());
+		// 获取GroupTemplate ,可以设置共享变量等操作
+		GroupTemplate groupTemplate = BeetlRenderFactory.groupTemplate ;
+
+}
+
+----------------------------
+
+BeetlRenderFactory 默认使用FileResourceLoader ，其跟目录位于WebRoot目录下，如果你需要修改到别的目录，可以设置配置文件，如
+
+
+[source,java]
+----------------------------
+RESOURCE.root= /WEB-INF/template/
+
+----------------------------
+
+
+
+如下是 BeetlRenderFactory 源码
+
+[source,java]
+----------------------------
+package org.beetl.ext.jfinal;
+
+import java.io.File;
+import java.io.IOException;
+
+import org.beetl.core.Configuration;
+import org.beetl.core.GroupTemplate;
+import org.beetl.core.resource.FileResourceLoader;
+
+import com.jfinal.render.IMainRenderFactory;
+import com.jfinal.render.Render;
+
+public class BeetlRenderFactory implements IMainRenderFactory
+{
+
+	public static String viewExtension = ".html";
+	public static GroupTemplate groupTemplate = null;
+
+	static
+	{
+		try
+		{
+			String path = BeetlRenderFactory.class.getResource("/").getFile();
+			String root = new File(path).getParentFile().getParentFile().getCanonicalPath();
+
+			Configuration cfg = Configuration.defaultConfiguration();
+			String charset = cfg.getCharset();
+			String realPath = cfg.getProperty("RESOURCE.root");
+			if (realPath != null)
+			{
+				root = root + File.separator + realPath + File.separator;
+			}
+			FileResourceLoader resourceLoader = new FileResourceLoader(root, charset);
+			groupTemplate = new GroupTemplate(resourceLoader, cfg);
+
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException("Can notload properties for beetl");
+		}
+	}
+
+	public Render getRender(String view)
+	{
+		return new BeetlRender(groupTemplate, view);
+	}
+
+	public String getViewExtension()
+	{
+		return viewExtension;
+	}
+
+}
+
+
+----------------------------
+
+
+
+BeetlRender 继承了Jfinal Render类，内容如下：
+
+
+[source,java]
+----------------------------
+package org.beetl.ext.jfinal;
+
+import org.beetl.core.GroupTemplate;
+import org.beetl.core.exception.BeetlException;
+import org.beetl.ext.web.WebRender;
+
+import com.jfinal.render.Render;
+import com.jfinal.render.RenderException;
+
+public class BeetlRender extends Render
+{
+	GroupTemplate gt = null;
+	private transient static final String encoding = getEncoding();
+	private transient static final String contentType = "text/html; charset=" + encoding;
+
+	public BeetlRender(GroupTemplate gt, String view)
+	{
+		this.gt = gt;
+		this.view = view;
+	}
+
+	@Override
+	public void render()
+	{
+
+		try
+
+		{
+			response.setContentType(contentType);
+			WebRender webRender = new WebRender(gt);
+			webRender.render(view, request, response);
+
+		}
+		catch (BeetlException e)
+		{
+			throw new RenderException(e);
+		}
+
+	}
+
 }
 ----------------------------
-<1> just test
 
-hello
+
+
+
+=== Nuts集成 ===
+
+*************************************************
+
+未完
+
+*************************************************
+
+=== Struts2集成 ===
+
+*************************************************
+
+未完
+
+*************************************************
+
+
+== 附录 ==
+
+=== 内置方法 ===
+
+*************************************************
+
+未完
+
+*************************************************
+
+=== 内置格式化方法 ===
+
+*************************************************
+
+未完
+
+*************************************************
+
+=== 内置标签函数 ===
+
+*************************************************
+
+未完
+
+*************************************************
+
+=== 性能测试对比 ===
+
+*************************************************
+
+未完
+
+*************************************************
+

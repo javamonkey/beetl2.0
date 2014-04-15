@@ -55,6 +55,8 @@ public class WebRender
 			template.binding("request", request);
 			template.binding("ctxPath", request.getContextPath());
 
+			modifyTemplate(template, key, request, response);
+
 			if (gt.getConf().isDirectByteOutput())
 			{
 				os = response.getOutputStream();
@@ -73,7 +75,7 @@ public class WebRender
 		}
 		catch (BeetlException e)
 		{
-			throw e;
+			handleBeetlException(e);
 		}
 
 		finally
@@ -95,17 +97,10 @@ public class WebRender
 	}
 
 	/**
-	 * 子类可以对GroupTemplate做更多的修改
-	 */
-	protected void moreGroupTemplateConfig()
-	{
-
-	}
-
-	/**
 	 * 可以添加更多的绑定
 	 */
-	protected void moreBinding(Template template)
+	protected void modifyTemplate(Template template, String key, HttpServletRequest request,
+			HttpServletResponse response)
 	{
 
 	}
@@ -116,5 +111,13 @@ public class WebRender
 	protected void handleClientError(IOException ex)
 	{
 		//do nothing
+	}
+
+	/**处理客户端抛出的IO异常
+	 * @param ex
+	 */
+	protected void handleBeetlException(BeetlException ex)
+	{
+		throw ex;
 	}
 }

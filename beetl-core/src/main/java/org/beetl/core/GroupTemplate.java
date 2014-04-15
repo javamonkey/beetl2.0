@@ -72,6 +72,7 @@ public class GroupTemplate
 	ClassSearch classSearch = null;
 	NativeSecurityManager nativeSecurity = null;
 	ErrorHandler errorHandler = null;
+	Map<String, Object> sharedVars = null;
 
 	/**
 	 * 使用默认的配置和默认的模板资源加载器{@link ClasspathResourceLoader}，
@@ -549,6 +550,16 @@ public class GroupTemplate
 	public ErrorHandler getErrorHandler()
 	{
 		return errorHandler;
+	}
+
+	public Map<String, Object> getSharedVars()
+	{
+		return sharedVars;
+	}
+
+	public void setSharedVars(Map<String, Object> sharedVars)
+	{
+		this.sharedVars = sharedVars;
 	}
 
 }

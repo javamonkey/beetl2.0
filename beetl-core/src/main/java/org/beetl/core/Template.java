@@ -32,6 +32,7 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.beetl.core.exception.BeetlException;
@@ -106,7 +107,15 @@ public class Template
 			ctx.byteOutputMode = cf.directByteOutput;
 			ctx.gt = this.gt;
 			ctx.template = this;
+			if (gt.sharedVars != null)
+			{
+				for (Entry<String, Object> entry : gt.sharedVars.entrySet())
+				{
+					ctx.set(entry.getKey(), entry.getValue());
+				}
+			}
 			program.metaData.initContext(ctx);
+
 			program.execute(ctx);
 			byteWriter.flush();
 		}

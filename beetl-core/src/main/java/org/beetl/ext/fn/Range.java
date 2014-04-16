@@ -27,58 +27,78 @@
  */
 package org.beetl.ext.fn;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import org.beetl.core.Context;
 import org.beetl.core.Function;
-import org.stringtemplate.v4.compiler.STParser.ifstat_return;
 
 /**
  * 
  * @author 张健川 dlut.zjc@gmail.com
- * @create 2014-04-16
+ * @create 2014-04-17
  */
 public class Range implements Function
 {
 
 	@Override
-	public Collection<Integer> call(Object[] paras, Context ctx)
+	public Iterator<Integer> call(Object[] paras, Context ctx)
 	{
-		int step = 1;
+		final int param1 = ((Number) paras[0]).intValue();
+		final int param2 = ((Number) paras[1]).intValue();
+		int rStep = 1;
 		if (paras.length > 2)
 		{
-			step = ((Number) paras[2]).intValue();
+			rStep = ((Number) paras[2]).intValue();
 		}
-		Collection<Integer> collection = new ArrayList<Integer>();
-		int min = ((Number) paras[0]).intValue();
-		int max = ((Number) paras[1]).intValue();
-		if ((step < 0 && min < max) || ((step > 0) && (min > max)) || min == max)
+		final int param3 = rStep;
+		if ((rStep < 0 && param1 < param2) || ((rStep > 0) && (param1 > param2)) || param1 == param2 || rStep == 0)
 		{
-			throw new RuntimeException("最值设定方式不正确");
+			throw new RuntimeException("参数设置不正确");
 		}
-		if (min < max)
-		{
-			for (int i = min; i < max; i += step)
+		return new Iterator<Integer>() {
+			private int start = param1;
+			private int end = param2;
+			private int step = param3;
+			private int currentValue = start;
+
+			@Override
+			public boolean hasNext()
 			{
-				collection.add(i);
+				if ((step > 0 && currentValue + step <= end) || (step < 0 && currentValue + step >= end))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
-		}
-		else
-		{
-			for (int i = min; i > max; i += step)
+
+			@Override
+			public Integer next()
 			{
-				collection.add(i);
+				Integer temp = currentValue;
+				currentValue += step;
+				return temp;
 			}
-		}
-		return collection;
+
+			@Override
+			public void remove()
+			{
+
+			}
+		};
 	}
 
 	public static void main(String[] args)
 	{
 		Context ctx = new Context();
 		Range range = new Range();
-		System.out.println(range.call(new Object[]
-		{ 52, 54, 1 }, ctx));
+		Iterator<Integer> iterator = range.call(new Object[]
+		{ 5, 4, -1 }, ctx);
+		while (iterator.hasNext())
+		{
+			int i = (Integer) iterator.next();
+			System.out.println(i);
+		}
 	}
 }

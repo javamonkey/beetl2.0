@@ -45,7 +45,7 @@ import org.beetl.core.fun.FileFunctionWrapper;
 public class ClasspathResourceLoader implements ResourceLoader
 {
 	private String root = "";
-	boolean checkModified = false;
+	boolean autouCheck = false;
 	protected String charset = "UTF-8";
 	String functionRoot = "functions";
 	String functionSuffix = "html";
@@ -105,7 +105,7 @@ public class ClasspathResourceLoader implements ResourceLoader
 	@Override
 	public boolean isModified(Resource key)
 	{
-		if (this.checkModified)
+		if (this.autouCheck)
 		{
 			return key.isModified();
 		}
@@ -115,14 +115,14 @@ public class ClasspathResourceLoader implements ResourceLoader
 		}
 	}
 
-	public boolean isCheckModified()
+	public boolean isAutouCheck()
 	{
-		return checkModified;
+		return autouCheck;
 	}
 
-	public void setCheckModified(boolean checkModified)
+	public void setAutouCheck(boolean autouCheck)
 	{
-		this.checkModified = checkModified;
+		this.autouCheck = autouCheck;
 	}
 
 	public String getRoot()

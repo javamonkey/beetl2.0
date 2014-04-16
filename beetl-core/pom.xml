@@ -22,6 +22,15 @@
             <scope>system</scope>
         </dependency>        
 	
+	
+	
+		<dependency>
+            <groupId>jfinal</groupId>
+            <artifactId>complete</artifactId>  
+            <version>4.2</version>          
+            <systemPath>${basedir}/lib/jfinal-1.6-bin.jar</systemPath>
+            <scope>system</scope>
+        </dependency>     
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>

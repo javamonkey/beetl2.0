@@ -27,6 +27,8 @@
  */
 package org.beetl.core.misc;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
@@ -169,5 +171,20 @@ public class BeetlUtil
 
 		}
 		return w;
+	}
+
+	public static String getWebRoot()
+	{
+		String path = BeetlUtil.class.getResource("/").getFile();
+		try
+		{
+			String root = new File(path).getParentFile().getParentFile().getCanonicalPath();
+			return root;
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException(e);
+		}
+
 	}
 }

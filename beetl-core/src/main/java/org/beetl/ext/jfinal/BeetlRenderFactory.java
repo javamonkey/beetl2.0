@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
+import org.beetl.core.misc.BeetlUtil;
 import org.beetl.core.resource.FileResourceLoader;
 
 import com.jfinal.render.IMainRenderFactory;
@@ -20,8 +21,8 @@ public class BeetlRenderFactory implements IMainRenderFactory
 	{
 		try
 		{
-			String path = BeetlRenderFactory.class.getResource("/").getFile();
-			String root = new File(path).getParentFile().getParentFile().getCanonicalPath();
+
+			String root = BeetlUtil.getWebRoot();
 
 			Configuration cfg = Configuration.defaultConfiguration();
 			String charset = cfg.getCharset();

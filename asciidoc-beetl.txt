@@ -115,23 +115,23 @@ RESOURCE.checkModified = true
 
 第6行指定IO输出模式，默认是FALSE,即通常的字符输出，再考虑高性能情况下，可以设置成true。相信请参考高级用法
 
-第7,8行指定了支持HTML标签，且符号为#，默认配置下，模板引擎识别<#tag ></#tag>这样的类似html标签，并能调用相应的标签函数。
+第8,9行指定了支持HTML标签，且符号为#，默认配置下，模板引擎识别<#tag ></#tag>这样的类似html标签，并能调用相应的标签函数。
 
-第9行指定允许本地Class直接调用
+第10行指定允许本地Class直接调用
 
-第10行指定模板字符集是UTF-8
+第11行指定模板字符集是UTF-8
 
-第11行指定异常的解析类，默认是ConsoleErrorHandler，他将在render发生异常的时候在后台打印出错误相信信。
+第12行指定异常的解析类，默认是ConsoleErrorHandler，他将在render发生异常的时候在后台打印出错误相信信。
 
-第12行指定了本地Class调用的安全策略
+第13行指定了本地Class调用的安全策略
 
-第13行指定了默认使用的模板资源加载器
+第14行指定了默认使用的模板资源加载器
 
-第14行配置了是否进行严格MVC，通常情况下，此处设置为false.
+第15行配置了是否进行严格MVC，通常情况下，此处设置为false.
 
-第19行和21行配置了模板资源加载器的一些属性，如设置跟路径为/,即Classpath的顶级路径，并且总是检测模板是否更改
+第20行和22行配置了模板资源加载器的一些属性，如设置跟路径为/,即Classpath的顶级路径，并且总是检测模板是否更改
 
-作为新手，通常只需要关注3,4,5,6行定界符的配置，以及10行模板字符集的配置就可以了，其他配置会在后面章节陆续提到
+作为新手，通常只需要关注3,4,5,6行定界符的配置，以及11行模板字符集的配置就可以了，其他配置会在后面章节陆续提到
 
 模板开发者可以创建一个beetl.properties的配置文件，此时，该配置文件将覆盖默认的配置文件属性，比如，你的定界符考虑是<!--: 和 -->,则在beetl.properties加入一行即可,并将此配置文件放入Classpath根目录下即可。 Configuration.defaultConfiguration()总是先加载系统默认的，然后再加载Beetl.properties的配置属性，如果用重复，用后者代替前者的配置
 
@@ -720,6 +720,12 @@ Beetl内置函数请参考附录，以下列出了常用的函数
 如果是其他值，则输出"不知道了"
 - debug 在控制台输出debug指定的对象以及所在模板文件以及模板中的行数，如debug(1),则输出1 [在3行@/org/beetl/core/lab/hello.txt]
 
+- parseInt 将数字或者字符解析为整形  如 parseInt("123");
+
+- parseDouble 将数字或者字符解析为浮点类型 如parseDouble("1.23")
+
+- range 接收三个参数，初始值，结束值，还有步增（可以不需要，则默认为1），返回一个Iterator，常用于循环中，如for(var i in range(1,5)) {print(i)},将依次打印1234.
+
 
 
 
@@ -790,7 +796,7 @@ DIRECTIVE SAFE_OUTPUT_OPEN;
 ${user.wife.name}
 模板其他内容，均能安全输出……
 <%
-//关闭安全输出
+//关闭安全输出。
 DIRECTIVE SAFE_OUTPUT_CLOSE;
 %>
 
@@ -1136,11 +1142,38 @@ var c = a+2;
 
 === Beetl小工具 ===
 
-*************************************************
 
-未完
+BeetlKit 提供了一些便利的方法让你立刻能使用Beetl模板引擎。提供了如下方法
 
-*************************************************
+- public static String render(String template, Map<String, Object> paras)
+渲染模板，使用paras参数，渲染结果作为字符串返回
+
+- public static void renderTo(String template, Writer writer, Map<String, Object> paras)
+渲染模板，使用paras参数，渲染结果作为字符串返回
+
+- public static void execute(String script, Map<String, Object> paras)
+执行某个脚本
+
+- 	public static Map execute(String script, Map<String, Object> paras, String[] locals)
+执行某个脚本，将locals指定的变量名和模板执行后相应值放入到返回的Map里
+
+- public static Map executeAndReturnRootScopeVars(String script)
+执行某个脚本，返回所有顶级scope的所有变量和值
+
+- public static String testTemplate(String template, String initValue)
+渲染模板template，其变量来源于intValue脚本运行的结果，其所有顶级Scope的变量都将作为template的变量
+
+
+
+[source,java]
+----------------------------
+
+String template = "var a=1,c=2+1;";
+Map result = executeAndReturnRootScopeVars(template);
+System.out.println(result);
+//输出结果是{c=3, a=1}
+
+----------------------------
 
 === 琐碎功能 ===
 

@@ -61,6 +61,7 @@ public class ProgramBuilderContext
 	int varIndexSize = 0;
 	// 全局变量在空间中的位置
 	public Map<String, Integer> globalIndexMap = new HashMap<String, Integer>();
+	public Map<String, Integer> rootIndexMap = new HashMap<String, Integer>();
 
 	public void enterBlock()
 	{
@@ -156,10 +157,10 @@ public class ProgramBuilderContext
 
 	public void anzlyszeLocal()
 	{
-		anzlysze(this.root, this.globalVar.size());
+		anzlysze(this.root, this.globalVar.size(), true);
 	}
 
-	private void anzlysze(BlockEnvContext block, int nextIndex)
+	private void anzlysze(BlockEnvContext block, int nextIndex, boolean isRoot)
 	{
 
 		for (Entry<String, VarDescrption> entry : block.vars.entrySet())
@@ -170,6 +171,10 @@ public class ProgramBuilderContext
 			for (ASTNode node : vd.where)
 			{
 				((IVarIndex) node).setVarIndex(nextIndex);
+				if (isRoot)
+				{
+					this.rootIndexMap.put(vd.getVarName(), nextIndex);
+				}
 			}
 			nextIndex++;
 			// }
@@ -179,7 +184,7 @@ public class ProgramBuilderContext
 
 		for (BlockEnvContext subBlock : block.blockList)
 		{
-			anzlysze(subBlock, nextIndex);
+			anzlysze(subBlock, nextIndex, false);
 			int inc = subBlock.vars.size();
 			varIndexSize = Math.max(varIndexSize, nextIndex + inc);
 		}

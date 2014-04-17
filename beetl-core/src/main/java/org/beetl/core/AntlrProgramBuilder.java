@@ -223,6 +223,7 @@ public class AntlrProgramBuilder
 		data.statements = ls.toArray(new Statement[0]);
 		data.globalIndexMap = pbCtx.globalIndexMap;
 		data.globalVarAttr = pbCtx.globaVarAttr;
+		data.setTemplateRootScopeIndexMap(pbCtx.rootIndexMap);
 
 		return data;
 

@@ -73,17 +73,17 @@ public class ParseDouble implements Function
 		return result;
 	}
 
-	public static void main(String[] args)
-	{
-		ParseDouble pDouble = new ParseDouble();
-		Context ctx = new Context();
-		System.out.println(pDouble.call(new Object[]
-		{ -01.}, ctx));
-		System.out.println(pDouble.call(new Object[]
-		{ 2332.23213 }, ctx));
-		System.out.println(pDouble.call(new Object[]
-		{ "-1.023" }, ctx));
-		System.out.println(pDouble.call(new Object[]
-		{ "abcd" }, ctx));
-	}
+	//	public static void main(String[] args)
+	//	{
+	//		ParseDouble pDouble = new ParseDouble();
+	//		Context ctx = new Context();
+	//		System.out.println(pDouble.call(new Object[]
+	//		{ -01.}, ctx));
+	//		System.out.println(pDouble.call(new Object[]
+	//		{ 2332.23213 }, ctx));
+	//		System.out.println(pDouble.call(new Object[]
+	//		{ "-1.023" }, ctx));
+	//		System.out.println(pDouble.call(new Object[]
+	//		{ "abcd" }, ctx));
+	//	}
 }

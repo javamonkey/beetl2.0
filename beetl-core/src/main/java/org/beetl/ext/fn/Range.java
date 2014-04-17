@@ -28,6 +28,7 @@
 package org.beetl.ext.fn;
 
 import java.util.Iterator;
+
 import org.beetl.core.Context;
 import org.beetl.core.Function;
 
@@ -89,16 +90,4 @@ public class Range implements Function
 		};
 	}
 
-	public static void main(String[] args)
-	{
-		Context ctx = new Context();
-		Range range = new Range();
-		Iterator<Integer> iterator = range.call(new Object[]
-		{ 5, 4, -1 }, ctx);
-		while (iterator.hasNext())
-		{
-			int i = (Integer) iterator.next();
-			System.out.println(i);
-		}
-	}
 }

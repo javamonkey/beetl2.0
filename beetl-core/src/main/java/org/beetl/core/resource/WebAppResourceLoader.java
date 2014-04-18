@@ -28,21 +28,21 @@
 package org.beetl.core.resource;
 
 import java.io.File;
-import java.net.URL;
 
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Resource;
 import org.beetl.core.ResourceLoader;
 import org.beetl.core.fun.FileFunctionWrapper;
+import org.beetl.core.misc.BeetlUtil;
 
 /**
- * ClassPath加载器
+ * Web应用加载器
  * 
  * @author joelli
  * 
  * 
  */
-public class ClasspathResourceLoader implements ResourceLoader
+public class WebAppResourceLoader implements ResourceLoader
 {
 	private String root = "";
 	boolean autouCheck = false;
@@ -52,28 +52,30 @@ public class ClasspathResourceLoader implements ResourceLoader
 	GroupTemplate gt = null;
 	ClassLoader classLoader = null;
 
-	public ClasspathResourceLoader()
+	public WebAppResourceLoader()
 	{
 		//保留，用于通过配置构造一个ResouceLoader
 		classLoader = this.getClass().getClassLoader();
+		this.root = BeetlUtil.getWebRoot() + File.separator + root;
 
 	}
 
 	/** 
 	 * @param prefix ，前缀，其后的resourceId对应的路径是prefix+"/"+resourceId
 	 */
-	public ClasspathResourceLoader(String root)
+	public WebAppResourceLoader(String root)
 	{
 
 		this();
-		this.root = root;
+		this.root = BeetlUtil.getWebRoot() + File.separator + root;
 
 	}
 
-	public ClasspathResourceLoader(String root, String charset)
+	public WebAppResourceLoader(String root, String charset)
 	{
 
-		this.root = root;
+		this();
+		this.root = BeetlUtil.getWebRoot() + File.separator + root;
 		this.charset = charset;
 	}
 
@@ -86,7 +88,9 @@ public class ClasspathResourceLoader implements ResourceLoader
 	public Resource getResource(String key)
 	{
 
-		Resource resource = new ClasspathResource(key, root + key, this);
+		File file = new File(root, key);
+		Resource resource = new WebFileResource(file, key, this);
+		resource.setResourceLoader(this);
 		return resource;
 	}
 
@@ -132,7 +136,7 @@ public class ClasspathResourceLoader implements ResourceLoader
 
 	public void setRoot(String root)
 	{
-		this.root = root;
+		this.root = BeetlUtil.getWebRoot() + File.separator + root;
 	}
 
 	public String getCharset()
@@ -148,18 +152,11 @@ public class ClasspathResourceLoader implements ResourceLoader
 	@Override
 	public void init(GroupTemplate gt)
 	{
-		URL url = classLoader.getResource("");
+		File root = new File(this.root, this.functionRoot);
 		this.gt = gt;
-		if (url.getProtocol().equals("file"))
+		if (root.exists())
 		{
-			File root = new File(url.getFile(), this.functionRoot);
-			if (root.exists())
-			{
-				String ns = "";
-				String path = "/".concat(this.functionRoot).concat("/");
-				readFuntionFile(root, ns, path);
-			}
-
+			readFuntionFile(root, "", "/".concat(functionRoot).concat("/"));
 		}
 
 	}

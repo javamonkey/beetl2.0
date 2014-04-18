@@ -1,12 +1,10 @@
 package org.beetl.ext.jfinal;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
-import org.beetl.core.misc.BeetlUtil;
-import org.beetl.core.resource.FileResourceLoader;
+import org.beetl.core.resource.WebAppResourceLoader;
 
 import com.jfinal.render.IMainRenderFactory;
 import com.jfinal.render.Render;
@@ -22,16 +20,8 @@ public class BeetlRenderFactory implements IMainRenderFactory
 		try
 		{
 
-			String root = BeetlUtil.getWebRoot();
-
 			Configuration cfg = Configuration.defaultConfiguration();
-			String charset = cfg.getCharset();
-			String realPath = cfg.getProperty("RESOURCE.root");
-			if (realPath != null)
-			{
-				root = root + File.separator + realPath + File.separator;
-			}
-			FileResourceLoader resourceLoader = new FileResourceLoader(root, charset);
+			WebAppResourceLoader resourceLoader = new WebAppResourceLoader();
 			groupTemplate = new GroupTemplate(resourceLoader, cfg);
 
 		}

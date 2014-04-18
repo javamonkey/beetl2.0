@@ -62,4 +62,8 @@ public interface ResourceLoader
 	 */
 	public void init(GroupTemplate gt);
 
+	public void setCharset(String charset);
+
+	public void setRoot(String root);
+
 }

@@ -120,6 +120,8 @@ public class GroupTemplate
 			String value = entry.getValue();
 			ObjectUtil.setSimpleValueByString(resourceLoader, key, value);
 		}
+
+		ObjectUtil.setSimpleValueByString(resourceLoader, "charset", conf.getCharset());
 	}
 
 	/**

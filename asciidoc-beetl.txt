@@ -102,7 +102,7 @@ MVC_STRICT = FALSE
 #classpath 跟路径
 RESOURCE.root= /
 #是否检测文件变化
-RESOURCE.checkModified = true
+RESOURCE.autouCheck= true
 
 
 ----------------------------
@@ -193,6 +193,21 @@ System.out.println(str);
 第1行代码指定了模板根目录，即搜索模板的时候从根目录开始，如果new ClasspathResourceLoader("/template"),则表示搜索/template下的模板。此处用空构造函数，表示搜索路径是跟路径，且字符集默认字符集UTF-8.
 
 第4行通过模板的相对路径org/beetl/sample/s01/hello.txt来加载模板
+
+==== WebApp资源模板加载器 ====
+
+WebAppResourceLoader 是用于web应用的资源模板加载器，默认根路径是WebRoot目录。也可以通过制定root属性来设置相对于WebRoot的的模板根路径，从安全角考虑，建议放到WEB-INF目录下
+
+如下是Jfinal集成 里初始化GroupTemplate的方法
+
+[source,java]
+----------------------------
+Configuration cfg = Configuration.defaultConfiguration();
+WebAppResourceLoader resourceLoader = new WebAppResourceLoader();
+groupTemplate = new GroupTemplate(resourceLoader, cfg);
+----------------------------
+
+
 
 === 注释 ===
 
@@ -1185,91 +1200,606 @@ $money$\$, 或者Hello,it's $money+"\$"$ 。如果要输出\符号本生，则�
 
 == 高级用法 ==
 
-*************************************************
 
-未完
-
-*************************************************
 
 === 配置GroupTemplate ===
 
-*************************************************
+Beetl建议通过配置文件配置配置GroupTemplate，主要考虑到未来可能IDE插件会支持Beetl模板，模板的属性，和函数等如果能通过配置文件获取，将有助于IDE插件识别。 配置GroupTemplate有俩种方法
 
-未完
+- 配置文件： 默认配置在/org/beetl/core/beetl-default.properties 里，Beetl首先加载此配置文件，然后再加载classpath里的beetl.properties,并用后者覆盖前者。配置文件通过Configuration类加载，因此加载完成后，也可以通过此类API来修改配置信息
 
-*************************************************
+- 通过调用GroupTemplate提供的方法来注册函数，格式化函数，标签函数等
+
+配置文件分为三部分，第一部分是基本配置，在第一节讲到过。第二部分是资源类配置，可以在指定资源加载类，以及资源加载器的属性，如下
+
+[source,java]
+-------------------------
+RESOURCE_LOADER=org.beetl.core.resource.ClasspathResourceLoader
+#资源配置，resource后的属性只限于特定ResourceLoader 
+#classpath 跟路径
+RESOURCE.root= /
+#是否检测文件变化
+RESOURCE.autouCheck= true
+-------------------------
+第一行指定了类加载器，第二行指定了模板根目录的路径，此处/ 表示位于classpath 根路径下，第三行是否自动检测模板变化，默认为true，开发环境下自动检测模板是否更改。关于如何如何自定义ResouceLoader，请参考下一章
+
+配置文件第三部分是扩展部分，如方法，格式化函数等
+
+[source,java]
+-------------------------
+#####  扩展 ##############
+## 内置的方法
+FN.date = org.beetl.ext.fn.DateFunction
+FN.nvl = org.beetl.ext.fn.NVLFunction
+.................
+##内置的功能包
+FNP.strutil = org.beetl.ext.fn.StringUtil
+
+##内置的格式化函数
+FT.dateFormat =  org.beetl.ext.format.DateFormat
+FT.numberFormat =  org.beetl.ext.format.NumberFormat
+.................
+
+##内置的默认格式化函数
+FTC.java.util.Date = org.beetl.ext.format.DateFormat
+FTC.java.sql.Date = org.beetl.ext.format.DateFormat
+
+## 标签类
+TAG.include= org.beetl.ext.tag.IncludeTag
+TAG.includeFileTemplate= org.beetl.ext.tag.IncludeTag
+TAG.layout= org.beetl.ext.tag.LayoutTag
+TAG.htmltag= org.beetl.ext.tag.HTMLTagSupportWrapper
+
+-------------------------
+
+fn前缀表示Function，fnp前缀表示FunctionPackage，FT表示format函数，FTC表示类的默认Format函数，TAG表示标签类。Beetl强烈建议通过配置文件加载扩展。以便随后IDE插件能识别这些注册函数
+
 
 === 自定义方法 ===
 
+==== 实现Funtion ====
+
+[source,java]
+-------------------------
+public class Print implements Function
+{
+
+	public String call(Object[] paras, Context ctx)
+	{
+		Object o = paras[0];
+
+		if (o != null)
+		{
+			try
+			{
+				ctx.byteWriter.write(o.toString());
+			}
+			catch (IOException e)
+			{
+				throw new RuntimeException(e);
+			}
+		}
+		return "";
+
+	}
+
+-------------------------
+
+call方法有俩个参数，第一个是数组，这是由模板传入的，对应着模板的参数，第二个是Context，包含了模板的上下文，主要提供了如下属性
+
+- byteWriter 输出流
+- template 模板本身
+- gt GroupTemplate
+- globalVar 该模板对应的全局变量
+- byteOutputMode 模板的输出模式，是字节还是字符
+- safeOutput 模板当前是否处于安全输出模式
+- 其他属性建议不熟悉的开发人员不要乱动
+
 *************************************************
 
-未完
+1 call方法要求返回一个Object，如果无返回，返回null即可
+
+2 为了便于类型判断，call方法最好返回一个具体的类，如date函数返回的就是java.util.Date
+
+3 call方法里的任何异常应该抛出成Runtime异常
 
 *************************************************
+
+
+
+==== 使用普通的java类 ====
+
+尽管实现Function对于模板引擎来说，是效率最高的方式，但考虑到很多系统只有utiil类，这些类里的方法仍然可以注册为模板函数。其规则很简单，就是该类的所有public方法。如果需还要Contrext 变量，则需要在方法最后一个参数加上Context即可，如
+
+
+[source,java]
+-------------------------
+public class util 
+{
+
+	public String print(Object a, Context ctx)
+	{
+		...............
+
+	}
+
+-------------------------
+
+注意
+
+*************************************************
+
+1 从beetl效率角度来讲，采用的普通java类尽量少同名方法。
+
+2 如果确实有同名方法，尽量少的具有同样参数长度的同名方法
+
+3 如果以上俩种情况避免不了，则方法调用效率比较低，beetl将根据参数类型在运行时刻判断是调用哪个方法。找到第一个能调用的方法为此次调用的function。这和java是一样的。
+
+*************************************************
+
+
+
+==== 使用模板文件作为方法 ====
+
+可以不用写java代码，模板文件也能作为一个方法。默认情况下，需要将模板文件放到Root的functions目录下，且扩展名为.html(可以通过ResourceLoader配置文件属性来修改此俩默认值)
+方法参数分别是para1,para2.....
+
+如下root/functions/page.html
+
+[source,javascript]
+
+-------------------------
+<%
+//para0,para1 由函数调用传入
+var current = para0,total = para1,style=para2!'simple'
+%>
+当前页面 ${current},总共${total}
+
+-------------------------
+
+则在模板中
+
+[source,javascript]
+
+-------------------------
+<%
+page(current,total);
+%>
+
+-------------------------
+
+也可以在functions建立子目录，这样function则具有namespace，其值就是文件夹名
 
 === 自定义格式化函数 ===
 
-*************************************************
+需要实现Format接口
 
-未完
+[source,javascript]
 
-*************************************************
+-------------------------
+public class DateFormat implements Format
+{
+
+	public Object format(Object data, String pattern)
+	{
+		if (data == null)
+			return null;
+		if (Date.class.isAssignableFrom(data.getClass()))
+		{
+			SimpleDateFormat sdf = null;
+			if (pattern == null)
+			{
+				sdf = new SimpleDateFormat();
+			}
+			else
+			{
+				sdf = new SimpleDateFormat(pattern);
+			}
+			return sdf.format((Date) data);
+
+		}
+		else
+		{
+			throw new RuntimeException("Arg Error:Type should be Date");
+		}
+	}
+
+-------------------------
+
+data 参数表示需要格式化的对象，pattern表示格式化模式，开发时候需要考虑pattern为null的情况
+
 
 === 自定义标签 ===
 
-*************************************************
+标签形式有俩种，一种是标签函数，第二种是html tag。第二种实际上在语法解析的时候会转化成第一种，其实现是HTMLTagSupportWrapper，此类将会寻找root/htmltag目录下同名的标签文件作为模板来执行。类似普通模板一样，在此就不详细说了
 
-未完
+==== 标签函数 ====
 
-*************************************************
+标签函数类似jsp2.0的实现方式，需要实现Tag类的render方法即可
+
+[source,javascript]
+
+-------------------------
+
+public class DeleteTag extends Tag
+{
+
+	@Override
+	public void render()
+	{
+		// do nothing,just ignore body
+		ctx.byteWriter.write("被删除了，付费可以看")
+
+	}
+
+}
+
+-------------------------
+
+如上一个最简单的Tag，将忽略tag体，并输出内容
+
+
+[source,javascript]
+
+-------------------------
+
+public class XianDeDantengTag extends Tag
+{
+
+	@Override
+	public void render()
+	{
+		doBodyRender();
+
+	}
+
+}
+
+-------------------------
+此类将调用父类方法doBodyRender，渲染tag body体
+
+
+[source,javascript]
+
+-------------------------
+
+public class CompressTag extends Tag
+{
+
+	@Override
+	public void render()
+	{
+		BodyContent  content = getBodyContent();
+		String content = content.getBody();
+		String zip = compress(conent);
+		ctx.byteWriter.write(zip);
+
+	}
+
+}
+
+-------------------------
+此类将调用父类方法getBodyContent ，获得tag body后压缩输出
+
+tag类提供了如下属性和方法供使用
+
+- args  传入标签的参数
+
+- gt GroupTemplate
+
+- ctx  Context
+
+- bw   当前的输出流
+
+- bs  标签体对应的语法树，不熟悉勿动
+
+
 
 === 自定义虚拟属性 ===
 
-*************************************************
+可以为特定类注册一个虚拟属性，也可以为一些类注册虚拟属性
 
-未完
+- public void registerVirtualAttributeClass(Class cls, VirtualClassAttribute virtual) 实现VirtualClassAttribute方法可以为特定类注册一个需要属性，如下代码：
 
-*************************************************
+[source,javascript]
+
+-------------------------
+gt.registerVirtualAttributeClass(User.class, new VirtualClassAttribute() {
+
+	@Override
+	public String eval(Object o, String attributeName, Context ctx)
+	{
+		
+		User user = (User) o;
+		if(attributeName.equals("ageDescritpion")){
+			if (user.getAge() < 10)
+			{
+				return "young";
+			}
+			else
+			{
+				return "old";
+			}
+		}
+		
+
+	}
+
+});
+
+-------------------------
+User类的所有虚拟属性将执行eval方法，此方法根据年纪属性来输出对应的描述。
+
+- public void registerVirtualAttributeEval(VirtualAttributeEval e) 为一些类注册需要属性，VirtualAttributeEval.isSupport方法将判断是否应用虚拟属性到此类
+
+如下是虚拟属性类的定义
+
+[source,java]
+
+-------------------------
+public interface VirtualClassAttribute
+{
+	public Object eval(Object o, String attributeName, Context ctx);
+
+}
+
+
+public interface VirtualAttributeEval extends VirtualClassAttribute
+{
+
+	public boolean isSupport(Class c, String attributeName);
+}
+
+-------------------------
+
 
 === 自定义资源加载器 ===
 
-*************************************************
+如果模板资源来自其他地方，如数据库，或者混合了数据库和物理文件，则需要自定义一个资源加载器。资源加载器需要实现ResourceLoader类。如下：
 
-未完
 
-*************************************************
+[source,javascript]
+
+-------------------------
+public interface ResourceLoader
+{
+
+	/**
+	 * 根据key获取Resource
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public Resource getResource(String key);
+
+	/** 检测模板是否更改，每次渲染模板前，都需要调用此方法，所以此方法不能占用太多时间，否则会影响渲染功能
+	 * @param key
+	 * @return
+	 */
+	public boolean isModified(Resource key);
+
+	/**
+	 * 关闭ResouceLoader，通常是GroupTemplate关闭的时候也关闭对应的ResourceLoader
+	 */
+	public void close();
+
+	/** 一些初始化方法
+	 * @param gt
+	 */
+	public void init(GroupTemplate gt);
+
+	public void setCharset(String charset);
+	
+	
+	public void setRoot(String root);
+
+}
+
+-------------------------
+
+setCharset 和 setRoot 在某些场景下不需要，则不用处理。
+
+
+
+[source,javascript]
+
+-------------------------
+public abstract class Resource
+{
+
+	
+	/**
+	 * 打开一个新的Reader
+	 * 
+	 * @return
+	 */
+	public abstract Reader openReader();
+
+	/**
+	 * 检测资源是否改变
+	 * 
+	 * @return
+	 */
+	public abstract boolean isModified();
+
+	
+
+』
+-------------------------
+
+Resource类需要实现OpenReader方法，以及isModified方法。对于模板内容存储在数据库中，openReader返回一个Clob，isModified 则需要根据改模板内容对应的lastUpdate（通常数据库应该这么设计）来判断模板是否更改
+
+参考例子可以参考beetl自带的ResourceLoader
+
 
 === 自定义错误处理器 ===
 
-*************************************************
+错误处理器需要实现ErrorHandler接口的processExcption(BeetlException beeExceptionos, Writer writer);
 
-未完
+- beeExceptionos，模板各种异常
 
-*************************************************
+- writer 模板使用的输出流。系统自带的并未采用此Writer，而是直接输出到控制台
+
+自定义错误处理可能是有多个原因，比如
+
+1 想将错误输出到页面而不是控制台
+
+2 错误输出美化一下，而不是自带的格式
+
+3 错误输出的内容做调整，如不输出错误行的模板内容，而仅仅是错误提示
+
+4 错误输出到日志系统里
+
+5 不仅仅输出日志，还抛出异常。默认自带的不会抛出异常，ReThrowConsoleErrorHandler 继承了ConsoleErrorHandler方法，打印异常后抛出
+
+
+[source,java]
+
+-------------------------
+
+public class ReThrowConsoleErrorHandler extends ConsoleErrorHandler
+{
+
+	@Override
+	public void processExcption(BeetlException ex, Writer writer)
+	{
+
+		super.processExcption(ex, writer);
+		throw ex;
+
+	}
+
+}
+
+-------------------------
+
+
+
+beetl 提供 ErrorInfo类来wrap BeetlException，转化为较为详细的提示信息，他具有如下信息
+
+- type 一个简单的中文描述
+
+- errorCode 内部使用的错误类型标识
+
+- errorTokenText 错误发生的节点文本
+
+- errorTokenLine 错误行
+
+- msg 错误消息，有可能没有，因为有时候errorCode描述的已经很清楚了
+
+- cause 错误的root 异常，也可能没有。
+
+BeetlException 也包含了一个关键信息就是 resourceId，即出错所在的模板文件
 
 === 自定义安全管理器 ===
 
-*************************************************
+所有模板的本地调用都需要通过安全管理器校验，默认需要实现NativeSecurityManager 的public boolean permit(String resourceId, Class c, Object target, String method) 方法
 
-未完
+如下是默认管理器的实现方法
 
-*************************************************
+[source,java]
+
+-------------------------
+
+public class DefaultNativeSecurityManager implements NativeSecurityManager
+{
+
+	@Override
+	public boolean permit(String resourceId, Class c, Object target, String method)
+	{
+		String name = c.getSimpleName();
+		String pkg = c.getPackage().getName();
+		if (pkg.startsWith("java.lang"))
+		{
+			if (name.equals("Runtime") || name.equals("Process") || name.equals("ProcessBuilder")
+					|| name.equals("System"))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+}
+
+-------------------------
 
 === 注册全局共享变量 ===
 
-*************************************************
-
-未完
-
-*************************************************
+GroupTemplate.setSharedVars(Map<String, Object> sharedVars)
 
 === 布局 ===
 
-*************************************************
+布局可以通过Beetl提供的include,layout 以及模板变量来完成。模板变量能完成复杂的布局
 
-未完
+- 采用layout include
 
-*************************************************
+[source,java]
+
+-------------------------
+ <%
+ //content.html内容如下：
+ layout("/inc/layout.html"){%>
+ this is 正文  
+ ..........
+ <%%}%>
+
+-------------------------
+
+如上一个子页面将使用layout布局页面，layout 页面内容如下
+
+[source,java]
+
+-------------------------
+ <%include("/inc/header.html"){} %>
+ this is content:${layoutContent}
+ this is footer: 
+
+-------------------------
+
+layoutContent 是默认变量，也可以改成其他名字，具体请参考layout标签函数
+
+
+- 采用模板变量和include
+
+[source,java]
+
+-------------------------
+ 
+ <%
+ 	var jsPart = {
+ %>
+   web页面js部分
+
+ <%};%>
+
+ <%
+ 	var htmlPart = {
+ %>
+   web页面html部分
+
+ <%};
+  include("/inc/layout.html",{jsSecition:jsPart,htmlSection:htmlPart})
+ %>
+
+-------------------------
+
+layout.html页面如下：
+[source,html]
+
+-------------------------
+<body>
+<head>
+${jsSection}
+</head>
+<body>
+.......
+${htmlSection}
+</body>
+
+-------------------------
+
 === 模板测试 ===
 
 *************************************************

@@ -605,7 +605,7 @@ public class ObjectUtil
 				}
 			}
 		}
-		throw new RuntimeException("未发现" + methodName);
+		//throw new RuntimeException("未发现" + methodName);
 	}
 
 	/**

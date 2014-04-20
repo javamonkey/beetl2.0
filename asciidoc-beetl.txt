@@ -1,10 +1,11 @@
-Beetl2.0使用说明书
+Beetl2.0使用说明书20140420
 ===================
 李家智 <xiandafu@126.com>
 :toc:
 :icons:
 :numbered:
 :website: http://ibeetl.com/
+
 
 
 
@@ -39,6 +40,25 @@ Beetl有些功能是发展了10多年的模板引擎所不具备的，这些功�
 7. 可插拔的设计，错误信息提示，模板引擎缓存机制，模板资源管理，本地调用的安全管理器都有默认的实现，但又完全可以自定义以适合特定需求
 8. 增强的语法，如for-elsefor, select-case 等，这些语法特别适合模板开发
 9. 性能超高,具有最快的模板解释引擎，同时，又有较低的CPU消耗。适合各类模板引用，如CMS系统，超高访问量的门户系统
+**********************************************************************
+
+
+.联系作者
+**********************************************************************
+作者：闲.大赋 （李家智）
+
+QQ群：350209275
+
+邮件：xiandafu@126.com
+
+Beetl主页：ibeetl.com
+
+源码主页：https://github.com/javamonkey/beetl2.0
+
+工作单位：中国电信系统集成公司
+
+如果有任何疑问或者提交bug，可以直接联系我
+
 **********************************************************************
 
 
@@ -406,7 +426,7 @@ Beetl里定义的临时变量类型默认对应的java是Int型或者double类�
 
 === 逻辑表达式 ===
 
-Beetl支持类似Javascript,java的条件表达式 如>， <， == ，!=，>= , <= 以及 !, 还有&&和 || 。如下例子
+Beetl支持类似Javascript,java的条件表达式 如>， <， == ，!=，>= , <= 以及 !, 还有&&和 || ，还有三元表达式等，如下例子
 
 [source,javascript]
 ----------------------------
@@ -589,11 +609,9 @@ select-case 是switch case的增强版。他允许case 里有逻辑表达式，�
 var b = 1;
 select(b){
 	case 0,1:
-		print("it's small int");
-		break;
+		print("it's small int");		
 	case 2,3:
-		print("it's big int");
-		break;
+		print("it's big int");		
 	default:
 		print("error");
 
@@ -1588,18 +1606,77 @@ public interface ResourceLoader
 	 */
 	public void init(GroupTemplate gt);
 
-	public void setCharset(String charset);
-	
-	
-	public void setRoot(String root);
-
 }
-
 -------------------------
 
-setCharset 和 setRoot 在某些场景下不需要，则不用处理。
+init方法可以初始化GroupTemplate，比如读取配置文件的root属性，autoCheck属性，字符集属性，以及加载functions目录下的所有模板方法
+如FileResourceLoader 的 init方法
+
+[source,javascript]
+
+-------------------------
+@Override
+	public void init(GroupTemplate gt)
+	{
+		Map<String, String> resourceMap = gt.getConf().getResourceMap();
+		if (this.root == null)
+		{
+			this.root = resourceMap.get("root");
+
+		}
+		if (this.charset == null)
+		{
+			this.charset = resourceMap.get("charset");
+
+		}
+		if (this.functionSuffix == null)
+		{
+			this.functionSuffix = resourceMap.get("functionSuffix");
+		}
+
+		this.autouCheck = Boolean.parseBoolean(resourceMap.get("autouCheck"));
+
+		File root = new File(this.root, this.functionRoot);
+		this.gt = gt;
+		if (root.exists())
+		{
+			readFuntionFile(root, "", "/".concat(functionRoot).concat("/"));
+		}
+
+	}
+-------------------------
+
+readFuntionFile 方法将读取functions下的所有模板，并注册为方法
+
+[source,javascript]
+
+-------------------------
+protected void readFuntionFile(File funtionRoot, String ns, String path)
+	{
+		String expected = ".".concat(this.functionSuffix);
+		File[] files = funtionRoot.listFiles();
+		for (File f : files)
+		{
+			if (f.isDirectory())
+			{
+				//读取子目录
+				readFuntionFile(f, f.getName().concat("."), path.concat(f.getName()).concat("/"));
+			}
+			else if (f.getName().endsWith(functionSuffix))
+			{
+				String resourceId = path + f.getName();
+				String fileName = f.getName();
+				fileName = fileName.substring(0, (fileName.length() - functionSuffix.length() - 1));
+				String functionName = ns.concat(fileName);
+				FileFunctionWrapper fun = new FileFunctionWrapper(resourceId);
+				gt.registerFunction(functionName, fun);
+			}
+		}
+	}
+-------------------------
 
 
+Resource类需要实现OpenReader方法，以及isModified方法。对于模板内容存储在数据库中，openReader返回一个Clob，isModified 则需要根据改模板内容对应的lastUpdate（通常数据库应该这么设计）来判断模板是否更改
 
 [source,javascript]
 
@@ -1627,7 +1704,7 @@ public abstract class Resource
 』
 -------------------------
 
-Resource类需要实现OpenReader方法，以及isModified方法。对于模板内容存储在数据库中，openReader返回一个Clob，isModified 则需要根据改模板内容对应的lastUpdate（通常数据库应该这么设计）来判断模板是否更改
+
 
 参考例子可以参考beetl自带的ResourceLoader
 
@@ -1802,28 +1879,43 @@ ${htmlSection}
 
 === 模板测试 ===
 
-*************************************************
+模板允许被单独测试，即使缺少模型。beetl可以通过BeetlKit类来单独测试模板，BeetlKi的方法 public static String testTemplate(String template, String initValue)。要求输入俩个String，第一个是模板本身，第二个是模板的变量，BeetlKit会计算initValue,并得出所有顶层的所有变量周围模型，来渲染Template，比如
 
-未完
+[source,java]
+-------------------------
+String initValue = "var a=1;var session = {user:{id,1,name:'xiandafu'}}";
+String template = "${session["user"].name}";
+String result = BeetlKit.testTemplate(template,initValue);
 
-*************************************************
+-------------------------
+
+运行testTemplate，可以返回"xiandafu";
 
 === 性能优化 ===
 
-*************************************************
+Beetl性能已经很快了，有些策略能更好提高性能
 
-未完
+- 使用二进制输出，此策略可以使模板在语法分析的时候将静态文本转化为二进制，省去了运行时刻编码时间，这是主要性能提高方式
 
-*************************************************
+- 使用FastRuntimeEngine，默认配置。 此引擎能对语法树做很多优化，从而提高运行性能，如生成字节码来访问属性而不是传统的反射访问。关于引擎，可能在新的版本推出更好的引擎，请随时关注
+
+- 通过@type 来申明全局变量类型，这不能提高运行性能，但有助于模板维护
+
+为什么Beetl性能这么好............(待续)
+
+
+
 
 ===  分布式缓存模板 ===
 
+Beetl模板引擎模板在同一个虚拟机里缓存Beetl 脚本。也可以将缓存脚本到其他地方，只要实现Cache接口，并设置ProgramCacheFactory.cache即可，这样GroupTemplate将从你提供的Cache中存取Beetl脚本 
+
+
 *************************************************
 
-未完
+此功能未被很好测试
 
 *************************************************
-
 
 
 
@@ -1986,27 +2078,155 @@ public class WebRender
 
 === Serlvet集成 ===
 
-*************************************************
+只需要在Servlet代码里引用ServletGroupTemplate就能集成Beetl，他提供了一个render(String child, HttpServletRequest request, HttpServletResponse response)方法。例子如下：
 
-未完
 
-*************************************************
+[source,java]
+----------------------------
+protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		
+		response.setContentType("text/html;charset=UTF-8");			
+		//request.setAttribute ....
+		ServletGroupTemplate.instance().render("/index.html", request, response);
+
+	
+	}
+
+----------------------------
+
+ServletGroupTemplate同其他web集成一样，将读取配置文件来配置，如果需要通过代码配置，可以在Serlvet listener里 ServletGroupTemplate.instance().getGroupTemplate()方法获取GroupTemplate
+
+
 
 === SpringMVC集成 ===
 
-*************************************************
+需要做如下配置即可
+[source,xml]
+----------------------------
+<bean id="beetlConfig" class="org.beetl.ext.spring.BeetlGroupUtilConfiguration" init-method="init"/>
+			
+	
+<bean id="viewResolver" class="org.beetl.ext.spring.BeetlSpringViewResolver">
+	<property name="contentType" value="text/html;charset=UTF-8">
+</bean>
 
-未完
+----------------------------
+同其他集成方式一样，模板的配置将放在beetl.properties中。
 
-*************************************************
+如果想获取GroupTemplate,可以调用如下代码
+
+[source,java]
+----------------------------
+BeetlGroupUtilConfiguration config = (BeetlGroupUtilConfiguration) this.getApplicationContext().getBean(
+				"beetlConfig");
+GroupTemplate group = config.getGroupTemplate();
+
+
+----------------------------
+
+
 
 === Jodd集成 ===
 
-*************************************************
+只需要在Action里返回"beetl:....."就可以了，冒号后面是模板路径，请以/开头，如下例子：
 
-未完
+[source,java]
+----------------------------
+@MadvocAction
+public class IndexAction {
+	
+     @Out
+     String value;
 
-*************************************************
+     @Action("/index.html")
+     public String world() {
+        
+         value = "Hello World!";
+         return "beetl:/ok.html";
+     }
+}
+
+
+----------------------------
+
+这样，将访问ROOT/ok.html的模板。如果你想配置GroupTemplate，正如其他集成框架一样，只需要写一个beetl.properties 即可。
+
+如下是集成的类实现，你也可以定制自己的集成方式
+
+[source,java]
+----------------------------
+package org.beetl.ext.jodd;
+
+import java.io.IOException;
+
+import jodd.madvoc.ActionRequest;
+import jodd.madvoc.result.ActionResult;
+
+import org.beetl.core.Configuration;
+import org.beetl.core.GroupTemplate;
+import org.beetl.core.resource.WebAppResourceLoader;
+import org.beetl.ext.web.WebRender;
+
+public class BeetlActionResult implements ActionResult
+{
+
+	public static final String NAME = "beetl";
+	GroupTemplate groupTemplate = null;
+
+	public BeetlActionResult()
+	{
+
+		try
+		{
+
+			Configuration cfg = Configuration.defaultConfiguration();
+			WebAppResourceLoader resourceLoader = new WebAppResourceLoader();
+			groupTemplate = new GroupTemplate(resourceLoader, cfg);
+
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException("加载GroupTemplate失败", e);
+		}
+
+	}
+
+	@Override
+	public void render(ActionRequest actionRequest, Object resultValue) throws Exception
+	{
+		
+		WebRender render = new WebRender(groupTemplate);
+		render.render((String) resultValue, actionRequest.getHttpServletRequest(),
+				actionRequest.getHttpServletResponse());
+
+	}
+
+	@Override
+	public String getResultType()
+	{
+		return NAME;
+	}
+
+	@Override
+	public Class getResultValueType()
+	{
+
+		return String.class;
+	}
+
+	@Override
+	public void init()
+	{
+
+	}
+
+}
+
+
+----------------------------
+
+
 === JFinal集成 ===
 
 JFinal提供 BeetlRenderFactory ，通过如下注册即可使用beetl模板引擎
@@ -2154,17 +2374,109 @@ public class BeetlRender extends Render
 
 === Nuts集成 ===
 
-*************************************************
+Nutz集成提供了 BeetlViewMaker ，实现了 ViewMaker方法，如下代码
 
-未完
 
-*************************************************
+[source,java]
+----------------------------
+public class HelloBeetl {
+	@At("/hello")
+	@Ok("beetl:hello.html")
+	public String doHello() {
+		// do something ....
+		return "";
+	}	
+}
+
+
+----------------------------
+
+代码第三行使用前缀beetl，这表示使用BeetlViewMaker.如下椒BeetlViewMaker实现
+
+[source,java]
+----------------------------
+package org.beetl.ext.nutz;
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.beetl.core.Configuration;
+import org.beetl.core.GroupTemplate;
+import org.beetl.core.resource.WebAppResourceLoader;
+import org.beetl.ext.web.WebRender;
+import org.nutz.ioc.Ioc;
+import org.nutz.mvc.View;
+import org.nutz.mvc.ViewMaker;
+import org.nutz.mvc.view.AbstractPathView;
+
+/**
+ * Beelt for Nutz
+ * 
+ * @author wendal,joelli
+ * 
+ */
+public class BeetlViewMaker implements ViewMaker
+{
+
+	public GroupTemplate groupTemplate;
+	private boolean inited;
+
+	public void init()
+	{
+		if (inited)
+			return;
+
+		Configuration cfg;
+		try
+		{
+			cfg = Configuration.defaultConfiguration();
+			WebAppResourceLoader resourceLoader = new WebAppResourceLoader();
+			groupTemplate = new GroupTemplate(resourceLoader, cfg);
+			inited = true;
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException("加载GroupTemplate失败", e);
+		}
+
+	}
+
+	public void depose()
+	{
+		if (groupTemplate != null)
+			groupTemplate.close();
+	}
+
+	public View make(Ioc ioc, String type, String value)
+	{
+		if (!inited)
+			init();
+		if ("beetl".equals(type))
+			return new AbstractPathView(value) {
+				@SuppressWarnings("unchecked")
+				public void render(HttpServletRequest req, HttpServletResponse resp, Object obj) throws Throwable
+				{
+
+					String child = evalPath(req, obj);
+					WebRender render = new WebRender(groupTemplate);
+					render.render(child, req, resp);
+
+				}
+			};
+		return null;
+	}
+}
+
+----------------------------
+
 
 === Struts2集成 ===
 
 *************************************************
 
-未完
+暂时不支持，稍后退出
 
 *************************************************
 
@@ -2173,33 +2485,209 @@ public class BeetlRender extends Render
 
 === 内置方法 ===
 
-*************************************************
+==== 常用内置方法 ====
+- date 返回一个java.util.Date类型的变量，如 date() 返回一个当前时间; ${date('2011-1-1','yyyy-MM-dd')} 返回指定日期
 
-未完
+- print 打印一个对象  print(user.name);
 
-*************************************************
+- println 打印一个对象以及回车换行符号，回车换号符号使用的是模板本身的，而不是本地系统的.
 
+- nvl 函数nvl，如果对象为null，则返回第二个参数，否则，返回自己  nvl(user,"不存在")
+
+- isEmpty 判断变量或者表达式是否为空，变量不存在，变量为null，变量是空字符串，变量是空集合，变量是空数组，此函数都将返回true
+
+- assert 如果表达式为false，则抛出异常
+
+- trunc 截取数字，保留指定的小数位，如trunc(12.456,2) 输出是12.45
+
+- decode  一个简化的if else 结构，如 decode(a,1,"a=1",2,"a=2","不知道了")},如果a是1，这decode输出"a=1",如果a是2，则输出"a==2",
+如果是其他值，则输出"不知道了"
+- debug 在控制台输出debug指定的对象以及所在模板文件以及模板中的行数，如debug(1),则输出1 [在3行@/org/beetl/core/lab/hello.txt]
+
+- parseInt 将数字或者字符解析为整形  如 parseInt("123");
+
+- parseDouble 将数字或者字符解析为浮点类型 如parseDouble("1.23")
+
+- range 接收三个参数，初始值，结束值，还有步增（可以不需要，则默认为1），返回一个Iterator，常用于循环中，如for(var i in range(1,5)) {print(i)},将依次打印1234.
+
+==== 字符串相关方法 ====
+
+- strutil.startWith	${ strutil.startWith(“hello”,”he”) 输出是true
+
+- strutil.endWith	${ strutil.endWith(“hello”,”o”) 输出是true
+
+- strutil.length	${ strutil. length (“hello”),输出是5
+
+- strutil.subString	${ strutil.subString (“hello”,1),输出是“ello”
+
+- strutil.subStringTo	${ strutil.subStringTo (“hello”,1,2),输出是“el”
+
+- strutil.split	${ strutil.split (“hello,joeli”,”,”),输出是数组，有俩个元素，第一个是hello，第二个是joelli”
+
+- strutil.contain	${ strutil.split (“hello,”el”),输出是true
+
+- strutil.toUpperCase	${ strutil.toUpperCase (“hello”),输出是HELLO
+
+- strutil.toLowerCase	${ strutil.toLowerCase (“Hello”),输出是hello
+
+- strutil.replace	${ strutil.replace (“Hello”,”lo”,”loooo”),输出是helloooo
+
+- strutil.format	${ strutil.format (“hello,{0}, my age is {1}”,”joeli”,15),输出是hello,joelli, my age is 15.
+具体请参考http://docs.oracle.com/javase/6/docs/api/java/text/MessageFormat.html
+
+- strutil.trim	去掉字符串的尾部空格
+
+- strutil.formatDate	Var a = strutil.formatDate(user.bir,’yyyy-MM-dd’);
+
+==== 数组相关方法 ====
+
+- array.range  返回数组或者Collection一部分，接受三个参数，第一个是数组或者Collection子类，第二，三个参数分别是起始位置
+
+- array.remove 删除某个数组或者Collection的一个元素，并返回该数组或者Collection.第一个是数组或者Collection子类,第二个参数是元素
+
+- array.add 向数组或者Collection添加一个元素，并返回该数组或者Collection。第一个是数组或者Collection子类,第二个参数是元素
+
+- array.contain 判断数组或者元素是否包含元素，如果包含，返回true。否则false。第一个是数组或者Collection子类,第二个参数是元素
+
+ 
 === 内置格式化方法 ===
 
-*************************************************
+- dateFormat	日期格式化函数，如 ${date,dateFormat='yyyy-Mm-dd'}，等于符号后的参数也可以没有，则使用本地默认来做格式化如
+${date,dateFormat}
 
-未完
+- numberFormat	${0.345,numberFormat="##.#%"} 输出是 34.5%,具体请参考文档 http://docs.oracle.com/javase/6/docs/api/java/text/DecimalFormat.html
 
-*************************************************
+
+
+
 
 === 内置标签函数 ===
 
+- include	include一个模板，如 : 
+
+[source,javascript]
+----------------------------
+
+ <%include("/header.html"){}%>
+
+----------------------------
+
+如果想往子模板中传入参数，则可以后面跟一个json变量
+
+[source,javascript]
+----------------------------
+
+   <%includeFileTemplate("/header.html",{'user',user:'id',user.id}){}%> 
+
+----------------------------
+
+这样user，和id 可以在header.html被引用，并成为header.html的全局变量
+
+
 *************************************************
 
-未完
+(beetl1.2 也叫includeFileTemplate ，2.0仍然支持，但不再文档里体现了)
 
 *************************************************
+
+
+ - layout	提供一个布局功能，每个页面总是由一定布局，如页面头，菜单，页面脚，以及正文。 layout标签允许为正文指定一个布局，如下使用方式
+ 
+ content.html内容如下：
+
+[source,javascript]
+----------------------------
+ <%
+ //content.html内容如下：
+ layout("/inc/layout.html"){%>
+ this is 正文
+ ..........
+ <%%}%>
+
+----------------------------
+
+ layout.html 是布局文件，内容如下•
+ 
+[source,javascript]
+----------------------------
+ <%
+ <%include("/inc/header.html"){} %>
+ this is content:${layoutContent}
+ this is footer:
+
+ <%%}%>
+
+----------------------------
+
+ 
+ 运行content.html模板文件后，，正文文件的内容将被替换到layoutContent的地方，变成如下内容
+ 
+ this is header
+ this is content:this is 正文  
+ ............
+ this is footer:
+
+如果想往layout页面传入参数，则传入一个json变量，如下往layout.html页面传入一个用户登录时间
+
+[source,javascript]
+----------------------------
+ <%
+  layout("/inc/header.html",{'date':user.loginDate,'title':"内容页面"}){%>
+ this is 正文  
+ ..........
+
+ <%%}%>
+
+----------------------------
+
+
+如果layoutContent 命名有冲突，可以在layout第三个参数指定，如
+
+[source,javascript]
+----------------------------
+ <%
+ 
+ layout("/inc/header.html",{'date':user.loginDate,'title':"内容页面"},"myLayoutContent"){%>
+ this is 正文  
+ ..........
+
+ <%}%>
+----------------------------
+
+
+- cache	能Cache标签的内容，并指定多长时间刷新，如
+
+
+[source,javascript]
+----------------------------
+<%:cache('key2',10,false){  %>
+内容体
+<%}%>
+----------------------------
+
+需要指定三个参数，第一个是cache的Key值，第二个是缓存存在的时间，秒为单位，第三个表示是否强制刷新•，false表示不，true表示强制刷新
+Cache默认实现org.beetl.ext.tag.cache.SimpleCacheManager. 你可以设置你自己的Cache实现，通过调用CacheTag. cacheManager= new YourCacheImplementation();
+
+可以在程序里调用如下方法手工删除Cache：
+
+
+[source,java]
+----------------------------
+public void clearAll();
+
+public void clearAll(String key);
+
+public void clearAll(String... keys);
+----------------------------
+
+
+
+
+
 
 === 性能测试对比 ===
 
-*************************************************
+测试结果：3倍于Freemaker，具体见http://my.oschina.net/u/567839/blog/212727
+测试用例 https://github.com/javamonkey/ebm
 
-未完
-
-*************************************************
 

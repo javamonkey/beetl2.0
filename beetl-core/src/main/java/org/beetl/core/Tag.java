@@ -57,7 +57,9 @@ public abstract class Tag
 
 	protected void doBodyRender()
 	{
+
 		bs.execute(ctx);
+
 	}
 
 	protected BodyContent getBodyContent()

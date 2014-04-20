@@ -101,9 +101,21 @@ public class ObjectUtil
 	 * @param attrName
 	 * @return
 	 */
-	public static String getMethod(String attrName)
+	public static String getGetMethod(String attrName)
 	{
 		StringBuilder mbuffer = new StringBuilder("get");
+		mbuffer.append(attrName.substring(0, 1).toUpperCase()).append(attrName.substring(1));
+		return mbuffer.toString();
+	}
+
+	/** 已知属性名，得出set方法，如属性名是name,get方法是setName
+	 * 遵循javabean规范
+	 * @param attrName
+	 * @return
+	 */
+	public static String getSetMethod(String attrName)
+	{
+		StringBuilder mbuffer = new StringBuilder("set");
 		mbuffer.append(attrName.substring(0, 1).toUpperCase()).append(attrName.substring(1));
 		return mbuffer.toString();
 	}
@@ -136,7 +148,7 @@ public class ObjectUtil
 			return invoker;
 		}
 		//try get
-		String methodName = getMethod(name);
+		String methodName = getGetMethod(name);
 		Method method = getGetMethod(c, methodName, null);
 		if (method != null)
 		{
@@ -534,78 +546,6 @@ public class ObjectUtil
 		{
 			throw new RuntimeException(e);
 		}
-	}
-
-	/** 调用某个对象的methodName方法，传入值value根据目标方法的参数类型做转化。此接口用于读取配置文件，并根据key-value设置配置类
-	 * 
-	 * @param o
-	 * @param methodName
-	 * @param value
-	 */
-	public static void setSimpleValueByString(Object o, String methodName, String value)
-	{
-
-		Method[] ms = o.getClass().getMethods();
-		for (Method m : ms)
-		{
-			if (m.getName() == methodName)
-			{
-				Class[] paras = m.getParameterTypes();
-				if (paras.length == 1)
-				{
-					Class type = paras[0];
-					Object parasValue = null;
-					if (type == String.class)
-					{
-						parasValue = value;
-					}
-					else if (type == Boolean.class || type == boolean.class)
-					{
-						parasValue = Boolean.valueOf(value);
-					}
-					else if (type == Integer.class || type == int.class)
-					{
-						parasValue = Integer.parseInt(value);
-					}
-					else if (type == Long.class || type == Long.class)
-					{
-						parasValue = Long.parseLong(value);
-					}
-					else if (type == Float.class || type == float.class)
-					{
-						parasValue = Float.parseFloat(value);
-					}
-					else if (type == Double.class || type == double.class)
-					{
-						parasValue = Double.parseDouble(value);
-					}
-					else
-					{
-						throw new RuntimeException("属性未支持" + methodName + " type=" + type);
-					}
-					try
-					{
-						m.invoke(o, new Object[]
-						{ parasValue });
-					}
-					catch (IllegalArgumentException e)
-					{
-						throw new RuntimeException(e);
-					}
-					catch (IllegalAccessException e)
-					{
-						// TODO Auto-generated catch block
-						throw new RuntimeException(e);
-					}
-					catch (InvocationTargetException e)
-					{
-						throw new RuntimeException(e.getTargetException());
-					}
-
-				}
-			}
-		}
-		//throw new RuntimeException("未发现" + methodName);
 	}
 
 	/**

@@ -11,6 +11,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.beetl.core.AntlrProgramBuilder;
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
+import org.beetl.core.Resource;
 import org.beetl.core.TemplateEngine;
 import org.beetl.core.parser.BeetlAntlrErrorStrategy;
 import org.beetl.core.parser.BeetlLexer;
@@ -25,7 +26,8 @@ public class DefaultTemplateEngine implements TemplateEngine
 	BeetlAntlrErrorStrategy antlrErrorStrategy = new BeetlAntlrErrorStrategy();
 
 	@Override
-	public Program createProgram(String id, Reader reader, Map<Integer, String> textMap, String cr, GroupTemplate gt)
+	public Program createProgram(Resource resource, Reader reader, Map<Integer, String> textMap, String cr,
+			GroupTemplate gt)
 	{
 		ANTLRInputStream input;
 		try
@@ -52,7 +54,8 @@ public class DefaultTemplateEngine implements TemplateEngine
 		ProgramMetaData data = pb.build(tree);
 		Program program = new Program();
 		program.metaData = data;
-		program.id = id;
+		program.id = resource.getId();
+		program.rs = resource;
 		program.gt = gt;
 
 		program.metaData.staticTextArray = new Object[textMap.size()];

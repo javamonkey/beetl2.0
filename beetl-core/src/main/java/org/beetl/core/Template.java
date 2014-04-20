@@ -121,6 +121,7 @@ public class Template
 		}
 		catch (BeetlException e)
 		{
+			//			e.printStackTrace();
 			Writer w = BeetlUtil.getWriterByByteWriter(ctx.byteWriter);
 			e.resourceId = this.program.id;
 			e.gt = this.program.gt;

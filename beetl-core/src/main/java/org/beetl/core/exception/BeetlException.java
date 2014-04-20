@@ -218,7 +218,8 @@ public class BeetlException extends RuntimeException
 
 	public String toString()
 	{
-		return "Error:" + detailCode + "at " + token.line + super.getMessage() != null ? super.getMessage() : "";
+		return detailCode;
+		//		return "Error:" + detailCode + "at " + token.line + super.getMessage() != null ? super.getMessage() : "";
 	}
 
 }

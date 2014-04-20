@@ -106,9 +106,4 @@ public class StringUtil
 		return sd.format(o);
 	}
 
-	public int len(String str)
-	{
-		return str.length();
-	}
-
 }

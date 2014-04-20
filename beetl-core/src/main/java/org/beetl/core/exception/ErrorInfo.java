@@ -89,7 +89,15 @@ public class ErrorInfo
 		}
 		else
 		{
-			this.errorTokenText = ex.token.text;
+			if (ex.token != null)
+			{
+				this.errorTokenText = ex.token.text;
+			}
+			else
+			{
+				ex.printStackTrace();
+			}
+
 		}
 
 		this.msg = ex.getMessage();

@@ -29,6 +29,7 @@ package org.beetl.core.resource;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Map;
 
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Resource;
@@ -44,7 +45,7 @@ import org.beetl.core.fun.FileFunctionWrapper;
  */
 public class ClasspathResourceLoader implements ResourceLoader
 {
-	private String root = "";
+	private String root = null;
 	boolean autouCheck = false;
 	protected String charset = "UTF-8";
 	String functionRoot = "functions";
@@ -66,14 +67,29 @@ public class ClasspathResourceLoader implements ResourceLoader
 	{
 
 		this();
-		this.root = root;
+		if (root.equals("/"))
+		{
+			this.root = "";
+		}
+		else
+		{
+			this.root = root;
+		}
 
 	}
 
 	public ClasspathResourceLoader(String root, String charset)
 	{
 
-		this.root = root;
+		if (root.equals("/"))
+		{
+			this.root = "";
+		}
+		else
+		{
+			this.root = root;
+		}
+
 		this.charset = charset;
 	}
 
@@ -130,24 +146,28 @@ public class ClasspathResourceLoader implements ResourceLoader
 		return root;
 	}
 
-	public void setRoot(String root)
-	{
-		this.root = root;
-	}
-
-	public String getCharset()
-	{
-		return charset;
-	}
-
-	public void setCharset(String charset)
-	{
-		this.charset = charset;
-	}
-
 	@Override
 	public void init(GroupTemplate gt)
 	{
+		Map<String, String> resourceMap = gt.getConf().getResourceMap();
+		if (this.root == null)
+		{
+			this.root = resourceMap.get("root");
+
+		}
+		if (this.charset == null)
+		{
+			this.charset = resourceMap.get("charset");
+
+		}
+		if (this.functionSuffix == null)
+		{
+			this.functionSuffix = resourceMap.get("functionSuffix");
+		}
+
+		this.autouCheck = Boolean.parseBoolean(resourceMap.get("autouCheck"));
+
+		//初始化functions
 		URL url = classLoader.getResource("");
 		this.gt = gt;
 		if (url.getProtocol().equals("file"))

@@ -27,7 +27,7 @@ public class BeetlRenderFactory implements IMainRenderFactory
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException("Can notload properties for beetl");
+			throw new RuntimeException("加载GroupTemplate失败", e);
 		}
 	}
 

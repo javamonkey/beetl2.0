@@ -29,10 +29,7 @@ package org.beetl.core.resource;
 
 import java.io.File;
 
-import org.beetl.core.GroupTemplate;
 import org.beetl.core.Resource;
-import org.beetl.core.ResourceLoader;
-import org.beetl.core.fun.FileFunctionWrapper;
 import org.beetl.core.misc.BeetlUtil;
 
 /**
@@ -42,21 +39,13 @@ import org.beetl.core.misc.BeetlUtil;
  * 
  * 
  */
-public class WebAppResourceLoader implements ResourceLoader
+public class WebAppResourceLoader extends FileResourceLoader
 {
-	private String root = "";
-	boolean autouCheck = false;
-	protected String charset = "UTF-8";
-	String functionRoot = "functions";
-	String functionSuffix = "html";
-	GroupTemplate gt = null;
-	ClassLoader classLoader = null;
 
 	public WebAppResourceLoader()
 	{
-		//保留，用于通过配置构造一个ResouceLoader
-		classLoader = this.getClass().getClassLoader();
-		this.root = BeetlUtil.getWebRoot() + File.separator + root;
+
+		this.root = BeetlUtil.getWebRoot() + File.separator;
 
 	}
 
@@ -79,108 +68,18 @@ public class WebAppResourceLoader implements ResourceLoader
 		this.charset = charset;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.beetl.core.ResourceLoader#getResource(java.lang.String)
-	 */
 	@Override
 	public Resource getResource(String key)
 	{
 
-		File file = new File(root, key);
-		Resource resource = new WebFileResource(file, key, this);
-		resource.setResourceLoader(this);
-		return resource;
+		return super.getResource(key);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.beetl.core.ResourceLoader#close()
-	 */
 	@Override
 	public void close()
 	{
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public boolean isModified(Resource key)
-	{
-		if (this.autouCheck)
-		{
-			return key.isModified();
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	public boolean isAutouCheck()
-	{
-		return autouCheck;
-	}
-
-	public void setAutouCheck(boolean autouCheck)
-	{
-		this.autouCheck = autouCheck;
-	}
-
-	public String getRoot()
-	{
-		return root;
-	}
-
-	public void setRoot(String root)
-	{
-		this.root = BeetlUtil.getWebRoot() + File.separator + root;
-	}
-
-	public String getCharset()
-	{
-		return charset;
-	}
-
-	public void setCharset(String charset)
-	{
-		this.charset = charset;
-	}
-
-	@Override
-	public void init(GroupTemplate gt)
-	{
-		File root = new File(this.root, this.functionRoot);
-		this.gt = gt;
-		if (root.exists())
-		{
-			readFuntionFile(root, "", "/".concat(functionRoot).concat("/"));
-		}
-
-	}
-
-	protected void readFuntionFile(File funtionRoot, String ns, String path)
-	{
-		String expected = ".".concat(this.functionSuffix);
-		File[] files = funtionRoot.listFiles();
-		for (File f : files)
-		{
-			if (f.isDirectory())
-			{
-				readFuntionFile(f, f.getName().concat("."), path.concat(f.getName()).concat("/"));
-			}
-			else if (f.getName().endsWith(functionSuffix))
-			{
-				String resourceId = path + f.getName();
-				String fileName = f.getName();
-				fileName = fileName.substring(0, (fileName.length() - functionSuffix.length() - 1));
-				String functionName = ns.concat(fileName);
-				FileFunctionWrapper fun = new FileFunctionWrapper(resourceId);
-				gt.registerFunction(functionName, fun);
-			}
-		}
 	}
 
 }

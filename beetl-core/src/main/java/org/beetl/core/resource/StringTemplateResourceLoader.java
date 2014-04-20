@@ -73,18 +73,4 @@ public class StringTemplateResourceLoader implements ResourceLoader
 
 	}
 
-	@Override
-	public void setCharset(String charset)
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setRoot(String root)
-	{
-		// TODO Auto-generated method stub
-
-	}
-
 }

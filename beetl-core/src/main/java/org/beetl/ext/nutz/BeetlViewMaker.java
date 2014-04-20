@@ -35,14 +35,15 @@ public class BeetlViewMaker implements ViewMaker
 		try
 		{
 			cfg = Configuration.defaultConfiguration();
+			WebAppResourceLoader resourceLoader = new WebAppResourceLoader();
+			groupTemplate = new GroupTemplate(resourceLoader, cfg);
+			inited = true;
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException("无法加载beetl配置" + e.getMessage());
+			throw new RuntimeException("加载GroupTemplate失败", e);
 		}
-		WebAppResourceLoader resourceLoader = new WebAppResourceLoader();
-		groupTemplate = new GroupTemplate(resourceLoader, cfg);
-		inited = true;
+
 	}
 
 	public void depose()
@@ -60,14 +61,9 @@ public class BeetlViewMaker implements ViewMaker
 				@SuppressWarnings("unchecked")
 				public void render(HttpServletRequest req, HttpServletResponse resp, Object obj) throws Throwable
 				{
-					// ���·����ȡһ��ģ��
-					// TODO ʵ��ForwardViewʽ�Ĵ����,��Ĭ��ֵ��·������
-					// TODO ��ֵ���
+
 					String child = evalPath(req, obj);
-					WebRender render = new WebRender(groupTemplate) {
-
-					};
-
+					WebRender render = new WebRender(groupTemplate);
 					render.render(child, req, resp);
 
 				}

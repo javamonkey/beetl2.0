@@ -1,6 +1,6 @@
 /*
  [The "BSD license"]
- Copyright (c) 2011-2014 Joel Li (李家智)
+ Copyright (c) 2011-2013 Joel Li (李家智)
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -25,41 +25,25 @@
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.beetl.core;
+package org.beetl.ext.spring;
 
-/**
- * ResourceLoader 负责根据GroupTemplate提供的Key,来获取Resource，这些Resource可以是文件，
- * 字符串，加密的文本，以及数据库Blob字段等
- * 
- * @author joelli
- * 
- * 
- */
-public interface ResourceLoader
+import org.springframework.web.servlet.view.AbstractTemplateViewResolver;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
+
+public class BeetlSpringViewResolver extends AbstractTemplateViewResolver
 {
+	public BeetlSpringViewResolver()
+	{
+		setViewClass(requiredViewClass());
+	}
 
 	/**
-	 * 根据key获取Resource
-	 * 
-	 * @param key
-	 * @return
+	 * Requires {@link FreeMarkerView}.
 	 */
-	public Resource getResource(String key);
 
-	/** 检测模板是否更改，每次渲染模板前，都需要调用此方法，所以此方法不能占用太多时间，否则会影响渲染功能
-	 * @param key
-	 * @return
-	 */
-	public boolean isModified(Resource key);
+	protected Class requiredViewClass()	{
 
-	/**
-	 * 关闭ResouceLoader，通常是GroupTemplate关闭的时候也关闭对应的ResourceLoader
-	 */
-	public void close();
-
-	/** 一些初始化方法
-	 * @param gt
-	 */
-	public void init(GroupTemplate gt);
-
+		
+		return BeetlSpringView.class;
+	}
 }

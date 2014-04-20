@@ -16,11 +16,13 @@ public class FileResource extends Resource
 {
 
 	File file = null;
+	long lastModified = 0;
 
 	public FileResource(File file, String id, ResourceLoader loader)
 	{
 		super(id, loader);
 		this.file = file;
+		lastModified = file.lastModified();
 
 	}
 
@@ -50,7 +52,7 @@ public class FileResource extends Resource
 	public boolean isModified()
 	{
 		// TODO Auto-generated method stub
-		return false;
+		return this.lastModified != file.lastModified();
 	}
 
 }

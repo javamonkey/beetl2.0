@@ -28,6 +28,7 @@
 package org.beetl.core.resource;
 
 import java.io.File;
+import java.util.Map;
 
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Resource;
@@ -127,6 +128,24 @@ public class FileResourceLoader implements ResourceLoader
 	@Override
 	public void init(GroupTemplate gt)
 	{
+		Map<String, String> resourceMap = gt.getConf().getResourceMap();
+		if (this.root == null)
+		{
+			this.root = resourceMap.get("root");
+
+		}
+		if (this.charset == null)
+		{
+			this.charset = resourceMap.get("charset");
+
+		}
+		if (this.functionSuffix == null)
+		{
+			this.functionSuffix = resourceMap.get("functionSuffix");
+		}
+
+		this.autouCheck = Boolean.parseBoolean(resourceMap.get("autouCheck"));
+
 		File root = new File(this.root, this.functionRoot);
 		this.gt = gt;
 		if (root.exists())
@@ -144,6 +163,7 @@ public class FileResourceLoader implements ResourceLoader
 		{
 			if (f.isDirectory())
 			{
+				//读取子目录
 				readFuntionFile(f, f.getName().concat("."), path.concat(f.getName()).concat("/"));
 			}
 			else if (f.getName().endsWith(functionSuffix))

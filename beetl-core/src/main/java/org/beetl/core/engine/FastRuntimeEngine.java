@@ -5,16 +5,17 @@ import java.util.Map;
 
 import org.beetl.core.Context;
 import org.beetl.core.GroupTemplate;
+import org.beetl.core.Resource;
 import org.beetl.core.statement.Program;
 
 public class FastRuntimeEngine extends DefaultTemplateEngine
 {
 
 	@Override
-	public Program createProgram(String id, Reader reader, Map<Integer, String> textMap, String cr, GroupTemplate gt)
+	public Program createProgram(Resource rs, Reader reader, Map<Integer, String> textMap, String cr, GroupTemplate gt)
 	{
 
-		Program program = super.createProgram(id, reader, textMap, cr, gt);
+		Program program = super.createProgram(rs, reader, textMap, cr, gt);
 		Probe nextFilter = new BasicProgramOptProbe(program);
 		Probe filter = new TypeBindingProbe(program, nextFilter);
 		FilterProgram filterProgram = new FilterProgram(program, filter);
@@ -31,6 +32,7 @@ public class FastRuntimeEngine extends DefaultTemplateEngine
 			this.filter = filter;
 			this.id = program.id;
 			this.gt = program.gt;
+			this.rs = program.rs;
 
 		}
 

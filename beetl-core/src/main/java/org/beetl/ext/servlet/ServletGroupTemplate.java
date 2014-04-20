@@ -1,14 +1,11 @@
 package org.beetl.ext.servlet;
 
-import java.io.File;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
-import org.beetl.core.resource.FileResourceLoader;
-import org.beetl.ext.jfinal.BeetlRenderFactory;
+import org.beetl.core.resource.WebAppResourceLoader;
 import org.beetl.ext.web.WebRender;
 
 /**
@@ -24,7 +21,7 @@ import org.beetl.ext.web.WebRender;
  */
 public class ServletGroupTemplate
 {
-	static ServletGroupTemplate sgt;// =   new ServletGroupTemplate();
+	static ServletGroupTemplate sgt = new ServletGroupTemplate();
 	GroupTemplate groupTemplate = null;
 
 	private ServletGroupTemplate()
@@ -32,19 +29,9 @@ public class ServletGroupTemplate
 
 		try
 		{
-			String path = BeetlRenderFactory.class.getResource("/").getFile();
-			String root = new File(path).getParentFile().getParentFile().getCanonicalPath();
-
 			Configuration cfg = Configuration.defaultConfiguration();
-			String charset = cfg.getCharset();
-			String realPath = cfg.getProperty("RESOURCE.root");
-			if (realPath != null)
-			{
-				root = root + File.separator + realPath + File.separator;
-			}
-			FileResourceLoader resourceLoader = new FileResourceLoader(root, charset);
+			WebAppResourceLoader resourceLoader = new WebAppResourceLoader();
 			groupTemplate = new GroupTemplate(resourceLoader, cfg);
-
 		}
 		catch (Exception ex)
 		{

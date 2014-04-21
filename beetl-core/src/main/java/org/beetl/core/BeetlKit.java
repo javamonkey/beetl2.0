@@ -1,6 +1,7 @@
 package org.beetl.core;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,10 +15,10 @@ import org.beetl.ext.fn.GetValueFunction;
  * 
  * 
  */
-class BeetlKit
+public class BeetlKit
 {
 
-	static GroupTemplate gt = null;
+	public static GroupTemplate gt = null;
 	static
 	{
 		StringTemplateResourceLoader resourceLoader = new StringTemplateResourceLoader();
@@ -25,6 +26,7 @@ class BeetlKit
 		try
 		{
 			cfg = Configuration.defaultConfiguration();
+
 		}
 		catch (IOException e)
 		{
@@ -32,6 +34,52 @@ class BeetlKit
 		}
 		gt = new GroupTemplate(resourceLoader, cfg);
 		gt.registerFunction("beetlKit", new GetValueFunction());
+		gt.setErrorHandler(new ConsoleErrorHandler() {
+			protected void println(Writer w, String msg)
+			{
+				try
+				{
+					w.write(msg);
+					w.write('\n');
+				}
+				catch (IOException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			protected void print(Writer w, String msg)
+			{
+				try
+				{
+					w.write(msg);
+				}
+				catch (IOException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			protected void printThrowable(Writer w, Throwable t)
+			{
+
+				t.printStackTrace(new PrintWriter(w));
+			}
+
+			protected String getResourceName(String resourceId)
+			{
+				if (resourceId.length() > 10)
+				{
+					return resourceId.substring(0, 10).concat("...");
+				}
+				else
+				{
+					return resourceId;
+				}
+			}
+		});
 	}
 
 	/* 模板部分 */
@@ -149,10 +197,10 @@ class BeetlKit
 
 	public static void main(String[] args)
 	{
-		Map map = new HashMap();
-		map.put("name", "joelli");
-		String template = "var a=1,c=2+1;";
-		Map result = executeAndReturnRootScopeVars(template);
+		String template = "${a}";
+		String initValue = "var a=1,c=2+1";
+		String result = testTemplate(template, initValue);
 		System.out.println(result);
+
 	}
 }

@@ -574,4 +574,9 @@ public class GroupTemplate
 		this.sharedVars = sharedVars;
 	}
 
+	public void setErrorHandler(ErrorHandler errorHandler)
+	{
+		this.errorHandler = errorHandler;
+	}
+
 }

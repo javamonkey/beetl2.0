@@ -22,6 +22,83 @@
             <scope>system</scope>
         </dependency>        
 	
+	
+	
+		<dependency>
+            <groupId>jfinal</groupId>
+            <artifactId>complete</artifactId>  
+            <version>4.2</version>          
+            <systemPath>${basedir}/lib/jfinal-1.6-bin.jar</systemPath>
+            <scope>system</scope>
+        </dependency>     
+        
+        <dependency>
+            <groupId>nutz</groupId>
+            <artifactId>complete</artifactId>  
+            <version>1.b.49</version>          
+            <systemPath>${basedir}/lib/nutz-1.b.49-jdk6.jar</systemPath>
+            <scope>system</scope>
+        </dependency>  
+        
+          <dependency>
+            <groupId>spring</groupId>
+            <artifactId>core</artifactId>  
+            <version>1.b.49</version>          
+            <systemPath>${basedir}/lib/spring-core-3.2.2.RELEASE.jar</systemPath>
+            <scope>system</scope>
+        </dependency>  
+        
+         <dependency>
+            <groupId>spring</groupId>
+            <artifactId>web</artifactId>  
+            <version>1.b.49</version>          
+            <systemPath>${basedir}/lib/spring-web-3.0.5.RELEASE.jar</systemPath>
+            <scope>system</scope>
+        </dependency>  
+         
+         <dependency>
+            <groupId>spring</groupId>
+            <artifactId>webmvc</artifactId>  
+            <version>1.b.49</version>          
+            <systemPath>${basedir}/lib/spring-webmvc-3.2.2.RELEASE.jar</systemPath>
+            <scope>system</scope>
+        </dependency>  
+         
+         
+            <dependency>
+            <groupId>spring</groupId>
+            <artifactId>beans</artifactId>  
+            <version>1.b.49</version>          
+            <systemPath>${basedir}/lib/spring-beans-3.2.2.RELEASE.jar</systemPath>
+            <scope>system</scope>
+        </dependency> 
+        
+        
+          <dependency>
+            <groupId>spring</groupId>
+            <artifactId>context</artifactId>  
+            <version>1.b.49</version>          
+            <systemPath>${basedir}/lib/spring-context-3.2.2.RELEASE.jar</systemPath>
+            <scope>system</scope>
+        </dependency>   
+         
+          <dependency>
+            <groupId>spring</groupId>
+            <artifactId>context-support</artifactId>  
+            <version>1.b.49</version>          
+            <systemPath>${basedir}/lib/spring-context-support-3.2.2.RELEASE.jar</systemPath>
+            <scope>system</scope>
+        </dependency>   
+         
+          <dependency>
+            <groupId>jodd</groupId>
+            <artifactId>mav-doc</artifactId>  
+            <version>1.b.49</version>          
+            <systemPath>${basedir}/lib/jodd-3.5.1.jar</systemPath>
+            <scope>system</scope>
+        </dependency>   
+         
+          
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
@@ -36,7 +113,7 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>2.5</version>
-			
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	

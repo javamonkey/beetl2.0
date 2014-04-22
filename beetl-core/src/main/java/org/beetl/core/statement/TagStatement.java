@@ -101,7 +101,7 @@ public class TagStatement extends Statement
 		}
 		catch (BeetlException ex)
 		{
-			ex.token = this.token;
+			//ex.token = this.token;
 			throw ex;
 		}
 		catch (RuntimeException ex)

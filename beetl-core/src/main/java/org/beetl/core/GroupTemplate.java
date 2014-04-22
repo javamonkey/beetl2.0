@@ -82,8 +82,8 @@ public class GroupTemplate
 		try
 		{
 			this.conf = Configuration.defaultConfiguration();
-			initResourceLoader();
 			init();
+			initResourceLoader();
 		}
 		catch (Exception ex)
 		{
@@ -101,25 +101,14 @@ public class GroupTemplate
 		try
 		{
 			this.conf = conf;
-			initResourceLoader();
 			init();
+			initResourceLoader();
 		}
 		catch (Exception ex)
 		{
 			throw new RuntimeException("初始化失败", ex);
 		}
 
-	}
-
-	protected void initResourceLoader()
-	{
-		this.resourceLoader = (ResourceLoader) ObjectUtil.instnace(conf.resourceLoader);
-		for (Entry<String, String> entry : conf.resourceMap.entrySet())
-		{
-			String key = entry.getKey();
-			String value = entry.getValue();
-			ObjectUtil.setSimpleValueByString(resourceLoader, key, value);
-		}
 	}
 
 	/**
@@ -139,11 +128,23 @@ public class GroupTemplate
 			this.resourceLoader = loader;
 			this.conf = conf;
 			init();
+			initResourceLoader();
 		}
 		catch (Exception ex)
 		{
 			throw new RuntimeException("初始化失败", ex);
 		}
+
+	}
+
+	protected void initResourceLoader()
+	{
+		if (this.resourceLoader == null)
+		{
+			this.resourceLoader = (ResourceLoader) ObjectUtil.instnace(conf.resourceLoader);
+
+		}
+		resourceLoader.init(this);
 
 	}
 
@@ -154,7 +155,7 @@ public class GroupTemplate
 		this.initFormatter();
 		this.initTag();
 		this.initVirtual();
-		this.resourceLoader.init(this);
+
 		classSearch = new ClassSearch(conf.getPkgList());
 		nativeSecurity = (NativeSecurityManager) ObjectUtil.instnace(conf.getNativeSecurity());
 		errorHandler = (ErrorHandler) ObjectUtil.instnace(conf.errorHandlerClass);
@@ -310,7 +311,18 @@ public class GroupTemplate
 					Resource resource = resourceLoader.getResource(key);
 					program = this.loadTemplate(resource);
 					this.programCache.set(key, program);
+					return new Template(this, program, this.conf);
 				}
+			}
+		}
+
+		if (resourceLoader.isModified(program.rs))
+		{
+			synchronized (key)
+			{
+				Resource resource = resourceLoader.getResource(key);
+				program = this.loadTemplate(resource);
+				this.programCache.set(key, program);
 			}
 		}
 
@@ -342,7 +354,7 @@ public class GroupTemplate
 			}
 			Reader scriptReader;
 			scriptReader = sf.transform(reader);
-			Program program = engine.createProgram(res.getId(), scriptReader, sf.textMap, sf.lineSeparator, this);
+			Program program = engine.createProgram(res, scriptReader, sf.textMap, sf.lineSeparator, this);
 			return program;
 
 		}
@@ -560,6 +572,11 @@ public class GroupTemplate
 	public void setSharedVars(Map<String, Object> sharedVars)
 	{
 		this.sharedVars = sharedVars;
+	}
+
+	public void setErrorHandler(ErrorHandler errorHandler)
+	{
+		this.errorHandler = errorHandler;
 	}
 
 }

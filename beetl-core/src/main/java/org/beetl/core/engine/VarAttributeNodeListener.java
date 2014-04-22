@@ -10,6 +10,7 @@ import org.beetl.core.Context;
 import org.beetl.core.Event;
 import org.beetl.core.InferContext;
 import org.beetl.core.Listener;
+import org.beetl.core.exception.BeetlException;
 import org.beetl.core.misc.NumberUtil;
 import org.beetl.core.om.AttributeAccess;
 import org.beetl.core.om.AttributeAccessFactory;
@@ -32,6 +33,7 @@ public class VarAttributeNodeListener implements Listener
 		if (o instanceof VarRef)
 		{
 			VarRef ref = (VarRef) o;
+
 			VarAttribute[] attrs = ref.attributes;
 			for (int i = 0; i < attrs.length; i++)
 			{
@@ -42,8 +44,15 @@ public class VarAttributeNodeListener implements Listener
 
 					String name = attr.token != null ? attr.token.text : null;
 					// 换成速度较快的属性访问类
-					AttributeAccess aa = AttributeAccessFactory.buildFiledAccessor(type.cls, name);
-					attr.aa = aa;
+					try
+					{
+						AttributeAccess aa = AttributeAccessFactory.buildFiledAccessor(type.cls, name);
+						attr.aa = aa;
+					}
+					catch (BeetlException ex)
+					{
+						ex.token = attr.token;
+					}
 
 				}
 				else if (attr.getClass() == VarSquareAttribute.class)
@@ -71,10 +80,19 @@ public class VarAttributeNodeListener implements Listener
 							Literal literal = (Literal) exp;
 							if (literal.obj instanceof String)
 							{
-								String attributeName = (String) literal.obj;
-								AttributeAccess aa = AttributeAccessFactory.buildFiledAccessor(c, attributeName);
-								ref.attributes[i] = new VarSquareAttribute2((VarSquareAttribute) attrs[i],
-										attributeName, aa);
+
+								try
+								{
+									String attributeName = (String) literal.obj;
+									AttributeAccess aa = AttributeAccessFactory.buildFiledAccessor(c, attributeName);
+									ref.attributes[i] = new VarSquareAttribute2((VarSquareAttribute) attrs[i],
+											attributeName, aa);
+								}
+								catch (BeetlException ex)
+								{
+									ex.token = attr.token;
+								}
+
 							}
 						}
 

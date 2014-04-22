@@ -47,7 +47,7 @@ public interface TemplateEngine
 	 * @param gt  模板组
 	 * @return
 	 */
-	public Program createProgram(String resourceId, Reader input, Map<Integer, String> textMap, String cr,
+	public Program createProgram(Resource resource, Reader input, Map<Integer, String> textMap, String cr,
 			GroupTemplate gt);
 
 }

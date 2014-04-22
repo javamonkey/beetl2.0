@@ -120,18 +120,21 @@ public abstract class Resource
 					if (temp == '\r' && ch == '\n')
 					{
 
-						sb.append((char) ch);
+						if (hasStart)
+							sb.append((char) ch);
 					}
 					else if (temp == '\n' && ch == '\r')
 					{
 
-						sb.append((char) ch);
+						if (hasStart)
+							sb.append((char) ch);
 					}
 					else
 					{
 						if (line != end)
 						{
-							sb.append((char) ch);
+							if (hasStart)
+								sb.append((char) ch);
 						}
 					}
 

@@ -92,6 +92,7 @@ public class ClasspathResource extends Resource
 		if (url.getProtocol().equals("file"))
 		{
 			file = new File(url.getFile());
+			lastModified = file.lastModified();
 		}
 
 		Reader br;

@@ -16,6 +16,9 @@ public class Test
 		Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
 		String str = t.render();
 		System.out.println(str);
-
+		Thread.sleep(1000 * 8);
+		t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
+		str = t.render();
+		System.out.println(str);
 	}
 }

@@ -29,6 +29,7 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 import org.beetl.core.GroupTemplate;
+import org.beetl.core.Resource;
 
 /**
  * 脚本运行程序
@@ -41,6 +42,7 @@ public class Program
 	public ProgramMetaData metaData = null;
 	public String id = null;
 	public GroupTemplate gt = null;
+	public Resource rs = null;
 
 	public Program()
 	{

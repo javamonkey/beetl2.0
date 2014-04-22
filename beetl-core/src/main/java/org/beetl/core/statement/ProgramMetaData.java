@@ -67,6 +67,9 @@ public class ProgramMetaData implements java.io.Serializable
 	//@type(User cc,List<User> list)
 	public Map<String, Type> globalType = new HashMap<String, Type>(0);
 
+	//模板里的顶级变量映射关系
+	protected Map<String, Integer> templateRootScopeIndexMap = new HashMap<String, Integer>();
+
 	public void initContext(Context ctx)
 	{
 		// 模板静态文本部分
@@ -136,6 +139,16 @@ public class ProgramMetaData implements java.io.Serializable
 	{
 		ProgramMetaData newCopy = (ProgramMetaData) ObjectUtil.copy(this);
 		return newCopy;
+	}
+
+	public Map<String, Integer> getTemplateRootScopeIndexMap()
+	{
+		return templateRootScopeIndexMap;
+	}
+
+	public void setTemplateRootScopeIndexMap(Map<String, Integer> templateRootScopeIndexMap)
+	{
+		this.templateRootScopeIndexMap = templateRootScopeIndexMap;
 	}
 
 }

@@ -50,14 +50,16 @@ import org.beetl.core.statement.Statement;
 public abstract class Tag
 {
 	protected Object[] args = null;
-	protected GroupTemplate group;
+	protected GroupTemplate gt;
 	protected Context ctx;
 	protected ByteWriter bw;
 	protected Statement bs;
 
 	protected void doBodyRender()
 	{
+
 		bs.execute(ctx);
+
 	}
 
 	protected BodyContent getBodyContent()
@@ -76,7 +78,7 @@ public abstract class Tag
 	{
 		this.ctx = ctx;
 		this.bw = ctx.byteWriter;
-		this.group = ctx.gt;
+		this.gt = ctx.gt;
 		this.args = args;
 		this.bs = st;
 	}

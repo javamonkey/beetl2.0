@@ -654,4 +654,35 @@ public class Configuration
 	{
 		return this.ps.getProperty(name);
 	}
+
+	public String getResourceLoader()
+	{
+		return resourceLoader;
+	}
+
+	public void setResourceLoader(String resourceLoader)
+	{
+		this.resourceLoader = resourceLoader;
+	}
+
+	public Map<String, String> getResourceMap()
+	{
+		return resourceMap;
+	}
+
+	public void setResourceMap(Map<String, String> resourceMap)
+	{
+		this.resourceMap = resourceMap;
+	}
+
+	public Properties getPs()
+	{
+		return ps;
+	}
+
+	public void setPs(Properties ps)
+	{
+		this.ps = ps;
+	}
+
 }

@@ -23,7 +23,7 @@ public class HTMLTagSupportWrapper extends Tag
 		// 首先查找 已经注册的Tag
 		TagFactory realTag = null;
 		String functionTagName = child.replace(':', '.');
-		realTag = this.group.getTagFactory(child);
+		realTag = this.gt.getTagFactory(child);
 		if (realTag == null)
 		{
 			String path = getHtmlTagResourceId(child);
@@ -48,7 +48,7 @@ public class HTMLTagSupportWrapper extends Tag
 	{
 		Template t = null;
 
-		t = group.getTemplate(path);
+		t = gt.getTemplate(path);
 
 		t.binding(ctx.globalVar);
 		t.dynamic(ctx.objectKeys);

@@ -33,6 +33,7 @@ public class TypeBindingProbe extends Probe
 		copyProgram.metaData = metaData;
 		copyProgram.id = p.id;
 		copyProgram.gt = p.gt;
+		copyProgram.rs = p.rs;
 		this.program = copyProgram;
 
 		nextFilter.program = this.program;

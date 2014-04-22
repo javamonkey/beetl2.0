@@ -38,7 +38,7 @@ import org.beetl.core.misc.ByteClassLoader;
 public class AttributeCodeGen
 {
 
-	static ByteClassLoader loader = new ByteClassLoader();
+	static ByteClassLoader loader = new ByteClassLoader(AttributeAccess.class.getClassLoader());
 
 	public static AttributeAccess createAAClass(Class c, String name, String methodName, Class returnType)
 	{

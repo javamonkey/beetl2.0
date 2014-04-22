@@ -60,7 +60,7 @@ public class LayoutTag extends Tag
 			throw new RuntimeException("参数错误，期望child,map");
 		}
 		String layoutFile = BeetlUtil.getRelPath(ctx.getResourceId(), (String) args[0]);
-		Template t = this.group.getTemplate(layoutFile);
+		Template t = this.gt.getTemplate(layoutFile);
 		t.binding(ctx.globalVar);
 		t.dynamic(ctx.objectKeys);
 

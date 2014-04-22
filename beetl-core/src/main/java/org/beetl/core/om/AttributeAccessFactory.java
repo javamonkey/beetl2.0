@@ -139,7 +139,7 @@ public class AttributeAccessFactory
 	public static FindResult findCommonInterfaceOrClass(Class c, String name)
 	{
 
-		FindResult findResult = findResult(c, ObjectUtil.getMethod(name), ObjectUtil.getIsMethod(name));
+		FindResult findResult = findResult(c, ObjectUtil.getGetMethod(name), ObjectUtil.getIsMethod(name));
 		return findResult;
 
 	}

@@ -1,11 +1,10 @@
 package org.beetl.ext.jfinal;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
-import org.beetl.core.resource.FileResourceLoader;
+import org.beetl.core.resource.WebAppResourceLoader;
 
 import com.jfinal.render.IMainRenderFactory;
 import com.jfinal.render.Render;
@@ -20,23 +19,15 @@ public class BeetlRenderFactory implements IMainRenderFactory
 	{
 		try
 		{
-			String path = BeetlRenderFactory.class.getResource("/").getFile();
-			String root = new File(path).getParentFile().getParentFile().getCanonicalPath();
 
 			Configuration cfg = Configuration.defaultConfiguration();
-			String charset = cfg.getCharset();
-			String realPath = cfg.getProperty("RESOURCE.root");
-			if (realPath != null)
-			{
-				root = root + File.separator + realPath + File.separator;
-			}
-			FileResourceLoader resourceLoader = new FileResourceLoader(root, charset);
+			WebAppResourceLoader resourceLoader = new WebAppResourceLoader();
 			groupTemplate = new GroupTemplate(resourceLoader, cfg);
 
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException("Can notload properties for beetl");
+			throw new RuntimeException("加载GroupTemplate失败", e);
 		}
 	}
 

@@ -14,7 +14,8 @@ public static void main(String[] args) throws Exception {
 	FileResourceLoader resourceLoader = new FileResourceLoader(root,"utf-8");		
 		Configuration cfg = Configuration.defaultConfiguration();
 	GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
-	Template t = gt.getTemplate("/s32/pagefunction.html");	
+	gt.registerFunctionPackage("t", new FunctionPackage());
+	Template t = gt.getTemplate("/s32/functionPackage.html");	
 	String str = t.render();		
 	System.out.println(str);
 

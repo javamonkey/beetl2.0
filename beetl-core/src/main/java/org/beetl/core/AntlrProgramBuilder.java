@@ -223,6 +223,7 @@ public class AntlrProgramBuilder
 		data.statements = ls.toArray(new Statement[0]);
 		data.globalIndexMap = pbCtx.globalIndexMap;
 		data.globalVarAttr = pbCtx.globaVarAttr;
+		data.setTemplateRootScopeIndexMap(pbCtx.rootIndexMap);
 
 		return data;
 
@@ -748,7 +749,7 @@ public class AntlrProgramBuilder
 		Statement elseStat = null;
 		if (elseStatCtx != null)
 		{
-			elseStat = this.parseStatment(ifStatCtx);
+			elseStat = this.parseStatment(elseStatCtx);
 		}
 		return new IfStatement(exp, ifStat, elseStat, this.getBTToken(ctx.If().getSymbol()));
 	}

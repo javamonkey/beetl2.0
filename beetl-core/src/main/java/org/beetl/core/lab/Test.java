@@ -10,15 +10,15 @@ public class Test
 	public static void main(String[] args) throws Exception
 	{
 
-		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader();
+		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("");
 		Configuration cfg = Configuration.defaultConfiguration();
 		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 		Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
 		String str = t.render();
 		System.out.println(str);
-		Thread.sleep(1000 * 8);
-		t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
-		str = t.render();
-		System.out.println(str);
+		//		Thread.sleep(1000 * 8);
+		//		t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
+		//		str = t.render();
+		//		System.out.println(str);
 	}
 }

@@ -9,7 +9,7 @@ public class ASMSource {
 	 */
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
-		ASMifier.main(new String[] { "com.beetl.performance.lab.asm.UserAsmAccessor" });
+		ASMifier.main(new String[] { "org.beetl.performance.lab.asm.JustTest" });
 
 	}
 

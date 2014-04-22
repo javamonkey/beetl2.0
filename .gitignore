@@ -5,3 +5,4 @@ logs-test/
 logs/
 target/
 
+/beetl-core/doc

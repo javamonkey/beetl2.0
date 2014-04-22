@@ -1,3 +1,30 @@
+/*
+ [The "BSD license"]
+ Copyright (c) 2011-2014 Joel Li (李家智)
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+ 3. The name of the author may not be used to endorse or promote products
+     derived from this software without specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package org.beetl.core;
 
 import java.io.IOException;
@@ -5,23 +32,32 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.beetl.core.exception.BeetlException;
-import org.beetl.core.exception.TempException;
 import org.beetl.core.io.ByteWriter_Byte;
 import org.beetl.core.io.ByteWriter_Char;
+import org.beetl.core.misc.BeetlUtil;
 import org.beetl.core.statement.Program;
 
+/** 模板类
+ * @author joelli
+ *
+ */
 public class Template
 {
-	protected Program program = null;
-	protected Configuration cf = null;
+	public Program program;
+	public Configuration cf;
+	public GroupTemplate gt;
+
 	Context ctx = new Context();
 
-	protected Template(Program program, Configuration cf)
+	protected Template(GroupTemplate gt, Program program, Configuration cf)
 	{
 		this.program = program;
 		this.cf = cf;
+		this.gt = gt;
 	}
 
 	/**
@@ -62,19 +98,48 @@ public class Template
 		this.renderTo(byteWriter);
 	}
 
-	private void renderTo(ByteWriter byteWriter)
+	public void renderTo(ByteWriter byteWriter)
 	{
-		ctx.byteWriter = byteWriter;
-		ctx.byteOutputMode = cf.directByteOutput;
-		program.metaData.initContext(ctx);
-		program.execute(ctx);
+
 		try
 		{
+			ctx.byteWriter = byteWriter;
+			ctx.byteOutputMode = cf.directByteOutput;
+			ctx.gt = this.gt;
+			ctx.template = this;
+			if (gt.sharedVars != null)
+			{
+				for (Entry<String, Object> entry : gt.sharedVars.entrySet())
+				{
+					ctx.set(entry.getKey(), entry.getValue());
+				}
+			}
+			program.metaData.initContext(ctx);
+
+			program.execute(ctx);
 			byteWriter.flush();
+		}
+		catch (BeetlException e)
+		{
+			//			e.printStackTrace();
+			Writer w = BeetlUtil.getWriterByByteWriter(ctx.byteWriter);
+			e.resourceId = this.program.id;
+			e.gt = this.program.gt;
+			e.cr = this.program.metaData.lineSeparator;
+			ErrorHandler errorHandler = this.gt.getErrorHandler();
+			errorHandler.processExcption(e, w);
 		}
 		catch (IOException e)
 		{
-			throw new TempException("ioexception");
+			if (!ctx.gt.conf.isIgnoreClientIOError)
+			{
+				throw new RuntimeException(e);
+			}
+			else
+			{
+				//do  nothing ,just ignore
+			}
+
 		}
 
 	}
@@ -110,6 +175,16 @@ public class Template
 		this.binding(varName, o, false);
 	}
 
+	public void dynamic(Set<String> objectKeys)
+	{
+		this.ctx.objectKeys = objectKeys;
+	}
+
+	public void dynamic(String key)
+	{
+		this.ctx.objectKeys.add(key);
+	}
+
 	/**
 	 * 为模板绑定多个变量，map的key，value对应了变量名称和变量值。key必须符合javascript命名规范
 	 * 
@@ -120,25 +195,26 @@ public class Template
 		ctx.globalVar = map;
 	}
 
-	public void fastRender(Map map, ByteWriter byteWriter)
-	{
-		if (ctx.isInit)
-		{
-			ctx.globalVar = map;
-			// 重用
-			for (int i = ctx.tempVarStartIndex; i < ctx.vars.length; i++)
-			{
-				ctx.vars[i] = null;
-			}
-			ctx.byteWriter = byteWriter;
-			program.metaData.replaceGlobal(ctx);
-			program.execute(ctx);
-		}
-		else
-		{
-			ctx.globalVar = map;
-			renderTo(byteWriter);
-		}
+	//	public void fastRender(Map map, ByteWriter byteWriter)
+	//	{
+	//		if (ctx.isInit)
+	//		{
+	//			ctx.globalVar = map;
+	//			// 重用
+	//			for (int i = ctx.tempVarStartIndex; i < ctx.vars.length; i++)
+	//			{
+	//				ctx.vars[i] = null;
+	//			}
+	//			ctx.byteWriter = byteWriter;
+	//			program.metaData.replaceGlobal(ctx);
+	//			program.execute(ctx);
+	//		}
+	//		else
+	//		{
+	//			ctx.globalVar = map;
+	//			renderTo(byteWriter);
+	//		}
+	//
+	//	}
 
-	}
 }

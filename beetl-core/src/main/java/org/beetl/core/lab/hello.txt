@@ -1,0 +1,6 @@
+<%
+var a = 11;
+debug(a);
+%>
+
+sfsfsdf ${a} dfdsfdsfds

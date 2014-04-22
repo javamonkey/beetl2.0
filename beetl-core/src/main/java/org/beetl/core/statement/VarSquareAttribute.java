@@ -1,4 +1,34 @@
+/*
+ [The "BSD license"]
+ Copyright (c) 2011-2014 Joel Li (李家智)
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+ 3. The name of the author may not be used to endorse or promote products
+     derived from this software without specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package org.beetl.core.statement;
+
+import org.beetl.core.Context;
+import org.beetl.core.InferContext;
 
 /**
  * a.[]
@@ -8,18 +38,45 @@ package org.beetl.core.statement;
  */
 public class VarSquareAttribute extends VarAttribute
 {
-	protected short type = 1;
 	public Expression exp;
 
-	public VarSquareAttribute(Expression exp, Token token)
+	public VarSquareAttribute(Expression exp, GrammarToken token)
 	{
 		super(token);
 		this.exp = exp;
 	}
 
-	public void infer(Type[] types, Object temp)
+	@Override
+	public Object evaluate(Context ctx)
 	{
-		super.infer(types, temp);
+		throw new UnsupportedOperationException();
+	}
+
+	public Object evaluate(Context ctx, Object o)
+	{
+		Object value = exp.evaluate(ctx);
+		return aa.value(o, value);
+	}
+
+	public void infer(InferContext inferCtx)
+	{
+		Type type = (Type) inferCtx.temp;
+		Type[] tps = type.types;
+		if (tps != null)
+		{
+			if (tps.length == 1)
+			{
+				this.type = tps[0];
+				return;
+			}
+			else if (tps.length == 2)
+			{
+				this.type = tps[1];
+				return;
+			}
+		}
+		this.type = Type.ObjectType;
+
 	}
 
 }

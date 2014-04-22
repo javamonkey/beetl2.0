@@ -749,7 +749,7 @@ public class AntlrProgramBuilder
 		Statement elseStat = null;
 		if (elseStatCtx != null)
 		{
-			elseStat = this.parseStatment(ifStatCtx);
+			elseStat = this.parseStatment(elseStatCtx);
 		}
 		return new IfStatement(exp, ifStat, elseStat, this.getBTToken(ctx.If().getSymbol()));
 	}

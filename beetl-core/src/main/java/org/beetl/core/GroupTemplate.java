@@ -360,20 +360,21 @@ public class GroupTemplate
 		}
 		catch (HTMLTagParserException e)
 		{
-			ErrorGrammarProgram ep = new ErrorGrammarProgram(res.getId(), this, sf.lineSeparator);
+			ErrorGrammarProgram ep = new ErrorGrammarProgram(res, this, sf.lineSeparator);
 			ep.setException(e);
+
 			return ep;
 		}
 		catch (IOException e)
 		{
-			ErrorGrammarProgram ep = new ErrorGrammarProgram(res.getId(), this, sf.lineSeparator);
+			ErrorGrammarProgram ep = new ErrorGrammarProgram(res, this, sf.lineSeparator);
 			BeetlException ex = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR);
 			ep.setException(ex);
 			return ep;
 		}
 		catch (BeetlException ex)
 		{
-			ErrorGrammarProgram ep = new ErrorGrammarProgram(res.getId(), this, sf != null ? sf.lineSeparator : null);
+			ErrorGrammarProgram ep = new ErrorGrammarProgram(res, this, sf != null ? sf.lineSeparator : null);
 			ep.setException(ex);
 			return ep;
 		}

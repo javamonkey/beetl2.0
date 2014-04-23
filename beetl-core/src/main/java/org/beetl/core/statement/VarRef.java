@@ -108,7 +108,8 @@ public class VarRef extends Expression implements IVarIndex
 			}
 
 		}
-		return value;
+
+		return hasSafe ? (value == null ? safe.evaluate(ctx) : value) : value;
 
 	}
 

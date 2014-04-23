@@ -85,7 +85,7 @@ public class VarRef extends Expression implements IVarIndex
 		for (VarAttribute attr : attributes)
 		{
 
-			if (value == null && hasSafe)
+			if (value == null && (hasSafe || ctx.safeOutput))
 			{
 				return safe == null ? null : safe.evaluate(ctx);
 			}
@@ -109,7 +109,7 @@ public class VarRef extends Expression implements IVarIndex
 
 		}
 
-		return hasSafe ? (value == null ? safe.evaluate(ctx) : value) : value;
+		return hasSafe || ctx.safeOutput ? (value == null ? safe.evaluate(ctx) : value) : value;
 
 	}
 

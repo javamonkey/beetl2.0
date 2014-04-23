@@ -1,10 +1,6 @@
 <%
-var a =null;// [1,2];
-for(i in a!){
-print(i);
-}elsefor{
-print("empty");
-}
+var a = true;
+print(!a);
 %>
 
 

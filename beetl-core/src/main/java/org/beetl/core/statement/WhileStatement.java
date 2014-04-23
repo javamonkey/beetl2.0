@@ -38,8 +38,8 @@ import org.beetl.core.exception.BeetlException;
 public class WhileStatement extends Statement implements IGoto
 {
 
-	Expression exp;
-	Statement whileBody;
+	public Expression exp;
+	public Statement whileBody;
 	public boolean hasGoto = false;
 
 	public WhileStatement(Expression exp, Statement whileBody, GrammarToken token)

@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.URISyntaxException;
 
 import org.beetl.core.ByteWriter;
 import org.beetl.core.io.ByteWriter_Byte;
@@ -175,14 +176,17 @@ public class BeetlUtil
 
 	public static String getWebRoot()
 	{
-		String path = BeetlUtil.class.getResource("/").getFile();
 		try
 		{
+			String path = BeetlUtil.class.getClassLoader().getResource("").toURI().getPath();
 			String root = new File(path).getParentFile().getParentFile().getCanonicalPath();
 			return root;
 		}
 		catch (IOException e)
 		{
+			throw new RuntimeException(e);
+		}
+		catch (URISyntaxException e) {
 			throw new RuntimeException(e);
 		}
 

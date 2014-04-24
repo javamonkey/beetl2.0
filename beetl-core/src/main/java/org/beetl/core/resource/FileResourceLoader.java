@@ -44,7 +44,7 @@ public class FileResourceLoader implements ResourceLoader
 
 	String root = null;
 	String charset = "UTF-8";
-	boolean autouCheck = false;
+	boolean autoCheck = false;
 	String functionRoot = "functions";
 	String functionSuffix = "html";
 	GroupTemplate gt = null;
@@ -85,7 +85,7 @@ public class FileResourceLoader implements ResourceLoader
 	@Override
 	public boolean isModified(Resource key)
 	{
-		if (this.autouCheck)
+		if (this.autoCheck)
 		{
 			return key.isModified();
 		}
@@ -95,14 +95,14 @@ public class FileResourceLoader implements ResourceLoader
 		}
 	}
 
-	public boolean isAutouCheck()
+	public boolean isAutoCheck()
 	{
-		return autouCheck;
+		return autoCheck;
 	}
 
-	public void setAutouCheck(boolean autouCheck)
+	public void setAutoCheck(boolean autoCheck)
 	{
-		this.autouCheck = autouCheck;
+		this.autoCheck = autoCheck;
 	}
 
 	public String getRoot()
@@ -144,7 +144,7 @@ public class FileResourceLoader implements ResourceLoader
 			this.functionSuffix = resourceMap.get("functionSuffix");
 		}
 
-		this.autouCheck = Boolean.parseBoolean(resourceMap.get("autouCheck"));
+		this.autoCheck = Boolean.parseBoolean(resourceMap.get("autoCheck"));
 
 		File root = new File(this.root, this.functionRoot);
 		this.gt = gt;

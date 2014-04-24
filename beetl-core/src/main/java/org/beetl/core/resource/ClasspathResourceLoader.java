@@ -46,7 +46,7 @@ import org.beetl.core.fun.FileFunctionWrapper;
 public class ClasspathResourceLoader implements ResourceLoader
 {
 	private String root = null;
-	boolean autouCheck = false;
+	boolean autoCheck = false;
 	protected String charset = "UTF-8";
 	String functionRoot = "functions";
 	String functionSuffix = "html";
@@ -121,7 +121,7 @@ public class ClasspathResourceLoader implements ResourceLoader
 	@Override
 	public boolean isModified(Resource key)
 	{
-		if (this.autouCheck)
+		if (this.autoCheck)
 		{
 			return key.isModified();
 		}
@@ -131,14 +131,14 @@ public class ClasspathResourceLoader implements ResourceLoader
 		}
 	}
 
-	public boolean isAutouCheck()
+	public boolean isAutoCheck()
 	{
-		return autouCheck;
+		return autoCheck;
 	}
 
-	public void setAutouCheck(boolean autouCheck)
+	public void setAutoCheck(boolean autoCheck)
 	{
-		this.autouCheck = autouCheck;
+		this.autoCheck = autoCheck;
 	}
 
 	public String getRoot()
@@ -165,7 +165,7 @@ public class ClasspathResourceLoader implements ResourceLoader
 			this.functionSuffix = resourceMap.get("functionSuffix");
 		}
 
-		this.autouCheck = Boolean.parseBoolean(resourceMap.get("autouCheck"));
+		this.autoCheck = Boolean.parseBoolean(resourceMap.get("autoCheck"));
 
 		//初始化functions
 		URL url = classLoader.getResource("");

@@ -1,6 +1,8 @@
 <%
-var a = true;
-print(!a);
+DIRECTIVE SAFE_OUTPUT_OPEN;
+var a = {cc:null};
+var b = a.cc;
 %>
+${b}
 
 

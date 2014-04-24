@@ -44,7 +44,7 @@ public class ProgramCacheFactory
 
 	public static Cache defaulCache()
 	{
-		return (Cache) ObjectUtil.instnace(CACHE);
+		return (Cache) ObjectUtil.instance(CACHE);
 
 	}
 }

@@ -688,6 +688,16 @@ public class AntlrProgramBuilder
 			return null;
 
 		}
+		else if (directive.equalsIgnoreCase("safe_output_open".intern()))
+		{
+			this.pbCtx.isSafeOutput = true;
+			return ds;
+		}
+		else if (directive.equalsIgnoreCase("safe_output_close".intern()))
+		{
+			this.pbCtx.isSafeOutput = false;
+			return ds;
+		}
 		else
 		{
 			return ds;
@@ -804,6 +814,19 @@ public class AntlrProgramBuilder
 
 			pbCtx.addVarAndPostion(loopStatusVar);
 
+			//			//beetl.2 兼容
+			//			VarDefineNode indexVar = new VarDefineNode(new org.beetl.core.statement.GrammarToken(forCtx.Identifier()
+			//					.getSymbol().getText()
+			//					+ "_index", forCtx.Identifier().getSymbol().getLine(), 0));
+			//
+			//			VarDefineNode sizeVar = new VarDefineNode(new org.beetl.core.statement.GrammarToken(forCtx.Identifier()
+			//					.getSymbol().getText()
+			//					+ "_size", forCtx.Identifier().getSymbol().getLine(), 0));
+			//
+			//			pbCtx.addVarAndPostion(indexVar);
+			//
+			//			pbCtx.addVarAndPostion(sizeVar);
+
 			Expression exp = this.parseExpress(forCtx.expression());
 
 			Statement forPart = this.parseStatment(forContext);
@@ -815,8 +838,19 @@ public class AntlrProgramBuilder
 				elseForPart = this.parseStatment(elseContext);
 
 			}
+			boolean hasSafe = false;
+			if (exp instanceof VarRef)
+			{
+				VarRef varRef = (VarRef) exp;
+				hasSafe = varRef.hasSafe;
+			}
 
-			ForStatement forStatement = new ForStatement(forVar, exp, forPart, elseForPart, forVar.token);
+			if (pbCtx.isSafeOutput)
+			{
+				hasSafe = true;
+			}
+
+			ForStatement forStatement = new ForStatement(forVar, exp, hasSafe, forPart, elseForPart, forVar.token);
 			this.checkGoto(forStatement);
 			pbCtx.exitBlock();
 			return forStatement;
@@ -1439,6 +1473,12 @@ public class AntlrProgramBuilder
 			hasSafe = true;
 
 		}
+
+		if (this.pbCtx.isSafeOutput)
+		{
+			hasSafe = true;
+		}
+
 		List<VarAttributeContext> list = varRef.varAttribute();
 		VarAttribute[] vas = this.parseVarAttribute(list);
 		if (vas.length > 0)

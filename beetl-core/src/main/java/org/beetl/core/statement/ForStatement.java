@@ -56,17 +56,13 @@ public final class ForStatement extends Statement implements IGoto
 	 * @param elseforPart
 	 * @param token
 	 */
-	public ForStatement(VarDefineNode idNode, Expression exp, Statement forPart, Statement elseforPart,
-			GrammarToken token)
+	public ForStatement(VarDefineNode idNode, Expression exp, boolean hasSafe, Statement forPart,
+			Statement elseforPart, GrammarToken token)
 	{
 		super(token);
 		this.idNode = idNode;
 		this.exp = exp;
-		if (exp instanceof VarRef)
-		{
-			VarRef varRef = (VarRef) exp;
-			hasSafe = varRef.hasSafe;
-		}
+		this.hasSafe = hasSafe;
 		this.elseforPart = elseforPart;
 		this.forPart = forPart;
 
@@ -98,6 +94,10 @@ public final class ForStatement extends Statement implements IGoto
 		}
 
 		ctx.vars[varIndex + 1] = it;
+		// loop_index
+		//		ctx.vars[varIndex+2] = 0;
+		//		ctx.vars[varIndex+3] = it.getSize();
+		//		
 		if (this.hasGoto)
 		{
 

@@ -141,7 +141,7 @@ public class GroupTemplate
 	{
 		if (this.resourceLoader == null)
 		{
-			this.resourceLoader = (ResourceLoader) ObjectUtil.instnace(conf.resourceLoader);
+			this.resourceLoader = (ResourceLoader) ObjectUtil.instance(conf.resourceLoader);
 
 		}
 		resourceLoader.init(this);
@@ -157,8 +157,8 @@ public class GroupTemplate
 		this.initVirtual();
 
 		classSearch = new ClassSearch(conf.getPkgList());
-		nativeSecurity = (NativeSecurityManager) ObjectUtil.instnace(conf.getNativeSecurity());
-		errorHandler = (ErrorHandler) ObjectUtil.instnace(conf.errorHandlerClass);
+		nativeSecurity = (NativeSecurityManager) ObjectUtil.instance(conf.getNativeSecurity());
+		errorHandler = (ErrorHandler) ObjectUtil.instance(conf.errorHandlerClass);
 	}
 
 	protected void initFunction()
@@ -169,7 +169,7 @@ public class GroupTemplate
 		{
 			String name = entry.getKey();
 			String clsName = entry.getValue();
-			this.registerFunction(name, (Function) ObjectUtil.instnace(clsName));
+			this.registerFunction(name, (Function) ObjectUtil.instance(clsName));
 		}
 
 	}
@@ -182,7 +182,7 @@ public class GroupTemplate
 		{
 			String name = entry.getKey();
 			String clsName = entry.getValue();
-			this.registerFormat(name, (Format) ObjectUtil.instnace(clsName));
+			this.registerFormat(name, (Format) ObjectUtil.instance(clsName));
 		}
 
 		Map<String, String> defaultFormatMap = this.conf.defaultFormatMap;
@@ -194,7 +194,7 @@ public class GroupTemplate
 			Format format = temp.get(formatClass);
 			if (format == null)
 			{
-				format = (Format) ObjectUtil.instnace(formatClass);
+				format = (Format) ObjectUtil.instance(formatClass);
 				temp.put(formatClass, format);
 			}
 			this.registerDefaultFormat(ObjectUtil.getClassByName(defaultType), format);
@@ -226,7 +226,7 @@ public class GroupTemplate
 		{
 			String name = entry.getKey();
 			String clsName = entry.getValue();
-			this.registerTagFactory(name, (TagFactory) ObjectUtil.instnace(clsName));
+			this.registerTagFactory(name, (TagFactory) ObjectUtil.instance(clsName));
 		}
 
 	}

@@ -15,7 +15,7 @@ public class FilePathRL {
 		FileResourceLoader resourceLoader = new FileResourceLoader(root,"utf-8");		
 			Configuration cfg = Configuration.defaultConfiguration();
 		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
-		Template t = gt.getTemplate("/s01/hello.txt");	
+		Template t = gt.getTemplate("/s01/hello.txt1");	
 		String str = t.render();		
 		System.out.println(str);
 

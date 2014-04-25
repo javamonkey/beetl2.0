@@ -172,6 +172,14 @@ public class GroupTemplate
 			this.registerFunction(name, (Function) ObjectUtil.instance(clsName));
 		}
 
+		Map<String, String> fnpMap = this.conf.fnPkgMap;
+		for (Entry<String, String> entry : fnpMap.entrySet())
+		{
+			String name = entry.getKey();
+			String clsName = entry.getValue();
+			this.registerFunctionPackage(name, ObjectUtil.instance(clsName));
+		}
+
 	}
 
 	protected void initFormatter()

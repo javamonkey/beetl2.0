@@ -1,7 +1,5 @@
 <%
-DIRECTIVE SAFE_OUTPUT_OPEN;
-var a = {cc:null};
-var b = a.cc;
+var b = strutil.length("hello");
 %>
 ${b}
 

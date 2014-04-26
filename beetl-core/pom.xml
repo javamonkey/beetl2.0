@@ -74,6 +74,23 @@
         </dependency> 
         
         
+           <dependency>
+            <groupId>struts</groupId>
+            <artifactId>core</artifactId>  
+            <version>1.b.49</version>          
+            <systemPath>${basedir}/lib/struts2-core-2.3.16.1.jar</systemPath>
+            <scope>system</scope>
+        </dependency> 
+        
+        
+           <dependency>
+            <groupId>struts</groupId>
+            <artifactId>xwork</artifactId>  
+            <version>1.b.49</version>          
+            <systemPath>${basedir}/lib/xwork-core-2.3.16.1.jar</systemPath>
+            <scope>system</scope>
+        </dependency> 
+        
           <dependency>
             <groupId>spring</groupId>
             <artifactId>context</artifactId>  

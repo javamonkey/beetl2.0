@@ -57,6 +57,7 @@ public class ClasspathResourceLoader implements ResourceLoader
 	{
 		//保留，用于通过配置构造一个ResouceLoader
 		classLoader = this.getClass().getClassLoader();
+		this.root = "";
 
 	}
 
@@ -150,11 +151,11 @@ public class ClasspathResourceLoader implements ResourceLoader
 	public void init(GroupTemplate gt)
 	{
 		Map<String, String> resourceMap = gt.getConf().getResourceMap();
-		if (this.root == null)
+		if (resourceMap.get("root") != null)
 		{
-			this.root = resourceMap.get("root");
-
+			this.root = this.root + File.separator + resourceMap.get("root");
 		}
+
 		if (this.charset == null)
 		{
 			this.charset = resourceMap.get("charset");

@@ -129,11 +129,11 @@ public class FileResourceLoader implements ResourceLoader
 	public void init(GroupTemplate gt)
 	{
 		Map<String, String> resourceMap = gt.getConf().getResourceMap();
-		if (this.root == null)
+		if (resourceMap.get("root") != null)
 		{
-			this.root = resourceMap.get("root");
-
+			this.root = this.root + File.separator + resourceMap.get("root");
 		}
+
 		if (this.charset == null)
 		{
 			this.charset = resourceMap.get("charset");

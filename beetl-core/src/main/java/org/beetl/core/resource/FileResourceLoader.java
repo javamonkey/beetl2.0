@@ -131,7 +131,11 @@ public class FileResourceLoader implements ResourceLoader
 		Map<String, String> resourceMap = gt.getConf().getResourceMap();
 		if (resourceMap.get("root") != null)
 		{
-			this.root = this.root + File.separator + resourceMap.get("root");
+
+			String temp = resourceMap.get("root");
+			File test = new File(root, temp);
+
+			this.root = test.toString();
 		}
 
 		if (this.charset == null)

@@ -1,4 +1,4 @@
-Beetl2.0使用说明书20140420
+Beetl2.0使用说明书20140427
 ===================
 李家智 <xiandafu@126.com>
 :toc:
@@ -14,17 +14,14 @@ Beetl目前版本是2.0，大小650K，相对于其他java模板引擎，具有�
 
 - 功能完备：同主流的java模板引擎相比，Beetl具有绝大多数功能。适用于各种应用场景，从对响应速度有很高要求的大网站到功能繁多的CMS管理系统都适合。Beetl本身还具有很多独特功能来完成模板编写和维护，这是其他模板引擎所不具有的。
 - 非常简单：类似Javascript语法和习俗，只要半小时就能通过半学半猜完全掌握用法。拒绝其他模板引擎那种非人性化的语法和习俗。
-- 超高的性能：Beetl 远超过主流java模板引擎性能，而且消耗较低的CPU
-- 易于整合：Beetl能很容易的与各种web框架整合，如Spring MVC，JFinal,Struts,Nutz，Jodd等。
+- 超高的性能：Beetl 远超过主流java模板引擎性能(引擎性能3-4倍与freemaker，参考附录），而且消耗较低的CPU
+- 易于整合：Beetl能很容易的与各种web框架整合，如Spring MVC，JFinal,Struts,Nutz，Jodd，Servlet等。
 - 支持模板单独开发和测试，即在MVC架构中，即使没有M和C部分，也能开发和测试模板。
 - 扩展和个性化：Beetl支持自定义方法，格式化函数，虚拟属性，标签，和HTML标签. 同时Beetl也支持自定义占位符和控制语句起始符号也支持使用者完全可以打造适合自己的工具包.
 
 .关于性能
 **********************************************************************
-通过与主流模板引擎Freemaker，Vecloity以及JSP对比，Beetl均远高于前面三个，这是因为宏观上，通过了优化的渲染引擎，IO的二进制输出，字节码属性访问增强，微观上，通过一维数组保存上下文很静态文本，通过重复使用字节数组java频繁的创建和销毁数组，还使用模板缓存，运行时优化等方法。详情可以参考附录“为什么beetl这么快”
-可以参考性能测试如下Beetl2.0 3倍于Freemaker和 Velocity
-
-
+通过与主流模板引擎Freemaker，Vecloity以及JSP对比，Beetl均远高于前面三个，这是因为宏观上，通过了优化的渲染引擎，IO的二进制输出，字节码属性访问增强，微观上，通过一维数组保存上下文Context,静态文本合并处理，通过重复使用字节数组来防止java频繁的创建和销毁数组，还使用模板缓存，运行时优化等方法。
 **********************************************************************
 
 .独特功能
@@ -37,8 +34,8 @@ Beetl有些功能是发展了10多年的模板引擎所不具备的，这些功�
 4. 强大的安全输出，通过安全输出符号！，能在模板变量，变量属性引用，for循环，占位符输出，try-catch中等各个地方提供安全输出，保证渲染正常
 5. 模板变量：运行将模板的某一部分输出像js那样赋值个一个变量，稍后再处理。利用模板变量能完成非常复杂的页面布局（简单的布局可使用layout标签函数)
 6. 类型推测，能在运行的时候推测模板变量类型，从而优化性能，也可以通过注解的方法显示的说明模板变量属性（这是非必须的，但有助于IDE自动提示功能）
-7. 可插拔的设计，错误信息提示，模板引擎缓存机制，模板资源管理，本地调用的安全管理器都有默认的实现，但又完全可以自定义以适合特定需求
-8. 增强的语法，如for-elsefor, select-case 等，这些语法特别适合模板开发
+7. 可插拔的设计，错误信息提示，模板引擎缓存机制，模板资源管理，本地调用的安全管理器,严格MVC限制，模板引擎本身都有默认的实现，但又完全可以自定义以适合特定需求
+8. 增强的语法，如for-elsefor, select-case，安全输出符号! 等，这些语法特别适合模板开发
 9. 性能超高,具有最快的模板解释引擎，同时，又有较低的CPU消耗。适合各类模板引用，如CMS系统，超高访问量的门户系统
 **********************************************************************
 
@@ -46,6 +43,8 @@ Beetl有些功能是发展了10多年的模板引擎所不具备的，这些功�
 .联系作者
 **********************************************************************
 作者：闲.大赋 （李家智）
+
+
 
 QQ群：350209275
 
@@ -55,7 +54,9 @@ Beetl主页：ibeetl.com
 
 源码主页：https://github.com/javamonkey/beetl2.0
 
-工作单位：中国电信系统集成公司
+在线体验和代码分享  http://ibeetl.com:8080/beetlonline/
+
+工作单位：中国电信
 
 如果有任何疑问或者提交bug，可以直接联系我
 
@@ -79,11 +80,13 @@ System.out.println(str);
 
 ----------------------------
 
-Beetl的核心是GroupTemplate，创建GroupTemplate需要俩个参数，一个是模板资源加载器，一个是配置类，模板资源加载器Beetl内置了3总，分别是
+Beetl的核心是GroupTemplate，创建GroupTemplate需要俩个参数，一个是模板资源加载器，一个是配置类，模板资源加载器Beetl内置了4总，分别是
 
 - StringTemplateResourceLoader：字符串模板加载器，用于加载字符串模板，如本例所示
 - FileResourceLoader：文件模板加载器，需要一个根目录作为参数构造，，传入getTemplate方法的String是模板文件相对于Root目录的相对路径
 - ClasspathResourceLoader：文件模板加载器，模板文件位于Classpath里
+- WebAppResourceLoader：用于webapp集成，假定模板跟目录就是WebRoot目录
+
 
 代码第5行将变量name传入模板里，其值是“Beetl”。
 代码第6行是渲染模板，得到输出，template提供了多种获得渲染输出的方法，如下
@@ -421,7 +424,7 @@ var f = 122228833330322.1112h
 
 ----------------------------
 
-Beetl里定义的临时变量类型默认对应的java是Int型或者double类型，对于模板常用情况说，已经够了.如果需要定义长精度类型（对应java的BigDecimal），则需要在数字末尾加上h以表示这是长精度BigDecimal，其后的计算和输出都将按照长精度类型来考虑。
+Beetl里定义的临时变量类型默认对应的java是Int型或者double类型，对于模板常用情况说，已经够了.如果需要定义长精度类型（对应java的BigDecimal），则需要在数字末尾加上h以表示这是长精度BigDecimal，其后的计算和输出以及逻辑表达式都将按照长精度类型来考虑。
 
 
 === 逻辑表达式 ===
@@ -2150,7 +2153,13 @@ public class WebRender
 		this.gt = gt;
 	}
 
-	public void render(String key, HttpServletRequest request, HttpServletResponse response)
+	/**
+	 * @param key 模板资源id
+	 * @param request
+	 * @param response
+	 * @param args 其他参数，将会传给modifyTemplate方法
+	 */
+	public void render(String key, HttpServletRequest request, HttpServletResponse response, Object... args)
 	{
 		Writer writer = null;
 		OutputStream os = null;
@@ -2178,7 +2187,7 @@ public class WebRender
 			template.binding("request", request);
 			template.binding("ctxPath", request.getContextPath());
 
-			modifyTemplate(template, key, request, response);
+			modifyTemplate(template, key, request, response, args);
 
 			if (gt.getConf().isDirectByteOutput())
 			{
@@ -2221,9 +2230,14 @@ public class WebRender
 
 	/**
 	 * 可以添加更多的绑定
+	 * @param template 模板
+	 * @param key 模板的资源id
+	 * @param request 
+	 * @param response
+	 * @param args  调用render的时候传的参数
 	 */
 	protected void modifyTemplate(Template template, String key, HttpServletRequest request,
-			HttpServletResponse response)
+			HttpServletResponse response, Object... args)
 	{
 
 	}
@@ -2244,7 +2258,6 @@ public class WebRender
 		throw ex;
 	}
 }
-
 
 ----------------------------
 
@@ -2458,23 +2471,15 @@ public class BeetlRenderFactory implements IMainRenderFactory
 	{
 		try
 		{
-			String path = BeetlRenderFactory.class.getResource("/").getFile();
-			String root = new File(path).getParentFile().getParentFile().getCanonicalPath();
 
 			Configuration cfg = Configuration.defaultConfiguration();
-			String charset = cfg.getCharset();
-			String realPath = cfg.getProperty("RESOURCE.root");
-			if (realPath != null)
-			{
-				root = root + File.separator + realPath + File.separator;
-			}
-			FileResourceLoader resourceLoader = new FileResourceLoader(root, charset);
+			WebAppResourceLoader resourceLoader = new WebAppResourceLoader();
 			groupTemplate = new GroupTemplate(resourceLoader, cfg);
 
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException("Can notload properties for beetl");
+			throw new RuntimeException("加载GroupTemplate失败", e);
 		}
 	}
 
@@ -2489,7 +2494,6 @@ public class BeetlRenderFactory implements IMainRenderFactory
 	}
 
 }
-
 
 ----------------------------
 
@@ -2648,11 +2652,104 @@ public class BeetlViewMaker implements ViewMaker
 
 === Struts2集成 ===
 
-*************************************************
+需要在struts2配置文件里添加result-types做如下配置
+[source,xml]
+----------------------------
+<package name="default" namespace="/" extends="struts-default">
+.......
+<result-types>
+	<result-type name="beetl"
+		class="org.beetl.ext.struts2.Struts2BeetlActionResult" default="true" />
+</result-types>
 
-暂时不支持，稍后退出
+<action name="HelloWorld" class="example.HelloWorld">
+    <result>/hello.html</result>
+</action>
+........
+</package>
+----------------------------
 
-*************************************************
+该类会根据struts配置文件获取模板，如上例的hello.html,并将formbean的属性，以及request属性作为全局变量传递给模板
+Struts2BeetlActionResult 集成代码如下：
+[source,java]
+----------------------------
+public class Struts2BeetlActionResult extends StrutsResultSupport
+{
+
+	
+	ReflectionProvider reflectionProvider = null;
+	public static GroupTemplate groupTemplate;
+	static {
+		Configuration cfg;
+		try
+		{
+			cfg = Configuration.defaultConfiguration();
+			WebAppResourceLoader resourceLoader = new WebAppResourceLoader();
+			groupTemplate = new GroupTemplate(resourceLoader, cfg);
+			
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException("加载GroupTemplate失败", e);
+		}
+	}
+
+	@Inject
+	public void setReflectionProvider(ReflectionProvider prov)
+	{
+		this.reflectionProvider = prov;
+	}
+
+	protected void doExecute(String locationArg, ActionInvocation invocation) throws Exception
+	{
+
+		ActionContext ctx = invocation.getInvocationContext();
+
+		HttpServletRequest req = (HttpServletRequest) ctx.get(ServletActionContext.HTTP_REQUEST);
+		HttpServletResponse rsp = (HttpServletResponse) ctx.get(ServletActionContext.HTTP_RESPONSE);
+
+		if (!locationArg.startsWith("/"))
+		{
+			String base = ResourceUtil.getResourceBase(req);
+			locationArg = base + "/" + locationArg;
+		}
+
+		Template template = groupTemplate.getTemplate(locationArg);
+		
+		Object action = 	invocation.getAction();
+		Map<String, Object> values = reflectionProvider.getBeanMap(action);
+		
+		WebRender render = new WebRender(groupTemplate){
+			protected void modifyTemplate(Template template, String key, HttpServletRequest request,
+					HttpServletResponse response, Object... args)
+			{
+				Map model = (Map) args[0];
+
+				for (Object o : model.entrySet())
+				{
+					Entry entry = (Entry) o;
+					String name = (String) entry.getKey();
+					Object value = entry.getValue();
+					template.binding(name, value);
+				}
+			}
+		};
+		render.render(locationArg, req, rsp,values);
+	
+
+	}	
+
+	
+}
+----------------------------
+
+
+.郑重申明
+**********************************************************************
+鉴于struts2有安全漏洞，而官方补丁打法很消极，所以请谨慎使用Struts2，Beetl的安全性已经通过在线体验，多个使用网站得以体现
+一旦你的struts2网站被攻破，请先确定是否是struts2 的问题
+
+**********************************************************************
 
 
 == 附录 ==
@@ -2855,13 +2952,29 @@ public void clearAll(String... keys);
 ----------------------------
 
 
+- includeJSP,可以在模板里包括一个jsp文件，如：
+[source,java]
+----------------------------
+<%
+includeJSP("/xxxx.jsp",{"key":"value"})
+%>
+----------------------------
 
+key value 都是字符串，将以paramenter的形式提供给jsp，因此jsp可以通过request.getParameter("key")来获取参数
 
+主要注意的是，这个标签并非内置，需要手工注册一下
+
+[source,java]
+----------------------------
+groupTemplate.registerTag("incdlueJSP",org.beetl.ext.jsp.IncludeJSPTag.class);
+----------------------------
 
 
 === 性能测试对比 ===
 
-测试结果：3倍于Freemaker，具体见http://my.oschina.net/u/567839/blog/212727
+
+image:performance.jpg[]
+
 测试用例 https://github.com/javamonkey/ebm
 
 

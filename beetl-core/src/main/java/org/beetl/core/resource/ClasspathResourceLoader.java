@@ -153,7 +153,16 @@ public class ClasspathResourceLoader implements ResourceLoader
 		Map<String, String> resourceMap = gt.getConf().getResourceMap();
 		if (resourceMap.get("root") != null)
 		{
-			this.root = this.root + File.separator + resourceMap.get("root");
+			String temp = resourceMap.get("root");
+			if (temp.equals("/") || temp.length() == 0)
+			{
+
+			}
+			else
+			{
+				this.root = this.root + "/" + resourceMap.get("root");
+			}
+
 		}
 
 		if (this.charset == null)

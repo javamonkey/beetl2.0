@@ -7,7 +7,7 @@ import java.util.List;
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Template;
-import org.beetl.core.res.FileResourceLoader;
+import org.beetl.core.resource.FileResourceLoader;
 
 public class GroupTemplateTest {
 

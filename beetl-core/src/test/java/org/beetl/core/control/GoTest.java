@@ -2,6 +2,7 @@ package org.beetl.core.control;
 
 import org.beetl.core.BasicTestCase;
 import org.beetl.core.Template;
+import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
@@ -13,6 +14,7 @@ public class GoTest extends BasicTestCase
 	@Test
 	public void testContinue() throws Exception
 	{
+		Assert.assertTrue(false);
 		Template t = gt.getTemplate("/control/go/continue_template.html");
 		this.bind(t, "dataList", data);
 		String str = t.render();

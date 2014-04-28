@@ -1,4 +1,4 @@
-# Beetl 2 ![构建状态](https://api.travis-ci.org/gyk001/beetl2.0.png)
+# Beetl 2 ![构建状态](https://travis-ci.org/gyk001/beetl2.0.svg)
 
 http://ibeetl.com/wordpress/
 

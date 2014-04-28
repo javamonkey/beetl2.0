@@ -41,7 +41,8 @@ public class FileResource extends Resource
 		}
 		catch (FileNotFoundException e)
 		{
-			BeetlException be = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR, "未找到模板文件 " + id);
+			FileResourceLoader loader = (FileResourceLoader) this.resourceLoader;
+			BeetlException be = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR, " 模板根目录为 " + loader.getRoot());
 			throw be;
 
 		}

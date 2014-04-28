@@ -50,7 +50,7 @@ public class NotBooleanExpression extends Expression
 
 	public final Object evaluate(Context ctx)
 	{
-		return ALU.isTrue(exp.evaluate(ctx), exp);
+		return !ALU.isTrue(exp.evaluate(ctx), exp);
 
 	}
 

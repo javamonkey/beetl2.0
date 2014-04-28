@@ -297,6 +297,7 @@ public class FieldAccessBCW implements BCW
 			out.writeByte(INVOKE_STATIC);
 			methodIndex = registerMethod(this.integerClass, this.valueOfFunction, this.intValueOfFunctionDesc);
 			out.writeShort(methodIndex);
+
 		}
 		else if (this.retByteCodeType.equals("S"))
 		{
@@ -316,7 +317,20 @@ public class FieldAccessBCW implements BCW
 			methodIndex = registerMethod(this.longClass, this.valueOfFunction, this.longValueOfFunctionDesc);
 			out.writeShort(methodIndex);
 		}
-
+		else if (this.retByteCodeType.equals("Z"))
+		{
+			out.writeByte(INVOKE_STATIC);
+			methodIndex = registerMethod(this.booleanClass, this.valueOfFunction, this.booleanValueOfFunctionDesc);
+			out.writeShort(methodIndex);
+		}
+		else if (this.retByteCodeType.equals("B"))
+		{
+			out.writeByte(INVOKE_STATIC);
+			methodIndex = registerMethod(this.byteClass, this.valueOfFunction, this.booleanValueOfFunctionDesc);
+			out.writeShort(methodIndex);
+		}
+		
+		
 		out.writeByte(ARETURN - 256);
 		return bs.toByteArray();
 

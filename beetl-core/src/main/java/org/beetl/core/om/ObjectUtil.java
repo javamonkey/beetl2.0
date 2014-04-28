@@ -177,6 +177,7 @@ public class ObjectUtil
 		if (invoker != null)
 		{
 			methodInvokerCache.put(key, invoker);
+
 			return invoker;
 		}
 		else
@@ -194,10 +195,14 @@ public class ObjectUtil
 	 */
 	public static Method getGetMethod(Class c, String methodName, Class... paras)
 	{
+
 		//需要优化
 		try
 		{
-			return c.getMethod(methodName, paras);
+
+			Method m = c.getMethod(methodName, paras);
+			m.setAccessible(true);
+			return m;
 		}
 		catch (SecurityException e)
 		{
@@ -528,7 +533,7 @@ public class ObjectUtil
 	 * @param clsName
 	 * @return 如果未能创建实例，则抛出runtime异常
 	 */
-	public static Object instnace(String clsName)
+	public static Object instance(String clsName)
 	{
 		try
 		{

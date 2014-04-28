@@ -32,6 +32,7 @@ import java.io.Writer;
 import org.beetl.core.Context;
 import org.beetl.core.ErrorHandler;
 import org.beetl.core.GroupTemplate;
+import org.beetl.core.Resource;
 import org.beetl.core.exception.BeetlException;
 import org.beetl.core.misc.BeetlUtil;
 
@@ -45,10 +46,11 @@ public class ErrorGrammarProgram extends Program
 {
 	BeetlException exception = null;
 
-	public ErrorGrammarProgram(String resourcId, GroupTemplate gt, String cr)
+	public ErrorGrammarProgram(Resource res, GroupTemplate gt, String cr)
 	{
 		super();
-		this.id = resourcId;
+		this.id = res.getId();
+		this.rs = res;
 		this.gt = gt;
 		this.metaData = new ProgramMetaData() {
 			public void initContext(Context ctx)

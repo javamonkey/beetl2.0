@@ -27,9 +27,12 @@
  */
 package org.beetl.core.statement;
 
+import java.util.Collections;
+
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
 import org.beetl.core.IteratorStatus;
+import org.beetl.core.exception.BeetlException;
 
 /** for(user:list){}elsefor{}
  * @author joelli
@@ -43,6 +46,7 @@ public final class ForStatement extends Statement implements IGoto
 	public Statement elseforPart;
 	public boolean hasGoto = false;
 	public short itType = 0;
+	public boolean hasSafe;
 
 	/**
 	 * for(idNode in exp) {forPath}elsefor{elseforPart}
@@ -52,12 +56,13 @@ public final class ForStatement extends Statement implements IGoto
 	 * @param elseforPart
 	 * @param token
 	 */
-	public ForStatement(VarDefineNode idNode, Expression exp, Statement forPart, Statement elseforPart,
-			GrammarToken token)
+	public ForStatement(VarDefineNode idNode, Expression exp, boolean hasSafe, Statement forPart,
+			Statement elseforPart, GrammarToken token)
 	{
 		super(token);
 		this.idNode = idNode;
 		this.exp = exp;
+		this.hasSafe = hasSafe;
 		this.elseforPart = elseforPart;
 		this.forPart = forPart;
 
@@ -67,8 +72,32 @@ public final class ForStatement extends Statement implements IGoto
 	{
 		// idNode 是其后设置的
 		int varIndex = ((IVarIndex) idNode).getVarIndex();
-		IteratorStatus it = IteratorStatus.getIteratorStatus(exp.evaluate(ctx), itType);
+		Object collection = exp.evaluate(ctx);
+		IteratorStatus it = null;
+		if (collection == null)
+		{
+			if (!this.hasSafe)
+			{
+				BeetlException ex = new BeetlException(BeetlException.NULL);
+				ex.token = exp.token;
+				throw ex;
+			}
+			else
+			{
+				it = new IteratorStatus(Collections.EMPTY_LIST);
+			}
+
+		}
+		else
+		{
+			it = IteratorStatus.getIteratorStatus(exp.evaluate(ctx), itType);
+		}
+
 		ctx.vars[varIndex + 1] = it;
+		// loop_index
+		//		ctx.vars[varIndex+2] = 0;
+		//		ctx.vars[varIndex+3] = it.getSize();
+		//		
 		if (this.hasGoto)
 		{
 
@@ -93,7 +122,8 @@ public final class ForStatement extends Statement implements IGoto
 
 			if (!it.hasData())
 			{
-				elseforPart.execute(ctx);
+				if (elseforPart != null)
+					elseforPart.execute(ctx);
 			}
 			return;
 
@@ -108,7 +138,8 @@ public final class ForStatement extends Statement implements IGoto
 			}
 			if (!it.hasData())
 			{
-				elseforPart.execute(ctx);
+				if (elseforPart != null)
+					elseforPart.execute(ctx);
 			}
 
 		}

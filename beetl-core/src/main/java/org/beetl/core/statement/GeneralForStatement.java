@@ -35,14 +35,14 @@ import org.beetl.core.InferContext;
  * @author joelli
  *
  */
-public final class GeneralForStatement extends Statement implements IGoto
+public class GeneralForStatement extends Statement implements IGoto
 {
 	public Expression[] expInit;
 	public Expression condtion;
 	public Expression[] expUpdate;
 	public Statement forPart;
 	public Statement elseforPart;
-	VarAssignStatementSeq varAssignSeq;
+	public VarAssignStatementSeq varAssignSeq;
 	public boolean hasGoto = false;
 	public short itType = 0;
 
@@ -60,7 +60,7 @@ public final class GeneralForStatement extends Statement implements IGoto
 
 	}
 
-	public final void execute(Context ctx)
+	public void execute(Context ctx)
 	{
 		if (expInit != null)
 		{

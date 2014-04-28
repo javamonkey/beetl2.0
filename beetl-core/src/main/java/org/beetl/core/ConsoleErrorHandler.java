@@ -49,13 +49,15 @@ public class ConsoleErrorHandler implements ErrorHandler
 		StringBuilder sb = new StringBuilder(">>").append(error.getType()).append(":")
 				.append(error.getErrorTokenText()).append(" 位于").append(line).append("行").append(" 资源:")
 				.append(getResourceName(ex.resourceId));
-		;
-		println(writer, sb.toString());
+
 		if (error.getErrorCode().equals(BeetlException.TEMPLATE_LOAD_ERROR))
 		{
-			printCause(error, writer);
+			sb.append(error.getMsg());
+			println(writer, sb.toString());
 			return;
 		}
+
+		println(writer, sb.toString());
 
 		ResourceLoader resLoader = ex.gt.getResourceLoader();
 		//潜在问题，此时可能得到是一个新的模板，不过可能性很小，忽略！

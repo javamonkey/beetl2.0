@@ -42,6 +42,11 @@ public class NoLockStringWriter extends Writer
 		this.buf = new char[64];
 	}
 
+	public NoLockStringWriter(char buf[])
+	{
+		this.buf = buf;
+	}
+
 	@Override
 	public void write(char[] cbuf, int off, int len) throws IOException
 	{

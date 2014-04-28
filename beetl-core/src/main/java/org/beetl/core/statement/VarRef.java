@@ -65,15 +65,19 @@ public class VarRef extends Expression implements IVarIndex
 			{
 				return safe == null ? null : safe.evaluate(ctx);
 			}
-			else if (ctx.safeOutput)
-			{
-				return null;
-			}
 			else
 			{
 				BeetlException ex = new BeetlException(BeetlException.VAR_NOT_DEFINED);
 				ex.token = this.token;
 				throw ex;
+			}
+		}
+
+		if (value == null)
+		{
+			if (hasSafe)
+			{
+				return safe == null ? null : safe.evaluate(ctx);
 			}
 		}
 
@@ -108,7 +112,15 @@ public class VarRef extends Expression implements IVarIndex
 			}
 
 		}
-		return value;
+
+		if (value == null && hasSafe)
+		{
+			return safe == null ? null : safe.evaluate(ctx);
+		}
+		else
+		{
+			return value;
+		}
 
 	}
 

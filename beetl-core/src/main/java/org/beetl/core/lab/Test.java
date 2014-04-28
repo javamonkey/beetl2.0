@@ -14,11 +14,13 @@ public class Test
 		Configuration cfg = Configuration.defaultConfiguration();
 		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 		Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
+		TestUser user = new TestUser("aa");
+		t.binding("user", user);
 		String str = t.render();
 		System.out.println(str);
-		Thread.sleep(1000 * 8);
-		t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
-		str = t.render();
-		System.out.println(str);
+		//		Thread.sleep(1000 * 8);
+		//		t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
+		//		str = t.render();
+		//		System.out.println(str);
 	}
 }

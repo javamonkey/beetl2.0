@@ -89,7 +89,7 @@ public class TypeBindingProbe extends Probe
 		{
 			if (types[i] == null)
 			{
-				if (ctx.vars[i] != ctx.NOT_EXIST_OBJECT)
+				if (ctx.vars[i] != ctx.NOT_EXIST_OBJECT && ctx.vars[i] != null)
 				{
 					Object o = ctx.vars[i];
 					Type c = getType(o);

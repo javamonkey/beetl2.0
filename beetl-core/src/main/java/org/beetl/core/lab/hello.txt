@@ -1,6 +1,7 @@
 <%
-var a = 11;
-debug(a);
+var b = isEmpty(user.bir);
 %>
+${b}
+${user.bir}
 
-sfsfsdf ${a} dfdsfdsfds
+

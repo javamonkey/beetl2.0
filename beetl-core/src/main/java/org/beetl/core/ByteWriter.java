@@ -71,7 +71,8 @@ public abstract class ByteWriter
 
 	public ByteWriter()
 	{
-		buffer = new char[64];
+		//TODO ,GET BUFFER FROM THREAD CACHE
+		buffer = new char[256];
 	}
 
 	public ByteWriter(char[] buffer)

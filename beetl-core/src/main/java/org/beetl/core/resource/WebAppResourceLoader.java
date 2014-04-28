@@ -56,7 +56,7 @@ public class WebAppResourceLoader extends FileResourceLoader
 	{
 
 		this();
-		this.root = BeetlUtil.getWebRoot() + File.separator + root;
+		this.root = root;
 
 	}
 
@@ -64,7 +64,7 @@ public class WebAppResourceLoader extends FileResourceLoader
 	{
 
 		this();
-		this.root = BeetlUtil.getWebRoot() + File.separator + root;
+		this.root = root;
 		this.charset = charset;
 	}
 

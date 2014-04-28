@@ -27,7 +27,13 @@ public class WebRender
 		this.gt = gt;
 	}
 
-	public void render(String key, HttpServletRequest request, HttpServletResponse response)
+	/**
+	 * @param key 模板资源id
+	 * @param request
+	 * @param response
+	 * @param args 其他参数，将会传给modifyTemplate方法
+	 */
+	public void render(String key, HttpServletRequest request, HttpServletResponse response, Object... args)
 	{
 		Writer writer = null;
 		OutputStream os = null;
@@ -55,7 +61,7 @@ public class WebRender
 			template.binding("request", request);
 			template.binding("ctxPath", request.getContextPath());
 
-			modifyTemplate(template, key, request, response);
+			modifyTemplate(template, key, request, response, args);
 
 			if (gt.getConf().isDirectByteOutput())
 			{
@@ -98,9 +104,14 @@ public class WebRender
 
 	/**
 	 * 可以添加更多的绑定
+	 * @param template 模板
+	 * @param key 模板的资源id
+	 * @param request 
+	 * @param response
+	 * @param args  调用render的时候传的参数
 	 */
 	protected void modifyTemplate(Template template, String key, HttpServletRequest request,
-			HttpServletResponse response)
+			HttpServletResponse response, Object... args)
 	{
 
 	}

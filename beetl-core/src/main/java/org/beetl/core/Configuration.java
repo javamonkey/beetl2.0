@@ -200,14 +200,8 @@ public class Configuration
 		}
 		else if (key.equalsIgnoreCase(DELIMITER_PLACEHOLDER_END))
 		{
-			if (value == null | value.length() == 0 || value.equals("null"))
-			{
-				this.placeholderEnd = null;
-			}
-			else
-			{
-				this.placeholderEnd = value;
-			}
+
+			this.placeholderEnd = value;
 		}
 		else if (key.equalsIgnoreCase(DELIMITER_STATEMENT_START))
 		{
@@ -215,7 +209,15 @@ public class Configuration
 		}
 		else if (key.equalsIgnoreCase(DELIMITER_STATEMENT_END))
 		{
-			this.statementEnd = value;
+			if (value == null | value.length() == 0 || value.equals("null"))
+			{
+				this.statementEnd = null;
+			}
+			else
+			{
+				this.statementEnd = value;
+			}
+
 		}
 		else if (key.equalsIgnoreCase(NATIVE_CALL))
 		{

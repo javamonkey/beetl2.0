@@ -14,7 +14,6 @@ public class GoTest extends BasicTestCase
 	@Test
 	public void testContinue() throws Exception
 	{
-		Assert.assertTrue(false);
 		Template t = gt.getTemplate("/control/go/continue_template.html");
 		this.bind(t, "dataList", data);
 		String str = t.render();

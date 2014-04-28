@@ -1,17 +1,43 @@
 package org.beetl.core.statement;
 
+import java.lang.reflect.Method;
+
+import org.beetl.core.Context;
+import org.beetl.core.InferContext;
+import org.beetl.core.VirtualClassAttribute;
+import org.beetl.core.om.ObjectUtil;
+
+/**
+ * list.~size
+ * @author joelli
+ *
+ */
 public class VarVirtualAttribute extends VarAttribute
 {
-	protected short type = 2;
+	protected String name = null;
 
-	public VarVirtualAttribute(Token token)
+	public VarVirtualAttribute(GrammarToken token)
 	{
 		super(token);
+		this.name = token.text;
 
 	}
 
-	public void infer(Type[] types, Object temp)
+	public Object evaluate(Context ctx, Object o)
 	{
-		throw new UnsupportedOperationException();
+
+		VirtualClassAttribute vae = ctx.gt.getVirtualAttributeEval(o.getClass(), name);
+		return vae.eval(o, name, ctx);
+
+	}
+
+	@Override
+	public void infer(InferContext inferCtx)
+	{
+		Type type = (Type) inferCtx.temp;
+		VirtualClassAttribute vae = inferCtx.gt.getVirtualAttributeEval(type.cls, name);
+		Method m = ObjectUtil.getGetMethod(vae.getClass(), "eval", new Class[]
+		{ Object.class, String.class, Context.class });
+		this.type = new Type(m.getReturnType());
 	}
 }

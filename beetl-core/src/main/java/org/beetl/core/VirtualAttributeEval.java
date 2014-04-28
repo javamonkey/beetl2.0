@@ -33,7 +33,8 @@ package org.beetl.core;
  * @author joelli
  * 
  */
-public interface VirtualAttributeEval
+public interface VirtualAttributeEval extends VirtualClassAttribute
 {
-	public Object eval(Object o, String attributeName, Context ctx);
+
+	public boolean isSupport(Class c, String attributeName);
 }

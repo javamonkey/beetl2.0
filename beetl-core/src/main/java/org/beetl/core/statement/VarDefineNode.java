@@ -1,13 +1,19 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
+import org.beetl.core.InferContext;
 
+/**
+ * var c 
+ * @author joelli
+ *
+ */
 public class VarDefineNode extends Expression implements IVarIndex
 {
 
 	int varIndex = 0;
 
-	public VarDefineNode(Token token)
+	public VarDefineNode(GrammarToken token)
 	{
 		super(token);
 		// TODO Auto-generated constructor stub
@@ -31,6 +37,13 @@ public class VarDefineNode extends Expression implements IVarIndex
 	public int getVarIndex()
 	{
 		return varIndex;
+	}
+
+	@Override
+	public void infer(InferContext inferCtx)
+	{
+		// TODO Auto-generated method stub
+
 	}
 
 }

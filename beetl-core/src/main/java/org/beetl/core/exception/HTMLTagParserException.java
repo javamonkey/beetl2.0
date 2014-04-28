@@ -27,28 +27,29 @@
  */
 package org.beetl.core.exception;
 
-import org.beetl.core.statement.Token;
+import org.beetl.core.statement.GrammarToken;
 
 /**
- * html解析支持
+ * html解析异常
  * 
  * @author joelli
  * 
  */
 public class HTMLTagParserException extends BeetlException
 {
-	String msg = null;
-	public Token token = null;
+
+	public GrammarToken token = null;
 	public int line = 0;
 
 	public HTMLTagParserException(String message)
 	{
-		this.msg = message;
+		super(message);
+		this.detailCode = BeetlException.PARSER_HTML_TAG_ERROR;
 
 	}
 
 	public String getHtmlTagErrorMsg()
 	{
-		return msg;
+		return super.getMessage();
 	}
 }

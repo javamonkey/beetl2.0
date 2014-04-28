@@ -1,8 +1,43 @@
+/*
+ [The "BSD license"]
+ Copyright (c) 2011-2014 Joel Li (李家智)
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+ 3. The name of the author may not be used to endorse or promote products
+     derived from this software without specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package org.beetl.core.statement;
 
-import org.beetl.core.Context;
-import org.beetl.core.IteratorStatus;
+import java.util.Collections;
 
+import org.beetl.core.Context;
+import org.beetl.core.InferContext;
+import org.beetl.core.IteratorStatus;
+import org.beetl.core.exception.BeetlException;
+
+/** for(user:list){}elsefor{}
+ * @author joelli
+ *
+ */
 public final class ForStatement extends Statement implements IGoto
 {
 	public Expression idNode;
@@ -11,12 +46,23 @@ public final class ForStatement extends Statement implements IGoto
 	public Statement elseforPart;
 	public boolean hasGoto = false;
 	public short itType = 0;
+	public boolean hasSafe;
 
-	public ForStatement(VarDefineNode idNode, Expression exp, Statement forPart, Statement elseforPart, Token token)
+	/**
+	 * for(idNode in exp) {forPath}elsefor{elseforPart}
+	 * @param idNode
+	 * @param exp
+	 * @param forPart
+	 * @param elseforPart
+	 * @param token
+	 */
+	public ForStatement(VarDefineNode idNode, Expression exp, boolean hasSafe, Statement forPart,
+			Statement elseforPart, GrammarToken token)
 	{
 		super(token);
 		this.idNode = idNode;
 		this.exp = exp;
+		this.hasSafe = hasSafe;
 		this.elseforPart = elseforPart;
 		this.forPart = forPart;
 
@@ -26,8 +72,32 @@ public final class ForStatement extends Statement implements IGoto
 	{
 		// idNode 是其后设置的
 		int varIndex = ((IVarIndex) idNode).getVarIndex();
-		IteratorStatus it = IteratorStatus.getIteratorStatus(exp.evaluate(ctx), itType);
+		Object collection = exp.evaluate(ctx);
+		IteratorStatus it = null;
+		if (collection == null)
+		{
+			if (!this.hasSafe)
+			{
+				BeetlException ex = new BeetlException(BeetlException.NULL);
+				ex.token = exp.token;
+				throw ex;
+			}
+			else
+			{
+				it = new IteratorStatus(Collections.EMPTY_LIST);
+			}
+
+		}
+		else
+		{
+			it = IteratorStatus.getIteratorStatus(exp.evaluate(ctx), itType);
+		}
+
 		ctx.vars[varIndex + 1] = it;
+		// loop_index
+		//		ctx.vars[varIndex+2] = 0;
+		//		ctx.vars[varIndex+3] = it.getSize();
+		//		
 		if (this.hasGoto)
 		{
 
@@ -52,7 +122,8 @@ public final class ForStatement extends Statement implements IGoto
 
 			if (!it.hasData())
 			{
-				elseforPart.execute(ctx);
+				if (elseforPart != null)
+					elseforPart.execute(ctx);
 			}
 			return;
 
@@ -67,7 +138,8 @@ public final class ForStatement extends Statement implements IGoto
 			}
 			if (!it.hasData())
 			{
-				elseforPart.execute(ctx);
+				if (elseforPart != null)
+					elseforPart.execute(ctx);
 			}
 
 		}
@@ -89,17 +161,25 @@ public final class ForStatement extends Statement implements IGoto
 	}
 
 	@Override
-	public void infer(Type[] types, Object temp)
+	public void infer(InferContext inferCtx)
 	{
-		exp.infer(types, null);
-		idNode.type = exp.getType().types[0];
+		exp.infer(inferCtx);
+		if (exp.getType().types != null)
+		{
+			idNode.type = exp.getType().types[0];
+		}
+		else
+		{
+			idNode.type = Type.ObjectType;
+		}
+
 		int index = ((IVarIndex) idNode).getVarIndex();
-		types[index] = idNode.type;
-		types[index + 1] = new Type(IteratorStatus.class, idNode.type.cls);
-		forPart.infer(types, null);
+		inferCtx.types[index] = idNode.type;
+		inferCtx.types[index + 1] = new Type(IteratorStatus.class, idNode.type.cls);
+		forPart.infer(inferCtx);
 		if (elseforPart != null)
 		{
-			elseforPart.infer(types, null);
+			elseforPart.infer(inferCtx);
 		}
 
 	}

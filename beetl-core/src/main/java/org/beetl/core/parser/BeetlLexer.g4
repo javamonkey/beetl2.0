@@ -195,10 +195,10 @@ mode MODE_COMMENT_TYPE;
 Identifier1:Identifier;
 PERIOD1:'.';
 LEFT_PAR1:'(';
-RIGHT_PAR1:')';
+RIGHT_PAR1:')' -> popMode ;
 COMMA1:','; 
 LEFT_ANGULAR:'<';
 RIGHT_ANGULAR:'>';
 WS1  :   [ \r\t\u000C]+ -> channel(HIDDEN);
-TYPE_END: [\r\n]  -> popMode,channel(HIDDEN)
-        ;
+TYPE_END: [\r\n]  -> popMode,channel(HIDDEN)        ;
+

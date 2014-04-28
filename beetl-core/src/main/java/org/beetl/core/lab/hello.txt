@@ -1,0 +1,7 @@
+<%
+var b = isEmpty(user.bir);
+%>
+${b}
+${user.bir}
+
+

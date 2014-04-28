@@ -1,12 +1,41 @@
+/*
+ [The "BSD license"]
+ Copyright (c) 2011-2014 Joel Li (李家智)
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+ 3. The name of the author may not be used to endorse or promote products
+     derived from this software without specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package org.beetl.core.statement;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
+import org.beetl.core.BodyContent;
 import org.beetl.core.IteratorStatus;
-import org.beetl.core.exception.TempException;
-import org.beetl.core.util.ObjectUtil;
+import org.beetl.core.exception.BeetlException;
+import org.beetl.core.om.MethodInvoker;
+import org.beetl.core.om.ObjectUtil;
 
 /**
  * 表达式类型
@@ -21,6 +50,12 @@ public class Type implements java.io.Serializable
 	public static final Type ObjectType = new Type(Object.class);
 	public static final Type BooleanType = new Type(Boolean.class);
 	public static final Type StringType = new Type(String.class);
+	public static final Type NumberType = new Type(Number.class);
+
+	public static final Type ListType = new Type(List.class);
+	public static final Type MapType = new Type(Map.class);
+	public static final Type NULLType = new Type(NULLClass.class);
+	public static final Type BodyContentType = new Type(BodyContent.class);
 
 	public static final Class[] StringPara = new Class[]
 	{ String.class };
@@ -62,7 +97,7 @@ public class Type implements java.io.Serializable
 
 	}
 
-	public Type getType(String attrName)
+	public Type getType(String attrName) throws BeetlException
 	{
 		if (Map.class.isAssignableFrom(cls))
 		{
@@ -99,54 +134,16 @@ public class Type implements java.io.Serializable
 		else
 		{
 
-			Method m = null;
-			try
-			{
-				m = cls.getMethod(ObjectUtil.getMethod(attrName), GetMethodPara);
-				Class returnCls = m.getReturnType();
-				return new Type(returnCls);
-			}
-			catch (NoSuchMethodException e1)
+			MethodInvoker invoker = ObjectUtil.getInvokder(cls, attrName);
+			if (invoker == null)
 			{
 
-			}
-			catch (SecurityException e1)
-			{
+				BeetlException be = new BeetlException(BeetlException.GET_CALL_ERROR);
+				throw be;
 
 			}
-
-			try
-			{
-				m = cls.getMethod(ObjectUtil.getIsMethod(attrName), GetMethodPara);
-				Class returnCls = m.getReturnType();
-				return new Type(returnCls);
-			}
-			catch (NoSuchMethodException e1)
-			{
-
-			}
-			catch (SecurityException e1)
-			{
-
-			}
-
-			try
-			{
-				m = cls.getMethod("get", StringPara);
-				Class returnCls = m.getReturnType();
-				return new Type(returnCls);
-			}
-			catch (NoSuchMethodException e)
-			{
-
-			}
-			catch (SecurityException e)
-			{
-
-			}
-
-			throw new TempException(cls + " 无" + attrName + "方法");
-
+			Class returnCls = invoker.getReturnType();
+			return new Type(returnCls);
 		}
 	}
 
@@ -164,6 +161,42 @@ public class Type implements java.io.Serializable
 			sb.append(">");
 		}
 		return sb.toString();
+
+	}
+
+	public boolean equals(Object o)
+	{
+		Type t = (Type) o;
+		if (t.cls == this.cls)
+		{
+			//还需要考虑x,y?
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public Type copy()
+	{
+		Type type = new Type(this.cls);
+
+		if (types != null)
+		{
+			Type[] copyTypes = new Type[types.length];
+			for (int i = 0; i < types.length; i++)
+			{
+				copyTypes[i] = new Type(types[i].cls);
+			}
+			type.types = copyTypes;
+		}
+		return type;
+
+	}
+
+	public class NULLClass
+	{
 
 	}
 }

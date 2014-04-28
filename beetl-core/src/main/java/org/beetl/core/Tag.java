@@ -1,6 +1,6 @@
 /*
  [The "BSD license"]
- Copyright (c) 2011-2013 Joel Li (李家智)
+ Copyright (c) 2011-2014 Joel Li (李家智)
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -27,8 +27,10 @@
  */
 package org.beetl.core;
 
+import org.beetl.core.statement.Statement;
+
 /**
- * 请使用GeneralBeetlTag
+ * 
  * 
  * 
  * <p/>
@@ -48,51 +50,37 @@ package org.beetl.core;
 public abstract class Tag
 {
 	protected Object[] args = null;
-	protected ByteWriter tagBody;
-	protected GroupTemplate group;
+	protected GroupTemplate gt;
 	protected Context ctx;
+	protected ByteWriter bw;
+	protected Statement bs;
 
-	public void setParas(Object[] args)
+	protected void doBodyRender()
 	{
-		this.args = args;
+
+		bs.execute(ctx);
+
 	}
 
-	/**
-	 * 是否需要解析运行标签体，有些情况是不用输入文本的，譬如{@link org.bee.tl.ext.includeFileTemplate
-	 * includeFileTemplate}标签， 有些情况下是要用，如{@link org.bee.tl.ext.LayoutTag layout}
-	 * 标签
-	 */
-	public boolean requriedInput()
+	protected BodyContent getBodyContent()
 	{
-		return true;
+		ByteWriter writer = ctx.byteWriter;
+		ByteWriter tempWriter = ctx.byteWriter.getTempWriter();
+		ctx.byteWriter = tempWriter;
+		doBodyRender();
+		ctx.byteWriter = writer;
+		return tempWriter.getTempConent();
 	}
 
-	/**
-	 * @param input
-	 *            标签体的内容
-	 */
-	public void setInput(ByteWriter tagBody)
-	{
-		this.tagBody = tagBody;
-	}
+	public abstract void render();
 
-	/**
-	 * @param ctx
-	 *            上下文，可以通过__this获取template，通过__pw获取Writer， __group
-	 *            获取GroupTemplate
-	 */
-	public void setContext(Context ctx)
+	public void init(Context ctx, Object[] args, Statement st)
 	{
-
 		this.ctx = ctx;
-
+		this.bw = ctx.byteWriter;
+		this.gt = ctx.gt;
+		this.args = args;
+		this.bs = st;
 	}
-
-	/**
-	 * 将标签内容输出到里
-	 * 
-	 * @return
-	 */
-	public abstract void writeTo(ByteWriter writer);
 
 }

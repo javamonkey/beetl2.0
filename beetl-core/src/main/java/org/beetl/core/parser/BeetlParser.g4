@@ -28,20 +28,21 @@ statement
     |   While parExpression statement   #whileSt
     |   Switch parExpression switchBlock    #siwchSt
     |   Select g_switchStatment #selectSt
-    |   Try NOT? block (Catch  LEFT_PAR Identifier RIGHT_PAR  block   )?    #trySt
+    |   Try  block (Catch  LEFT_PAR Identifier? RIGHT_PAR  block   )?    #trySt
     |   Return expression? END  #returnSt
     |   Break END   #breakSt
     |   Continue END    #continueSt
     |   Var varDeclareList END  #varSt
     |   Directive  directiveExp #directiveSt 
     |   assignMent END  #assignSt
-    |   functionTagCall #functionSt
+    |   functionTagCall #functionTagSt
+    //|   functionCall #functionCallSt
     |   statementExpression END   #statmentExpSt 
-     
+      
     ;
-//◊¢Ω‚:@type (User)user,(List<User>userList
-commentTypeTag: commentTypeItemTag (COMMA1 commentTypeItemTag);
-commentTypeItemTag:   LEFT_PAR1 classOrInterfaceType RIGHT_PAR1  Identifier1    
+//Ê≥®Ëß£:@type User user,List<User> userList
+commentTypeTag: LEFT_PAR1 commentTypeItemTag (COMMA1 commentTypeItemTag)* RIGHT_PAR1;
+commentTypeItemTag:    classOrInterfaceType   Identifier1    
                   ;
 classOrInterfaceType: Identifier1 (PERIOD1 Identifier1 )* typeArguments?;
 typeArguments
@@ -51,8 +52,10 @@ typeArgument
     :   classOrInterfaceType 
     ;
 
-//÷∏¡Ó  directive object xx,xx,xx                 
-directiveExp:  Identifier (StringLiteral)? END;
+//Êåá‰ª§  directive object xx,xx,xx                 
+directiveExp:  Identifier (StringLiteral|directiveExpIDList)? END;
+directiveExpIDList: Identifier (COMMA Identifier)* ;
+
 
 g_switchStatment
 	:	 (LEFT_PAR base=expression RIGHT_PAR)? LEFT_BRACE g_caseStatment* g_defaultStatment? RIGHT_BRACE
@@ -75,7 +78,7 @@ assignMent
 ;
 
 switchBlock
-    :   LEFT_BRACE switchBlockStatementGroup* switchLabel* RIGHT_BRACE
+    :   LEFT_BRACE switchBlockStatementGroup* RIGHT_BRACE
     ;
 
 switchBlockStatementGroup
@@ -88,8 +91,19 @@ switchLabel
     ;
 
 forControl
-    :    Var?   Identifier FOR_IN expression ;
+    :    forInControl
+    |    generalForControl
+    ;
    
+forInControl: Var?   Identifier FOR_IN expression ;
+generalForControl:forInit? ';' expression? ';' forUpdate?;
+forInit
+    :   Var varDeclareList
+    |   expressionList
+    ;
+forUpdate
+    :   expressionList
+    ;
 
 
 
@@ -106,18 +120,18 @@ expressionList
 statementExpression
     :   expression
     ;
-textStatment:   //±Ì¥Ô Ω ‰≥ˆ
+textStatment:   //Ë°®ËææÂºèËæìÂá∫
        LEFT_TOKEN textVar RIGHT_TOKEN
       |      LEFT_TOKEN NOT LEFT_PAR textVar RIGHT_PAR RIGHT_TOKEN ;
 textVar	
 :	b=expression  (COMMA textformat)?
 ;
 textformat:
-        fm=functionNs (ASSIN StringLiteral)
+        fm=functionNs (ASSIN StringLiteral)?
         | StringLiteral  ;
 
 constantsTextStatment
-	:	LEFT_TEXT_TOKEN  DecimalLiteral RIGHT_TOKEN   ; // ≥£¡ø ‰≥ˆ,¥˙±Ì ˝◊ÈÀ—”¶
+	:	LEFT_TEXT_TOKEN  DecimalLiteral RIGHT_TOKEN   ; // Â∏∏ÈáèËæìÂá∫,‰ª£Ë°®Êï∞ÁªÑÊêúÂ∫î
 
 
 constantExpression
@@ -128,9 +142,11 @@ constantExpression
     :   literal        #literalExp
     |   AT nativeCall   #nativeCallExp
     |   functionCall    #functionCallExp
-    |   varRef ( NOT expression)?           #varRefExp
+    |   varRef          #varRefExp
     |   json        #jsonExp  
+    |   Identifier (INCREASE|DECREASE) #oneIncDec
     |   (ADD|MIN) expression    #negExp
+    |   (INCREASE|DECREASE)  Identifier #incDecOne
     |   NOT expression      #notExp
     |   expression (MUlTIP|DIV|MOD) expression #muldivmodExp
     |   expression (ADD|MIN) expression #addminExp
@@ -143,13 +159,14 @@ constantExpression
     ;
     
 
-    varRef:Identifier ( varAttribute)*  
+ varRef:Identifier ( varAttribute)*  (safe_output)?
 ;
 varAttribute :PERIOD Identifier   #varAttributeGeneral
              | VIRTUAL Identifier #varAttributeVirtual
              |LEFT_SQBR expression RIGHT_SQBR #varAttributeArrayOrMap
              ;
-
+safe_output: NOT expression? ;
+    
 
 functionCall: functionNs LEFT_PAR expressionList? RIGHT_PAR (varAttribute)* ; 
 functionTagCall:functionNs  LEFT_PAR expressionList? RIGHT_PAR  block ;

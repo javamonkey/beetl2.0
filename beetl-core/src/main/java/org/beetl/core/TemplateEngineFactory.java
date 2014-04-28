@@ -17,4 +17,18 @@ public class TemplateEngineFactory
 		}
 
 	}
+
+	public static TemplateEngine getEngine(String engine)
+	{
+		try
+		{
+			return (TemplateEngine) Class.forName(engine).newInstance();
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+			throw new RuntimeException(ex.getMessage());
+		}
+
+	}
 }

@@ -1,20 +1,18 @@
-package org.beetl.core.io;
-
 /*
  [The "BSD license"]
- Copyright (c) 2011-2013 Joel Li (李家智)
+ Copyright (c) 2011-2014 Joel Li (李家智)
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions
  are met:
  1. Redistributions of source code must retain the above copyright
- notice, this list of conditions and the following disclaimer.
+     notice, this list of conditions and the following disclaimer.
  2. Redistributions in binary form must reproduce the above copyright
- notice, this list of conditions and the following disclaimer in the
- documentation and/or other materials provided with the distribution.
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
  3. The name of the author may not be used to endorse or promote products
- derived from this software without specific prior written permission.
+     derived from this software without specific prior written permission.
 
  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
@@ -27,29 +25,25 @@ package org.beetl.core.io;
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package org.beetl.core.io;
+
 import java.io.IOException;
 import java.io.Writer;
 
+import org.beetl.core.BodyContent;
 import org.beetl.core.ByteWriter;
-import org.beetl.core.SuperVar;
 
 public final class ByteWriter_Char extends ByteWriter
 {
 
-	Writer w = null;
-	String cs = null;
-	ByteWriter parent = null;
+	Writer w;
+	String cs;
 
 	public ByteWriter_Char(Writer w, String cs)
 	{
+		super();
 		this.w = w;
 		this.cs = cs;
-	}
-
-	public ByteWriter_Char(Writer w, String cs, ByteWriter parent)
-	{
-		this(w, cs);
-		this.parent = parent;
 	}
 
 	@Override
@@ -74,16 +68,16 @@ public final class ByteWriter_Char extends ByteWriter
 	}
 
 	@Override
-	public ByteWriter getTempWriter()
+	public final void write(byte[] bs, int count) throws IOException
 	{
-		return new ByteWriter_Char(new NoLockStringWriter(), cs, this);
+		this.write(new String(bs, 0, count, cs));
+
 	}
 
 	@Override
-	public Object getTempContent()
+	public ByteWriter getTempWriter()
 	{
-		// 检查是否是Temp?
-		return w.toString();
+		return new ByteWriter_Char(new NoLockStringWriter(), cs);
 	}
 
 	@Override
@@ -93,36 +87,45 @@ public final class ByteWriter_Char extends ByteWriter
 
 	}
 
-	@Override
-	public ByteWriter getParent()
-	{
-		// TODO Auto-generated method stub
-		return parent;
-	}
-
 	public String toString()
 	{
 		return w.toString();
 	}
 
 	@Override
-	public void write(SuperVar sv) throws IOException
+	public void fill(ByteWriter bw) throws IOException
 	{
-		this.w.write(sv.toString());
+		NoLockStringWriter blw = ((NoLockStringWriter) ((ByteWriter_Char) bw).w);
+		char[] buf = blw.buf;
+		this.write(buf, blw.count);
 
 	}
 
 	@Override
-	public void flushToParent() throws IOException
+	public BodyContent getTempConent()
 	{
-		// TODO Auto-generated method stub
-		if (this.parent == null)
-		{
-			throw new NullPointerException("Parent is null");
-		}
-		w.flush();
-		parent.write(w.toString());
+		NoLockStringWriter blw = (NoLockStringWriter) w;
+		return new StringBodyContent(blw.buf, blw.count);
+	}
 
+	public Writer getW()
+	{
+		return w;
+	}
+
+	public void setW(Writer w)
+	{
+		this.w = w;
+	}
+
+	public String getCs()
+	{
+		return cs;
+	}
+
+	public void setCs(String cs)
+	{
+		this.cs = cs;
 	}
 
 }

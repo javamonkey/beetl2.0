@@ -2,6 +2,7 @@ package org.beetl.core.control;
 
 import org.beetl.core.BasicTestCase;
 import org.beetl.core.Template;
+import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 

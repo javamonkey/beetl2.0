@@ -1,5 +1,7 @@
 <%
 var b = isEmpty(user.bir);
+print("ok");
+var d = 1/0;
 %>
 ${b}
 ${user.bir}

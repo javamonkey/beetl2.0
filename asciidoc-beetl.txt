@@ -1,4 +1,4 @@
-Beetl2.0使用说明书20140427
+Beetl2.0使用说明书20140429
 ===================
 李家智 <xiandafu@126.com>
 :toc:
@@ -932,13 +932,13 @@ layout.html
 ----------------------------
 
 title is ${title}
-body content ${bodyContent}
+body content ${layoutContent}
 footer
 ----------------------------
 
 第1行变量title来自于layout标签函数的参数
 
-第2行bodyContent 是layout标签体{}渲染后的结果
+layoutContent 是layout标签体{}渲染后的结果
 
 关于layout标签，参考高级主体布局
 

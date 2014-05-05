@@ -183,7 +183,7 @@ public class AttributeAccessFactory
 		}
 
 		Class parent = c.getSuperclass();
-		if (!parent.getName().startsWith("java."))
+		if (parent!=null&&!parent.getName().startsWith("java."))
 		{
 			result = findResult(parent, getName, isName);
 			if (result != null)

@@ -1,9 +1,6 @@
 <%
-var b = isEmpty(user.bir);
-print("ok");
-var d = 1/0;
+var a = {
 %>
-${b}
-${user.bir}
-
-
+hello
+<%};%>
+${a}

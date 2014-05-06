@@ -30,6 +30,7 @@ package org.beetl.core.statement;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.beetl.core.BodyContent;
 import org.beetl.core.IteratorStatus;
@@ -56,6 +57,7 @@ public class Type implements java.io.Serializable
 	public static final Type MapType = new Type(Map.class);
 	public static final Type NULLType = new Type(NULLClass.class);
 	public static final Type BodyContentType = new Type(BodyContent.class);
+	public static final Type mapEntryType = new Type(Entry.class);
 
 	public static final Class[] StringPara = new Class[]
 	{ String.class };
@@ -143,7 +145,15 @@ public class Type implements java.io.Serializable
 
 			}
 			Class returnCls = invoker.getReturnType();
-			return new Type(returnCls);
+			if (returnCls == Object.class)
+			{
+				return Type.ObjectType;
+			}
+			else
+			{
+				return new Type(returnCls);
+			}
+
 		}
 	}
 

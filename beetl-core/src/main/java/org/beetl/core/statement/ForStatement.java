@@ -28,6 +28,7 @@
 package org.beetl.core.statement;
 
 import java.util.Collections;
+import java.util.Map;
 
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
@@ -166,7 +167,18 @@ public final class ForStatement extends Statement implements IGoto
 		exp.infer(inferCtx);
 		if (exp.getType().types != null)
 		{
-			idNode.type = exp.getType().types[0];
+
+			if (Map.class.isAssignableFrom(exp.getType().cls))
+			{
+				idNode.type = Type.mapEntryType;
+
+			}
+			else
+			{
+				//list or array
+				idNode.type = exp.getType().types[0];
+			}
+
 		}
 		else
 		{

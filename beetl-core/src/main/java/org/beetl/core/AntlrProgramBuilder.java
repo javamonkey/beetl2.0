@@ -163,6 +163,7 @@ import org.beetl.core.statement.SelectStatement;
 import org.beetl.core.statement.Statement;
 import org.beetl.core.statement.StatementExpression;
 import org.beetl.core.statement.StaticTextASTNode;
+import org.beetl.core.statement.StaticTextByteASTNode;
 import org.beetl.core.statement.SwitchStatement;
 import org.beetl.core.statement.TagStatement;
 import org.beetl.core.statement.TernaryExpression;
@@ -296,8 +297,17 @@ public class AntlrProgramBuilder
 			ConstantsTextStatmentContext cst = st.constantsTextStatment();
 			String str = cst.DecimalLiteral().getSymbol().getText();
 			int position = Integer.parseInt(str);
-			StaticTextASTNode textNode = new StaticTextASTNode(position, null);
-			return textNode;
+			if (!this.gt.getConf().directByteOutput)
+			{
+				StaticTextASTNode textNode = new StaticTextASTNode(position, null);
+				return textNode;
+			}
+			else
+			{
+				StaticTextByteASTNode textNode = new StaticTextByteASTNode(position, null);
+				return textNode;
+			}
+
 		}
 		else if (node instanceof IfStContext)
 		{

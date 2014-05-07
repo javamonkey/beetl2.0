@@ -1,7 +1,14 @@
 <%
-for(entry in map){
-var key = entry.key;
-var value = entry.value;
-print(key+"---"+value);
-}
+var a = 0;
+var b=0;
+var c = 2;
 %>
+${a>b}
+${a<b}
+${a<=b}
+${a>=b}
+${a>=c}
+${a>c}
+${a<c}
+${a<=c}
+${user.name}

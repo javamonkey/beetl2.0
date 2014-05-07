@@ -73,10 +73,10 @@ public class CompareExpression extends Expression
 			case NOT_EQUAL:
 				return !ALU.equals(x, y);
 			case LARGE_EQUAL:
-				return ALU.less(y, x, a, b);
+				return !ALU.less(x, y, a, b);
 
 			case LARGE:
-				return ALU.lessEquals(y, x, a, b);
+				return !ALU.lessEquals(x, y, a, b);
 			case LESS:
 				return ALU.less(x, y, a, b);
 			case LESS_EQUAL:

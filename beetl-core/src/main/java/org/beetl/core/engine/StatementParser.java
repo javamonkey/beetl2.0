@@ -43,6 +43,21 @@ public class StatementParser
 		Class[] matchClasses = listeners.keySet().toArray(new Class[0]);
 
 		this.exec(block, matchClasses, stack);
+		System.out.println("stack=" + stack.size());
+
+	}
+
+	protected boolean match(Class astNodeType, Class[] matchClasses)
+	{
+
+		for (Class expected : matchClasses)
+		{
+			if (expected == astNodeType)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	protected void exec(Object astNode, Class[] matchClasses, Stack stack)
@@ -53,145 +68,117 @@ public class StatementParser
 		Field[] fields = astNodeClass.getFields();
 		for (Field f : fields)
 		{
-			if (f.getModifiers() == Modifier.PUBLIC)
+			if (f.getModifiers() != Modifier.PUBLIC)
+				continue;
+
+			Class target = null;
+			Class c = f.getType();
+			if (c.isArray())
 			{
-				Class target = null;
-				Class target2 = null;
-				// Class c = f.getDeclaringClass();
-				Class c = f.getType();
-				if (c.isArray())
-				{
-					target = c.getComponentType();
-				}
-				else
-				{
-					target = c;
-				}
+				target = c.getComponentType();
+			}
+			else
+			{
+				target = c;
+			}
+			// 只解析含有ASTNode的字段
+			if (!ASTNode.class.isAssignableFrom(target))
+				continue;
 
-				boolean isArray = false;
+			Object values;
+			try
+			{
+				//需要判断的节点
+				values = f.get(astNode);
 
-				// 只解析含有ASTNode的字段
-				if (ASTNode.class.isAssignableFrom(target))
+				if (values == null)
+					continue;
+				//具体类型
+				Class target2 = values.getClass();
+				if (target2.isArray())
 				{
-					Object values;
-					try
+					Object[] array = (Object[]) values;
+					if (array.length == 0)
+						continue;
+					for (int i = 0; i < array.length; i++)
 					{
-						values = f.get(astNode);
-
-						if (values == null)
+						Object item = array[i];
+						if (item == null)
 							continue;
-						else
+						Class target3 = item.getClass();
+						if (match(target3, matchClasses))
 						{
-							target2 = values.getClass();
-							if (target2.isArray())
+							stack.push(item);
+							Listener ls = this.listeners.get(target3);
+							NodeEvent e = new NodeEvent(stack);
+							Object newASTNode = ls.onEvent(e);
+							if (newASTNode != null)
 							{
-								if (((Object[]) values).length == 0)
-								{
-									continue;
-								}
-								target2 = target2.getComponentType();
-
-								isArray = true;
-							}
-						}
-					}
-					catch (Exception e)
-					{
-						throw new RuntimeException(e);
-					}
-
-					for (Class expected : matchClasses)
-					{
-						// 如果匹配上
-						if (isArray)
-						{
-							Object[] targetValue = (Object[]) values;
-
-							for (int i = 0; i < targetValue.length; i++)
-							{
-								Object o = targetValue[i];
-								if (o == null)
-									continue;
-								if (expected.isAssignableFrom(o.getClass()))
-								{
-									stack.push(o);
-									Listener ls = this.listeners.get(expected);
-									NodeEvent e = new NodeEvent(stack);
-									Object newASTNode = ls.onEvent(e);
-									if (newASTNode != null)
-									{
-										stack.pop();
-										stack.push(newASTNode);
-										//替换原有节点
-										targetValue[i] = newASTNode;
-										o = newASTNode;
-									}
-									// 继续遍历子节点
-									this.exec(o, matchClasses, stack);
-									stack.pop();
-									continue;
-								}
-
-							}
-						}
-						else
-						{
-							if (expected.isAssignableFrom(values.getClass()))
-							{
-								stack.push(values);
-
-								Listener ls = this.listeners.get(expected);
-								NodeEvent e = new NodeEvent(stack);
-								Object newASTNode = ls.onEvent(e);
-
-								if (newASTNode != null)
-								{
-									stack.pop();
-									stack.push(newASTNode);
-									//替换原有节点
-									try
-									{
-										f.set(astNode, values);
-									}
-									catch (Exception ex)
-									{
-										BeetlException be = new BeetlException(BeetlException.ERROR, "替换ASTNode错", ex);
-										be.token = ((ASTNode) newASTNode).token;
-										throw be;
-									}
-
-									values = newASTNode;
-								}
-								this.exec(values, matchClasses, stack);
-
 								stack.pop();
-								continue;
+								stack.push(newASTNode);
+								//替换原有节点
+								array[i] = newASTNode;
+								item = newASTNode;
 							}
-						}
-
-						// 没有匹配上，继续遍历
-						if (isArray)
-						{
-							ASTNode[] astNodes = (ASTNode[]) values;
-							for (ASTNode node : astNodes)
-							{
-								this.exec(node, matchClasses, stack);
-							}
+							// 继续遍历子节点
+							this.exec(item, matchClasses, stack);
+							stack.pop();
 						}
 						else
 						{
-							ASTNode node = (ASTNode) values;
+							ASTNode node = (ASTNode) item;
 							this.exec(node, matchClasses, stack);
 						}
 
 					}
-				}
 
+				}
+				else
+				{
+					if (match(target2, matchClasses))
+					{
+						stack.push(values);
+						Listener ls = this.listeners.get(target2);
+						NodeEvent e = new NodeEvent(stack);
+						Object newASTNode = ls.onEvent(e);
+						if (newASTNode != null)
+						{
+							stack.pop();
+							stack.push(newASTNode);
+							//替换原有节点
+							try
+							{
+								f.set(astNode, values);
+							}
+							catch (Exception ex)
+							{
+								BeetlException be = new BeetlException(BeetlException.ERROR, "替换ASTNode错", ex);
+								be.token = ((ASTNode) newASTNode).token;
+								throw be;
+							}
+
+							values = newASTNode;
+						}
+						this.exec(values, matchClasses, stack);
+						stack.pop();
+						continue;
+					}
+					else
+					{
+						ASTNode node = (ASTNode) values;
+						this.exec(node, matchClasses, stack);
+					}
+
+				}
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException(e);
 			}
 
 		}
+
 		stack.pop();
 
 	}
-
 }

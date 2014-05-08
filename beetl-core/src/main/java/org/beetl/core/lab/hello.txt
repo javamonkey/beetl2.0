@@ -1,3 +1,5 @@
 <%
-debug(@s1.getClass());
+for(i in list){
+print(i);
+}
 %>

@@ -38,7 +38,7 @@ import org.beetl.core.misc.ALU;
 public class NegExpression extends Expression
 {
 
-	Expression exp;
+	public Expression exp;
 
 	public NegExpression(Expression exp, GrammarToken token)
 	{

@@ -44,8 +44,8 @@ import org.beetl.core.fun.SingleFunctionWrapper;
 public class FunctionExpression extends Expression
 {
 	String name;
-	Expression[] exps;
-	VarAttribute[] vas;
+	public Expression[] exps;
+	public VarAttribute[] vas;
 
 	public FunctionExpression(String name, Expression[] exps, VarAttribute[] vas, GrammarToken token)
 	{

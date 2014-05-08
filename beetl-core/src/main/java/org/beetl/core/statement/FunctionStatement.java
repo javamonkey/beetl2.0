@@ -37,7 +37,7 @@ import org.beetl.core.InferContext;
 public class FunctionStatement extends Statement
 {
 
-	FunctionExpression fe;
+	public FunctionExpression fe;
 
 	public FunctionStatement(FunctionExpression fe, GrammarToken token)
 	{

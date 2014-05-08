@@ -12,7 +12,7 @@ import org.beetl.core.misc.ALU;
 public class OrExpression extends Expression
 {
 
-	Expression exp1, exp2;
+	public Expression exp1, exp2;
 
 	public OrExpression(Expression exp1, Expression exp2, GrammarToken token)
 	{

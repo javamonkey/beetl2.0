@@ -14,22 +14,10 @@ public class Test
 		Configuration cfg = Configuration.defaultConfiguration();
 		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 		Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
-		TestUser user = new TestUser("aa");
-		t.binding("user", user);
-
-		t.binding("s1", new Long(1));
-		t.binding("s2", new Long(1));
-
-		//		gt.setSharedVars(map);
+		t.binding("list", new String[]
+		{ "1", "2" });
 		String str = t.render();
 		System.out.println(str);
-
-		t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
-		user = new TestUser("aa");
-		t.binding("user", user);
-
-		t.binding("s1", new Long(1));
-		t.binding("s2", new Long(1));
 
 		//		gt.setSharedVars(map);
 		str = t.render();

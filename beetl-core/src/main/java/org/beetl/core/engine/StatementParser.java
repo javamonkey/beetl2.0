@@ -43,7 +43,7 @@ public class StatementParser
 		Class[] matchClasses = listeners.keySet().toArray(new Class[0]);
 
 		this.exec(block, matchClasses, stack);
-		System.out.println("stack=" + stack.size());
+		//		System.out.println("stack=" + stack.size());
 
 	}
 

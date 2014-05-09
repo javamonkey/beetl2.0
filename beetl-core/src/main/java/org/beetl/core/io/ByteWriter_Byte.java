@@ -56,13 +56,12 @@ package org.beetl.core.io;
  */
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 
 import org.beetl.core.BodyContent;
 import org.beetl.core.ByteWriter;
-
-import sun.nio.cs.StreamEncoder;
 
 public class ByteWriter_Byte extends ByteWriter
 {
@@ -70,59 +69,62 @@ public class ByteWriter_Byte extends ByteWriter
 	protected OutputStream os;
 	protected String cs;
 	protected Charset charset = null;
-	StreamEncoder se = null;
+	CharsetEncoder encoder = null;
+	ByteBuffer byteBuffer = null;
+	byte[] bs = new byte[256];
 
 	public ByteWriter_Byte(OutputStream os, String cs)
 	{
 		this.os = os;
 		this.cs = cs;
 		charset = Charset.forName(cs);
-		try
-		{
-			se = StreamEncoder.forOutputStreamWriter(os, this, cs);
-		}
-		catch (UnsupportedEncodingException e)
-		{
-			throw new RuntimeException(e);
-		}
+		encoder = charset.newEncoder();
+		byteBuffer = ByteBuffer.wrap(bs);
+
 	}
 
 	@Override
-	public void write(char[] cbuf) throws IOException
+	public final void write(final char[] cbuf) throws IOException
 	{
-		//		byte[] bs = new String(cbuf).getBytes(cs);
-		//		write(bs);
-		//		
+		this.write(cbuf, cbuf.length);
+
 		//todo:性能如何？
 
-		//		byte[] bs = charset.encode(CharBuffer.wrap(cbuf)).array();
-		//		//		byte[] bs = new String(cbuf).getBytes(cs);
+	}
+
+	@Override
+	public final void write(final char[] cbuf, final int len) throws IOException
+	{
+		//		se.write(cbuf, 0, cbuf.length);
+		byte[] bs = new String(cbuf, 0, len).getBytes(cs);
+		write(bs);
+
+		//		encoder.encode(in, out, endOfInput)
+		//		byte[] bs = charset.encode(CharBuffer.wrap(cbuf, 0, len)).array();
 		//		write(bs);
-		se.write(cbuf, 0, cbuf.length);
+
+		//		byteBuffer.clear();
+		//		this.encoder.reset().encode(CharBuffer.wrap(cbuf, 0, len), byteBuffer, true);
+		//		encoder.flush(byteBuffer);
+		//		os.write(bs, 0, byteBuffer.position());
 
 	}
+
+	//	public void write(String str) throws IOException
+	//	{
+	//
+	//		se.write(str);
+	//		
+	//		//		if (str != null)
+	//		//		{
+	//		//			byte[] bs = charset.encode(str).array();
+	//		//			write(bs);
+	//		//		}
+	//
+	//	}
 
 	@Override
-	public void write(char[] cbuf, int len) throws IOException
-	{
-		se.write(cbuf, 0, cbuf.length);
-
-	}
-
-	public void write(String str) throws IOException
-	{
-
-		se.write(str);
-		//		if (str != null)
-		//		{
-		//			byte[] bs = charset.encode(str).array();
-		//			write(bs);
-		//		}
-
-	}
-
-	@Override
-	public void write(byte[] bs) throws IOException
+	public final void write(final byte[] bs) throws IOException
 	{
 
 		os.write(bs);
@@ -144,8 +146,7 @@ public class ByteWriter_Byte extends ByteWriter
 	@Override
 	public void flush() throws IOException
 	{
-		//		this.os.flush();
-		se.flush();
+		this.os.flush();
 
 	}
 

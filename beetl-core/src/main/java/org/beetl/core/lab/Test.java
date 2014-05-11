@@ -16,15 +16,9 @@ public class Test
 		Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
 		t.binding("list", new String[]
 		{ "1", "2" });
+		t.binding("user", new TestUser(""));
 		String str = t.render();
 		System.out.println(str);
 
-		//		gt.setSharedVars(map);
-		str = t.render();
-		System.out.println(str);
-		//		Thread.sleep(1000 * 8);
-		//		t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
-		//		str = t.render();
-		//		System.out.println(str);
 	}
 }

@@ -90,6 +90,7 @@ import org.beetl.core.parser.BeetlParser.IncDecOneContext;
 import org.beetl.core.parser.BeetlParser.JsonContext;
 import org.beetl.core.parser.BeetlParser.JsonExpContext;
 import org.beetl.core.parser.BeetlParser.JsonKeyValueContext;
+import org.beetl.core.parser.BeetlParser.LiteralContext;
 import org.beetl.core.parser.BeetlParser.LiteralExpContext;
 import org.beetl.core.parser.BeetlParser.MuldivmodExpContext;
 import org.beetl.core.parser.BeetlParser.NativeArrayContext;
@@ -104,6 +105,7 @@ import org.beetl.core.parser.BeetlParser.OrExpContext;
 import org.beetl.core.parser.BeetlParser.ParExpContext;
 import org.beetl.core.parser.BeetlParser.ParExpressionContext;
 import org.beetl.core.parser.BeetlParser.ReturnStContext;
+import org.beetl.core.parser.BeetlParser.Safe_allow_expContext;
 import org.beetl.core.parser.BeetlParser.Safe_outputContext;
 import org.beetl.core.parser.BeetlParser.SelectStContext;
 import org.beetl.core.parser.BeetlParser.SiwchStContext;
@@ -1006,7 +1008,7 @@ public class AntlrProgramBuilder
 
 		if (ctx instanceof LiteralExpContext)
 		{
-			return parseLiteralExpress((LiteralExpContext) ctx);
+			return parseLiteralExpress(((LiteralExpContext) ctx).literal());
 		}
 		else if (ctx instanceof VarRefExpContext)
 		{
@@ -1478,8 +1480,34 @@ public class AntlrProgramBuilder
 		boolean hasSafe = false;
 		if (soctx != null)
 		{
-			ExpressionContext safeExpression = soctx.expression();
-			safeExp = this.parseExpress(safeExpression);
+			List list = soctx.children;
+			if (list.size() == 1)
+			{
+				//just  xxx!
+				safeExp = null;
+			}
+			else
+			{
+				//just xxx!exp
+				Safe_allow_expContext allowExp = (Safe_allow_expContext) list.get(1);
+				if (allowExp.literal() != null)
+				{
+					safeExp = this.parseLiteralExpress(allowExp.literal());
+				}
+				else if (allowExp.nativeCall() != null)
+				{
+					safeExp = this.parseNativeCallExpression(allowExp.nativeCall());
+				}
+				else if (allowExp.functionCall() != null)
+				{
+					safeExp = this.parseFunExp(allowExp.functionCall());
+				}
+				else if (allowExp.expression() != null)
+				{
+					safeExp = this.parseExpress(allowExp.expression());
+				}
+
+			}
 			hasSafe = true;
 
 		}
@@ -1542,10 +1570,10 @@ public class AntlrProgramBuilder
 
 	}
 
-	protected Expression parseLiteralExpress(LiteralExpContext ctx)
+	protected Expression parseLiteralExpress(LiteralContext ctx)
 	{
-		LiteralExpContext lec = (LiteralExpContext) ctx;
-		ParseTree tree = lec.literal().getChild(0);
+
+		ParseTree tree = ctx.getChild(0);
 		Object value = null;
 		if (tree instanceof TerminalNode)
 		{

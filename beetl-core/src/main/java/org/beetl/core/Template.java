@@ -81,7 +81,7 @@ public class Template
 	 */
 	public void renderTo(Writer writer) throws BeetlException
 	{
-		ByteWriter_Char byteWriter = new ByteWriter_Char(writer, cf.charset);
+		ByteWriter_Char byteWriter = new ByteWriter_Char(writer, cf.charset, ctx);
 		this.renderTo(byteWriter);
 
 	}
@@ -94,7 +94,7 @@ public class Template
 	 */
 	public void renderTo(OutputStream os) throws BeetlException
 	{
-		ByteWriter_Byte byteWriter = new ByteWriter_Byte(os, cf.charset);
+		ByteWriter_Byte byteWriter = new ByteWriter_Byte(os, cf.charset, ctx);
 		this.renderTo(byteWriter);
 	}
 

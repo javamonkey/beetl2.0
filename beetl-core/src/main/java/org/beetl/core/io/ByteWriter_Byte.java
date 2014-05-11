@@ -56,30 +56,32 @@ package org.beetl.core.io;
  */
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
 
 import org.beetl.core.BodyContent;
 import org.beetl.core.ByteWriter;
+import org.beetl.core.Context;
 
 public class ByteWriter_Byte extends ByteWriter
 {
 
 	protected OutputStream os;
 	protected String cs;
-	protected Charset charset = null;
-	CharsetEncoder encoder = null;
-	ByteBuffer byteBuffer = null;
-	byte[] bs = new byte[256];
+	DefaultEncoder encode = null;
 
-	public ByteWriter_Byte(OutputStream os, String cs)
+	//	protected Charset charset = null;
+	//	CharsetEncoder encoder = null;
+	//	ByteBuffer byteBuffer = null;
+	//	byte[] bs = new byte[256];
+
+	public ByteWriter_Byte(OutputStream os, String cs, Context ctx)
 	{
+		super(ctx);
 		this.os = os;
 		this.cs = cs;
-		charset = Charset.forName(cs);
-		encoder = charset.newEncoder();
-		byteBuffer = ByteBuffer.wrap(bs);
+		encode = new DefaultEncoder(cs, this.localBuffer);
+		//		charset = Charset.forName(cs);
+		//		encoder = charset.newEncoder();
+		//		byteBuffer = ByteBuffer.wrap(bs);
 
 	}
 
@@ -137,10 +139,21 @@ public class ByteWriter_Byte extends ByteWriter
 
 	}
 
+	public void writeString(String str) throws IOException
+	{
+
+		if (str != null)
+		{
+			encode.write(str, os);
+			//			os.write(str.getBytes(cs));
+		}
+
+	}
+
 	@Override
 	public ByteWriter getTempWriter()
 	{
-		return new ByteWriter_Byte(new NoLockByteArrayOutputStream(), cs);
+		return new ByteWriter_Byte(new NoLockByteArrayOutputStream(), cs, this.ctx);
 	}
 
 	@Override
@@ -184,6 +197,18 @@ public class ByteWriter_Byte extends ByteWriter
 	public void setCs(String cs)
 	{
 		this.cs = cs;
+	}
+
+	@Override
+	public void writeNumberChars(char[] chars, int len) throws IOException
+	{
+		for (int i = 0; i < len; i++)
+		{
+			//	byte bs = (byte) (chars[i] & 0xFF);
+			//this.os.write(bs);
+			this.os.write((byte) chars[i]);
+		}
+
 	}
 
 }

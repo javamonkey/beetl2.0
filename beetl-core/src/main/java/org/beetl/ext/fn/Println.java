@@ -48,7 +48,7 @@ public class Println implements Function
 			ByteWriter w = ctx.byteWriter;
 			if (paras.length == 0)
 			{
-				w.write(ctx.template.program.metaData.lineSeparator);
+				w.writeString(ctx.template.program.metaData.lineSeparator);
 				return "";
 			}
 			Object o = paras[0];
@@ -56,8 +56,8 @@ public class Println implements Function
 			if (o != null)
 			{
 
-				w.write(o.toString());
-				w.write(ctx.template.program.metaData.lineSeparator);
+				w.writeString(o.toString());
+				w.writeString(ctx.template.program.metaData.lineSeparator);
 			}
 
 		}

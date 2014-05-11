@@ -1,5 +1,7 @@
 <%
-for(i in list){
-print(i);
+if(list.~size!(3-2)>0){
+	print('hi');
+}else{
+	print('hello');
 }
 %>

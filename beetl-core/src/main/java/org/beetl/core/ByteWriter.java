@@ -56,6 +56,10 @@ package org.beetl.core;
  */
 import java.io.IOException;
 
+import org.beetl.core.io.FloatingIOWriter;
+import org.beetl.core.io.IntIOWriter;
+import org.beetl.core.io.LongIOWriter;
+
 /** 混合了直接和字符的Writer
  * @author joelli
  *
@@ -63,43 +67,22 @@ import java.io.IOException;
 public abstract class ByteWriter
 {
 
-	protected char[] buffer = null;
+	protected ContextLocalBuffer localBuffer = null;
+	protected Context ctx = null;
+
+	public ByteWriter(Context ctx)
+	{
+		this.ctx = ctx;
+		this.localBuffer = ctx.localBuffer;
+	}
 
 	public abstract void write(char[] cbuf) throws IOException;
 
 	public abstract void write(char[] cbuf, int len) throws IOException;
 
-	public ByteWriter()
-	{
-		//TODO ,GET BUFFER FROM THREAD CACHE
-		buffer = new char[256];
-	}
+	public abstract void writeString(String str) throws IOException;
 
-	public ByteWriter(char[] buffer)
-	{
-		this.buffer = buffer;
-	}
-
-	public void write(String str) throws IOException
-	{
-
-		if (str != null)
-		{
-			int len = str.length();
-			if (len < buffer.length)
-			{
-				str.getChars(0, len, buffer, 0);
-				this.write(buffer, len);
-
-			}
-			else
-			{
-				this.write(str.toCharArray());
-			}
-
-		}
-
-	}
+	public abstract void writeNumberChars(char[] chars, int len) throws IOException;
 
 	public abstract void write(byte[] bs) throws IOException;
 
@@ -117,45 +100,59 @@ public abstract class ByteWriter
 	 */
 	public abstract void fill(ByteWriter bw) throws IOException;
 
+	public abstract void flush() throws IOException;
+
 	public void write(BodyContent bodyContent) throws IOException
 	{
 		bodyContent.fill(this);
 	}
 
-	public abstract void flush() throws IOException;
+	public void writeDouble(Double d) throws IOException
+	{
+		FloatingIOWriter fd = new FloatingIOWriter(d);
+		fd.write(this, localBuffer.getCharBuffer());
+	}
 
-	public void write(Object o) throws IOException
+	public void writeFloat(Float d) throws IOException
+	{
+		FloatingIOWriter fd = new FloatingIOWriter(d);
+		fd.write(this, localBuffer.getCharBuffer());
+	}
+
+	public void writeInteger(Integer i) throws IOException
+	{
+
+		IntIOWriter.writeInteger(this, i);
+
+	}
+
+	public void writeShort(Short i) throws IOException
+	{
+
+		IntIOWriter.writeShort(this, i);
+
+	}
+
+	public void writeLong(Long i) throws IOException
+	{
+
+		LongIOWriter.writeLong(this, i);
+	}
+
+	public void writeObject(Object o) throws IOException
 	{
 		if (o != null)
 		{
-			this.write(o.toString());
+
+			this.writeString(o.toString());
+
 		}
 
 	}
 
-	public void write(int c) throws IOException
+	public ContextLocalBuffer getLocalBuffer()
 	{
-		this.write(String.valueOf(c));
-	}
-
-	public void write(long c) throws IOException
-	{
-		this.write(String.valueOf(c));
-	}
-
-	public void write(double c) throws IOException
-	{
-		this.write(String.valueOf(c));
-	}
-
-	public void write(short c) throws IOException
-	{
-		this.write(String.valueOf(c));
-	}
-
-	public void write(float c) throws IOException
-	{
-		this.write(String.valueOf(c));
+		return localBuffer;
 	}
 
 }

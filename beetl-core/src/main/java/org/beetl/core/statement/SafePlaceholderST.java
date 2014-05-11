@@ -58,7 +58,7 @@ public class SafePlaceholderST extends Statement
 			{
 				value = format.evaluateValue(value, ctx);
 			}
-			ctx.byteWriter.write(value);
+			ctx.byteWriter.writeObject(value);
 		}
 		catch (Exception ex)
 		{

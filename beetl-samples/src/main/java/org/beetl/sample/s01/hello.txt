@@ -1,6 +1,2 @@
-<%
-var array =[1,2,3];
-for(a in array){
-	print(a);
-}
-%>
+${"123"}
+abc

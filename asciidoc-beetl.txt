@@ -1,4 +1,4 @@
-Beetl2.0使用说明书20140427
+Beetl2.0使用说明书20140512
 ===================
 李家智 <xiandafu@126.com>
 :toc:
@@ -21,7 +21,7 @@ Beetl目前版本是2.0，大小650K，相对于其他java模板引擎，具有�
 
 .关于性能
 **********************************************************************
-通过与主流模板引擎Freemaker，Vecloity以及JSP对比，Beetl均远高于前面三个，这是因为宏观上，通过了优化的渲染引擎，IO的二进制输出，字节码属性访问增强，微观上，通过一维数组保存上下文Context,静态文本合并处理，通过重复使用字节数组来防止java频繁的创建和销毁数组，还使用模板缓存，运行时优化等方法。
+通过与主流模板引擎Freemaker，Vecloity以及JSP对比，Beetl均远高于前面三个，这是因为宏观上，通过了优化的渲染引擎，IO的二进制输出，字节码属性访问增强，微观上，通过一维数组保存上下文Context,静态文本合并处理，通过重复使用字节数组来防止java频繁的创建和销毁数组，还使用模板缓存，运行时优化等方法。详情参考附录
 **********************************************************************
 
 .独特功能
@@ -36,7 +36,7 @@ Beetl有些功能是发展了10多年的模板引擎所不具备的，这些功�
 6. 类型推测，能在运行的时候推测模板变量类型，从而优化性能，也可以通过注解的方法显示的说明模板变量属性（这是非必须的，但有助于IDE自动提示功能）
 7. 可插拔的设计，错误信息提示，模板引擎缓存机制，模板资源管理，本地调用的安全管理器,严格MVC限制，模板引擎本身都有默认的实现，但又完全可以自定义以适合特定需求
 8. 增强的语法，如for-elsefor, select-case，安全输出符号! 等，这些语法特别适合模板开发
-9. 性能超高,具有最快的模板解释引擎，同时，又有较低的CPU消耗。适合各类模板引用，如CMS系统，超高访问量的门户系统
+9. 性能超高,具有最快的模板解释引擎，同时，又有较低的CPU消耗。4倍于国内使用的Freemaker，。适合各类模板应用，如代码生成工具，CMS系统，普通网站，超高访问量的门户系统，和富客户端JS框架整合的后台管理应用
 **********************************************************************
 
 
@@ -100,13 +100,15 @@ Beetl的核心是GroupTemplate，创建GroupTemplate需要俩个参数，一个�
 2.  如何对模板进行配置，请参考下一节
 *************************************************
 
+
+
 === 模板基础配置 ===
 
 Beetl提供不但功能齐全，而且还有你很多独特功能，通过简单的配置文件，就可以定义众多的功能，默认情况下，Configuration类总是会先加载默认的配置文件（位于/org/beetl/core/beetl-default.properties）下，其内容片断如下：
 [source,java]
 ----------------------------
 #默认配置
-ENGINE=org.beetl.core.FastRuntimeEngine
+ENGINE=org.beetl.core.engine.FastRuntimeEngine
 DELIMITER_PLACEHOLDER_START=${
 DELIMITER_PLACEHOLDER_END=}
 DELIMITER_STATEMENT_START=<%
@@ -230,7 +232,54 @@ WebAppResourceLoader resourceLoader = new WebAppResourceLoader();
 groupTemplate = new GroupTemplate(resourceLoader, cfg);
 ----------------------------
 
+*************************************************
 
+WebAppResourceLoader 假定 beetl.jar 是位于	WEB-INF/lib 目录下，因此，可以通过WebAppResourceLoader类的路径来推断出WebRoot路径从而指定模板根路径。所有线上环境一般都是如此，如果是开发环境或者其他环境部符合此假设，你需要调用resourceLoader.setRoot() 来指定模板更路径
+
+*************************************************
+
+
+
+
+=== 定界符与站位符号 ===
+
+Beetl模板语言类似JS语言和习俗，只需要将Beetl语言放入定界符号里即可，如默认的是<% %> ,占位符用于静态文本里嵌入占位符用于输出，如下是正确例子
+
+
+[source,javascript]
+----------------------------
+<%
+var a = 2;
+var b = 3;
+var result = a+b;
+%>
+hello 2+3=${result}
+
+----------------------------
+
+千万不要在定界符里使用站位符号，因为占位符仅仅嵌在静态文本里，如下例子是**错误**例子
+
+[source,javascript]
+----------------------------
+<%
+var a = "hi";
+var c = ${a}+"beetl"; //应该是var c = a+"beetl"
+%>
+
+
+----------------------------
+
+每次有人问我如上例子为啥不能运行的时候，我总是有点憎恶velocity 带来的这种非人性语法
+
+定界符号里是表达式，如果表达式跟定界符有冲突，可以在表达式里用 “\” 符号，如
+[source,javascript]
+----------------------------
+${[1,2,3]} //输出一个json列表
+${ {key:1,value:2 \}  } //输出一个json map，} 需要加上\
+
+
+
+----------------------------
 
 === 注释 ===
 
@@ -269,7 +318,7 @@ var a = 3; //定义一个变量.
 - <!--# 和 -->
 - <?  和  ?>
 
-你也可以根据自己喜爱来选择定界符好和占位符号
+你也可以根据自己喜爱来选择定界符号和占位符号
 
 
 
@@ -319,8 +368,7 @@ hello,${user.name};
 [source,java]
 ----------------------------
 
-ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader();		
-Configuration cfg = Configuration.defaultConfiguration();
+.....
 GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 Map<String,Object> shared = new HashMap<String,Object>();
 shared.put("name", "beetl");
@@ -794,6 +842,7 @@ ${user.wife.name!”单身”}，如果user为null，或者user.wife为null，�
 ${user. birthday!@System.constants.DefaultBir}， 表示如果user为null，或者user. birthday为null，输出System.constants.DefaultBir
 
 
+
 还有一种情况很少发生，但也有可能，输出模板变量发生的任何异常，如变量内部抛出的一个异常
 
 这需要使用格式${!(变量)},这样，在变量引用发生任何异常情况下，都不作输出，譬如
@@ -859,6 +908,63 @@ for(item in list!){
 
 
 ----------------------------
+
+==== 变量是否存在 ====
+
+判断变量是否存在，可以采用内置的isEmpty方法来判断，参数是变量，如
+[source,javascript]
+
+----------------------------
+
+<%
+if(isEmpty(flag)){
+	print("not exit")
+}
+%>
+----------------------------
+
+如果需要判断变量是否存在，如果存在，还有其他判断条件，通常都这么写
+
+[source,javascript]
+
+----------------------------
+
+<%
+if(isEmpty(flag)||flag==0){
+	//code 
+}
+%>
+----------------------------
+
+如果flag不存在，或者flag存在，但值是0，都将执行if语句
+
+但是，有更为简便的方法是直接用安全输出，如
+
+
+[source,javascript]
+
+----------------------------
+
+<%
+if(flag!0==0){
+	//code 
+}
+%>
+----------------------------
+
+falg!0 取值是这样的，如果flag不存在，则为0，如果存在，则取值flag的值，类似三元表达式 isEmpty(falg)?falg:0
+
+==== 安全输出表达式 ====
+
+安全输出表达式可以包括
+
+- 字符串常量,如 ${user.count!"无结果"}
+- boolean常量  ${user.count!false}
+- 数字常量，仅限于正数，因为如果是负数，则类似减号，容易误用，因此，如果需要表示负数，请用括号，如${user.count!(-1)}
+- class直接调用，如${user.count!@User.DEFAULT_NUM}
+- 方法调用，如 ${user.count!getDefault() }
+- 属性引用，如 ${user.count!user.maxCount }
+- 任何表达式，需要用括号
 
 
 === 格式化 ===
@@ -2416,7 +2522,7 @@ public class BeetlActionResult implements ActionResult
 
 === JFinal集成 ===
 
-JFinal提供 BeetlRenderFactory ，通过如下注册即可使用beetl模板引擎
+Beetl提供 JFinal 集成，使用BeetlRenderFactory ，通过如下注册即可使用beetl模板引擎
 
 [source,java]
 ----------------------------
@@ -2968,6 +3074,27 @@ key value 都是字符串，将以paramenter的形式提供给jsp，因此jsp可
 ----------------------------
 groupTemplate.registerTag("incdlueJSP",org.beetl.ext.jsp.IncludeJSPTag.class);
 ----------------------------
+
+=== 性能优化的秘密 ===
+
+Beetl2.0目前只完成了解释引擎，使用解释引擎好处是可以适用于各种场景，性能测试表明，Beetl2.0引擎是Freemaker的4倍，跟最好的
+的编译引擎性能相比，也相差只有几个百分点。为什么Beetl能跑的如此之快呢，简单的说，有如下策略
+
+- 优化IO输出，允许使用字节直接输出，模板中的静态文本事先转化为字节
+
+- encode优化，对于number类型，输出通常是.toString 转化成String，然后encode输出，这中间浪费了大量的资源，Beetl实现了encode，输出一步到位
+
+- Context 采用一维数组，语言里的Context通常采用Map实现，每次进入{} ，就新增一个child Map，尽快map很快，但不够快。也有其他模板语言采用二位数组提高性能，Beetl是通过固定大小一维数组来维护模板的Context，因此访问更快，也避免了Map和二维素组的频繁创建。其实除了此处，beetl很多地方都不采用Map来维护key-value, 而都采用数组索引，以最求性能极限
+
+- 字节码访问属性，通过反射获取性能比较慢，就算JVM有优化，但优化效果也不确定。Beetl通过字节码生成了属性访问类，从而将属性访问速度提高了一个数量级
+
+- 类型推测：Beetl 是强制类型的，因此预先知道类型，可以对模板做一些优化而省去了动态判断类型的时间
+
+- 使用数组Buffer，避免频繁创建和销毁数组
+
+- 编译引擎将模板编译成类，会产生大量的类，虚拟机很难对这些做优化。而解释引擎只有几十个固定的类，虚拟机容易优化
+
+
 
 
 === 性能测试对比 ===

@@ -65,7 +65,7 @@ public class IncludeJSPTag extends Tag
 			String realJspPath = getJSPPath(prefix, child);
 			request.getRequestDispatcher(realJspPath).include(request, rspWrapper);
 
-			ctx.byteWriter.write(rspWrapper.getRealWriter().toString());
+			ctx.byteWriter.writeString(rspWrapper.getRealWriter().toString());
 
 		}
 		catch (IOException e)

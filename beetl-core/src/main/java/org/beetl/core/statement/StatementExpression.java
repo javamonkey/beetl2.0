@@ -11,7 +11,7 @@ import org.beetl.core.InferContext;
 public class StatementExpression extends Statement
 {
 
-	Expression exp;
+	public Expression exp;
 
 	public StatementExpression(Expression exp, GrammarToken token)
 	{

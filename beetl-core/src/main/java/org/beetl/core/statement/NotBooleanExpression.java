@@ -39,7 +39,7 @@ import org.beetl.core.misc.ALU;
 public class NotBooleanExpression extends Expression
 {
 
-	Expression exp;
+	public Expression exp;
 
 	public NotBooleanExpression(Expression exp, GrammarToken token)
 	{

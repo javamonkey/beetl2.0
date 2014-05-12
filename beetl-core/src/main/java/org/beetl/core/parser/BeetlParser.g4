@@ -165,7 +165,13 @@ varAttribute :PERIOD Identifier   #varAttributeGeneral
              | VIRTUAL Identifier #varAttributeVirtual
              |LEFT_SQBR expression RIGHT_SQBR #varAttributeArrayOrMap
              ;
-safe_output: NOT expression? ;
+safe_output: NOT safe_allow_exp? ;
+safe_allow_exp:literal
+              | AT nativeCall
+              | functionCall
+              | json 
+              | varRef
+              | LEFT_PAR expression RIGHT_PAR;
     
 
 functionCall: functionNs LEFT_PAR expressionList? RIGHT_PAR (varAttribute)* ; 

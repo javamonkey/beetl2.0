@@ -90,6 +90,7 @@ import org.beetl.core.parser.BeetlParser.IncDecOneContext;
 import org.beetl.core.parser.BeetlParser.JsonContext;
 import org.beetl.core.parser.BeetlParser.JsonExpContext;
 import org.beetl.core.parser.BeetlParser.JsonKeyValueContext;
+import org.beetl.core.parser.BeetlParser.LiteralContext;
 import org.beetl.core.parser.BeetlParser.LiteralExpContext;
 import org.beetl.core.parser.BeetlParser.MuldivmodExpContext;
 import org.beetl.core.parser.BeetlParser.NativeArrayContext;
@@ -104,6 +105,7 @@ import org.beetl.core.parser.BeetlParser.OrExpContext;
 import org.beetl.core.parser.BeetlParser.ParExpContext;
 import org.beetl.core.parser.BeetlParser.ParExpressionContext;
 import org.beetl.core.parser.BeetlParser.ReturnStContext;
+import org.beetl.core.parser.BeetlParser.Safe_allow_expContext;
 import org.beetl.core.parser.BeetlParser.Safe_outputContext;
 import org.beetl.core.parser.BeetlParser.SelectStContext;
 import org.beetl.core.parser.BeetlParser.SiwchStContext;
@@ -163,6 +165,7 @@ import org.beetl.core.statement.SelectStatement;
 import org.beetl.core.statement.Statement;
 import org.beetl.core.statement.StatementExpression;
 import org.beetl.core.statement.StaticTextASTNode;
+import org.beetl.core.statement.StaticTextByteASTNode;
 import org.beetl.core.statement.SwitchStatement;
 import org.beetl.core.statement.TagStatement;
 import org.beetl.core.statement.TernaryExpression;
@@ -296,8 +299,17 @@ public class AntlrProgramBuilder
 			ConstantsTextStatmentContext cst = st.constantsTextStatment();
 			String str = cst.DecimalLiteral().getSymbol().getText();
 			int position = Integer.parseInt(str);
-			StaticTextASTNode textNode = new StaticTextASTNode(position, null);
-			return textNode;
+			if (!this.gt.getConf().directByteOutput)
+			{
+				StaticTextASTNode textNode = new StaticTextASTNode(position, null);
+				return textNode;
+			}
+			else
+			{
+				StaticTextByteASTNode textNode = new StaticTextByteASTNode(position, null);
+				return textNode;
+			}
+
 		}
 		else if (node instanceof IfStContext)
 		{
@@ -713,6 +725,7 @@ public class AntlrProgramBuilder
 		List<TerminalNode> idList = ctx.functionNs().Identifier();
 		String nsId = this.getID(idList);
 		GrammarToken btToken = new org.beetl.core.statement.GrammarToken(nsId, ctx.start.getLine(), 0);
+		//需要做些特殊处理的函数
 		if (nsId.equals("isEmpty"))
 		{
 
@@ -731,6 +744,23 @@ public class AntlrProgramBuilder
 				}
 			}
 
+		}
+		else if (nsId.equals("has"))
+		{
+			if (exps.length != 0)
+			{
+				Expression one = exps[0];
+				if (one instanceof VarRef)
+				{
+
+					//强制为变量引用增加一个安全输出
+					VarRef ref = (VarRef) one;
+					String name = ref.token.text;
+					Literal newExp = new Literal(name, ref.token);
+					//将变量引用转化为字符串
+					exps[0] = newExp;
+				}
+			}
 		}
 		else if (nsId.equals("debug"))
 		{
@@ -996,11 +1026,11 @@ public class AntlrProgramBuilder
 
 		if (ctx instanceof LiteralExpContext)
 		{
-			return parseLiteralExpress((LiteralExpContext) ctx);
+			return parseLiteralExpress(((LiteralExpContext) ctx).literal());
 		}
 		else if (ctx instanceof VarRefExpContext)
 		{
-			return this.parseVarRefExpression((VarRefExpContext) ctx);
+			return this.parseVarRefExpression(((VarRefExpContext) ctx).varRef());
 		}
 		else if (ctx instanceof CompareExpContext)
 		{
@@ -1459,17 +1489,46 @@ public class AntlrProgramBuilder
 
 	}
 
-	protected Expression parseVarRefExpression(VarRefExpContext ctx)
+	protected Expression parseVarRefExpression(VarRefContext varRef)
 	{
-		VarRefContext varRef = ctx.varRef();
 
 		Expression safeExp = null;
 		Safe_outputContext soctx = varRef.safe_output();
 		boolean hasSafe = false;
 		if (soctx != null)
 		{
-			ExpressionContext safeExpression = soctx.expression();
-			safeExp = this.parseExpress(safeExpression);
+			List list = soctx.children;
+			if (list.size() == 1)
+			{
+				//just  xxx!
+				safeExp = null;
+			}
+			else
+			{
+				//just xxx!exp
+				Safe_allow_expContext allowExp = (Safe_allow_expContext) list.get(1);
+				if (allowExp.literal() != null)
+				{
+					safeExp = this.parseLiteralExpress(allowExp.literal());
+				}
+				else if (allowExp.nativeCall() != null)
+				{
+					safeExp = this.parseNativeCallExpression(allowExp.nativeCall());
+				}
+				else if (allowExp.functionCall() != null)
+				{
+					safeExp = this.parseFunExp(allowExp.functionCall());
+				}
+				else if (allowExp.expression() != null)
+				{
+					safeExp = this.parseExpress(allowExp.expression());
+				}
+				else if (allowExp.varRef() != null)
+				{
+					safeExp = this.parseVarRefExpression(allowExp.varRef());
+				}
+
+			}
 			hasSafe = true;
 
 		}
@@ -1532,10 +1591,10 @@ public class AntlrProgramBuilder
 
 	}
 
-	protected Expression parseLiteralExpress(LiteralExpContext ctx)
+	protected Expression parseLiteralExpress(LiteralContext ctx)
 	{
-		LiteralExpContext lec = (LiteralExpContext) ctx;
-		ParseTree tree = lec.literal().getChild(0);
+
+		ParseTree tree = ctx.getChild(0);
 		Object value = null;
 		if (tree instanceof TerminalNode)
 		{

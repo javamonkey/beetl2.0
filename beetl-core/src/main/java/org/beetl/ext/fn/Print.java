@@ -48,7 +48,7 @@ public class Print implements Function
 		{
 			try
 			{
-				ctx.byteWriter.write(o.toString());
+				ctx.byteWriter.writeString(o.toString());
 			}
 			catch (IOException e)
 			{

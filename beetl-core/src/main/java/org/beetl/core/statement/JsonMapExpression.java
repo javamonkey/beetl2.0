@@ -44,11 +44,13 @@ public class JsonMapExpression extends Expression
 {
 
 	Map<String, Expression> map;
+	public Expression[] array;
 
 	public JsonMapExpression(Map<String, Expression> map, GrammarToken token)
 	{
 		super(token);
 		this.map = map;
+		array = map.values().toArray(new Expression[0]);
 	}
 
 	public Object evaluate(Context ctx)
@@ -73,7 +75,7 @@ public class JsonMapExpression extends Expression
 	public void infer(InferContext inferCtx)
 	{
 
-		for (Expression exp : map.values())
+		for (Expression exp : array)
 		{
 			exp.infer(inferCtx);
 		}

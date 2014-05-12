@@ -1,35 +1,45 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.beetl</groupId>
-	<artifactId>beetl-parent</artifactId>
-	<version>2.0-SNAPSHOT</version>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
 		<version>7</version>
 	</parent>
+	<groupId>org.beetl</groupId>
+	<artifactId>beetl-parent</artifactId>
+	<version>2.0.2-SNAPSHOT</version>
+	<packaging>pom</packaging>
 	<description>Bee Template Language</description>
 	<url>https://github.com/javamonkey/beetl2.0</url>
 	<modules>
 		<module>beetl-core</module>
-		<!--  
 		<module>beetl-performance</module>
 		<module>beetl-samples</module>
-		-->
 	</modules>
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>org.antlr</groupId>
+				<artifactId>antlr4</artifactId>
+				<version>${antlr4.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.antlr</groupId>
+				<artifactId>antlr4-runtime</artifactId>
+				<version>${antlr4.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.antlr</groupId>
+				<artifactId>antlr4-annotations</artifactId>
+				<version>${antlr4.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.ow2.asm</groupId>
 				<artifactId>asm</artifactId>
 				<version>4.1</version>
 			</dependency>
-			<dependency>
-				<groupId>org.antlr</groupId>
-				<artifactId>antlr4-runtime</artifactId>
-				<version>4.1</version>
-			</dependency>
+
 			<dependency>
 				<groupId>org.ow2.asm</groupId>
 				<artifactId>asm-util</artifactId>
@@ -56,26 +66,79 @@
 				<artifactId>logback-classic</artifactId>
 				<version>1.0.13</version>
 			</dependency>
-			<!-- 单元测试 -->
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.11</version>
-				<scope>test</scope>
+	        <dependency>
+	            <groupId>org.springframework</groupId>
+	            <artifactId>spring-core</artifactId>
+	            <version>${spring.version}</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.springframework</groupId>
+	            <artifactId>spring-web</artifactId>
+	            <version>${spring.version}</version>
+	        </dependency>         
+	        <dependency>
+	            <groupId>org.springframework</groupId>
+	            <artifactId>spring-webmvc</artifactId>
+	            <version>${spring.version}</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.springframework</groupId>
+	            <artifactId>spring-beans</artifactId>
+	            <version>${spring.version}</version>
+	        </dependency>
+	       	<dependency>
+	            <groupId>org.springframework</groupId>
+	            <artifactId>spring-context</artifactId>
+	            <version>${spring.version}</version>
+	        </dependency>	        
+	       	<dependency>
+	            <groupId>org.springframework</groupId>
+	            <artifactId>spring-context-support</artifactId>
+	            <version>${spring.version}</version>
+	        </dependency>
+	        <dependency>
+				<groupId>org.apache.struts</groupId>
+				<artifactId>struts2-core</artifactId>
+				<version>${struts2.version}</version>
 			</dependency>
+			<dependency>
+            	<groupId>com.jfinal</groupId>
+            	<artifactId>jfinal</artifactId>
+            	<version>${jfinal.version}</version>
+        	</dependency>
+        	<dependency>
+				<groupId>org.nutz</groupId>
+				<artifactId>nutz</artifactId>
+				<version>${nutz.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.struts.xwork</groupId>
+				<artifactId>xwork-core</artifactId>
+				<version>${struts2.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jodd</groupId>
+				<artifactId>jodd-madvoc</artifactId>
+				<version>${jodd.version}</version>
+			</dependency>
+			<!-- 单元测试 -->
 			<dependency>
 				<groupId>org.testng</groupId>
 				<artifactId>testng</artifactId>
-				<version>6.8.7</version>
-				<scope>test</scope>
+				<version>${testng.version}</version>
 			</dependency>
-
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+			</dependency>
+            			            			            			            
 		</dependencies>
 	</dependencyManagement>
 	<licenses>
 		<license>
-			<name>The MIT License (MIT)</name>
-			<url>http://opensource.org/licenses/MIT</url>
+			<name>The BSD 3-Clause License</name>
+			<url>http://opensource.org/licenses/BSD-3-Clause</url>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
@@ -93,11 +156,23 @@
 			<url>http://www.guoyukun.cn</url>
 			<timezone>+8</timezone>
 		</developer>
+		<developer>
+			<id>CZJCC</id>
+			<name>CZJCC</name>
+			<url>https://github.com/CZJCC</url>
+			<timezone>+8</timezone>
+		</developer>
+		<developer>
+			<id>QinAIns</id>
+			<name>QinAIns</name>
+			<email>qinains@gmail.com</email>
+			<url>https://github.com/QinAIns</url>
+		</developer>
 	</developers>
 	<scm>
 		<connection>scm:git:git@github.com:javamonkey/beetl2.0.git</connection>
 		<developerConnection>scm:git:git@github.com:javamonkey/beetl2.0.git</developerConnection>
-		<url>https://github.com/BEETL/BEETL</url>
+		<url>https://github.com/javamonkey/beetl2.0</url>
 	</scm>
 	<issueManagement>
 		<system>github</system>
@@ -111,6 +186,14 @@
 		<project.build.targetLevel>1.6</project.build.targetLevel>
 		<project.build.sourceLevel>1.6</project.build.sourceLevel>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<spring.version>3.2.8.RELEASE</spring.version>
+		<struts2.version>2.3.16.1</struts2.version>
+		<jfinal.version>1.6</jfinal.version>
+		<nutz.version>1.b.49</nutz.version>
+		<jodd.version>3.5.1</jodd.version>
+		<antlr4.version>4.2</antlr4.version>
+		<testng.version>6.8.7</testng.version>
+		<junit.version>4.11</junit.version>
 	</properties>
 	<build>
 		<pluginManagement>
@@ -172,8 +255,14 @@
 					<artifactId>maven-gpg-plugin</artifactId>
 					<version>1.4</version>
 				</plugin>
+				<plugin>
+			        <groupId>org.apache.maven.plugins</groupId>
+			        <artifactId>maven-surefire-plugin</artifactId>
+			        <version>2.17</version>
+			        <configuration>
+			        </configuration>
+			      </plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
-	<packaging>pom</packaging>
 </project>

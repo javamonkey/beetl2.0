@@ -3,9 +3,11 @@ package org.beetl.core;
 import java.io.IOException;
 import java.io.Reader;
 
+import junit.framework.TestCase;
+
 import org.beetl.core.resource.ClasspathResourceLoader;
 
-public class BasicTestCase
+public class BasicTestCase extends TestCase
 {
 	// 日志对象
 

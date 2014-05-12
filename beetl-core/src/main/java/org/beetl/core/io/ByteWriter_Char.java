@@ -32,6 +32,7 @@ import java.io.Writer;
 
 import org.beetl.core.BodyContent;
 import org.beetl.core.ByteWriter;
+import org.beetl.core.Context;
 
 public final class ByteWriter_Char extends ByteWriter
 {
@@ -39,9 +40,9 @@ public final class ByteWriter_Char extends ByteWriter
 	Writer w;
 	String cs;
 
-	public ByteWriter_Char(Writer w, String cs)
+	public ByteWriter_Char(Writer w, String cs, Context ctx)
 	{
-		super();
+		super(ctx);
 		this.w = w;
 		this.cs = cs;
 	}
@@ -61,23 +62,38 @@ public final class ByteWriter_Char extends ByteWriter
 	}
 
 	@Override
+	public void writeString(String str) throws IOException
+	{
+
+		if (str != null)
+		{
+			int len = str.length();
+			char[] buf = localBuffer.getCharBuffer(len);
+			str.getChars(0, len, buf, 0);
+			this.write(buf, len);
+
+		}
+
+	}
+
+	@Override
 	public final void write(byte[] bs) throws IOException
 	{
-		this.write(new String(bs, cs));
+		this.writeString(new String(bs, cs));
 
 	}
 
 	@Override
 	public final void write(byte[] bs, int count) throws IOException
 	{
-		this.write(new String(bs, 0, count, cs));
+		this.writeString(new String(bs, 0, count, cs));
 
 	}
 
 	@Override
 	public ByteWriter getTempWriter()
 	{
-		return new ByteWriter_Char(new NoLockStringWriter(), cs);
+		return new ByteWriter_Char(new NoLockStringWriter(), cs, ctx);
 	}
 
 	@Override
@@ -128,4 +144,11 @@ public final class ByteWriter_Char extends ByteWriter
 		this.cs = cs;
 	}
 
+	@Override
+	public void writeNumberChars(char[] chars, int len) throws IOException
+
+	{
+		this.w.write(chars, 0, len);
+
+	}
 }

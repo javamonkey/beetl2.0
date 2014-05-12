@@ -1,7 +1,5 @@
 <%
-var b = isEmpty(user.bir);
+if(has(user1)){
+print("has");
+}
 %>
-${b}
-${user.bir}
-
-

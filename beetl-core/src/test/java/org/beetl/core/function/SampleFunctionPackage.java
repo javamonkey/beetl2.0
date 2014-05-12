@@ -6,7 +6,7 @@ public class SampleFunctionPackage
 {
 	public void test1(Context ctx) throws Exception
 	{
-		ctx.byteWriter.write("hi");
+		ctx.byteWriter.writeString("hi");
 		//ctx.byteWriter.write(ctx.template.program.metaData.lineSeparator);
 
 	}

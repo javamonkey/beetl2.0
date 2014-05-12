@@ -36,7 +36,49 @@ public final class PlaceholderST extends Statement
 			{
 				value = format.evaluateValue(value, ctx);
 			}
-			ctx.byteWriter.write(value);
+			if (value != null)
+			{
+				if (value.getClass() == String.class)
+				{
+					ctx.byteWriter.writeString((String) value);
+					return;
+				}
+				else
+				{
+					if (value instanceof Number)
+					{
+						Class c = value.getClass();
+						if (c == Integer.class)
+						{
+							ctx.byteWriter.writeInteger((Integer) value);
+							return;
+						}
+						else if (c == Long.class)
+						{
+							ctx.byteWriter.writeLong((Long) value);
+							return;
+						}
+						else if (c == Double.class)
+						{
+							ctx.byteWriter.writeDouble((Double) value);
+							return;
+						}
+						else if (c == Float.class)
+						{
+							ctx.byteWriter.writeDouble((Double) value);
+							return;
+						}
+						else if (c == Short.class)
+						{
+							ctx.byteWriter.writeShort((Short) value);
+							return;
+						}
+					}
+
+				}
+				ctx.byteWriter.writeString(value.toString());
+			}
+			//			ctx.byteWriter.writeObject(value);
 		}
 		catch (IOException e)
 		{

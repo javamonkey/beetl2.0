@@ -98,6 +98,8 @@ public class Context
 	 */
 	public boolean safeOutput;
 
+	public ContextLocalBuffer localBuffer = ContextLocalBuffer.get();
+
 	/**
 	 * 判断全局变量是否存在
 	 * 

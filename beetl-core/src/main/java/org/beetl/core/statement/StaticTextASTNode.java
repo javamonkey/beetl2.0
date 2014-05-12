@@ -55,14 +55,8 @@ public final class StaticTextASTNode extends Statement
 	{
 		try
 		{
-			if (ctx.byteOutputMode)
-			{
-				ctx.byteWriter.write((byte[]) ctx.staticTextArray[textIndex]);
-			}
-			else
-			{
-				ctx.byteWriter.write((char[]) ctx.staticTextArray[textIndex]);
-			}
+			ctx.byteWriter.write((char[]) ctx.staticTextArray[textIndex]);
+
 		}
 		catch (IOException ex)
 		{

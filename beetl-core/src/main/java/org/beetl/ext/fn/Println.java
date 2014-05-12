@@ -43,22 +43,27 @@ public class Println implements Function
 
 	public String call(Object[] paras, Context ctx)
 	{
-		Object o = paras[0];
-		ByteWriter w = ctx.byteWriter;
-		//@todo
-		//String cr = csr.getCR();
-
-		if (o != null)
+		try
 		{
-			try
+			ByteWriter w = ctx.byteWriter;
+			if (paras.length == 0)
 			{
-				w.write(o.toString());
-				w.write(ctx.template.program.metaData.lineSeparator);
+				w.writeString(ctx.template.program.metaData.lineSeparator);
+				return "";
 			}
-			catch (IOException e)
+			Object o = paras[0];
+
+			if (o != null)
 			{
-				throw new RuntimeException(e);
+
+				w.writeString(o.toString());
+				w.writeString(ctx.template.program.metaData.lineSeparator);
 			}
+
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException(e);
 		}
 		return "";
 

@@ -39,7 +39,7 @@ import org.beetl.core.misc.ALU;
 public class AndExpression extends Expression
 {
 
-	Expression exp1, exp2;
+	public Expression exp1, exp2;
 
 	public AndExpression(Expression exp1, Expression exp2, GrammarToken token)
 	{

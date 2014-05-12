@@ -31,6 +31,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.beetl.core.exception.BeetlException;
 
@@ -56,6 +57,7 @@ public class AttributeAccessFactory
 	public static ListAA listAA = new ListAA();
 	public static ArrayAA arrayAA = new ArrayAA();
 	public static ObjectAA objectAA = new ObjectAA();
+	public static MapEntryAA mapEntryAA = new MapEntryAA();
 
 	static public AttributeAccess buildFiledAccessor(Class c, String attrExp)
 	{
@@ -79,6 +81,17 @@ public class AttributeAccessFactory
 		{
 			return arrayAA;
 		}
+
+		if (c == Entry.class)
+		{
+			return mapEntryAA;
+		}
+
+		if (c.getName().startsWith("java"))
+		{
+			return objectAA;
+		}
+
 		String name = (String) attrExp;
 		String className = c + "$_$" + name;
 		AttributeAccess aa = pojoCache.get(className);
@@ -183,7 +196,7 @@ public class AttributeAccessFactory
 		}
 
 		Class parent = c.getSuperclass();
-		if (!parent.getName().startsWith("java."))
+		if (parent != null && !parent.getName().startsWith("java."))
 		{
 			result = findResult(parent, getName, isName);
 			if (result != null)

@@ -55,7 +55,7 @@ public class Printf implements Function
 
 		try
 		{
-			ctx.byteWriter.write(sb.toString());
+			ctx.byteWriter.writeString(sb.toString());
 		}
 		catch (IOException e)
 		{

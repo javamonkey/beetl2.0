@@ -44,7 +44,7 @@ public class ContentBodyExpression extends Expression
 	public ContentBodyExpression(BlockStatement block, GrammarToken token)
 	{
 		super(token);
-		// TODO Auto-generated constructor stub
+		this.block = block;
 	}
 
 	public Object evaluate(Context ctx)

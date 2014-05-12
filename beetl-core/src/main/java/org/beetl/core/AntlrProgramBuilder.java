@@ -725,6 +725,7 @@ public class AntlrProgramBuilder
 		List<TerminalNode> idList = ctx.functionNs().Identifier();
 		String nsId = this.getID(idList);
 		GrammarToken btToken = new org.beetl.core.statement.GrammarToken(nsId, ctx.start.getLine(), 0);
+		//需要做些特殊处理的函数
 		if (nsId.equals("isEmpty"))
 		{
 
@@ -743,6 +744,23 @@ public class AntlrProgramBuilder
 				}
 			}
 
+		}
+		else if (nsId.equals("has"))
+		{
+			if (exps.length != 0)
+			{
+				Expression one = exps[0];
+				if (one instanceof VarRef)
+				{
+
+					//强制为变量引用增加一个安全输出
+					VarRef ref = (VarRef) one;
+					String name = ref.token.text;
+					Literal newExp = new Literal(name, ref.token);
+					//将变量引用转化为字符串
+					exps[0] = newExp;
+				}
+			}
 		}
 		else if (nsId.equals("debug"))
 		{
@@ -1012,7 +1030,7 @@ public class AntlrProgramBuilder
 		}
 		else if (ctx instanceof VarRefExpContext)
 		{
-			return this.parseVarRefExpression((VarRefExpContext) ctx);
+			return this.parseVarRefExpression(((VarRefExpContext) ctx).varRef());
 		}
 		else if (ctx instanceof CompareExpContext)
 		{
@@ -1471,9 +1489,8 @@ public class AntlrProgramBuilder
 
 	}
 
-	protected Expression parseVarRefExpression(VarRefExpContext ctx)
+	protected Expression parseVarRefExpression(VarRefContext varRef)
 	{
-		VarRefContext varRef = ctx.varRef();
 
 		Expression safeExp = null;
 		Safe_outputContext soctx = varRef.safe_output();
@@ -1505,6 +1522,10 @@ public class AntlrProgramBuilder
 				else if (allowExp.expression() != null)
 				{
 					safeExp = this.parseExpress(allowExp.expression());
+				}
+				else if (allowExp.varRef() != null)
+				{
+					safeExp = this.parseVarRefExpression(allowExp.varRef());
 				}
 
 			}

@@ -1,7 +1,5 @@
 <%
-if(list.~size!(3-2)>0){
-	print('hi');
-}else{
-	print('hello');
+if(has(user1)){
+print("has");
 }
 %>

@@ -80,7 +80,7 @@ System.out.println(str);
 
 ----------------------------
 
-Beetl的核心是GroupTemplate，创建GroupTemplate需要俩个参数，一个是模板资源加载器，一个是配置类，模板资源加载器Beetl内置了4总，分别是
+Beetl的核心是GroupTemplate，创建GroupTemplate需要俩个参数，一个是模板资源加载器，一个是配置类，模板资源加载器Beetl内置了4种，分别是
 
 - StringTemplateResourceLoader：字符串模板加载器，用于加载字符串模板，如本例所示
 - FileResourceLoader：文件模板加载器，需要一个根目录作为参数构造，，传入getTemplate方法的String是模板文件相对于Root目录的相对路径
@@ -790,11 +790,13 @@ Beetl内置函数请参考附录，以下列出了常用的函数
 
 - print 打印一个对象  print(user.name);
 
-- println 打印一个对象以及回车换行符号，回车换号符号使用的是模板本身的，而不是本地系统的.
+- println 打印一个对象以及回车换行符号，回车换号符号使用的是模板本身的，而不是本地系统的.如果仅仅打印一个换行符，则直接诶调用println() 即可
 
 - nvl 函数nvl，如果对象为null，则返回第二个参数，否则，返回自己  nvl(user,"不存在")
 
 - isEmpty 判断变量或者表达式是否为空，变量不存在，变量为null，变量是空字符串，变量是空集合，变量是空数组，此函数都将返回true
+
+- has 变量名为参数，判断是否存在此全局变量，如 has(userList),类似于1.x版本的exist("userList"),但不需要输入引号了
 
 - assert 如果表达式为false，则抛出异常
 
@@ -911,13 +913,13 @@ for(item in list!){
 
 ==== 变量是否存在 ====
 
-判断变量是否存在，可以采用内置的isEmpty方法来判断，参数是变量，如
+判断变量是否存在，可以采用内置的has或者isEmpty方法来判断，参数是变量，如
 [source,javascript]
 
 ----------------------------
 
 <%
-if(isEmpty(flag)){
+if(has(flag)){
 	print("not exit")
 }
 %>
@@ -930,7 +932,7 @@ if(isEmpty(flag)){
 ----------------------------
 
 <%
-if(isEmpty(flag)||flag==0){
+if(has(flag)||flag==0){
 	//code 
 }
 %>
@@ -2867,11 +2869,13 @@ public class Struts2BeetlActionResult extends StrutsResultSupport
 
 - print 打印一个对象  print(user.name);
 
-- println 打印一个对象以及回车换行符号，回车换号符号使用的是模板本身的，而不是本地系统的.
+- println 打印一个对象以及回车换行符号，回车换号符号使用的是模板本身的，而不是本地系统的.如果仅仅打印一个换行符，则直接诶调用println() 即可
 
 - nvl 函数nvl，如果对象为null，则返回第二个参数，否则，返回自己  nvl(user,"不存在")
 
 - isEmpty 判断变量或者表达式是否为空，变量不存在，变量为null，变量是空字符串，变量是空集合，变量是空数组，此函数都将返回true
+
+- has 变量名为参数，判断是否存在此全局变量，如 has(userList),类似于1.x版本的exist("userList"),但不需要输入引号了
 
 - assert 如果表达式为false，则抛出异常
 
@@ -2901,7 +2905,7 @@ public class Struts2BeetlActionResult extends StrutsResultSupport
 
 - strutil.split	${ strutil.split (“hello,joeli”,”,”),输出是数组，有俩个元素，第一个是hello，第二个是joelli”
 
-- strutil.contain	${ strutil.split (“hello,”el”),输出是true
+- strutil.contain	${ strutil.contain (“hello,”el”),输出是true
 
 - strutil.toUpperCase	${ strutil.toUpperCase (“hello”),输出是HELLO
 

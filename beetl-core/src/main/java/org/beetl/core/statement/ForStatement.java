@@ -34,6 +34,7 @@ import org.beetl.core.Context;
 import org.beetl.core.InferContext;
 import org.beetl.core.IteratorStatus;
 import org.beetl.core.exception.BeetlException;
+import org.beetl.core.exception.BeetlParserException;
 
 /** for(user:list){}elsefor{}
  * @author joelli
@@ -92,6 +93,12 @@ public final class ForStatement extends Statement implements IGoto
 		else
 		{
 			it = IteratorStatus.getIteratorStatus(exp.evaluate(ctx), itType);
+			if (it == null)
+			{
+				BeetlParserException ex = new BeetlParserException(BeetlParserException.COLLECTION_EXPECTED_ERROR);
+				ex.token = exp.token;
+				throw ex;
+			}
 		}
 
 		ctx.vars[varIndex + 1] = it;

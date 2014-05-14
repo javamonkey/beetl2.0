@@ -151,6 +151,11 @@ public class BeetlException extends RuntimeException
 	public static final String BOOLEAN_EXPECTED_ERROR = "BOOLEAN_EXPECTED_ERROR";
 
 	/**
+	 * 期望是个集合，数组，Iterator，Iterable类型，但却是其他类型
+	 */
+	public static final String COLLECTION_EXPECTED_ERROR = "COLLECTION_EXPECTED_ERROR";
+
+	/**
 	 * 期望是数字类型，但却是其他类型
 	 */
 	public static final String NUMBER_EXPECTED_ERROR = "NUMBER_EXPECTED_ERROR";

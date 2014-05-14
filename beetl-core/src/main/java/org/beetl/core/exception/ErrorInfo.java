@@ -65,6 +65,8 @@ public class ErrorInfo
 		errorLocalMap.put(BeetlException.FUNCTION_INVALID, concat("方法定义错误", BeetlException.FUNCTION_INVALID));
 		errorLocalMap.put(BeetlException.FUNCTION_NOT_FOUND, concat("未找到方法", BeetlException.FUNCTION_NOT_FOUND));
 		errorLocalMap.put(BeetlException.STRICK_MVC, concat("严格MVC，不允许在模板里直接调用本地类", BeetlException.STRICK_MVC));
+		errorLocalMap.put(BeetlException.COLLECTION_EXPECTED_ERROR,
+				concat("期望遍历目标是是集合，数组，Iterator，Iterable", BeetlException.COLLECTION_EXPECTED_ERROR));
 
 	}
 

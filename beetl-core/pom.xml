@@ -121,6 +121,7 @@
 				<configuration>
 					<excludes>
 						<exclude>**/*.xml</exclude>
+						<exclude>**/*.g4</exclude>
 					</excludes>
 				</configuration>
 			</plugin>

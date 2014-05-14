@@ -28,7 +28,6 @@
 package org.beetl.core.statement;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.beetl.core.Context;
@@ -53,7 +52,7 @@ public class JsonArrayExpression extends Expression
 	{
 		if (array.length == 0)
 		{
-			return Collections.EMPTY_LIST;
+			return new ArrayList();
 		}
 		else
 		{

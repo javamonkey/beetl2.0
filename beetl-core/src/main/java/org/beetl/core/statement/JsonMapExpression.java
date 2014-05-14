@@ -27,7 +27,6 @@
  */
 package org.beetl.core.statement;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -57,7 +56,7 @@ public class JsonMapExpression extends Expression
 	{
 		if (map.size() == 0)
 		{
-			return Collections.EMPTY_MAP;
+			return new HashMap();
 		}
 		else
 		{

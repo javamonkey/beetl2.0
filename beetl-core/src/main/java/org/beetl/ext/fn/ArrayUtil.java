@@ -117,21 +117,21 @@ public class ArrayUtil
 		return null;
 	}
 
-	public Object add(Object[] params)
+	public Object add(Object o, Object item)
 	{
-		Object o = params[0];
-		Object item = params[1];
+		return this.add(o, item, 0);
+	}
+
+	public Object add(Object o, Object item, int index)
+	{
+
 		if (o != null)
 		{
 			if (o.getClass().isArray())
 			{
 				Object[] oldArray = (Object[]) o;
 				Object[] newArray = new Object[oldArray.length + 1];
-				int index = ((Object[]) params[0]).length;
-				if (params.length > 2)
-				{
-					index = ((Integer) params[2]).intValue();
-				}
+
 				Class type = o.getClass().getComponentType();
 				if (!(item.getClass().equals(type)) || index < 0 || index > oldArray.length)
 				{

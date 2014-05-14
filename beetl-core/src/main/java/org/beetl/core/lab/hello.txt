@@ -1,5 +1,6 @@
 <%
-if(has(user1)){
-print("has");
-}
+var a = [];
+array.add(a,1);
+
 %>
+${a}

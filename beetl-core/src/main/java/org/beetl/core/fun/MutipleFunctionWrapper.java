@@ -143,7 +143,7 @@ public class MutipleFunctionWrapper extends FunctionWrapper
 						parameterType = parameterNoContextType;
 					}
 
-					ObjectMethodMatchConf conf = ObjectUtil.match(mc.m, parameterType, -1);
+					ObjectMethodMatchConf conf = ObjectUtil.match(mc.m, parameterType);
 					if (conf == null)
 					{
 						continue;
@@ -240,7 +240,7 @@ public class MutipleFunctionWrapper extends FunctionWrapper
 			String method = null;
 			if (index != -1)
 			{
-				method = functionName.substring(index+1);
+				method = functionName.substring(index + 1);
 			}
 			else
 			{

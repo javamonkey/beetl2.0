@@ -64,14 +64,16 @@ public final class IteratorStatus
 		{
 			return new IteratorStatus((Iterable) o);
 		}
+		else if (o instanceof Iterator)
+		{
+			return new IteratorStatus((Iterator) o);
+		}
 		else if (o.getClass().isArray())
 		{
 			return new IteratorStatus((Object[]) o);
 		}
 		else
 		{
-			// throw new
-			// RuntimeException("Object:"+o.getClass()+" 不能使用在For循环里");
 			return null;
 		}
 	}

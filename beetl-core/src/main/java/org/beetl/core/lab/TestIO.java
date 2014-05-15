@@ -1,16 +1,21 @@
 package org.beetl.core.lab;
 
-import org.beetl.core.io.FloatingIOWriter;
+import java.lang.reflect.Method;
 
 public class TestIO
 {
 
-	public static void main(String[] args)
+	public static void main(String[] args) throws NoSuchMethodException, SecurityException
 	{
-		FloatingIOWriter fd = new FloatingIOWriter(1.222333);
-		String str = fd.toJavaFormatString();
-		System.out.println(str);
+		TestIO test = new TestIO();
+		Method m = test.getClass().getMethod("testId", new Class[]
+		{ int.class });
 
+	}
+
+	public void testId(int id)
+	{
+		System.out.println(id);
 	}
 
 }

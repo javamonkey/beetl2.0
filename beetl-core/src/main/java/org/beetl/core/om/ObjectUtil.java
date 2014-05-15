@@ -220,25 +220,15 @@ public class ObjectUtil
 	 * @param parameterCount 如果为-1，则是精确匹配，输入参数与方法得参数个数必须一致
 	 * @return 如果不为null，则匹配，其包含了匹配信息
 	 */
-	public static ObjectMethodMatchConf match(Method method, Class[] parameterType, int parameterCount)
+	public static ObjectMethodMatchConf match(Method method, Class[] parameterType)
 	{
 		Class[] paras = method.getParameterTypes();
-		if (parameterCount == -1)
-		{
-			if (parameterType.length != paras.length)
-			{
-				return null;
-			}
-			parameterCount = parameterType.length;
-		}
-
-		if (parameterType.length > parameterCount)
+		if (parameterType.length != paras.length)
 		{
 			return null;
 		}
-
+		int parameterCount = paras.length;
 		int[] convert = new int[parameterCount];
-
 		boolean isMatch = true;
 
 		for (int j = 0; j < parameterType.length; j++)
@@ -491,20 +481,29 @@ public class ObjectUtil
 	{
 
 		List<Method> ms = getObjectInfo(target).getMethods(methodName);
+		if (ms.size() == 0)
+		{
+			return null;
+		}
+		else if (ms.size() == 1)
+		{
+			//就是它了
+			ObjectMethodMatchConf conf = new ObjectMethodMatchConf();
+			conf.isNeedConvert = false;
+			conf.method = ms.get(0);
+			return conf;
+		}
 
 		Method temp = null;
 		for (int i = 0; i < ms.size(); i++)
 		{
 			temp = ms.get(i);
-			if (temp.getName().equals(methodName))
+			ObjectMethodMatchConf selfMc = match(temp, parameterType);
+			if (selfMc != null && selfMc.isExactMatch)
 			{
-				ObjectMethodMatchConf selfMc = match(temp, parameterType, -1);
-				if (selfMc != null && selfMc.isExactMatch)
-				{
 
-					return selfMc;
+				return selfMc;
 
-				}
 			}
 
 		}

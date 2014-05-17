@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
+import org.beetl.core.exception.BeetlParserException;
 import org.beetl.core.om.ObjectMethodMatchConf;
 import org.beetl.core.om.ObjectUtil;
 import org.beetl.core.statement.nat.ClassNode;
@@ -153,7 +154,7 @@ public class NativeCallExpression extends Expression
 					}
 					if (targetObj != null)
 					{
-						targetObj = ObjectUtil.invoke(targetObj, method, args);
+						targetObj = ObjectUtil.invokeObject(targetObj, method, args);
 					}
 					else
 					{
@@ -196,6 +197,11 @@ public class NativeCallExpression extends Expression
 					be.token = GrammarToken.createToken(method, token.line);
 					throw be;
 				}
+				catch (BeetlParserException be)
+				{
+					be.token = GrammarToken.createToken(method, token.line);
+					throw be;
+				}
 			}
 
 		}
@@ -224,7 +230,9 @@ public class NativeCallExpression extends Expression
 			if (type.cls == Object.class)
 			{
 				this.type = type;
-				// do not infer since it's object
+
+				// do not infer since it's object,但是有风险，剩下的表达式没有机会推测，对于
+				//以后生成代码有问题
 				return;
 			}
 			if (node instanceof NativeAtrributeNode)
@@ -281,9 +289,7 @@ public class NativeCallExpression extends Expression
 					ObjectMethodMatchConf conf = ObjectUtil.findMethod(type.cls, method, argTypes);
 					if (conf == null)
 					{
-						BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION);
-						be.token = GrammarToken.createToken(method, token.line);
-						throw be;
+						type.cls = Object.class;
 					}
 					else
 					{

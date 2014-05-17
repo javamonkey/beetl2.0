@@ -41,14 +41,15 @@ public class ObjectMethodMatchConf
 	public int[] convert;
 	// 是否需要转化
 	public boolean isNeedConvert;
-	//todo,取消
-	public boolean isExactMatch = true;
+
 	public final static int INT_CONVERT = 1;
 	public final static int LONG_CONVERT = 2;
 	public final static int DOUBLE_CONVERT = 3;
 	public final static int FLOAT_CONVERT = 4;
 	public final static int SHORT_CONVERT = 5;
 	public final static int BIGDECIMAL_CONVERT = 6;
+	public final static int BYTE_CONVERT = 7;
+	public final static int CHAR_CONVERT = 8;
 
 	public final static int NO_CONVERT = 0;
 
@@ -62,49 +63,6 @@ public class ObjectMethodMatchConf
 		return str;
 	}
 
-	public Object invoke(Object o, Object[] parameter)
-	{
-		return null;
-	}
-
-	public String getOutputType(int i)
-	{
-		switch (convert[i])
-		{
-
-			case INT_CONVERT:
-			{
-				return ".intValue()";
-			}
-			case LONG_CONVERT:
-			{
-				return ".longValue()";
-			}
-			case DOUBLE_CONVERT:
-			{
-				return ".doubleValue()";
-			}
-			case FLOAT_CONVERT:
-			{
-				return ".floatValue()";
-			}
-			case SHORT_CONVERT:
-			{
-				return ".shortValue()";
-			}
-
-			case BIGDECIMAL_CONVERT:
-			{
-				return ".getBigDecimal()";
-			}
-			default:
-			{
-				throw new RuntimeException("not support converty type " + i);
-			}
-
-		}
-	}
-
 	public Object convert(Object o, int i)
 	{
 		switch (convert[i])
@@ -116,6 +74,14 @@ public class ObjectMethodMatchConf
 			case INT_CONVERT:
 			{
 				return ((Number) o).intValue();
+			}
+			case BYTE_CONVERT:
+			{
+				return ((Number) o).byteValue();
+			}
+			case CHAR_CONVERT:
+			{
+				return ((Character) o).charValue();
 			}
 			case LONG_CONVERT:
 			{
@@ -145,5 +111,4 @@ public class ObjectMethodMatchConf
 
 		}
 	}
-
 }

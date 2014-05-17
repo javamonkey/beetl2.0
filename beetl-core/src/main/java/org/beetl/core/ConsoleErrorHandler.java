@@ -58,6 +58,10 @@ public class ConsoleErrorHandler implements ErrorHandler
 		}
 
 		println(writer, sb.toString());
+		if (ex.getMessage() != null)
+		{
+			println(writer, ex.getMessage());
+		}
 
 		ResourceLoader resLoader = ex.gt.getResourceLoader();
 		//潜在问题，此时可能得到是一个新的模板，不过可能性很小，忽略！

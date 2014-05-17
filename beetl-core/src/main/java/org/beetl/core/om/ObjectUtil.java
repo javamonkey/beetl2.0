@@ -44,11 +44,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.beetl.core.exception.BeetlException;
 import org.beetl.core.exception.BeetlParserException;
 
 /**
@@ -456,6 +458,14 @@ public class ObjectUtil
 		else
 		{
 			targets = paras;
+		}
+		if (o == null)
+		{
+			//check static 
+			if (!Modifier.isStatic(conf.method.getModifiers()))
+			{
+				throw new BeetlException(BeetlException.NATIVE_CALL_INVALID, "该方法是非静态方法，不能静态形式调用");
+			}
 		}
 		return conf.method.invoke(o, targets);
 	}

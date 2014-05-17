@@ -6,7 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
-import org.beetl.core.exception.BeetlParserException;
 import org.beetl.core.om.ObjectMethodMatchConf;
 import org.beetl.core.om.ObjectUtil;
 import org.beetl.core.statement.nat.ClassNode;
@@ -197,7 +196,7 @@ public class NativeCallExpression extends Expression
 					be.token = GrammarToken.createToken(method, token.line);
 					throw be;
 				}
-				catch (BeetlParserException be)
+				catch (BeetlException be)
 				{
 					be.token = GrammarToken.createToken(method, token.line);
 					throw be;

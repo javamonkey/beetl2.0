@@ -136,7 +136,7 @@ public class NativeTest extends BasicTestCase
 		return i + ":" + c + ":" + d;
 	}
 
-	public Object getValue(String tt)
+	public static Object getValue(String tt)
 	{
 		return 1;
 	}

@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -191,6 +192,17 @@ public class Template
 	 * @param map
 	 */
 	public void binding(Map map)
+	{
+		Map<String, Object> values = map;
+		ctx.globalVar = new HashMap<String, Object>();
+		Map<String, Object> target = ctx.globalVar;
+		for (Entry<String, Object> entry : values.entrySet())
+		{
+			target.put(entry.getKey(), entry.getValue());
+		}
+	}
+
+	public void fastBinding(Map map)
 	{
 		ctx.globalVar = map;
 	}

@@ -91,6 +91,21 @@ public class NativeTest extends BasicTestCase
 		AssertJUnit.assertEquals(this.getFileContent("/nat/all_expected.html"), str);
 	}
 
+	@Test
+	public void testObjectReturn() throws Exception
+	{
+		NativeTest test = new NativeTest();
+		Template t = gt.getTemplate("/nat/object_template.html");
+		this.bind(t, "test", test);
+		String str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/nat/object_expected.html"), str);
+
+		t = gt.getTemplate("/nat/object_template.html");
+		this.bind(t, "test", test);
+		str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/nat/object_expected.html"), str);
+	}
+
 	public String getText()
 	{
 		return "text";
@@ -116,8 +131,13 @@ public class NativeTest extends BasicTestCase
 		return i + ":" + c;
 	}
 
-	public String getData(int i, String c, double d)
+	public static String getData(int i, String c, double d)
 	{
 		return i + ":" + c + ":" + d;
+	}
+
+	public static Object getValue(String tt)
+	{
+		return 1;
 	}
 }

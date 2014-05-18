@@ -48,28 +48,40 @@ public class MutipleFunctionWrapper extends FunctionWrapper
 
 	Method[] ms = null;
 	HashMap<Integer, List<MethodContext>> map = new HashMap<Integer, List<MethodContext>>();
+	String methodName = null;
 
 	public MutipleFunctionWrapper(String funName, Object target, Method[] ms)
 	{
 		super(funName);
 		this.ms = ms;
 		this.target = target;
+		int index = this.functionName.lastIndexOf(".");
+		if (index != -1)
+		{
+			methodName = functionName.substring(index + 1);
+		}
+		else
+		{
+			methodName = functionName;
+		}
 		for (Method m : ms)
 		{
 			Class[] paraType = m.getParameterTypes();
 			MethodContext mc = new MethodContext();
 			mc.m = m;
 			mc.parasType = paraType;
+			int len = paraType.length;
 			if (paraType.length != 0 && paraType[paraType.length - 1] == Context.class)
 			{
 				mc.contextRequired = true;
+				len--;
 			}
-			List<MethodContext> list = map.get(paraType.length);
+			List<MethodContext> list = map.get(len);
 			if (list == null)
 			{
 				list = new ArrayList<MethodContext>();
 				//根据长度快速找到应该调用的方法
-				map.put(paraType.length, list);
+				map.put(len, list);
 			}
 			list.add(mc);
 
@@ -100,7 +112,9 @@ public class MutipleFunctionWrapper extends FunctionWrapper
 					newArgs[paras.length] = ctx;
 
 				}
-				return mc.m.invoke(target, newArgs);
+
+				return ObjectUtil.invokeObject(target, this.methodName, newArgs);
+
 			}
 			else
 			{
@@ -143,7 +157,7 @@ public class MutipleFunctionWrapper extends FunctionWrapper
 						parameterType = parameterNoContextType;
 					}
 
-					ObjectMethodMatchConf conf = ObjectUtil.match(mc.m, parameterType, -1);
+					ObjectMethodMatchConf conf = ObjectUtil.match(mc.m, parameterType);
 					if (conf == null)
 					{
 						continue;
@@ -167,14 +181,7 @@ public class MutipleFunctionWrapper extends FunctionWrapper
 						Object[] newParas = new Object[paras.length + (mc.contextRequired ? 1 : 0)];
 						for (int j = 0; j < paras.length; j++)
 						{
-							if (conf.convert[j] != 0)
-							{
-								newParas[j] = conf.convert(paras[j], j);
-							}
-							else
-							{
-								newParas[j] = paras[j];
-							}
+							newParas[j] = conf.convert(paras[j], j);
 						}
 
 						if (mc.contextRequired)
@@ -236,26 +243,16 @@ public class MutipleFunctionWrapper extends FunctionWrapper
 				parameterContextType = parameterType;
 			}
 
-			int index = functionName.lastIndexOf(".");
-			String method = null;
-			if (index != -1)
-			{
-				method = functionName.substring(index+1);
-			}
-			else
-			{
-				method = functionName;
-			}
-
-			ObjectMethodMatchConf matchConf = ObjectUtil.findMethod(target.getClass(), method, parameterContextType);
+			ObjectMethodMatchConf matchConf = ObjectUtil.findMethod(target.getClass(), this.methodName,
+					parameterContextType);
 			if (matchConf != null)
 			{
 				return matchConf.method.getReturnType();
 			}
 
 		}
-		BeetlException ex = new BeetlException(BeetlException.NATIVE_CALL_INVALID, "找不到方法 " + this.functionName);
-		throw ex;
+		//如果找不到合适类型，则认为调用返回Object
+		return Object.class;
 
 	}
 

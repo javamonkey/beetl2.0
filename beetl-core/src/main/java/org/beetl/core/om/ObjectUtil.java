@@ -28,6 +28,8 @@
 package org.beetl.core.om;
 
 import static org.beetl.core.om.ObjectMethodMatchConf.BIGDECIMAL_CONVERT;
+import static org.beetl.core.om.ObjectMethodMatchConf.BYTE_CONVERT;
+import static org.beetl.core.om.ObjectMethodMatchConf.CHAR_CONVERT;
 import static org.beetl.core.om.ObjectMethodMatchConf.DOUBLE_CONVERT;
 import static org.beetl.core.om.ObjectMethodMatchConf.FLOAT_CONVERT;
 import static org.beetl.core.om.ObjectMethodMatchConf.INT_CONVERT;
@@ -42,10 +44,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.beetl.core.exception.BeetlException;
+import org.beetl.core.exception.BeetlParserException;
 
 /**
  * java对象一些操作util类，并缓存一些中间结果以提高性能
@@ -216,159 +222,169 @@ public class ObjectUtil
 
 	/**看给定的参数是否匹配给定方法的前parameterCount参数 
 	 * @param method 
-	 * @param parameterType 输入的参数
-	 * @param parameterCount 如果为-1，则是精确匹配，输入参数与方法得参数个数必须一致
+	 * @param paras 输入的参数
 	 * @return 如果不为null，则匹配，其包含了匹配信息
 	 */
-	public static ObjectMethodMatchConf match(Method method, Class[] parameterType, int parameterCount)
+	public static ObjectMethodMatchConf match(Method method, Class[] paras)
 	{
-		Class[] paras = method.getParameterTypes();
-		if (parameterCount == -1)
-		{
-			if (parameterType.length != paras.length)
-			{
-				return null;
-			}
-			parameterCount = parameterType.length;
-		}
-
-		if (parameterType.length > parameterCount)
+		Class[] metodParaTypes = method.getParameterTypes();
+		if (paras.length != metodParaTypes.length)
 		{
 			return null;
 		}
-
+		int parameterCount = metodParaTypes.length;
 		int[] convert = new int[parameterCount];
 
-		boolean isMatch = true;
-
-		for (int j = 0; j < parameterType.length; j++)
+		for (int j = 0; j < paras.length; j++)
 		{
 
-			if (parameterType[j] == null)
+			if (paras[j] == null)
 			{
 				// 认为匹配
 				convert[j] = NO_CONVERT;
 				continue;
 			}
 
-			if (parameterType[j] == paras[j])
+			if (paras[j] == metodParaTypes[j])
 			{
 				convert[j] = NO_CONVERT;
 				continue;
 			}
 
-			if (paras[j] == Object.class)
+			if (metodParaTypes[j] == Object.class)
 			{
 
 				convert[j] = NO_CONVERT;
 
 				continue;
 			}
-			else if (paras[j].isAssignableFrom(parameterType[j]))
+			else if (metodParaTypes[j].isAssignableFrom(paras[j]))
 			{
 				convert[j] = NO_CONVERT;
 				continue;
 			}
-
-			else if (paras[j].isPrimitive() && Number.class.isAssignableFrom(parameterType[j]))
+			else if (metodParaTypes[j].isPrimitive() && Number.class.isAssignableFrom(paras[j]))
 			{
-
-				if (paras[j] == int.class)
+				//匹配，但需要类型转化
+				if (metodParaTypes[j] == int.class)
 				{
 					convert[j] = INT_CONVERT;
 				}
-				else if (paras[j] == long.class)
+				else if (metodParaTypes[j] == byte.class)
+				{
+					convert[j] = BYTE_CONVERT;
+				}
+				else if (metodParaTypes[j] == char.class)
+				{
+					convert[j] = CHAR_CONVERT;
+				}
+				else if (metodParaTypes[j] == long.class)
 				{
 					convert[j] = LONG_CONVERT;
 				}
-				else if (paras[j] == double.class)
+				else if (metodParaTypes[j] == double.class)
 				{
 					convert[j] = DOUBLE_CONVERT;
 				}
-				else if (paras[j] == float.class)
+				else if (metodParaTypes[j] == float.class)
 				{
 					convert[j] = FLOAT_CONVERT;
 				}
-				else if (paras[j] == short.class)
+				else if (metodParaTypes[j] == short.class)
 				{
 					convert[j] = SHORT_CONVERT;
 				}
+				continue;
+
 			}
-			else if (Number.class.isAssignableFrom(paras[j]) && Number.class.isAssignableFrom(parameterType[j]))
+			else if (Number.class.isAssignableFrom(metodParaTypes[j]) && Number.class.isAssignableFrom(paras[j]))
 			{
-				if (paras[j] == Integer.class)
+				//匹配，但需要类型转化
+				if (metodParaTypes[j] == Integer.class)
 				{
 					convert[j] = INT_CONVERT;
 				}
-				else if (paras[j] == Long.class)
+				else if (metodParaTypes[j] == Byte.class)
+				{
+					convert[j] = BYTE_CONVERT;
+				}
+				else if (metodParaTypes[j] == Character.class)
+				{
+					convert[j] = CHAR_CONVERT;
+				}
+				else if (metodParaTypes[j] == Long.class)
 				{
 					convert[j] = LONG_CONVERT;
 				}
-				else if (paras[j] == Double.class)
+				else if (metodParaTypes[j] == Double.class)
 				{
 					convert[j] = DOUBLE_CONVERT;
 				}
-				else if (paras[j] == Float.class)
+				else if (metodParaTypes[j] == Float.class)
 				{
 					convert[j] = FLOAT_CONVERT;
 				}
-				else if (paras[j] == Short.class)
+				else if (metodParaTypes[j] == Short.class)
 				{
 					convert[j] = SHORT_CONVERT;
 				}
-				else if (paras[j] == BigDecimal.class)
+				else if (metodParaTypes[j] == BigDecimal.class)
 				{
 					convert[j] = BIGDECIMAL_CONVERT;
 				}
-				else
-				{
-					throw new RuntimeException("不支持的类型转化");
-				}
+				continue;
+
 			}
-			else if (paras[j] == Boolean.class)
+
+			else if (metodParaTypes[j] == Boolean.class)
 			{
-				if (parameterType[j] == boolean.class || parameterType[j] == Boolean.class)
+				if (paras[j] == boolean.class)
 				{
 					convert[j] = NO_CONVERT;
+					continue;
 				}
 			}
-			else if (paras[j] == boolean.class)
+			else if (metodParaTypes[j] == boolean.class)
 			{
-				if (parameterType[j] == boolean.class || parameterType[j] == Boolean.class)
+				if (paras[j] == Boolean.class)
 				{
 					convert[j] = NO_CONVERT;
+					continue;
 				}
 			}
-			else
+			else if (metodParaTypes[j] == Character.class)
 			{
-				isMatch = false;
-			}
-		}
-
-		if (isMatch)
-		{
-
-			ObjectMethodMatchConf mc = new ObjectMethodMatchConf();
-			mc.method = method;
-			mc.convert = convert;
-			for (int c : convert)
-			{
-				if (c != 0)
+				if (paras[j] == char.class)
 				{
-					mc.isNeedConvert = true;
-					break;
+					convert[j] = CHAR_CONVERT;
+					continue;
 				}
 			}
-			if (parameterType.length != parameterCount)
+			else if (metodParaTypes[j] == char.class)
 			{
-				mc.isExactMatch = false;
+				if (paras[j] == Character.class)
+				{
+					convert[j] = CHAR_CONVERT;
+					continue;
+				}
 			}
-			return mc;
-		}
-		else
-		{
+
 			return null;
+
 		}
+		ObjectMethodMatchConf mc = new ObjectMethodMatchConf();
+		mc.method = method;
+		mc.convert = convert;
+		for (int c : convert)
+		{
+			if (c != 0)
+			{
+				mc.isNeedConvert = true;
+				break;
+			}
+		}
+
+		return mc;
 
 	}
 
@@ -381,32 +397,24 @@ public class ObjectUtil
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
 	 */
-	public static Object invoke(Object o, String methodName, Object[] paras) throws IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException
+	private static Object invoke(Class target, Object o, String methodName, Object[] paras)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
-		Class target = o.getClass();
-		ObjectInfo info = getObjectInfo(target);
-		List<Method> list = info.getMethods(methodName);
-		if (list.size() == 1)
-		{
-			//只有一个方法，就是它了
-			Method m = list.get(0);
-			return m.invoke(o, paras);
 
-		}
-		else
+		ObjectInfo info = getObjectInfo(target);
+		Class[] parameterType = new Class[paras.length];
+		int i = 0;
+		for (Object para : paras)
 		{
-			//多个方法，找到匹配的方法
-			Class[] parameterType = new Class[paras.length];
-			int i = 0;
-			for (Object para : paras)
-			{
-				parameterType[i++] = para.getClass();
-			}
-			ObjectMethodMatchConf mf = findMethod(target, methodName, parameterType);
-			Object result = invoke(o, mf, paras);
-			return result;
+			parameterType[i++] = para.getClass();
 		}
+		ObjectMethodMatchConf mf = findMethod(target, methodName, parameterType);
+		if (mf == null)
+		{
+			throw new BeetlParserException(BeetlParserException.NATIVE_CALL_INVALID, "根据参数未找到匹配的方法");
+		}
+		Object result = invoke(o, mf, paras);
+		return result;
 
 	}
 
@@ -422,29 +430,15 @@ public class ObjectUtil
 	public static Object invokeStatic(Class target, String methodName, Object[] paras) throws IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException
 	{
+		return invoke(target, null, methodName, paras);
 
-		ObjectInfo info = getObjectInfo(target);
-		List<Method> list = info.getMethods(methodName);
-		if (list.size() == 1)
-		{
-			//只有一个方法，就是它了
-			Method m = list.get(0);
-			return m.invoke(null, paras);
+	}
 
-		}
-		else
-		{
-			//多个方法，找到匹配的方法
-			Class[] parameterType = new Class[paras.length];
-			int i = 0;
-			for (Object para : paras)
-			{
-				parameterType[i++] = para.getClass();
-			}
-			ObjectMethodMatchConf mf = findMethod(target, methodName, parameterType);
-			Object result = invoke(null, mf, paras);
-			return result;
-		}
+	public static Object invokeObject(Object o, String methodName, Object[] paras) throws IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException
+	{
+		Class target = o.getClass();
+		return invoke(target, o, methodName, paras);
 
 	}
 
@@ -458,22 +452,20 @@ public class ObjectUtil
 			targets = new Object[paras.length];
 			for (int i = 0; i < paras.length; i++)
 			{
-				if (conf.convert[i] != 0)
-				{
-					targets[i] = conf.convert(paras[i], i);
-				}
-				else
-				{
-					targets[i] = paras[i];
-				}
+				targets[i] = conf.convert(paras[i], i);
 			}
-
-			return conf.method.invoke(o, targets);
-
 		}
 		else
 		{
 			targets = paras;
+		}
+		if (o == null)
+		{
+			//check static 
+			if (!Modifier.isStatic(conf.method.getModifiers()))
+			{
+				throw new BeetlException(BeetlException.NATIVE_CALL_INVALID, "该方法是非静态方法，不能静态形式调用");
+			}
 		}
 		return conf.method.invoke(o, targets);
 	}
@@ -492,19 +484,22 @@ public class ObjectUtil
 
 		List<Method> ms = getObjectInfo(target).getMethods(methodName);
 
+		if (ms == null || ms.size() == 0)
+		{
+			return null;
+		}
+
 		Method temp = null;
 		for (int i = 0; i < ms.size(); i++)
 		{
 			temp = ms.get(i);
-			if (temp.getName().equals(methodName))
+
+			ObjectMethodMatchConf selfMc = match(temp, parameterType);
+			if (selfMc != null)
 			{
-				ObjectMethodMatchConf selfMc = match(temp, parameterType, -1);
-				if (selfMc != null && selfMc.isExactMatch)
-				{
 
-					return selfMc;
+				return selfMc;
 
-				}
 			}
 
 		}

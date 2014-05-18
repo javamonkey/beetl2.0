@@ -97,7 +97,7 @@ public class BeetlException extends RuntimeException
 	public static final String TAG_INSTANCE_ERROR = "TAG_INSTANCE_ERROR";
 
 	/**
-	 * 本地调用错误，如classnotfound等
+	 * 本地调用错误，如classnotfound,methodnotfound等
 	 */
 	public static final String NATIVE_CALL_INVALID = "NATIVE_CALL_INVALID";
 	/**

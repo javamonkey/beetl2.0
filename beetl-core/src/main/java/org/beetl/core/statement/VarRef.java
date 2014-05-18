@@ -89,9 +89,19 @@ public class VarRef extends Expression implements IVarIndex
 		for (VarAttribute attr : attributes)
 		{
 
-			if (value == null && hasSafe)
+			if (value == null)
 			{
-				return safe == null ? null : safe.evaluate(ctx);
+				if (hasSafe)
+				{
+					return safe == null ? null : safe.evaluate(ctx);
+				}
+				else
+				{
+					BeetlException be = new BeetlException(BeetlException.NULL, "空指针");
+					be.token = attr.token;
+					throw be;
+				}
+
 			}
 
 			try

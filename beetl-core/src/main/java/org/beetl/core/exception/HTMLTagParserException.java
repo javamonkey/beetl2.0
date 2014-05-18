@@ -27,8 +27,6 @@
  */
 package org.beetl.core.exception;
 
-import org.beetl.core.statement.GrammarToken;
-
 /**
  * html解析异常
  * 
@@ -38,13 +36,11 @@ import org.beetl.core.statement.GrammarToken;
 public class HTMLTagParserException extends BeetlException
 {
 
-	public GrammarToken token = null;
 	public int line = 0;
 
 	public HTMLTagParserException(String message)
 	{
-		super(message);
-		this.detailCode = BeetlException.PARSER_HTML_TAG_ERROR;
+		super(BeetlException.PARSER_HTML_TAG_ERROR, message);
 
 	}
 

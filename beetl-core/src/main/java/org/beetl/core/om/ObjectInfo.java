@@ -74,6 +74,10 @@ public class ObjectInfo
 			//仅仅获取public
 			if (Modifier.isPublic(m.getModifiers()))
 			{
+				if (m.getDeclaringClass() == Object.class)
+				{
+					continue;
+				}
 				String name = m.getName();
 				List<Method> list = map.get(name);
 				if (list == null)

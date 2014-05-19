@@ -46,4 +46,14 @@ public class SampleFunctionPackage
 		return (int) d;
 	}
 
+	public int len(String a, Context ctx)
+	{
+		return a.length();
+	}
+
+	public int len(int a, Context ctx)
+	{
+		return (a + "").length();
+	}
+
 }

@@ -54,4 +54,18 @@ public class FunctionTest extends BasicTestCase
 		AssertJUnit.assertEquals(this.getFileContent("/function/isEmpty_expected.html"), str);
 
 	}
+
+	public void testMutilContext() throws Exception
+	{
+		gt.registerFunctionPackage("test", new SampleFunctionPackage());
+		Template t = gt.getTemplate("/function/context_template.html");
+		String str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/function/context_expected.html"), str);
+
+		t = gt.getTemplate("/function/context_template.html");
+		str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/function/context_expected.html"), str);
+
+	}
+
 }

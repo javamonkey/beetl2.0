@@ -632,7 +632,7 @@ public class AntlrProgramBuilder
 				{
 					ClassOrInterfaceTypeContext child = typeCtx.classOrInterfaceType();
 					Type type = this.getClassType(child);
-					subType[i] = type;
+					subType[i++] = type;
 				}
 				classType.types = subType;
 			}

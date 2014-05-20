@@ -156,7 +156,8 @@ public class TypeBindingProbe extends Probe
 	private boolean isDynamicObject(Context ctx, int index)
 	{
 		String varName = this.globalIndex.get(index);
-		return ctx.objectKeys.contains(varName);
+
+		return ctx.objectKeys != null && ctx.objectKeys.contains(varName);
 	}
 
 	private Type getType(Object c)

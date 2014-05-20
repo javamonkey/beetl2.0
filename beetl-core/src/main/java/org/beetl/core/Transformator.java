@@ -833,7 +833,7 @@ public class Transformator
 		{
 
 			// String str = "   #:var u='hello';:#  \n  $u$";
-			String str = "<#a id='123'/>";
+			String str = "<#a />";
 
 			BufferedReader reader = new BufferedReader(p.transform(str));
 			String line = null;

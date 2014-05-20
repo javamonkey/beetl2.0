@@ -168,11 +168,17 @@ public class HTMLTagParser
 			index++;
 			switch (status)
 			{
-				case 0:
+				case 0: //开始
 				{
 					if (ch == '>')
 					{
 						return false;
+					}
+					else if (ch == '/')
+					{
+						//emtyp tag
+						status = 4;
+						continue;
 					}
 					else if (ch != '=')
 					{
@@ -265,6 +271,24 @@ public class HTMLTagParser
 					}
 
 				}
+				case 4:
+				{
+					if (ch == ' ')
+					{
+						continue;
+					}
+					else if (ch == '>')
+					{
+						this.isEmptyTag = true;
+						return false;
+					}
+					else
+					{
+						throw new RuntimeException("解析出错，html tag '" + this.tagName + "' 错误的结尾");
+
+					}
+
+				}
 
 			}
 		}
@@ -299,7 +323,7 @@ public class HTMLTagParser
 
 	public static void main(String[] args)
 	{
-		String input = "<#img_cut p=\"[{k:'name',v:'2'}]\" />";
+		String input = "<#a k='1'>fff</#a>";
 		HTMLTagParser htmltag = new HTMLTagParser(input.toCharArray(), 2, true);
 		htmltag.parser();
 		System.out.println(htmltag.getTagName());
@@ -307,5 +331,4 @@ public class HTMLTagParser
 		System.out.println(htmltag.isEmptyTag());
 
 	}
-
 }

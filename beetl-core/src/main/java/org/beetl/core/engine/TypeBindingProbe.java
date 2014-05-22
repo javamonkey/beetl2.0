@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
+import org.beetl.core.exception.BeetlException;
 import org.beetl.core.statement.Program;
 import org.beetl.core.statement.ProgramMetaData;
 import org.beetl.core.statement.Statement;
@@ -129,10 +130,20 @@ public class TypeBindingProbe extends Probe
 		// 推测完毕
 		if (y == program.metaData.tempVarStartIndex)
 		{
-			infer();
-			isCompleted = true;
-			// 调用下一个filter
-			nextFilter.check(ctx);
+			try
+			{
+				infer();
+				isCompleted = true;
+				// 调用下一个filter
+				nextFilter.check(ctx);
+			}
+			catch (BeetlException bex)
+			{
+				//	bex.printStackTrace();
+				ProgramReplaceErrorEvent event = new ProgramReplaceErrorEvent(program.id, bex.getMessage(), bex);
+				program.gt.fireEvent(event);
+				isCompleted = true;
+			}
 
 		}
 	}

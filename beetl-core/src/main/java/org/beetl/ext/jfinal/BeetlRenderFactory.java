@@ -15,8 +15,14 @@ public class BeetlRenderFactory implements IMainRenderFactory
 	public static String viewExtension = ".html";
 	public static GroupTemplate groupTemplate = null;
 
-	static
+	public BeetlRenderFactory()
 	{
+
+		if (groupTemplate != null)
+		{
+			groupTemplate.close();
+		}
+
 		try
 		{
 
@@ -29,6 +35,7 @@ public class BeetlRenderFactory implements IMainRenderFactory
 		{
 			throw new RuntimeException("加载GroupTemplate失败", e);
 		}
+
 	}
 
 	public Render getRender(String view)

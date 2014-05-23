@@ -1,0 +1,254 @@
+<project default="install" basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+    <!-- pom -->
+    <property name="pom.xml">${basedir}/pom.xml</property>
+    <artifact:pom id="pom" file="${pom.xml}" />
+
+    <!-- maven -->
+    <property name="maven.group.id">${pom.groupId}</property>
+    <property name="maven.artifact.id">${pom.artifactId}</property>
+    <property name="maven.version">${pom.version}</property>
+
+    <!-- project -->
+    <property name="product.name">${maven.artifact.id}</property>
+    <property name="product.version">${maven.version}</property>
+    <property name="product.author">Guoqiang Chen</property>
+    <property name="product.vendor">jetbrick</property>
+
+    <!-- output dir -->
+    <property name="build.dir">${basedir}/build</property>
+    <property name="build.maven.lib.dir">${build.dir}/lib</property>
+    <property name="build.classes.dir">${build.dir}/classes</property>
+    <property name="build.javadoc.dir">${build.dir}/apidocs</property>
+    <property name="build.dist.dir">${build.dir}</property>
+
+    <!-- compile option -->
+    <property name="build.compiler">org.eclipse.jdt.core.JDTCompilerAdapter</property>
+    <property name="javac.source">1.6</property>
+    <property name="javac.target">1.6</property>
+    <property name="javac.encoding">utf-8</property>
+
+    <!-- javadoc -->
+    <property name="javadoc.encoding">${javac.encoding}</property>
+    <property name="javadoc.title">${product.name} ${product.version} API</property>
+    <property name="javadoc.access">public</property>
+    <property name="javadoc.linksource">false</property>
+    <property name="javadoc.copyright">Copyright @ 2013-2014 by ${product.author}, Shanghai, China. All Rights Reserved.</property>
+
+    <!-- package files -->
+    <property name="dist.jar">${build.dist.dir}/${product.name}-${product.version}.jar</property>
+    <property name="dist.sources.jar">${build.dist.dir}/${product.name}-${product.version}-sources.jar</property>
+    <property name="dist.javadoc.jar">${build.dist.dir}/${product.name}-${product.version}-javadoc.jar</property>
+    <property name="dist.zip">${build.dist.dir}/${product.name}-${product.version}.zip</property>
+    <property name="dist.all.zip">${build.dist.dir}/${product.name}-${product.version}-all.zip</property>
+
+
+    <artifact:dependencies pathId="compile.classpath" filesetId="compile.libs" useScope="compile">
+        <pom refid="pom" />
+    </artifact:dependencies>
+
+    <path id="compile.sourcepath">
+        <pathelement location="${basedir}/src/main/java" />
+        <pathelement location="${build.dir}/grammer" />
+    </path>
+    <path id="compile.resources">
+        <fileset dir="${basedir}/src/main/java" excludes="**/*.java" />
+        <fileset dir="${basedir}/src/main/resources" excludes="**/*.java" />
+    </path>
+    <path id="sources.resources">
+        <fileset dir="${basedir}/src/main/java" />
+        <fileset dir="${basedir}/src/main/resources" />
+        <fileset dir="${build.dir}/grammer" />
+    </path>
+
+    <patternset id="metainf.resources">
+        <include name="NOTICE" />
+        <include name="LICENSE" />
+        <include name="pom.xml" />
+    </patternset>
+
+    <target name="clean">
+        <delete dir="${build.dir}" quiet="true" />
+    </target>
+
+    <target name="download-libs" depends="clean">
+        <copy todir="${build.maven.lib.dir}">
+            <fileset refid="compile.libs" />
+            <mapper type="flatten" />
+        </copy>
+    </target>
+
+    <target name="compile.grammer" depends="download-libs">
+        <property name="antlr.version" value="4.2.2" />
+        <property name="antlr.jar" value="${build.maven.lib.dir}/antlr4-${antlr.version}-complete.jar" />
+        <property name="grammer.dir" value="${build.dir}/grammer/jetbrick/template/parser/grammer" />
+
+        <artifact:dependencies pathId="grammer.classpath" filesetId="grammer.libs" useScope="compile">
+            <dependency groupId="org.antlr" artifactId="antlr4" classifier="complete" version="${antlr.version}" />
+        </artifact:dependencies>
+        <copy todir="${build.maven.lib.dir}">
+            <fileset refid="grammer.libs" />
+            <mapper type="flatten" />
+        </copy>
+
+        <mkdir dir="${grammer.dir}" />
+        <java jar="${antlr.jar}" fork="yes" dir="${basedir}/src/main/antlr4/">
+            <arg value="jetbrick/template/parser/grammer/JetTemplateLexer.g4" />
+            <arg value="-package" />
+            <arg value="jetbrick.template.parser.grammer" />
+            <arg value="-o" />
+            <arg value="${grammer.dir}" />
+        </java>
+        <java jar="${antlr.jar}" fork="yes" dir="${basedir}/src/main/antlr4/">
+            <arg value="jetbrick/template/parser/grammer/JetTemplateParser.g4" />
+            <arg value="-package" />
+            <arg value="jetbrick.template.parser.grammer" />
+            <arg value="-no-listener" />
+            <arg value="-visitor" />
+            <arg value="-o" />
+            <arg value="${grammer.dir}" />
+        </java>
+        <delete file="${grammer.dir}/JetTemplateLexer.tokens" />
+        <delete file="${grammer.dir}/JetTemplateParser.tokens" />
+        <delete file="${grammer.dir}/JetTemplateParserBaseVisitor.java" />
+
+        <!--
+        <artifact:mvn pom="${pom.xml}" mavenHome="c:/dev/apache-maven-3.1.1" fork="true">
+            <arg value="generate-sources" />
+        </artifact:mvn>
+        -->
+    </target>
+
+    <target name="compile" depends="compile.grammer">
+        <mkdir dir="${build.classes.dir}" />
+        <javac destdir="${build.classes.dir}"
+               classpathref="compile.classpath"
+               debug="on" nowarn="true" deprecation="off"
+               source="${javac.source}" target="${javac.target}"
+               encoding="${javac.encoding}"
+               includeAntRuntime="off">
+            <src refid="compile.sourcepath" />
+        </javac>
+        <copy todir="${build.classes.dir}">
+            <path refid="compile.resources" />
+        </copy>
+        <mkdir dir="${build.classes.dir}/META-INF" />
+        <copy todir="${build.classes.dir}/META-INF">
+            <fileset dir="${basedir}">
+                <patternset refid="metainf.resources" />
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="${build.dist.dir}" />
+        <jar jarfile="${dist.jar}" whenempty="fail">
+            <fileset dir="${build.classes.dir}" includes="**" />
+            <manifest>
+                <attribute name="Built-By" value="${product.author}" />
+                <attribute name="Implementation-Vendor-Id" value="${maven.group.id}" />
+                <attribute name="Implementation-Vendor" value="${product.vendor}" />
+                <attribute name="Implementation-Title" value="${product.name}" />
+                <attribute name="Implementation-Version" value="${product.version}" />
+                <attribute name="Specification-Vendor" value="${product.vendor}" />
+                <attribute name="Specification-Title" value="${product.name}" />
+                <attribute name="Specification-Version" value="${product.version}" />
+                <attribute name="Main-Class" value="jetbrick.template.JetxGenerateApp" />
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="sources.jar">
+        <mkdir dir="${build.dist.dir}" />
+        <jar jarfile="${dist.sources.jar}" whenempty="fail">
+            <path refid="sources.resources" />
+            <manifest>
+                <attribute name="Built-By" value="${product.author}" />
+                <attribute name="Implementation-Vendor-Id" value="${maven.group.id}" />
+                <attribute name="Implementation-Vendor" value="${product.vendor}" />
+                <attribute name="Implementation-Title" value="${product.name}" />
+                <attribute name="Implementation-Version" value="${product.version}" />
+                <attribute name="Specification-Vendor" value="${product.vendor}" />
+                <attribute name="Specification-Title" value="${product.name}" />
+                <attribute name="Specification-Version" value="${product.version}" />
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="javadoc" depends="clean">
+        <mkdir dir="${build.javadoc.dir}" />
+        <javadoc destdir="${build.javadoc.dir}"
+                 sourcepathref="compile.sourcepath"
+                 classpathref="compile.classpath"
+                 windowtitle="${javadoc.title}"
+                 encoding="${javac.encoding}" docencoding="${javadoc.encoding}" charset="${javadoc.encoding}"
+                 access="${javadoc.access}" version="true" author="true" use="true" splitindex="true"
+                 nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false"
+                 doctitle="${javadoc.title}" bottom="${javadoc.copyright}"
+                 linksource="${javadoc.linksource}"
+        />
+    </target>
+
+    <target name="javadoc.jar" depends="javadoc">
+        <mkdir dir="${build.dist.dir}" />
+        <jar jarfile="${dist.javadoc.jar}" whenempty="fail">
+            <fileset dir="${build.javadoc.dir}" includes="**" />
+            <manifest>
+                <attribute name="Built-By" value="${product.author}" />
+                <attribute name="Implementation-Vendor-Id" value="${maven.group.id}" />
+                <attribute name="Implementation-Vendor" value="${product.vendor}" />
+                <attribute name="Implementation-Title" value="${product.name}" />
+                <attribute name="Implementation-Version" value="${product.version}" />
+                <attribute name="Specification-Vendor" value="${product.vendor}" />
+                <attribute name="Specification-Title" value="${product.name}" />
+                <attribute name="Specification-Version" value="${product.version}" />
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="install" depends="jar">
+        <artifact:install file="${dist.jar}">
+            <pom refid="pom" />
+        </artifact:install>
+    </target>
+
+    <target name="release" depends="jar, sources.jar, javadoc.jar, install">
+    </target>
+
+    <target name="deploy" depends="release, install">
+        <property name="maven-snapshots-repository-id" value="sonatype-nexus-snapshots" />
+        <property name="maven-snapshots-repository-url" value="https://oss.sonatype.org/content/repositories/snapshots/" />
+        <property name="maven-staging-repository-id" value="sonatype-nexus-staging" />
+        <property name="maven-staging-repository-url" value="https://oss.sonatype.org/service/local/staging/deploy/maven2/" />
+
+        <artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.4:sign-and-deploy-file" />
+            <arg value="-Durl=${maven-staging-repository-url}" />
+            <arg value="-DrepositoryId=${maven-staging-repository-id}" />
+            <arg value="-DpomFile=${pom.xml}" />
+            <arg value="-Dfile=${dist.jar}" />
+            <arg value="-Pgpg" />
+        </artifact:mvn>
+
+        <artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.4:sign-and-deploy-file" />
+            <arg value="-Durl=${maven-staging-repository-url}" />
+            <arg value="-DrepositoryId=${maven-staging-repository-id}" />
+            <arg value="-DpomFile=${pom.xml}" />
+            <arg value="-Dfile=${dist.sources.jar}" />
+            <arg value="-Dclassifier=sources" />
+            <arg value="-Pgpg" />
+        </artifact:mvn>
+
+        <artifact:mvn>
+            <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.4:sign-and-deploy-file" />
+            <arg value="-Durl=${maven-staging-repository-url}" />
+            <arg value="-DrepositoryId=${maven-staging-repository-id}" />
+            <arg value="-DpomFile=${pom.xml}" />
+            <arg value="-Dfile=${dist.javadoc.jar}" />
+            <arg value="-Dclassifier=javadoc" />
+            <arg value="-Pgpg" />
+        </artifact:mvn>
+    </target>
+
+</project>

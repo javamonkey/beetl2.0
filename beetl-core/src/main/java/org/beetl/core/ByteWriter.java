@@ -60,7 +60,7 @@ import org.beetl.core.io.FloatingIOWriter;
 import org.beetl.core.io.IntIOWriter;
 import org.beetl.core.io.LongIOWriter;
 
-/** 混合了直接和字符的Writer
+/** 混合了字节和字符的Writer
  * @author joelli
  *
  */
@@ -82,6 +82,11 @@ public abstract class ByteWriter
 
 	public abstract void writeString(String str) throws IOException;
 
+	/**
+	 * @param chars
+	 * @param len
+	 * @throws IOException
+	 */
 	public abstract void writeNumberChars(char[] chars, int len) throws IOException;
 
 	public abstract void write(byte[] bs) throws IOException;

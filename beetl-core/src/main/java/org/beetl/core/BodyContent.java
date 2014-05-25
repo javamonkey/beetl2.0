@@ -36,8 +36,15 @@ import java.io.IOException;
  */
 public interface BodyContent
 {
+	/** 模板或者标签的内容
+	 * @return
+	 */
 	public String getBody();
 
+	/** 将内容输出，
+	 * @param bw
+	 * @throws IOException
+	 */
 	public void fill(ByteWriter bw) throws IOException;
 
 }

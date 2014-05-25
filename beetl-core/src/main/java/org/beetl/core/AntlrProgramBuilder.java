@@ -204,6 +204,10 @@ public class AntlrProgramBuilder
 		this.gt = gt;
 	}
 
+	/** 通过Antlr的ParseTree生成Beetl的ProgramMetaData
+	 * @param tree
+	 * @return
+	 */
 	public ProgramMetaData build(ParseTree tree)
 	{
 

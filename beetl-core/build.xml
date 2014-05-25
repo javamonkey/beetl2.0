@@ -1,4 +1,8 @@
 <project default="install" basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+	<path id="maven-ant-tasks.classpath" path="maven-ant-tasks-2.1.3.jar" />
+	  <typedef resource="org/apache/maven/artifact/ant/antlib.xml"
+	           uri="antlib:org.apache.maven.artifact.ant"
+	           classpathref="maven-ant-tasks.classpath" />
 
     <!-- pom -->
     <property name="pom.xml">${basedir}/pom.xml</property>
@@ -12,8 +16,8 @@
     <!-- project -->
     <property name="product.name">${maven.artifact.id}</property>
     <property name="product.version">${maven.version}</property>
-    <property name="product.author">Guoqiang Chen</property>
-    <property name="product.vendor">jetbrick</property>
+    <property name="product.author">Li jiazhi</property>
+    <property name="product.vendor">Beetl</property>
 
     <!-- output dir -->
     <property name="build.dir">${basedir}/build</property>
@@ -23,9 +27,8 @@
     <property name="build.dist.dir">${build.dir}</property>
 
     <!-- compile option -->
-    <property name="build.compiler">org.eclipse.jdt.core.JDTCompilerAdapter</property>
-    <property name="javac.source">1.6</property>
-    <property name="javac.target">1.6</property>
+   <property name="javac.source">1.5</property>
+    <property name="javac.target">1.5</property>
     <property name="javac.encoding">utf-8</property>
 
     <!-- javadoc -->
@@ -33,7 +36,7 @@
     <property name="javadoc.title">${product.name} ${product.version} API</property>
     <property name="javadoc.access">public</property>
     <property name="javadoc.linksource">false</property>
-    <property name="javadoc.copyright">Copyright @ 2013-2014 by ${product.author}, Shanghai, China. All Rights Reserved.</property>
+    <property name="javadoc.copyright">Copyright @ 2011-2014 by ${product.author}, Didu, China. All Rights Reserved.</property>
 
     <!-- package files -->
     <property name="dist.jar">${build.dist.dir}/${product.name}-${product.version}.jar</property>
@@ -48,8 +51,7 @@
     </artifact:dependencies>
 
     <path id="compile.sourcepath">
-        <pathelement location="${basedir}/src/main/java" />
-        <pathelement location="${build.dir}/grammer" />
+        <pathelement location="${basedir}/src/main/java" />    
     </path>
     <path id="compile.resources">
         <fileset dir="${basedir}/src/main/java" excludes="**/*.java" />
@@ -58,13 +60,12 @@
     <path id="sources.resources">
         <fileset dir="${basedir}/src/main/java" />
         <fileset dir="${basedir}/src/main/resources" />
-        <fileset dir="${build.dir}/grammer" />
+       
     </path>
 
     <patternset id="metainf.resources">
         <include name="NOTICE" />
         <include name="LICENSE" />
-        <include name="pom.xml" />
     </patternset>
 
     <target name="clean">
@@ -79,44 +80,7 @@
     </target>
 
     <target name="compile.grammer" depends="download-libs">
-        <property name="antlr.version" value="4.2.2" />
-        <property name="antlr.jar" value="${build.maven.lib.dir}/antlr4-${antlr.version}-complete.jar" />
-        <property name="grammer.dir" value="${build.dir}/grammer/jetbrick/template/parser/grammer" />
-
-        <artifact:dependencies pathId="grammer.classpath" filesetId="grammer.libs" useScope="compile">
-            <dependency groupId="org.antlr" artifactId="antlr4" classifier="complete" version="${antlr.version}" />
-        </artifact:dependencies>
-        <copy todir="${build.maven.lib.dir}">
-            <fileset refid="grammer.libs" />
-            <mapper type="flatten" />
-        </copy>
-
-        <mkdir dir="${grammer.dir}" />
-        <java jar="${antlr.jar}" fork="yes" dir="${basedir}/src/main/antlr4/">
-            <arg value="jetbrick/template/parser/grammer/JetTemplateLexer.g4" />
-            <arg value="-package" />
-            <arg value="jetbrick.template.parser.grammer" />
-            <arg value="-o" />
-            <arg value="${grammer.dir}" />
-        </java>
-        <java jar="${antlr.jar}" fork="yes" dir="${basedir}/src/main/antlr4/">
-            <arg value="jetbrick/template/parser/grammer/JetTemplateParser.g4" />
-            <arg value="-package" />
-            <arg value="jetbrick.template.parser.grammer" />
-            <arg value="-no-listener" />
-            <arg value="-visitor" />
-            <arg value="-o" />
-            <arg value="${grammer.dir}" />
-        </java>
-        <delete file="${grammer.dir}/JetTemplateLexer.tokens" />
-        <delete file="${grammer.dir}/JetTemplateParser.tokens" />
-        <delete file="${grammer.dir}/JetTemplateParserBaseVisitor.java" />
-
-        <!--
-        <artifact:mvn pom="${pom.xml}" mavenHome="c:/dev/apache-maven-3.1.1" fork="true">
-            <arg value="generate-sources" />
-        </artifact:mvn>
-        -->
+        
     </target>
 
     <target name="compile" depends="compile.grammer">
@@ -142,8 +106,14 @@
 
     <target name="jar" depends="compile">
         <mkdir dir="${build.dist.dir}" />
-        <jar jarfile="${dist.jar}" whenempty="fail">
-            <fileset dir="${build.classes.dir}" includes="**" />
+        <jar jarfile="${dist.jar}" whenempty="fail" >
+            <fileset dir="${build.classes.dir}" includes="**" excludes="**/*.g4,**/*.xml, **/lab/**" />
+        	<zipfileset includes="**/*.class" src="build/lib/antlr4-runtime-4.2.jar">
+        		<exclude name="**/tree/gui/**"/>
+        		<exclude name="**/tree/pattern/**"/>
+        		<exclude name="**/tree/xpath/**"/>
+        		        		
+        	</zipfileset>
             <manifest>
                 <attribute name="Built-By" value="${product.author}" />
                 <attribute name="Implementation-Vendor-Id" value="${maven.group.id}" />
@@ -153,7 +123,6 @@
                 <attribute name="Specification-Vendor" value="${product.vendor}" />
                 <attribute name="Specification-Title" value="${product.name}" />
                 <attribute name="Specification-Version" value="${product.version}" />
-                <attribute name="Main-Class" value="jetbrick.template.JetxGenerateApp" />
             </manifest>
         </jar>
     </target>
@@ -181,6 +150,7 @@
                  sourcepathref="compile.sourcepath"
                  classpathref="compile.classpath"
                  windowtitle="${javadoc.title}"
+        		excludepackagenames="org.beetl.core.parser.*,org.beetl.core.lab.*"
                  encoding="${javac.encoding}" docencoding="${javadoc.encoding}" charset="${javadoc.encoding}"
                  access="${javadoc.access}" version="true" author="true" use="true" splitindex="true"
                  nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false"
@@ -214,7 +184,7 @@
 
     <target name="release" depends="jar, sources.jar, javadoc.jar, install">
     </target>
-
+	<!-- 
     <target name="deploy" depends="release, install">
         <property name="maven-snapshots-repository-id" value="sonatype-nexus-snapshots" />
         <property name="maven-snapshots-repository-url" value="https://oss.sonatype.org/content/repositories/snapshots/" />
@@ -250,5 +220,5 @@
             <arg value="-Pgpg" />
         </artifact:mvn>
     </target>
-
+-->
 </project>

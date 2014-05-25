@@ -31,7 +31,7 @@ import org.beetl.core.statement.Statement;
 
 /**
  * 
- * 
+ * 标签函数，用于处理一段模板快
  * 
  * <p/>
  * &lt;% cache(key){ %>

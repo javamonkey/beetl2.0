@@ -36,7 +36,7 @@ import java.util.Map;
  * @author joelli
  * @create 2013-6-12
  */
-public class HTMLTagParser
+class HTMLTagParser
 {
 
 	int index = 0;

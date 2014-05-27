@@ -79,11 +79,30 @@
         </copy>
     </target>
 
-    <target name="compile.grammer" depends="download-libs">
-        
-    </target>
+	 <target name="buid.grammer">
+	        <property name="antlr.jar" value="${basedir}/lib/antlr-4.2.2-complete.jar" />
+	        <property name="grammer.dir" value="${basedir}/src/main/java/org/beetl/core/parser/" />
+	        <java jar="${antlr.jar}" fork="yes" dir="${grammer.dir}">
+	            <arg value="BeetlLexer.g4" />
+	            <arg value="-o" />	        	
+	        	<arg value="." />
+	        	<arg value="-package" />
+	        	<arg value="org.beetl.core.parser" />
+	        		        	
+	        </java>
+	        <java jar="${antlr.jar}" fork="yes" dir="${grammer.dir}">
+	            <arg value="-no-listener" />
+	            <arg value="-no-visitor" />
+	            <arg value="BeetlParser.g4" />
+	            <arg value="-o" />
+	            <arg value="." />
+	        	<arg value="-package" />
+	        	<arg value="org.beetl.core.parser" />
+	        </java>
+	      
+	    </target>
 
-    <target name="compile" depends="compile.grammer">
+    <target name="compile" depends="buid.grammer">
         <mkdir dir="${build.classes.dir}" />
         <javac destdir="${build.classes.dir}"
                classpathref="compile.classpath"

@@ -17,7 +17,7 @@ public class FilePathRL {
 		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 		Template t = gt.getTemplate("/s01/hello.txt");	
 		String str = t.render();		
-		System.out.println(resourceLoader.getRoot());
+		System.out.println(str);
 
 	}
 }

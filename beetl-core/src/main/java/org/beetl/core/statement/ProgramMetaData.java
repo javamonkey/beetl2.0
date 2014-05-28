@@ -44,32 +44,67 @@ import org.beetl.core.om.ObjectUtil;
 public class ProgramMetaData implements java.io.Serializable
 {
 
+	/**
+	 * 模板的换行符
+	 */
 	public String lineSeparator = null;
 
+	/**
+	 * 模板的语句
+	 */
 	public Statement[] statements = null;
 
-	// 模板静态数据
+	/**
+	 * 模板静态数据
+	 */
 	public Object[] staticTextArray = null;
 
-	// 所有变量存放在数组中，数组长度为varIndexSize
+	/**
+	 * 所有变量存放在数组中，数组长度为varIndexSize
+	 */
 	public int varIndexSize = 0;
+
+	/**
+	 *  临时变量存放的起始索引
+	 */
 	public int tempVarStartIndex = 0;
 
 	public boolean hasGoto = false;
-	// 为全局变量在数组里分配的位置
+
+	/**
+	 * 为全局变量在数组里分配的位置
+	 */
 	public Map<String, Integer> globalIndexMap = new HashMap<String, Integer>();
-	// 全局变量属性
+
+	/**
+	 * 全局变量属性，未用到
+	 */
 	public Map<String, String[]> globalVarAttr = new HashMap<String, String[]>();
-	//directive dynamic ;
+
+	/**
+	 * directive dynamic ; 指示改模板全局变量类型是否是动态的
+	 */
 	public boolean allDynamic = false;
-	//directive dynamic xx,bb,cc
+
+	/**
+	 * directive dynamic xx,bb,cc 对应的描述
+	 */
 	public Set<String> dynamicObjectSet = new HashSet<String>(0);
-	//@type(User cc,List<User> list)
+
+	/**
+	 * @type(User cc,List<User> list)  对应的描述
+	 */
 	public Map<String, Type> globalType = new HashMap<String, Type>(0);
 
-	//模板里的顶级变量映射关系
+	/**
+	 * 模板里的顶级变量映射关系
+	 */
 	protected Map<String, Integer> templateRootScopeIndexMap = new HashMap<String, Integer>();
 
+	/**
+	 * 模板每次渲染前，初始化ctx,如分配变量空间
+	 * @param ctx
+	 */
 	public void initContext(Context ctx)
 	{
 		// 模板静态文本部分
@@ -84,22 +119,6 @@ public class ProgramMetaData implements java.io.Serializable
 		// 将全局变量放到数组
 		putGlobaToArray(ctx);
 
-	}
-
-	public void replaceGlobal(Context ctx)
-	{
-		putGlobaToArray(ctx);
-
-	}
-
-	/**
-	 * 重用此类，仅仅全局变量需要赋值
-	 * 
-	 * @param ctx
-	 */
-	public void initContextAgain(Context ctx)
-	{
-		this.putGlobaToArray(ctx);
 	}
 
 	/**
@@ -135,17 +154,26 @@ public class ProgramMetaData implements java.io.Serializable
 		}
 	}
 
+	/** 获取一个脚本描述的副本，用于优化
+	 * @return
+	 */
 	public ProgramMetaData copy()
 	{
 		ProgramMetaData newCopy = (ProgramMetaData) ObjectUtil.copy(this);
 		return newCopy;
 	}
 
+	/** 获取模板顶级临时变量的在变量素组里的索引
+	 * @return
+	 */
 	public Map<String, Integer> getTemplateRootScopeIndexMap()
 	{
 		return templateRootScopeIndexMap;
 	}
 
+	/** 设置模板顶级临时变量的在变量素组里的索引
+	 * @param templateRootScopeIndexMap
+	 */
 	public void setTemplateRootScopeIndexMap(Map<String, Integer> templateRootScopeIndexMap)
 	{
 		this.templateRootScopeIndexMap = templateRootScopeIndexMap;

@@ -57,11 +57,12 @@ public class FileFunctionWrapper implements Function
 		{
 
 			Template template = ctx.gt.getTemplate(this.resourceId);
-
+			template.binding(ctx.globalVar);
 			for (int i = 0; i < paras.length; i++)
 			{
 				template.binding("para".concat(String.valueOf(i)), paras[i]);
 			}
+
 			template.renderTo(ctx.byteWriter);
 			return null;
 

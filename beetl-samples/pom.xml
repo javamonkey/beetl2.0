@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.beetl</groupId>
 		<artifactId>beetl-parent</artifactId>
-		<version>2.0.5-SNAPSHOT</version>
+		<version>2.0.6-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>beetl-samples</artifactId>
@@ -14,5 +14,11 @@
 			<artifactId>beetl-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+	<dependency>  
+      <groupId>org.apache.commons</groupId>  
+      <artifactId>commons-lang3</artifactId>  
+      <version>3.1</version>  
+      <scope>provided</scope>  
+    </dependency>
 	</dependencies>
 </project>

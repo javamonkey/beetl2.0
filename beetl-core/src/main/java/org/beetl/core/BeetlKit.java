@@ -18,6 +18,9 @@ import org.beetl.ext.fn.GetValueFunction;
 public class BeetlKit
 {
 
+	/**
+	 * BeetlKit 默认使用的GroupTemplate，用户可以设置新的
+	 */
 	public static GroupTemplate gt = null;
 	static
 	{

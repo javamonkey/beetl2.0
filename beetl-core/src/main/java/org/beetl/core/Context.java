@@ -32,8 +32,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.beetl.core.statement.IGoto;
-
 /**
  * 模板渲染的Context
  * @author joelli
@@ -98,6 +96,9 @@ public class Context
 	 */
 	public boolean safeOutput;
 
+	/**
+	 * 一个字符和字节的buffer
+	 */
 	public ContextLocalBuffer localBuffer = ContextLocalBuffer.get();
 
 	/**
@@ -119,6 +120,10 @@ public class Context
 		}
 	}
 
+	/**设置全局变量
+	 * @param key
+	 * @param value
+	 */
 	public void set(String key, Object value)
 	{
 		if (globalVar == null)
@@ -139,14 +144,13 @@ public class Context
 		}
 	}
 
+	/** 得到全局变量
+	 * @param key
+	 * @return
+	 */
 	public Object getGlobal(String key)
 	{
 		return globalVar.get(key);
-	}
-
-	public void resetGotoFlag()
-	{
-		this.gotoFlag = IGoto.NORMAL;
 	}
 
 	public String getResourceId()

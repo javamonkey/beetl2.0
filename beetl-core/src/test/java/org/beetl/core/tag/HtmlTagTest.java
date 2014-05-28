@@ -46,22 +46,41 @@ public class HtmlTagTest extends BasicTestCase
 	//
 	//	}
 
+	//	@Test
+	//	public void testMutilTagInSamePage() throws Exception
+	//	{
+	//
+	//		//将默认搜索路径更改到tag目录下
+	//		gt.registerTag("htmltag", MyHTMLTagSupportWrapper.class);
+	//
+	//		Template t = gt.getTemplate("/tag/html3_template.html");
+	//		this.bind(t, "list", User.getTestUsers());
+	//		String str = t.render();
+	//		AssertJUnit.assertEquals(this.getFileContent("/tag/html3_expected.html"), str);
+	//
+	//		t = gt.getTemplate("/tag/html3_template.html");
+	//		this.bind(t, "list", User.getTestUsers());
+	//		str = t.render();
+	//		AssertJUnit.assertEquals(this.getFileContent("/tag/html3_expected.html"), str);
+	//
+	//	}
+
 	@Test
-	public void testMutilTagInSamePage() throws Exception
+	public void testEmptyTag() throws Exception
 	{
 
 		//将默认搜索路径更改到tag目录下
 		gt.registerTag("htmltag", MyHTMLTagSupportWrapper.class);
 
-		Template t = gt.getTemplate("/tag/html3_template.html");
+		Template t = gt.getTemplate("/tag/html4_template.html");
 		this.bind(t, "list", User.getTestUsers());
 		String str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/tag/html3_expected.html"), str);
+		AssertJUnit.assertEquals(this.getFileContent("/tag/html4_expected.html"), str);
 
-		t = gt.getTemplate("/tag/html3_template.html");
+		t = gt.getTemplate("/tag/html4_template.html");
 		this.bind(t, "list", User.getTestUsers());
 		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/tag/html3_expected.html"), str);
+		AssertJUnit.assertEquals(this.getFileContent("/tag/html4_expected.html"), str);
 
 	}
 

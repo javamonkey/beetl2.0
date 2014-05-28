@@ -1,6 +1,8 @@
 package org.beetl.core.lab;
 
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
@@ -16,14 +18,20 @@ public class Test
 		Configuration cfg = Configuration.defaultConfiguration();
 		cfg.setDirectByteOutput(true);
 		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
+		for (int i = 0; i < 2; i++)
+		{
+			Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
+			Map a = new HashMap();
+			a.put("a", new HashMap());
+			a.put("b", 123);
+			a.put("c", "123");
 
-		Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
-		t.binding("list", new String[]
-		{ "1", "2" });
-		t.binding("user", new TestUser(""));
-		ByteArrayOutputStream bs = new ByteArrayOutputStream();
-		t.renderTo(bs);
-		System.out.println(new String(bs.toByteArray()));
+			t.binding("map", a);
+			ByteArrayOutputStream bs = new ByteArrayOutputStream();
+			t.renderTo(bs);
+			System.out.println(new String(bs.toByteArray()));
+
+		}
 
 	}
 }

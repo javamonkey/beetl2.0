@@ -204,6 +204,10 @@ public class AntlrProgramBuilder
 		this.gt = gt;
 	}
 
+	/** 通过Antlr的ParseTree生成Beetl的ProgramMetaData
+	 * @param tree
+	 * @return
+	 */
 	public ProgramMetaData build(ParseTree tree)
 	{
 
@@ -632,7 +636,7 @@ public class AntlrProgramBuilder
 				{
 					ClassOrInterfaceTypeContext child = typeCtx.classOrInterfaceType();
 					Type type = this.getClassType(child);
-					subType[i] = type;
+					subType[i++] = type;
 				}
 				classType.types = subType;
 			}

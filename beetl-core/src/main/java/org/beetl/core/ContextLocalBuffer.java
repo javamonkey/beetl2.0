@@ -2,10 +2,21 @@ package org.beetl.core;
 
 import java.lang.ref.SoftReference;
 
+/** 一个缓存的字节和字符数组，用于减少beetl渲染各个过程中渲染字符数组
+ * @author joelli
+ *
+ */
 public class ContextLocalBuffer
 {
-	static int charBufferSize = 256;
-	static int byteBufferSize = 256;
+	/**
+	 *  初始化的字符数组大小
+	 */
+	public static int charBufferSize = 256;
+
+	/**
+	 * 初始化的字节大小
+	 */
+	public static int byteBufferSize = 256;
 
 	private char[] charBuffer = new char[charBufferSize];
 	private byte[] byteBuffer = new byte[byteBufferSize];
@@ -38,6 +49,10 @@ public class ContextLocalBuffer
 		return this.byteBuffer;
 	}
 
+	/** 得到一个期望长度的buffer
+	 * @param expected
+	 * @return
+	 */
 	public char[] getCharBuffer(int expected)
 	{
 		if (this.charBuffer.length >= expected)
@@ -52,6 +67,10 @@ public class ContextLocalBuffer
 		return this.charBuffer;
 	}
 
+	/**得到期望字节数组大小
+	 * @param expected
+	 * @return
+	 */
 	public byte[] getByteBuffer(int expected)
 	{
 		if (this.byteBuffer.length >= expected)

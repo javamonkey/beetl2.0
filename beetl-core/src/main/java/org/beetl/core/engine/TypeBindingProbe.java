@@ -1,11 +1,13 @@
 package org.beetl.core.engine;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
+import org.beetl.core.exception.BeetlException;
 import org.beetl.core.statement.Program;
 import org.beetl.core.statement.ProgramMetaData;
 import org.beetl.core.statement.Statement;
@@ -23,6 +25,7 @@ public class TypeBindingProbe extends Probe
 	Type[] types = null;
 	ProgramMetaData copyProgramMetaData = null;
 	Probe nextFilter = null;
+	Map<Integer, String> globalIndex = new HashMap<Integer, String>();
 
 	public TypeBindingProbe(Program p, Probe nextFilter)
 	{
@@ -38,6 +41,11 @@ public class TypeBindingProbe extends Probe
 
 		nextFilter.program = this.program;
 		this.nextFilter = nextFilter;
+		for (Entry<String, Integer> entry : this.program.metaData.globalIndexMap.entrySet())
+		{
+			globalIndex.put(entry.getValue(), entry.getKey());
+		}
+
 		types = new Type[program.metaData.varIndexSize];
 		//对type类型做设定
 		if (metaData.allDynamic)
@@ -92,6 +100,13 @@ public class TypeBindingProbe extends Probe
 				if (ctx.vars[i] != ctx.NOT_EXIST_OBJECT && ctx.vars[i] != null)
 				{
 					Object o = ctx.vars[i];
+					if (isDynamicObject(ctx, i))
+					{
+						types[i] = Type.ObjectType;
+						y++;
+						continue;
+					}
+
 					Type c = getType(o);
 					if (c == null)
 						continue;
@@ -115,10 +130,20 @@ public class TypeBindingProbe extends Probe
 		// 推测完毕
 		if (y == program.metaData.tempVarStartIndex)
 		{
-			infer();
-			isCompleted = true;
-			// 调用下一个filter
-			nextFilter.check(ctx);
+			try
+			{
+				infer();
+				isCompleted = true;
+				// 调用下一个filter
+				nextFilter.check(ctx);
+			}
+			catch (BeetlException bex)
+			{
+				//	bex.printStackTrace();
+				ProgramReplaceErrorEvent event = new ProgramReplaceErrorEvent(program.id, bex.getMessage(), bex);
+				program.gt.fireEvent(event);
+				isCompleted = true;
+			}
 
 		}
 	}
@@ -137,6 +162,13 @@ public class TypeBindingProbe extends Probe
 			st.infer(ctx);
 		}
 
+	}
+
+	private boolean isDynamicObject(Context ctx, int index)
+	{
+		String varName = this.globalIndex.get(index);
+
+		return ctx.objectKeys != null && ctx.objectKeys.contains(varName);
 	}
 
 	private Type getType(Object c)

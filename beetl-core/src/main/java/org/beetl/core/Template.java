@@ -194,12 +194,16 @@ public class Template
 	public void binding(Map map)
 	{
 		Map<String, Object> values = map;
-		ctx.globalVar = new HashMap<String, Object>();
-		Map<String, Object> target = ctx.globalVar;
-		for (Entry<String, Object> entry : values.entrySet())
+		if (values != null)
 		{
-			target.put(entry.getKey(), entry.getValue());
+			ctx.globalVar = new HashMap<String, Object>();
+			Map<String, Object> target = ctx.globalVar;
+			for (Entry<String, Object> entry : values.entrySet())
+			{
+				target.put(entry.getKey(), entry.getValue());
+			}
 		}
+
 	}
 
 	public void fastBinding(Map map)

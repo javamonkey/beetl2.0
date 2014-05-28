@@ -64,7 +64,7 @@ public interface Function
 	 * @param paras
 	 *            beetl传递的参数
 	 * @param ctx
-	 *            上下文，通过__pw获取Writer， __group 获取GroupTemplate
+	 *            
 	 * @return
 	 * 
 	 */

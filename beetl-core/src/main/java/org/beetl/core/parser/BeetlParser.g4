@@ -35,9 +35,9 @@ statement
     |   Var varDeclareList END  #varSt
     |   Directive  directiveExp #directiveSt 
     |   assignMent END  #assignSt
-    |   functionTagCall #functionTagSt
-    //|   functionCall #functionCallSt
+    |   functionTagCall #functionTagSt 
     |   statementExpression END   #statmentExpSt 
+    |   END   #end
       
     ;
 //注解:@type User user,List<User> userList

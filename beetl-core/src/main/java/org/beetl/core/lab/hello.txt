@@ -1,1 +1,3 @@
-<#a input="cc" ></a>
+${map.a.id}
+${map.c}
+${map.b}

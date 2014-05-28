@@ -57,6 +57,7 @@ public class NegExpression extends Expression
 	public void infer(InferContext inferCtx)
 	{
 		exp.infer(inferCtx);
+		this.type = exp.type;
 
 	}
 

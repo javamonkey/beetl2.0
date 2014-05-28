@@ -41,7 +41,7 @@ import org.beetl.core.statement.ASTNode;
 import org.beetl.core.statement.IGoto;
 import org.beetl.core.statement.IVarIndex;
 
-/** 结合AntlrProgramBuilder 将模板生成Program
+/** 结合AntlrProgramBuilder 将模板生成Program，该类负责记录变量定义的位置和出现的位置
  * @author joelli
  *
  */
@@ -63,8 +63,15 @@ public class ProgramBuilderContext
 	int varIndexSize = 0;
 	// 全局变量在空间中的位置
 	public Map<String, Integer> globalIndexMap = new HashMap<String, Integer>();
+
+	/**
+	 *  顶级变量在空间中的位置
+	 */
 	public Map<String, Integer> rootIndexMap = new HashMap<String, Integer>();
 
+	/**
+	 * 进入一个scope
+	 */
 	public void enterBlock()
 	{
 		BlockEnvContext blockVar = new BlockEnvContext();

@@ -28,13 +28,16 @@
 package org.beetl.core;
 
 /**
- * 默认的本地调用安全管理器，不允许调用java.lang.Runtime和Process
+ * 默认的本地调用安全管理器，黑名单方式，不允许调用java.lang.Runtime和Process
  * @author joelli
  *
  */
 public class DefaultNativeSecurityManager implements NativeSecurityManager
 {
 
+	/* (non-Javadoc)
+	 * @see org.beetl.core.NativeSecurityManager#permit(java.lang.String, java.lang.Class, java.lang.Object, java.lang.String)
+	 */
 	@Override
 	public boolean permit(String resourceId, Class c, Object target, String method)
 	{

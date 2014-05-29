@@ -50,11 +50,12 @@ public class MutipleFunctionWrapper extends FunctionWrapper
 	HashMap<Integer, List<MethodContext>> map = new HashMap<Integer, List<MethodContext>>();
 	String methodName = null;
 
-	public MutipleFunctionWrapper(String funName, Object target, Method[] ms)
+	public MutipleFunctionWrapper(String funName, Class cls, Object target, Method[] ms)
 	{
 		super(funName);
 		this.ms = ms;
 		this.target = target;
+		this.cls = cls;
 		int index = this.functionName.lastIndexOf(".");
 		if (index != -1)
 		{
@@ -112,8 +113,14 @@ public class MutipleFunctionWrapper extends FunctionWrapper
 					newArgs[paras.length] = ctx;
 
 				}
-
-				return ObjectUtil.invokeObject(target, this.methodName, newArgs);
+				if (target == null)
+				{
+					ObjectUtil.invokeStatic(cls, methodName, newArgs);
+				}
+				else
+				{
+					return ObjectUtil.invokeObject(target, this.methodName, newArgs);
+				}
 
 			}
 			else

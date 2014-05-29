@@ -548,6 +548,22 @@ public class ObjectUtil
 		}
 	}
 
+	/** 实例化一个类，如果不成功，返回null
+	 * @param clsName
+	 * @return
+	 */
+	public static Object tryInstance(String clsName)
+	{
+		try
+		{
+			return instance(clsName);
+		}
+		catch (Exception ex)
+		{
+			return null;
+		}
+	}
+
 	/**
 	 * 获取一个ObjectInfo
 	 * @param c

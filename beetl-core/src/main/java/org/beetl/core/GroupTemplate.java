@@ -177,7 +177,7 @@ public class GroupTemplate
 		{
 			String name = entry.getKey();
 			String clsName = entry.getValue();
-			this.registerFunctionPackage(name, ObjectUtil.instance(clsName));
+			this.registerFunctionPackage(name, ObjectUtil.getClassByName(clsName), ObjectUtil.tryInstance(clsName));
 		}
 
 	}
@@ -468,7 +468,22 @@ public class GroupTemplate
 	public void registerFunctionPackage(String packageName, Object o)
 	{
 
-		List<FunctionWrapper> list = FunctionWrapper.getFunctionWrapper(packageName, o);
+		registerFunctionPackage(packageName, o.getClass(), o);
+
+	}
+
+	public void registerFunctionPackage(String packageName, Class cls)
+	{
+
+		Object o = ObjectUtil.tryInstance(cls.getName());
+		registerFunctionPackage(packageName, cls, o);
+
+	}
+
+	protected void registerFunctionPackage(String packageName, Class target, Object o)
+	{
+
+		List<FunctionWrapper> list = FunctionWrapper.getFunctionWrapper(packageName, target, o);
 		for (FunctionWrapper fw : list)
 		{
 			this.registerFunction(fw.functionName, fw);

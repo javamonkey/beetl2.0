@@ -68,4 +68,17 @@ public class FunctionTest extends BasicTestCase
 
 	}
 
+	public void testStaticMutilContext() throws Exception
+	{
+		gt.registerFunctionPackage("test1", StaticPrivateFunctionPackage.class);
+		Template t = gt.getTemplate("/function/private_template.html");
+		String str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/function/private_expected.html"), str);
+
+		t = gt.getTemplate("/function/private_template.html");
+		str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/function/private_expected.html"), str);
+
+	}
+
 }

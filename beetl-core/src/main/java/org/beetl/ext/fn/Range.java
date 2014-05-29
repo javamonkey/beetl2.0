@@ -34,26 +34,26 @@ import org.beetl.core.Function;
 
 /**
  * 
- * @author 张健川 dlut.zjc@gmail.com
+ * @author 张健川 dlut.zjc@gmail.com,fixed by leonlau 10181606@qq.com
+
  * @create 2014-04-17
  */
 public class Range implements Function
 {
-
 	@Override
 	public Iterator<Integer> call(Object[] paras, Context ctx)
 	{
 		final int param1 = ((Number) paras[0]).intValue();
 		final int param2 = ((Number) paras[1]).intValue();
-		int rStep = 1;
-		if (paras.length > 2)
-		{
-			rStep = ((Number) paras[2]).intValue();
-		}
-		final int param3 = rStep;
-		if ((rStep < 0 && param1 < param2) || ((rStep > 0) && (param1 > param2)) || param1 == param2 || rStep == 0)
+
+		if (paras.length > 3)
 		{
 			throw new RuntimeException("参数设置不正确");
+		}
+		final int param3 = paras.length == 3 ? ((Number) paras[2]).intValue() : 1;
+		if (param3 == 0)
+		{ //原地踏步走？
+			throw new RuntimeException("参数step(步进)非零整数");
 		}
 		return new Iterator<Integer>() {
 			private int start = param1;
@@ -64,14 +64,7 @@ public class Range implements Function
 			@Override
 			public boolean hasNext()
 			{
-				if ((step > 0 && currentValue + step <= end) || (step < 0 && currentValue + step >= end))
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+				return step > 0 ? currentValue < end : currentValue > end;
 			}
 
 			@Override
@@ -89,5 +82,4 @@ public class Range implements Function
 			}
 		};
 	}
-
 }

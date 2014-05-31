@@ -168,6 +168,7 @@ import org.beetl.core.statement.StaticTextASTNode;
 import org.beetl.core.statement.StaticTextByteASTNode;
 import org.beetl.core.statement.SwitchStatement;
 import org.beetl.core.statement.TagStatement;
+import org.beetl.core.statement.TagVarBindingStatement;
 import org.beetl.core.statement.TernaryExpression;
 import org.beetl.core.statement.TryCatchStatement;
 import org.beetl.core.statement.Type;
@@ -563,11 +564,41 @@ public class AntlrProgramBuilder
 		}
 
 		Expression[] expList = this.parseExpressionCtxList(list);
-		BlockContext blockCtx = fc.block();
-		Statement block = parseBlock(blockCtx.statement(), blockCtx);
-		TagStatement tag = new TagStatement(this.gt.getTagFactory(id), expList, block, this.getBTToken(id, fc
-				.functionNs().getStart().getLine()));
-		return tag;
+		if (id.equals("htmltagvar"))
+		{
+			int line = fc.functionNs().getStart().getLine();
+			// 标签具有绑定变量功能
+			Literal l = (Literal) expList[2];
+			String varList = (String) l.obj;
+			String[] vars = varList.split(",");
+			//定义的变量仅仅在标签体内可见
+			this.pbCtx.enterBlock();
+			VarDefineNode[] varDefine = new VarDefineNode[vars.length];
+			for (int i = 0; i < vars.length; i++)
+			{
+				VarDefineNode varNode = new VarDefineNode(this.getBTToken(vars[i], line));
+				this.pbCtx.addVarAndPostion(varNode);
+				varDefine[i] = varNode;
+			}
+			BlockContext blockCtx = fc.block();
+			Statement block = parseBlock(blockCtx.statement(), blockCtx);
+
+			this.pbCtx.exitBlock();
+
+			TagStatement tag = new TagVarBindingStatement(this.gt.getTagFactory(id), expList, block, varDefine,
+					this.getBTToken(id, line));
+			return tag;
+		}
+		else
+		{
+			BlockContext blockCtx = fc.block();
+			Statement block = parseBlock(blockCtx.statement(), blockCtx);
+
+			TagStatement tag = new TagStatement(this.gt.getTagFactory(id), expList, block, this.getBTToken(id, fc
+					.functionNs().getStart().getLine()));
+			return tag;
+		}
+
 	}
 
 	protected TryCatchStatement parseTryCatch(TryStContext tryStCtx)

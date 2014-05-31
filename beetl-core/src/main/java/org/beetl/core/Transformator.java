@@ -291,9 +291,18 @@ public class Transformator
 		try
 		{
 			StringBuilder script = new StringBuilder();
-			script.append("htmltag");
 			HTMLTagParser html = new HTMLTagParser(cs, index, true);
 			html.parser();
+			if (html.hasVarBinding)
+			{
+				script.append("htmltagvar");
+
+			}
+			else
+			{
+				script.append("htmltag");
+
+			}
 			tagName = html.getTagName();
 			script.append("('").append(tagName).append("',");
 
@@ -329,6 +338,16 @@ public class Transformator
 			if (map.size() != 0)
 			{
 				script.append("}");
+			}
+
+			if (html.hasVarBinding)
+			{
+				if (map.size() == 0)
+				{
+					//保持三个参数，第一个为标签函数名，第二个为属性，第三个为申明的变量
+					script.append(",{}");
+				}
+				script.append(",").append("'").append(html.varBidingStr).append("'");
 			}
 
 			script.append("){");
@@ -833,7 +852,7 @@ public class Transformator
 		{
 
 			// String str = "   #:var u='hello';:#  \n  $u$";
-			String str = "<#a />";
+			String str = "<#aa tl='123';kk  ></#aa>";
 
 			BufferedReader reader = new BufferedReader(p.transform(str));
 			String line = null;

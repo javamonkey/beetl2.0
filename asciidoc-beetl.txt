@@ -1,4 +1,4 @@
-Beetl2.0使用说明书20140521
+Beetl2.0使用说明书20140527
 ===================
 李家智 <xiandafu@126.com>
 :toc:
@@ -10,7 +10,7 @@ Beetl2.0使用说明书20140521
 
 
 == 什么是Beetl ==
-Beetl目前版本是2.0，大小660K，相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及及其编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
+Beetl目前版本是2.0.6，大小650K，相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及及其编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
 
 - 功能完备：同主流的java模板引擎相比，Beetl具有绝大多数功能。适用于*各种应用场景*，从对响应速度有很高要求的大网站到功能繁多的CMS管理系统都适合。Beetl本身还具有很多独特功能来完成模板编写和维护，这是其他模板引擎所不具有的。
 - 非常简单：类似Javascript语法和习俗，只要半小时就能通过半学半猜完全掌握用法。拒绝其他模板引擎那种非人性化的语法和习俗。
@@ -1115,6 +1115,91 @@ Beetl 也支持HTML tag形式的标签， 区分beetl的html tag 与 标准html 
 - 如果在htmltag目录下找不到同名的模板文件，则beetl再次寻找是否有同名注册的标签函数（关于如何写标签函数，参考高级用法），如果存在，则调用标签函数
 
 
+Beetl 支持将标签实现类（java代码）里的对象作为临时变量，被标签体引用。形式如下：
+
+[source,javascript]
+----------------------------
+
+<#tag attr="" attr1=""; var1,var2 >
+	<%for(item in var1) ..... %>
+<#/tag>
+
+
+----------------------------
+
+如上例所示 需要在标签的最后的属性定义后面加上分号";" 表示这个标签实现类里的对象将绑定到变量var1,var2 上。如果后面没有变量列表，则默认绑定到
+标签名同名的变量上，如下例子绑定了一个叫customerList的临时变量：
+
+[source,javascript]
+----------------------------
+
+<#customerList attr="" attr1="";  >
+	<%for(item in customerList) ..... %>
+<#/tag>
+
+
+----------------------------
+
+标签实现类同普通标签类一样，但还必须实现TagVarBinding接口：
+
+[source,java]
+----------------------------
+
+public interface TagVarBinding
+{
+
+	/** 调用此方法获得tag返回的变量，并赋值标签定义的临时变量
+	 * @return
+	 */
+	public Object[] bindVars();
+
+}
+
+
+----------------------------
+
+
+
+
+Beetl引擎将会在初始化Tag后，调用此方法，获取绑定的变量并按照标签的描述，依次赋值给各个变量，如下是一个通常的例子：
+
+
+[source,java]
+----------------------------
+
+public class VarBindingSampleTag extends Tag implements TagVarBinding
+{
+
+	@Override
+	public void render()
+	{
+		this.doBodyRender();
+
+	}
+
+	@Override
+	public Object[] bindVars()
+	{
+		Map map = (Map) this.args[1];
+		String name = (String)map.get("name")
+		return new Object[]{dao.getCustomerList()};
+	}
+
+}
+
+
+----------------------------
+此标签类对应的html tag 如下：
+
+[source,html]
+----------------------------
+
+<#customerList name="xxx" ; customerList >
+	<%for(item in customerList) ..... %>
+<#/tag>
+
+
+----------------------------
 
 
 === 直接调用java方法和属性 ===

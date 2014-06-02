@@ -8,21 +8,39 @@ import org.testng.annotations.Test;
 
 public class LayoutTagTest extends BasicTestCase
 {
+	//	@Test
+	//	public void testLayout() throws Exception
+	//	{
+	//
+	//		User user = User.getTestUser();
+	//
+	//		Template t = gt.getTemplate("/tag/layout_template.html");
+	//		this.bind(t, "user", user);
+	//		String str = t.render();
+	//		AssertJUnit.assertEquals(this.getFileContent("/tag/layout_expected.html"), str);
+	//
+	//		t = gt.getTemplate("/tag/layout_template.html");
+	//		this.bind(t, "user", user);
+	//		str = t.render();
+	//		AssertJUnit.assertEquals(this.getFileContent("/tag/layout_expected.html"), str);
+	//
+	//	}
+
 	@Test
-	public void testLayout() throws Exception
+	public void testLayoutInclude() throws Exception
 	{
 
 		User user = User.getTestUser();
 
-		Template t = gt.getTemplate("/tag/layout_template.html");
+		Template t = gt.getTemplate("/tag/layoutinclude_template.html");
 		this.bind(t, "user", user);
 		String str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/tag/layout_expected.html"), str);
+		AssertJUnit.assertEquals(this.getFileContent("/tag/layoutinclude_expected.html"), str);
 
-		t = gt.getTemplate("/tag/layout_template.html");
+		t = gt.getTemplate("/tag/layoutinclude_template.html");
 		this.bind(t, "user", user);
 		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/tag/layout_expected.html"), str);
+		AssertJUnit.assertEquals(this.getFileContent("/tag/layoutinclude_expected.html"), str);
 
 	}
 

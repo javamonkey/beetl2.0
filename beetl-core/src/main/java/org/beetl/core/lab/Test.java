@@ -12,6 +12,8 @@ public class Test
 	public static void main(String[] args) throws Exception
 	{
 
+		char c = 0xc;
+		System.out.println(c);
 		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader();
 		Configuration cfg = Configuration.defaultConfiguration();
 		cfg.setDirectByteOutput(true);

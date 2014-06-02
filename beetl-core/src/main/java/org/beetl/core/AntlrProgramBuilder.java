@@ -1483,7 +1483,16 @@ public class AntlrProgramBuilder
 	{
 		Expression cond = this.parseExpress(ctx.expression(0));
 		Expression a = this.parseExpress(ctx.expression(1));
-		Expression b = this.parseExpress(ctx.expression(2));
+		Expression b = null;
+		if (ctx.COLON() == null)
+		{
+			b = null;
+		}
+		else
+		{
+			b = this.parseExpress(ctx.expression(2));
+		}
+
 		TerminalNode tn = (TerminalNode) ctx.getChild(1);
 		return new TernaryExpression(cond, a, b, this.getBTToken(tn.getSymbol()));
 

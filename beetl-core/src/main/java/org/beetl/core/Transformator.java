@@ -347,7 +347,25 @@ public class Transformator
 					//保持三个参数，第一个为标签函数名，第二个为属性，第三个为申明的变量
 					script.append(",{}");
 				}
-				script.append(",").append("'").append(html.varBidingStr).append("'");
+				if (html.varBidingStr.trim().length() == 0)
+				{
+					String defaultVarName = null;
+					int index = tagName.lastIndexOf(":");
+					if (index == -1)
+					{
+						defaultVarName = tagName;
+					}
+					else
+					{
+						defaultVarName = tagName.substring(index + 1);
+					}
+					script.append(",").append("'").append(defaultVarName).append("'");
+				}
+				else
+				{
+					script.append(",").append("'").append(html.varBidingStr).append("'");
+				}
+
 			}
 
 			script.append("){");
@@ -852,7 +870,7 @@ public class Transformator
 		{
 
 			// String str = "   #:var u='hello';:#  \n  $u$";
-			String str = "<#aa tl='123';kk  ></#aa>";
+			String str = "<#bk:aa ; kk,cc,tt  />";
 
 			BufferedReader reader = new BufferedReader(p.transform(str));
 			String line = null;

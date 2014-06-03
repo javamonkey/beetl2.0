@@ -870,11 +870,12 @@ public class Transformator
 		{
 
 			// String str = "   #:var u='hello';:#  \n  $u$";
-			String str = "<#bk:aa ; kk,cc,tt  />";
+			String str = "<#bk  >\n${c}\n\n</#bk>";
 
 			BufferedReader reader = new BufferedReader(p.transform(str));
 			String line = null;
 			System.out.println(p.getTextMap());
+			String v = p.getTextMap().get(0);
 			System.out.println("==============================");
 			while ((line = reader.readLine()) != null)
 			{

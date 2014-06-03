@@ -55,12 +55,15 @@ public class TagVarBindingStatement extends TagStatement
 	@Override
 	public void infer(InferContext inferCtx)
 	{
-		super.infer(inferCtx);
+		for (Expression exp : paras)
+		{
+			exp.infer(inferCtx);
+		}
 		for (int i = 0; i < varIndexs.length; i++)
 		{
 			inferCtx.types[varIndexs[i].getVarIndex()] = Type.ObjectType;
 		}
-
+		block.infer(inferCtx);
 	}
 
 }

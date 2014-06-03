@@ -63,6 +63,10 @@ public class HTMLTagVarBindingWrapper extends Tag implements TagVarBinding
 		TagFactory tagFactory = null;
 		String functionTagName = child.replace(':', '.');
 		tagFactory = this.gt.getTagFactory(functionTagName);
+		if (tagFactory == null)
+		{
+			throw new RuntimeException("标签初始化错误，未找到指定的标签实现类" + functionTagName);
+		}
 		tag = tagFactory.createTag();
 		if (tag == null)
 		{

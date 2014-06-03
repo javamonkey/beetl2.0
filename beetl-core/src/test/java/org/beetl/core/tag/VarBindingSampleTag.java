@@ -19,8 +19,11 @@ public class VarBindingSampleTag extends Tag implements TagVarBinding
 	public Object[] bindVars()
 	{
 		Map map = (Map) this.args[1];
+		String[] array = new String[]
+		{ "a", "b" };
+
 		return new Object[]
-		{ map.get("value") };
+		{ map.get("value"), array };
 	}
 
 }

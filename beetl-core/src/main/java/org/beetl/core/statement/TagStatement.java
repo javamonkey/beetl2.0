@@ -47,8 +47,8 @@ import org.beetl.core.om.ObjectUtil;
 public class TagStatement extends Statement
 {
 	TagFactory tagFactory;
-	Expression[] paras;
-	Statement block;
+	public Expression[] paras;
+	public Statement block;
 
 	public TagStatement(TagFactory tagFactory, Expression[] paras, Statement block, GrammarToken token)
 	{
@@ -95,13 +95,20 @@ public class TagStatement extends Statement
 		}
 
 		tag.init(ctx, args, block);
+		runTag(tag, ctx);
+
+	}
+
+	protected void runTag(Tag tag, Context ctx)
+	{
 		try
 		{
+
 			tag.render();
 		}
 		catch (BeetlException ex)
 		{
-			//ex.token = this.token;
+			//BeetlException异常时不要设置token，因为抛出的地方已经设置了
 			throw ex;
 		}
 		catch (RuntimeException ex)
@@ -110,7 +117,6 @@ public class TagStatement extends Statement
 			be.token = this.token;
 			throw be;
 		}
-
 	}
 
 	@Override

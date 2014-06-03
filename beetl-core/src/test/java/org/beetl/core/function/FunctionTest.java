@@ -68,16 +68,17 @@ public class FunctionTest extends BasicTestCase
 
 	}
 
-	public void testStaticMutilContext() throws Exception
-	{
-		gt.registerFunctionPackage("test1", StaticPrivateFunctionPackage.class);
-		Template t = gt.getTemplate("/function/private_template.html");
-		String str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/function/private_expected.html"), str);
 
-		t = gt.getTemplate("/function/private_template.html");
+	public void testToolKit() throws Exception
+	{
+		gt.registerFunction("str2Json", new Str2Json());
+		Template t = gt.getTemplate("/function/tojson_template.html");
+		String str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/function/tojson_expected.html"), str);
+
+		t = gt.getTemplate("/function/tojson_template.html");
 		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/function/private_expected.html"), str);
+		AssertJUnit.assertEquals(this.getFileContent("/function/tojson_expected.html"), str);
 
 	}
 

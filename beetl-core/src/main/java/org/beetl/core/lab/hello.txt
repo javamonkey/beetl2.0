@@ -1,3 +1,4 @@
-${map.a.id}
-${map.c}
-${map.b}
+<%
+var a = aa
+var b = c;
+%>

@@ -69,7 +69,7 @@
     </patternset>
 
     <target name="clean">
-        <delete dir="${build.dir}" quiet="true" />
+        <!-- delete dir="${build.dir}" quiet="true" /-->
     </target>
 
     <target name="download-libs" depends="clean">

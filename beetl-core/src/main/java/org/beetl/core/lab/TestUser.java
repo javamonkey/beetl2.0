@@ -19,6 +19,7 @@ public class TestUser
 	TestUser lover = null;
 	List friends = new ArrayList();
 	boolean isOk = false;
+	int id = 0;
 
 	public boolean isOk()
 	{
@@ -101,6 +102,16 @@ public class TestUser
 	public void setFriends(List friends)
 	{
 		this.friends = friends;
+	}
+
+	public int getId()
+	{
+		return id;
+	}
+
+	public void setId(int id)
+	{
+		this.id = id;
 	}
 
 	public static TestUser getTestUser()

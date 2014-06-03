@@ -66,6 +66,23 @@ public class TagStatement extends Statement
 		try
 		{
 			tag = this.tagFactory.createTag();
+			Object[] args = null;
+			if (paras.length == 0)
+			{
+				args = ObjectUtil.EMPTY_OBJECT_ARRAY;
+			}
+			else
+			{
+				args = new Object[paras.length];
+				for (int i = 0; i < args.length; i++)
+				{
+					args[i] = paras[i].evaluate(ctx);
+				}
+
+			}
+
+			tag.init(ctx, args, block);
+			runTag(tag, ctx);
 		}
 		catch (BeetlException ex)
 		{
@@ -78,24 +95,6 @@ public class TagStatement extends Statement
 			bex.token = this.token;
 			throw bex;
 		}
-
-		Object[] args = null;
-		if (paras.length == 0)
-		{
-			args = ObjectUtil.EMPTY_OBJECT_ARRAY;
-		}
-		else
-		{
-			args = new Object[paras.length];
-			for (int i = 0; i < args.length; i++)
-			{
-				args[i] = paras[i].evaluate(ctx);
-			}
-
-		}
-
-		tag.init(ctx, args, block);
-		runTag(tag, ctx);
 
 	}
 

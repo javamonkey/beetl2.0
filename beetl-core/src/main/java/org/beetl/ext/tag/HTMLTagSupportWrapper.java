@@ -48,10 +48,10 @@ public class HTMLTagSupportWrapper extends Tag
 		}
 		String child = (String) args[0];
 		// 首先查找 已经注册的Tag
-		TagFactory realTag = null;
+		TagFactory tagFactory = null;
 		String functionTagName = child.replace(':', '.');
-		realTag = this.gt.getTagFactory(functionTagName);
-		if (realTag == null)
+		tagFactory = this.gt.getTagFactory(functionTagName);
+		if (tagFactory == null)
 		{
 			String path = getHtmlTagResourceId(child);
 			callHtmlTag(path);
@@ -60,7 +60,7 @@ public class HTMLTagSupportWrapper extends Tag
 		else
 		{
 
-			callTag(realTag);
+			callTag(tagFactory);
 		}
 
 	}

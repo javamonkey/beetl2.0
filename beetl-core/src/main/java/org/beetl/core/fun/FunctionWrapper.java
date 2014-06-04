@@ -48,6 +48,7 @@ public abstract class FunctionWrapper implements Function
 	boolean requiredContext = false;
 	public String functionName = null;
 	Object target;
+	Class cls;
 
 	public FunctionWrapper(String funName)
 	{
@@ -73,10 +74,9 @@ public abstract class FunctionWrapper implements Function
 	 * @param o
 	 * @return
 	 */
-	public static List<FunctionWrapper> getFunctionWrapper(String ns, Object o)
+	public static List<FunctionWrapper> getFunctionWrapper(String ns, Class c, Object o)
 	{
 
-		Class c = o.getClass();
 		ObjectInfo info = ObjectUtil.getObjectInfo(c);
 		Map<String, List<Method>> map = info.getMap();
 		List<FunctionWrapper> fwList = new ArrayList<FunctionWrapper>();
@@ -87,14 +87,14 @@ public abstract class FunctionWrapper implements Function
 			{
 
 				Method method = entry.getValue().get(0);
-				FunctionWrapper fw = new SingleFunctionWrapper(ns.concat(".").concat(method.getName()), o, method);
+				FunctionWrapper fw = new SingleFunctionWrapper(ns.concat(".").concat(method.getName()), c, o, method);
 				fwList.add(fw);
 			}
 			else
 			{
 				Method method = entry.getValue().get(0);
 				String name = method.getName();
-				FunctionWrapper fw = new MutipleFunctionWrapper(ns.concat(".").concat(name), o, entry.getValue()
+				FunctionWrapper fw = new MutipleFunctionWrapper(ns.concat(".").concat(name), c, o, entry.getValue()
 						.toArray(new Method[0]));
 				fwList.add(fw);
 			}

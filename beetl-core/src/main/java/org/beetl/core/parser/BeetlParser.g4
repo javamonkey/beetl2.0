@@ -153,7 +153,7 @@ constantExpression
     |   expression (EQUAL | NOT_EQUAL |LESS_EQUAL | LARGE_EQUAL |LARGE |LESS) expression   #compareExp
     |   expression AND expression   #andExp
     |   expression OR expression    #orExp
-    |   expression QUESTOIN expression? COLON expression?  #ternaryExp
+    |   expression QUESTOIN expression? COLON? expression?  #ternaryExp
     |   LEFT_PAR expression RIGHT_PAR #parExp
   
     ;

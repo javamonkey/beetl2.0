@@ -1,6 +1,6 @@
 /*
  [The "BSD license"]
- Copyright (c) 2011-2013 Joel Li (李家智)
+ Copyright (c) 2011-2014 Joel Li (李家智)
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -25,61 +25,22 @@
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.beetl.ext.fn;
+package org.beetl.core;
 
-import java.util.Iterator;
-
-import org.beetl.core.Context;
-import org.beetl.core.Function;
-
-/**
+/** 实现此接口的Tag 函数，可以提供返回值给模板，如模板里：
+ * <#tag attr="xxx" ; userList,pageView />
+ * 则userList 为返回数组的第一个元素
+ * pageView为返回素组的第二个元素
  * 
- * @author 张健川 dlut.zjc@gmail.com,fixed by leonlau 10181606@qq.com
-
- * @create 2014-04-17
+ * @author joelli
+ *
  */
-public class Range implements Function
+public interface TagVarBinding
 {
-	@Override
-	public Iterator<Integer> call(Object[] paras, Context ctx)
-	{
-		final int param1 = ((Number) paras[0]).intValue();
-		final int param2 = ((Number) paras[1]).intValue();
 
-		if (paras.length > 3)
-		{
-			throw new RuntimeException("参数设置不正确");
-		}
-		final int param3 = paras.length == 3 ? ((Number) paras[2]).intValue() : 1;
-		if (param3 == 0)
-		{ //原地踏步走？
-			throw new RuntimeException("参数step(步进)非零整数");
-		}
-		return new Iterator<Integer>() {
-			private int start = param1;
-			private int end = param2;
-			private int step = param3;
-			private int currentValue = start;
+	/** 调用此方法获得tag返回的变量，并赋值标签定义的临时变量
+	 * @return
+	 */
+	public Object[] bindVars();
 
-			@Override
-			public boolean hasNext()
-			{
-				return step > 0 ? currentValue < end : currentValue > end;
-			}
-
-			@Override
-			public Integer next()
-			{
-				Integer temp = currentValue;
-				currentValue += step;
-				return temp;
-			}
-
-			@Override
-			public void remove()
-			{
-
-			}
-		};
-	}
 }

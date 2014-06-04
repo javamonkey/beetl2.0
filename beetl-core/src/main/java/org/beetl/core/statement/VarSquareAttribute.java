@@ -60,6 +60,8 @@ public class VarSquareAttribute extends VarAttribute
 
 	public void infer(InferContext inferCtx)
 	{
+
+		exp.infer(inferCtx);
 		Type type = (Type) inferCtx.temp;
 		Type[] tps = type.types;
 		if (tps != null)

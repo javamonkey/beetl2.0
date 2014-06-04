@@ -46,6 +46,8 @@ class HTMLTagParser
 	boolean isEmptyTag = false;
 	Map<String, String> expMap = new HashMap<String, String>();
 	Map<String, Character> quatMap = new HashMap<String, Character>();
+	boolean hasVarBinding = false;
+	String varBidingStr = null;
 
 	public HTMLTagParser(char[] cs, int index, boolean isStart)
 	{
@@ -159,6 +161,7 @@ class HTMLTagParser
 		StringBuilder expSb = new StringBuilder();
 		String key = null;
 		String exp = null;
+		//0 属性 1 属性值采用的双引号或者单引号 2 属性值
 		int status = 0;
 		char quot = '\'';
 
@@ -178,6 +181,12 @@ class HTMLTagParser
 					{
 						//emtyp tag
 						status = 4;
+						continue;
+					}
+					else if (ch == ';')
+					{
+						//标签绑定变量
+						status = 5;
 						continue;
 					}
 					else if (ch != '=')
@@ -264,7 +273,7 @@ class HTMLTagParser
 						return false;
 
 					}
-					else if (ch != ' ')
+					else
 					{
 						index--;
 						return true;
@@ -288,6 +297,28 @@ class HTMLTagParser
 
 					}
 
+				}
+				case 5:
+				{
+					if (ch == '>')
+					{
+						hasVarBinding = true;
+						this.varBidingStr = keySb.toString().trim();
+						return false;
+					}
+					else if (ch == '/' && cs[index] == '>')
+					{
+						this.isEmptyTag = true;
+						index++;
+						hasVarBinding = true;
+						this.varBidingStr = keySb.toString().trim();
+						return false;
+
+					}
+					else
+					{
+						keySb.append(ch);
+					}
 				}
 
 			}

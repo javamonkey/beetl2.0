@@ -68,4 +68,18 @@ public class FunctionTest extends BasicTestCase
 
 	}
 
+
+	public void testToolKit() throws Exception
+	{
+		gt.registerFunction("str2Json", new Str2Json());
+		Template t = gt.getTemplate("/function/tojson_template.html");
+		String str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/function/tojson_expected.html"), str);
+
+		t = gt.getTemplate("/function/tojson_template.html");
+		str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/function/tojson_expected.html"), str);
+
+	}
+
 }

@@ -1,6 +1,5 @@
 target/
-test-output/
-./.project
-logs/
-logs-test/
-
+build/
+.settings/
+.classpath
+.project

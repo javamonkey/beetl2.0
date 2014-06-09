@@ -89,7 +89,7 @@ public class WhileStatement extends Statement implements IGoto
 				else
 				{
 					BeetlException be = new BeetlException(BeetlException.BOOLEAN_EXPECTED_ERROR);
-					be.token = exp.token;
+					be.pushToken(exp.token);
 					throw be;
 				}
 
@@ -117,7 +117,7 @@ public class WhileStatement extends Statement implements IGoto
 				else
 				{
 					BeetlException be = new BeetlException(BeetlException.BOOLEAN_EXPECTED_ERROR);
-					be.token = exp.token;
+					be.pushToken(exp.token);
 					throw be;
 				}
 			}

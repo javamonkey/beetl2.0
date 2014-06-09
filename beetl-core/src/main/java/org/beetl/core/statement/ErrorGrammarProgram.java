@@ -68,10 +68,10 @@ public class ErrorGrammarProgram extends Program
 
 	public void execute(Context ctx)
 	{
-		Writer w = BeetlUtil.getWriterByByteWriter(ctx.byteWriter);
-
 		ErrorHandler errorHandler = this.gt.getErrorHandler();
-
+		if (errorHandler == null)
+			throw exception;
+		Writer w = BeetlUtil.getWriterByByteWriter(ctx.byteWriter);
 		errorHandler.processExcption(exception, w);
 	}
 
@@ -84,7 +84,7 @@ public class ErrorGrammarProgram extends Program
 	{
 		this.exception = exception;
 		this.exception.gt = this.gt;
-		this.exception.resourceId = this.id;
+		//		this.exception.pushResource(this.id);
 		this.exception.cr = this.metaData.lineSeparator;
 	}
 

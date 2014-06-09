@@ -34,7 +34,7 @@ public class TagVarBindingStatement extends TagStatement
 			else
 			{
 				BeetlException be = new BeetlException(BeetlException.ERROR, "tag必须是TagVarBinding子类");
-				be.token = this.token;
+				be.pushToken(this.token);
 				throw be;
 			}
 			tag.render();
@@ -47,7 +47,7 @@ public class TagVarBindingStatement extends TagStatement
 		catch (RuntimeException ex)
 		{
 			BeetlException be = new BeetlException(BeetlException.ERROR, "tag执行抛错", ex);
-			be.token = this.token;
+			be.pushToken(token);
 			throw be;
 		}
 	}

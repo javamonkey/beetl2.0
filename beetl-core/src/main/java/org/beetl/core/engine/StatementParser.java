@@ -153,7 +153,7 @@ public class StatementParser
 							catch (Exception ex)
 							{
 								BeetlException be = new BeetlException(BeetlException.ERROR, "替换ASTNode错", ex);
-								be.token = ((ASTNode) newASTNode).token;
+								be.pushToken(((ASTNode) newASTNode).token);
 								throw be;
 							}
 

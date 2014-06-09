@@ -81,7 +81,7 @@ public final class ForStatement extends Statement implements IGoto
 			if (!this.hasSafe)
 			{
 				BeetlException ex = new BeetlException(BeetlException.NULL);
-				ex.token = exp.token;
+				ex.pushToken(exp.token);
 				throw ex;
 			}
 			else
@@ -96,7 +96,7 @@ public final class ForStatement extends Statement implements IGoto
 			if (it == null)
 			{
 				BeetlParserException ex = new BeetlParserException(BeetlParserException.COLLECTION_EXPECTED_ERROR);
-				ex.token = exp.token;
+				ex.pushToken(exp.token);
 				throw ex;
 			}
 		}

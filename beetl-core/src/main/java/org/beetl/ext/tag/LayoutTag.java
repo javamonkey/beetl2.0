@@ -88,6 +88,7 @@ public class LayoutTag extends Tag
 		}
 		String layoutFile = BeetlUtil.getRelPath(ctx.getResourceId(), (String) args[0]);
 		Template t = this.gt.getTemplate(layoutFile);
+		t.isRoot = false;
 		t.binding(ctx.globalVar);
 		t.dynamic(ctx.objectKeys);
 

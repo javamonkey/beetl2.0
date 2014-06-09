@@ -67,7 +67,7 @@ public class SwitchStatement extends Statement
 		if (o == null)
 		{
 			BeetlException ex = new BeetlException(BeetlException.NULL);
-			ex.token = value.token;
+			ex.pushToken(value.token);
 			throw ex;
 		}
 

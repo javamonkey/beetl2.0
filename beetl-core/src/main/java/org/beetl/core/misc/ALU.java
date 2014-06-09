@@ -394,8 +394,8 @@ public class ALU
 		{
 			switch (getBaseType(o1, o2))
 			{
-				// case STRING:
-				// return String.valueOf(o1) + String.valueOf(o2);
+			// case STRING:
+			// return String.valueOf(o1) + String.valueOf(o2);
 				case INTEGER:
 					return Integer.valueOf(((Number) o1).intValue() - ((Number) o2).intValue());
 				case LONG:
@@ -429,8 +429,8 @@ public class ALU
 		{
 			switch (getBaseType(o1))
 			{
-				// case STRING:
-				// return String.valueOf(o1) + String.valueOf(o2);
+			// case STRING:
+			// return String.valueOf(o1) + String.valueOf(o2);
 				case INTEGER:
 					return -((Number) o1).intValue();
 				case LONG:
@@ -463,8 +463,8 @@ public class ALU
 		{
 			switch (getBaseType(o1, o2))
 			{
-				// case STRING:
-				// return String.valueOf(o1) + String.valueOf(o2);
+			// case STRING:
+			// return String.valueOf(o1) + String.valueOf(o2);
 				case INTEGER:
 					return Integer.valueOf(((Number) o1).intValue() * ((Number) o2).intValue());
 				case LONG:
@@ -506,7 +506,7 @@ public class ALU
 					if (c == 0)
 					{
 						BeetlException ex = new BeetlException(BeetlException.DIV_ZERO_ERROR);
-						ex.token = node2.token;
+						ex.pushToken(node2.token);
 						throw ex;
 					}
 					double a = ((Number) o1).doubleValue() / ((Number) o2).doubleValue();
@@ -587,8 +587,8 @@ public class ALU
 		{
 			switch (getBaseType(o1, o2))
 			{
-				// case STRING:
-				// return String.valueOf(o1) + String.valueOf(o2);
+			// case STRING:
+			// return String.valueOf(o1) + String.valueOf(o2);
 				case INTEGER:
 					return Integer.valueOf(((Number) o1).intValue() % ((Number) o2).intValue());
 				case LONG:
@@ -631,8 +631,8 @@ public class ALU
 		{
 			switch (getBaseType(o1, o2))
 			{
-				// case STRING:
-				// case CHAR:
+			// case STRING:
+			// case CHAR:
 
 				case SHORT:
 				case INTEGER:
@@ -668,7 +668,7 @@ public class ALU
 		{
 			switch (getBaseType(o1, o2))
 			{
-				// case STRING:
+			// case STRING:
 				case CHAR:
 					return (o1 instanceof Number ? ((Number) o1).intValue() : (int) ((Character) o1).charValue()) > (o2 instanceof Number ? ((Number) o2)
 							.intValue() : (int) ((Character) o2).charValue());
@@ -704,7 +704,7 @@ public class ALU
 		{
 			switch (getBaseType(o1, o2))
 			{
-				// case STRING:
+			// case STRING:
 				case CHAR:
 					return (o1 instanceof Number ? ((Number) o1).intValue() : (int) ((Character) o1).charValue()) >= (o2 instanceof Number ? ((Number) o2)
 							.intValue() : (int) ((Character) o2).charValue());
@@ -740,7 +740,7 @@ public class ALU
 		{
 			switch (getBaseType(o1, o2))
 			{
-				// case STRING:
+			// case STRING:
 				case CHAR:
 					return (o1 instanceof Number ? ((Number) o1).intValue() : (int) ((Character) o1).charValue()) < (o2 instanceof Number ? ((Number) o2)
 							.intValue() : (int) ((Character) o2).charValue());
@@ -776,7 +776,7 @@ public class ALU
 		{
 			switch (getBaseType(o1, o2))
 			{
-				// case STRING:
+			// case STRING:
 				case CHAR:
 					return (o1 instanceof Number ? ((Number) o1).intValue() : (int) ((Character) o1).charValue()) <= (o2 instanceof Number ? ((Number) o2)
 							.intValue() : (int) ((Character) o2).charValue());
@@ -812,21 +812,22 @@ public class ALU
 		BeetlException ex = new BeetlException(BeetlException.EXPRESSION_NOT_COMPATIBLE, o1.getClass() + type
 				+ o2.getClass());
 		GrammarToken token = GrammarToken.createToken(node1.token.text + type + node2.token.text, node1.token.line);
-		ex.token = token;
+		ex.pushToken(token);
 		throw ex;
 	}
 
 	private static RuntimeException numberExpectedException(final Object o1, ASTNode node1)
 	{
 		BeetlException ex = new BeetlException(BeetlException.NUMBER_EXPECTED_ERROR);
-		ex.token = node1.token;
+		ex.pushToken(node1.token);
+
 		throw ex;
 	}
 
 	private static RuntimeException valueIsNullException(final Object o1, ASTNode node1)
 	{
 		BeetlException ex = new BeetlException(BeetlException.NULL);
-		ex.token = node1.token;
+		ex.pushToken(node1.token);
 		throw ex;
 	}
 
@@ -837,12 +838,12 @@ public class ALU
 		if (o1 == null)
 		{
 			ex = new BeetlException(BeetlException.NULL);
-			ex.token = node1.token;
+			ex.pushToken(node1.token);
 		}
 		else
 		{
 			ex = new BeetlException(BeetlException.NULL);
-			ex.token = node2.token;
+			ex.pushToken(node2.token);
 		}
 		throw ex;
 
@@ -871,7 +872,7 @@ public class ALU
 		if (o == null)
 		{
 			BeetlException be = new BeetlException(BeetlException.NULL);
-			be.token = node.token;
+			be.pushToken(node.token);
 			throw be;
 		}
 
@@ -890,7 +891,7 @@ public class ALU
 		else
 		{
 			BeetlException ex = new BeetlException(BeetlException.BOOLEAN_EXPECTED_ERROR, o.getClass().toString());
-			ex.token = node.token;
+			ex.pushToken(node.token);
 			throw ex;
 		}
 	}

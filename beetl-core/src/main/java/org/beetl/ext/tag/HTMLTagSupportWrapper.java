@@ -76,6 +76,7 @@ public class HTMLTagSupportWrapper extends Tag
 		Template t = null;
 
 		t = gt.getTemplate(path);
+		t.isRoot = false;
 
 		t.binding(ctx.globalVar);
 		t.dynamic(ctx.objectKeys);

@@ -68,7 +68,7 @@ public class VarRef extends Expression implements IVarIndex
 			else
 			{
 				BeetlException ex = new BeetlException(BeetlException.VAR_NOT_DEFINED);
-				ex.token = this.token;
+				ex.pushToken(this.token);
 				throw ex;
 			}
 		}
@@ -98,7 +98,7 @@ public class VarRef extends Expression implements IVarIndex
 				else
 				{
 					BeetlException be = new BeetlException(BeetlException.NULL, "空指针");
-					be.token = attr.token;
+					be.pushToken(attr.token);
 					throw be;
 				}
 
@@ -110,14 +110,14 @@ public class VarRef extends Expression implements IVarIndex
 			}
 			catch (BeetlException ex)
 			{
-				ex.token = attr.token;
+				ex.pushToken(attr.token);
 				throw ex;
 
 			}
 			catch (RuntimeException ex)
 			{
 				BeetlException be = new BeetlException(BeetlException.ATTRIBUTE_INVALID, "属性访问出错", ex);
-				be.token = attr.token;
+				be.pushToken(attr.token);
 				throw be;
 			}
 

@@ -301,6 +301,13 @@ public class GroupTemplate
 
 	}
 
+	public Template getTemplate(String key, String parent)
+	{
+		Template template = this.getTemplate(key);
+		template.isRoot = false;
+		return template;
+	}
+
 	/** 获取指定模板。
 	 * 注意，不能根据Template为空来判断模板是否存在，请调用ResourceLoader来判断
 	 * @param key

@@ -45,8 +45,7 @@ public class IncludeTag extends Tag
 		String resourceId = BeetlUtil.getRelPath(ctx.getResourceId(), (String) this.args[0]);
 		;
 
-		Template t = this.gt.getTemplate(resourceId);
-		t.isRoot = false;
+		Template t = gt.getTemplate(resourceId, this.ctx.getResourceId());
 		//快速复制父模板的变量
 		t.binding(this.ctx.globalVar);
 		if (ctx.objectKeys != null && ctx.objectKeys.size() != 0)

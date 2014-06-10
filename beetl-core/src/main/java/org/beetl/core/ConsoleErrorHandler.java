@@ -97,9 +97,9 @@ public class ConsoleErrorHandler implements ErrorHandler
 
 		if (error.hasCallStack())
 		{
-			println(writer, "  ========");
+			println(writer, "  ========================");
 			println(writer, "  调用栈:");
-			for (int i = 1; i < error.getResourceCallStack().size(); i++)
+			for (int i = 0; i < error.getResourceCallStack().size(); i++)
 			{
 				println(writer, "  " + error.getResourceCallStack().get(i) + " 行："
 						+ error.getTokenCallStack().get(i).line);

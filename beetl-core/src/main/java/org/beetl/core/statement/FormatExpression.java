@@ -76,7 +76,7 @@ public class FormatExpression extends Expression
 		if (format == null)
 		{
 			BeetlException ex = new BeetlException(BeetlException.FORMAT_NOT_FOUND);
-			ex.token = token;
+			ex.pushToken(token);
 			throw ex;
 		}
 

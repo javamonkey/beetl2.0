@@ -74,25 +74,25 @@ public class NativeCallExpression extends Expression
 				catch (SecurityException e)
 				{
 					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "不能调用属性", e);
-					be.token = GrammarToken.createToken(attr, token.line);
+					be.pushToken(GrammarToken.createToken(attr, token.line));
 					throw be;
 				}
 				catch (NoSuchFieldException e)
 				{
 					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "无此属性", e);
-					be.token = GrammarToken.createToken(attr, token.line);
+					be.pushToken(GrammarToken.createToken(attr, token.line));
 					throw be;
 				}
 				catch (IllegalArgumentException e)
 				{
 					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "访问属性出错", e);
-					be.token = GrammarToken.createToken(attr, token.line);
+					be.pushToken(GrammarToken.createToken(attr, token.line));
 					throw be;
 				}
 				catch (IllegalAccessException e)
 				{
 					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "访问属性出错", e);
-					be.token = GrammarToken.createToken(attr, token.line);
+					be.pushToken(GrammarToken.createToken(attr, token.line));
 					throw be;
 				}
 
@@ -103,7 +103,7 @@ public class NativeCallExpression extends Expression
 				{
 					BeetlException be = new BeetlException(BeetlException.ARRAY_TYPE_ERROR);
 					//最好是把上一个字符显示出来
-					be.token = GrammarToken.createToken("[]", token.line);
+					be.pushToken(GrammarToken.createToken("[]", token.line));
 					throw be;
 				}
 				Expression exp = ((NativeArrayNode) node).exp;
@@ -125,7 +125,7 @@ public class NativeCallExpression extends Expression
 				else
 				{
 					BeetlException be = new BeetlException(BeetlException.ARRAY_INDEX_ERROR, "数组指针必须是Number类型");
-					be.token = GrammarToken.createToken("[]", token.line);
+					be.pushToken(GrammarToken.createToken("[]", token.line));
 					throw be;
 				}
 			}
@@ -148,7 +148,7 @@ public class NativeCallExpression extends Expression
 					if (!ctx.gt.getNativeSecurity().permit(ctx.template.program.id, targetCls, targetObj, method))
 					{
 						BeetlException be = new BeetlException(BeetlException.NATIVE_SECUARITY_EXCEPTION);
-						be.token = GrammarToken.createToken(method, token.line);
+						be.pushToken(GrammarToken.createToken(method, token.line));
 						throw be;
 					}
 					if (targetObj != null)
@@ -173,32 +173,32 @@ public class NativeCallExpression extends Expression
 				catch (SecurityException e)
 				{
 					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "不能调用方法", e);
-					be.token = GrammarToken.createToken(method, token.line);
+					be.pushToken(GrammarToken.createToken(method, token.line));
 					throw be;
 				}
 
 				catch (IllegalArgumentException e)
 				{
 					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "无法访问方法", e);
-					be.token = GrammarToken.createToken(method, token.line);
+					be.pushToken(GrammarToken.createToken(method, token.line));
 					throw be;
 				}
 				catch (IllegalAccessException e)
 				{
 					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "无法访问方法", e);
-					be.token = GrammarToken.createToken(method, token.line);
+					be.pushToken(GrammarToken.createToken(method, token.line));
 					throw be;
 				}
 				catch (InvocationTargetException e)
 				{
 					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "内部调用报错",
 							e.getTargetException());
-					be.token = GrammarToken.createToken(method, token.line);
+					be.pushToken(GrammarToken.createToken(method, token.line));
 					throw be;
 				}
 				catch (BeetlException be)
 				{
-					be.token = GrammarToken.createToken(method, token.line);
+					be.pushToken(GrammarToken.createToken(method, token.line));
 					throw be;
 				}
 			}
@@ -246,13 +246,13 @@ public class NativeCallExpression extends Expression
 				catch (SecurityException e)
 				{
 					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "无法访问属性", e);
-					be.token = GrammarToken.createToken(attr, token.line);
+					be.pushToken(GrammarToken.createToken(attr, token.line));
 					throw be;
 				}
 				catch (NoSuchFieldException e)
 				{
 					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "无此属性", e);
-					be.token = GrammarToken.createToken(attr, token.line);
+					be.pushToken(GrammarToken.createToken(attr, token.line));
 					throw be;
 				}
 
@@ -263,7 +263,7 @@ public class NativeCallExpression extends Expression
 				{
 					BeetlException be = new BeetlException(BeetlException.ARRAY_TYPE_ERROR);
 					//最好是把上一个字符显示出来
-					be.token = GrammarToken.createToken("[]", token.line);
+					be.pushToken(GrammarToken.createToken("[]", token.line));
 					throw be;
 				}
 				type.cls = type.cls.getComponentType();
@@ -299,7 +299,7 @@ public class NativeCallExpression extends Expression
 				catch (SecurityException e)
 				{
 					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "不能调用方法");
-					be.token = GrammarToken.createToken(method, token.line);
+					be.pushToken(GrammarToken.createToken(method, token.line));
 					throw be;
 				}
 

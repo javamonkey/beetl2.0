@@ -61,7 +61,7 @@ public class FunctionExpression extends Expression
 		if (fn == null)
 		{
 			BeetlException ex = new BeetlException(BeetlException.FUNCTION_NOT_FOUND);
-			ex.token = token;
+			ex.pushToken(token);
 			throw ex;
 		}
 
@@ -77,13 +77,13 @@ public class FunctionExpression extends Expression
 		}
 		catch (BeetlException ex)
 		{
-			ex.token = this.token;
+			ex.pushToken(token);
 			throw ex;
 		}
 		catch (RuntimeException ex)
 		{
 			BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "调用方法出错 " + name, ex);
-			be.token = this.token;
+			be.pushToken(this.token);
 			throw be;
 		}
 
@@ -103,21 +103,21 @@ public class FunctionExpression extends Expression
 				}
 				catch (BeetlException ex)
 				{
-					ex.token = attr.token;
+					ex.pushToken(attr.token);
 					throw ex;
 
 				}
 				catch (RuntimeException ex)
 				{
 					BeetlException be = new BeetlException(BeetlException.ATTRIBUTE_INVALID, "属性访问出错", ex);
-					be.token = attr.token;
+					be.pushToken(attr.token);
 					throw be;
 				}
 
 				if (value == null)
 				{
 					BeetlException be = new BeetlException(BeetlException.ERROR, "空指针 ");
-					be.token = attr.token;
+					be.pushToken(attr.token);
 					throw be;
 				}
 
@@ -133,7 +133,7 @@ public class FunctionExpression extends Expression
 		if (fn == null)
 		{
 			BeetlException ex = new BeetlException(BeetlException.FUNCTION_NOT_FOUND);
-			ex.token = token;
+			ex.pushToken(token);
 			throw ex;
 		}
 		for (Expression exp : exps)
@@ -162,7 +162,7 @@ public class FunctionExpression extends Expression
 			}
 			catch (BeetlException ex)
 			{
-				ex.token = this.token;
+				ex.pushToken(token);
 				throw ex;
 			}
 
@@ -179,13 +179,13 @@ public class FunctionExpression extends Expression
 			catch (NoSuchMethodException e)
 			{
 				BeetlException ex = new BeetlException(BeetlException.FUNCTION_INVALID);
-				ex.token = token;
+				ex.pushToken(token);
 				throw ex;
 			}
 			catch (SecurityException e)
 			{
 				BeetlException ex = new BeetlException(BeetlException.FUNCTION_INVALID);
-				ex.token = token;
+				ex.pushToken(token);
 				throw ex;
 			}
 		}

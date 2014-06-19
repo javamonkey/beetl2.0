@@ -28,7 +28,10 @@
 package org.beetl.core.exception;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.beetl.core.statement.GrammarToken;
 
 /**
  * 将{@link BeetlException)表达成ErrorInfo
@@ -43,6 +46,8 @@ public class ErrorInfo
 	String msg;
 	Throwable cause;
 	String errorCode = null;
+	List<String> resourceCallStack = null;
+	List<GrammarToken> tokenCallStack = null;
 	static Map<String, String> errorLocalMap = new HashMap<String, String>();
 	static
 	{
@@ -111,6 +116,8 @@ public class ErrorInfo
 		{
 			type = errorCode;
 		}
+		this.resourceCallStack = ex.errorResourceStack;
+		this.tokenCallStack = ex.errorTokenStack;
 
 	}
 
@@ -190,6 +197,31 @@ public class ErrorInfo
 	public void setCause(Throwable cause)
 	{
 		this.cause = cause;
+	}
+
+	public boolean hasCallStack()
+	{
+		return resourceCallStack.size() > 1;
+	}
+
+	public List<String> getResourceCallStack()
+	{
+		return resourceCallStack;
+	}
+
+	public void setResourceCallStack(List<String> resourceCallStack)
+	{
+		this.resourceCallStack = resourceCallStack;
+	}
+
+	public List<GrammarToken> getTokenCallStack()
+	{
+		return tokenCallStack;
+	}
+
+	public void setTokenCallStack(List<GrammarToken> tokenCallStack)
+	{
+		this.tokenCallStack = tokenCallStack;
 	}
 
 	public static Map<String, String> getErrorLocalMap()

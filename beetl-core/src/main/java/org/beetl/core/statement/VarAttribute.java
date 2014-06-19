@@ -75,7 +75,7 @@ public class VarAttribute extends Expression
 		}
 		catch (BeetlException be)
 		{
-			be.token = token;
+			be.pushToken(token);
 			throw be;
 		}
 

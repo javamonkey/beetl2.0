@@ -64,7 +64,7 @@ public class SelectStatement extends Statement
 			if (base == null)
 			{
 				BeetlException ex = new BeetlException(BeetlException.NULL);
-				ex.token = value.token;
+				ex.pushToken(value.token);
 				throw ex;
 			}
 
@@ -85,7 +85,7 @@ public class SelectStatement extends Statement
 				else
 				{
 					BeetlException be = new BeetlException(BeetlException.BOOLEAN_EXPECTED_ERROR);
-					be.token = exp.token;
+					be.pushToken(exp.token);
 					throw be;
 				}
 			}

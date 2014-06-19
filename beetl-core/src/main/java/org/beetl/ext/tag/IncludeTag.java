@@ -27,6 +27,7 @@
  */
 package org.beetl.ext.tag;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -44,7 +45,7 @@ public class IncludeTag extends Tag
 		String resourceId = BeetlUtil.getRelPath(ctx.getResourceId(), (String) this.args[0]);
 		;
 
-		Template t = this.gt.getTemplate(resourceId);
+		Template t = gt.getTemplate(resourceId, this.ctx.getResourceId());
 		//快速复制父模板的变量
 		t.binding(this.ctx.globalVar);
 		if (ctx.objectKeys != null && ctx.objectKeys.size() != 0)
@@ -57,7 +58,16 @@ public class IncludeTag extends Tag
 			Map<String, Object> map = (Map<String, Object>) this.args[1];
 			for (Entry<String, Object> entry : map.entrySet())
 			{
-				t.binding((String) entry.getKey(), entry.getValue());
+				Object value = entry.getValue();
+				if (value instanceof Map || value instanceof Collection)
+				{
+					t.binding((String) entry.getKey(), value, true);
+				}
+				else
+				{
+					t.binding((String) entry.getKey(), value);
+				}
+
 			}
 
 		}

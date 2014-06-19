@@ -90,7 +90,7 @@ public class TryCatchStatement extends Statement
 				else
 				{
 					BeetlException be = new BeetlException(BeetlException.ERROR, ex.getMessage(), ex);
-					be.token = tryPart.token;
+					be.pushToken(tryPart.token);
 					throw be;
 				}
 			}

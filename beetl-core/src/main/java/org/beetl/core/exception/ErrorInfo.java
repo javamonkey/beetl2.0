@@ -47,6 +47,8 @@ public class ErrorInfo
 	static
 	{
 		errorLocalMap.put(BeetlException.ERROR, "错误");
+		errorLocalMap.put(BeetlException.TOKEN_ERROR, concat("语法错误", BeetlException.TOKEN_ERROR));
+
 		errorLocalMap.put(BeetlException.PARSER_UNKNOW_ERROR, concat("语法错误", BeetlException.PARSER_UNKNOW_ERROR));
 		errorLocalMap.put(BeetlException.PARSER_VIABLE_ERROR, concat("语法错误", BeetlException.PARSER_VIABLE_ERROR));
 		errorLocalMap.put(BeetlException.PARSER_MISS_ERROR, concat("缺少符号", BeetlException.PARSER_MISS_ERROR));

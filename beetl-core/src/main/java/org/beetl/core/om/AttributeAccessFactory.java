@@ -121,7 +121,7 @@ public class AttributeAccessFactory
 		else
 		{
 			// General Get
-			className = c + "$_" + name;
+			className = c + "$_get";
 			aa = generalGetCache.get(className);
 			if (aa != null)
 			{

@@ -179,7 +179,7 @@ public class BeetlException extends RuntimeException
 	//语法错误
 	public static final String ERROR = "ERROR";
 	public static final String OPT_ERROR = "OPT_ERROR";
-
+	public static final String TOKEN_ERROR = "TOKEN_ERROR";
 	public static final String PARSER_UNKNOW_ERROR = "PARSER_UNKNOW_ERROR";
 	public static final String PARSER_VIABLE_ERROR = "PARSER_VIABLE_ERROR";
 	public static final String PARSER_MISS_ERROR = "PARSER_MISS_ERROR";

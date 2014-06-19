@@ -6,7 +6,7 @@ public class UserIdFiledAccess extends FieldAccess {
 
 	public Object value(Object o, Object name) {
 		// TODO Auto-generated method stub
-		return ((User) o).getPrice();
+		return ((User) o).get((String)name);
 	}
 
 }

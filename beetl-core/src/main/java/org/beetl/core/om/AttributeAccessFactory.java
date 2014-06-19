@@ -129,18 +129,21 @@ public class AttributeAccessFactory
 			}
 			else
 			{
-				FindResult generaGetResult = findResult(c, "get", "get");
-				if (generaGetResult != null)
+
+				try
 				{
-					aa = AttributeCodeGen.createAAClass(generaGetResult.c, "get", "get", Object.class);
+					Method m = c.getMethod("get", new Class[]
+					{ String.class });
+					aa = AttributeCodeGen.createAAClass(c, "get", "get", Object.class, String.class);
 					generalGetCache.put(className, aa);
 				}
-				else
+				catch (Exception e)
 				{
 					// 还是没有找到，抛错吧
 					BeetlException be = new BeetlException(BeetlException.ATTRIBUTE_NOT_FOUND, name);
 					throw be;
 				}
+
 			}
 
 		}

@@ -158,7 +158,15 @@ public class GroupTemplate
 
 		classSearch = new ClassSearch(conf.getPkgList());
 		nativeSecurity = (NativeSecurityManager) ObjectUtil.instance(conf.getNativeSecurity());
-		errorHandler = (ErrorHandler) ObjectUtil.instance(conf.errorHandlerClass);
+		if (conf.errorHandlerClass == null)
+		{
+			errorHandler = null;
+		}
+		else
+		{
+			errorHandler = (ErrorHandler) ObjectUtil.instance(conf.errorHandlerClass);
+
+		}
 	}
 
 	protected void initFunction()

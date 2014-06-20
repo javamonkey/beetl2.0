@@ -27,6 +27,7 @@
  */
 package org.beetl.core.fun;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.beetl.core.Context;
@@ -88,6 +89,20 @@ public class SingleFunctionWrapper extends FunctionWrapper
 
 			}
 
+		}
+		catch (InvocationTargetException ex)
+		{
+			Throwable t = ex.getTargetException();
+			if (t instanceof BeetlException)
+			{
+				throw (BeetlException) t;
+			}
+			else
+			{
+				BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "调用方法出错 "
+						+ this.functionName, t);
+				throw be;
+			}
 		}
 		catch (Exception ex)
 		{

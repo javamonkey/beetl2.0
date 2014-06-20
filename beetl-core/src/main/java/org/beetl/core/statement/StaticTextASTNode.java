@@ -61,7 +61,7 @@ public final class StaticTextASTNode extends Statement
 		catch (IOException ex)
 		{
 			BeetlException be = new BeetlException(BeetlException.CLIENT_IO_ERROR_ERROR, "Client IO Error", ex);
-			be.token = this.token;
+			be.pushToken(this.token);
 			throw be;
 		}
 

@@ -158,7 +158,15 @@ public class GroupTemplate
 
 		classSearch = new ClassSearch(conf.getPkgList());
 		nativeSecurity = (NativeSecurityManager) ObjectUtil.instance(conf.getNativeSecurity());
-		errorHandler = (ErrorHandler) ObjectUtil.instance(conf.errorHandlerClass);
+		if (conf.errorHandlerClass == null)
+		{
+			errorHandler = null;
+		}
+		else
+		{
+			errorHandler = (ErrorHandler) ObjectUtil.instance(conf.errorHandlerClass);
+
+		}
 	}
 
 	protected void initFunction()
@@ -299,6 +307,13 @@ public class GroupTemplate
 	protected void setClassLoader(ClassLoader classLoader)
 	{
 
+	}
+
+	public Template getTemplate(String key, String parent)
+	{
+		Template template = this.getTemplate(key);
+		template.isRoot = false;
+		return template;
 	}
 
 	/** 获取指定模板。

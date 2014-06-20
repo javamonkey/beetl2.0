@@ -1,4 +1,5 @@
 <%
-var a = aa
-var b = c;
+var k="aaaa"
+;
+var c = "123";
 %>

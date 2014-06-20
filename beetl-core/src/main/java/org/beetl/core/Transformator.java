@@ -183,7 +183,8 @@ public class Transformator
 			GrammarToken token = GrammarToken.createToken(tagName, this.totalLineCount + 1);
 
 			HTMLTagParserException ex = new HTMLTagParserException("解析html tag 标签出错,未找到匹配结束标签 " + tagName);
-			ex.token = token;
+
+			ex.pushToken(token);
 			ex.line = totalLineCount + 1;
 			this.clear();
 			throw ex;
@@ -211,7 +212,7 @@ public class Transformator
 			GrammarToken token = GrammarToken.createToken(tagName, this.totalLineCount + 1);
 
 			HTMLTagParserException ex = new HTMLTagParserException("解析html tag 标签出错,未找到匹配结束标签 " + tagName);
-			ex.token = token;
+			ex.pushToken(token);
 			ex.line = totalLineCount + 1;
 			this.clear();
 			throw ex;
@@ -391,7 +392,9 @@ public class Transformator
 			}
 			GrammarToken token = GrammarToken.createToken(tagName, this.totalLineCount + 1);
 			HTMLTagParserException ex = new HTMLTagParserException(re.getMessage());
-			ex.token = token;
+			ex.pushToken(token);
+			//todo
+			//			ex.token = token;
 			ex.line = totalLineCount + 1;
 			throw ex;
 
@@ -434,7 +437,8 @@ public class Transformator
 			}
 			GrammarToken token = GrammarToken.createToken(tagName, this.totalLineCount + 1);
 			HTMLTagParserException ex = new HTMLTagParserException(re.getMessage());
-			ex.token = token;
+			ex.pushToken(token);
+			//ex.token = token;
 			ex.line = totalLineCount + 1;
 			throw ex;
 		}
@@ -870,7 +874,7 @@ public class Transformator
 		{
 
 			// String str = "   #:var u='hello';:#  \n  $u$";
-			String str = "<#bk  >\n${c}\n\n</#bk>";
+			String str = "<#bbsListTag ;page></#bbsListTag>";
 
 			BufferedReader reader = new BufferedReader(p.transform(str));
 			String line = null;

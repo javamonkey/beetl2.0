@@ -651,7 +651,7 @@ public class AntlrProgramBuilder
 		{
 
 			BeetlException ex = new BeetlException(BeetlException.TYPE_SEARCH_ERROR, className);
-			ex.token = this.getBTToken(ctx.getStart());
+			ex.pushToken(this.getBTToken(ctx.getStart()));
 			throw ex;
 		}
 		Type classType = new Type(cls);
@@ -1321,7 +1321,7 @@ public class AntlrProgramBuilder
 						msg = "()()";
 					}
 					BeetlException ex = new BeetlException(BeetlException.PARSER_NATIVE_ERROR, msg);
-					ex.token = this.getBTToken(methodCtx.getStart());
+					ex.pushToken(this.getBTToken(methodCtx.getStart()));
 					throw ex;
 				}
 				//解析参数

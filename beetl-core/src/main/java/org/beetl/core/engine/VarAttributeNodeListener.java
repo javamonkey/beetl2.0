@@ -51,7 +51,8 @@ public class VarAttributeNodeListener implements Listener
 					}
 					catch (BeetlException ex)
 					{
-						ex.token = attr.token;
+						ex.pushToken(attr.token);
+						throw ex;
 					}
 
 				}
@@ -90,7 +91,8 @@ public class VarAttributeNodeListener implements Listener
 								}
 								catch (BeetlException ex)
 								{
-									ex.token = attr.token;
+									ex.pushToken(attr.token);
+									throw ex;
 								}
 
 							}

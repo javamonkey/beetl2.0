@@ -17,6 +17,7 @@ import org.beetl.core.parser.BeetlAntlrErrorStrategy;
 import org.beetl.core.parser.BeetlLexer;
 import org.beetl.core.parser.BeetlParser;
 import org.beetl.core.parser.BeetlParser.ProgContext;
+import org.beetl.core.parser.SyntaxErrorListener;
 import org.beetl.core.statement.Program;
 import org.beetl.core.statement.ProgramMetaData;
 
@@ -24,6 +25,7 @@ public class DefaultTemplateEngine implements TemplateEngine
 {
 
 	BeetlAntlrErrorStrategy antlrErrorStrategy = new BeetlAntlrErrorStrategy();
+	SyntaxErrorListener syntaxError = new SyntaxErrorListener();
 
 	@Override
 	public Program createProgram(Resource resource, Reader reader, Map<Integer, String> textMap, String cr,
@@ -40,11 +42,15 @@ public class DefaultTemplateEngine implements TemplateEngine
 			throw new RuntimeException(e);
 		}
 		BeetlLexer lexer = new BeetlLexer(input);
+		lexer.removeErrorListeners();
+		lexer.addErrorListener(syntaxError);
+
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 
 		BeetlParser parser = new BeetlParser(tokens);
 		//测试代码
 		parser.setErrorHandler(antlrErrorStrategy);
+
 		//
 
 		ProgContext tree = parser.prog();

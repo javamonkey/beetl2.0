@@ -46,13 +46,47 @@ public class AttributeCodeGen
 		{
 			BCW bcw = BCWFactory.defaultFactory.getAttribyteBCW(c, name, methodName, returnType);
 			byte[] bs = bcw.getClassByte();
-			Class fieldAccessorClass = loader.defineClass(c.getName() + "_" + name, bs);
-			AttributeAccess ac = (AttributeAccess) fieldAccessorClass.newInstance();
-			return ac;
+			String clsName = c.getName() + "_" + name;
+			return instance(bs, clsName);
 		}
 		catch (Exception ex)
 		{
 			throw new RuntimeException(ex);
+		}
+
+	}
+
+	public static AttributeAccess createAAClass(Class c, String name, String methodName, Class returnType,
+			Class parameterType)
+	{
+		try
+		{
+			BCW bcw = BCWFactory.defaultFactory.getAttribyteBCW(c, name, methodName, returnType, parameterType);
+			byte[] bs = bcw.getClassByte();
+			String clsName = c.getName() + "_" + name;
+			return instance(bs, clsName);
+
+		}
+		catch (Exception ex)
+		{
+			throw new RuntimeException(ex);
+		}
+
+	}
+
+	private static AttributeAccess instance(byte[] bs, String clsName)
+	{
+		Class fieldAccessorClass = loader.defineClass(clsName, bs);
+		AttributeAccess ac;
+		try
+		{
+			ac = (AttributeAccess) fieldAccessorClass.newInstance();
+			return ac;
+		}
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			throw new RuntimeException(e);
 		}
 
 	}

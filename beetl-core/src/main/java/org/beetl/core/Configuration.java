@@ -233,7 +233,15 @@ public class Configuration
 		}
 		else if (key.equalsIgnoreCase(ERROR_HANDLER))
 		{
-			this.errorHandlerClass = value;
+			if (value == null | value.length() == 0 || value.equals("null"))
+			{
+				this.errorHandlerClass = null;
+			}
+			else
+			{
+				this.errorHandlerClass = value;
+			}
+
 		}
 		else if (key.equalsIgnoreCase(MVC_STRICT))
 		{

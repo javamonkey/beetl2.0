@@ -103,6 +103,7 @@ public class FieldAccessBCW implements BCW
 	String targetFunction = "getAge";
 	String targetFunctionDesc = "()I";
 	String retByteCodeType = "I";
+	boolean isGeneralGet = false;
 
 	//	static ASMClassLoader loader = new ASMClassLoader();
 	//
@@ -148,6 +149,20 @@ public class FieldAccessBCW implements BCW
 		String returnTypeClass = returnArray[0];
 		this.retByteCodeType = returnArray[1];
 		this.targetFunctionDesc = "()" + returnTypeClass;
+
+	}
+
+	public FieldAccessBCW(Class c, String name, String methodName, Class returnType, Class paremterType)
+	{
+		String cname = c.getName().replace(".", "/");
+		this.targetCls = cname;
+		this.cls = cname + "_" + name;
+		this.targetFunction = methodName;
+		String[] returnArray = this.getRetrunTypeDesc(returnType);
+		String returnTypeClass = returnArray[0];
+		this.retByteCodeType = returnArray[1];
+		this.targetFunctionDesc = "(Ljava/lang/String;)" + returnTypeClass;
+		isGeneralGet = true;
 
 	}
 
@@ -262,11 +277,11 @@ public class FieldAccessBCW implements BCW
 		out.writeInt(attrlen);
 		if (this.retByteCodeType.equals("D") || this.retByteCodeType.equals("J"))
 		{
-			out.writeShort(2);
+			out.writeShort(2 + (this.isGeneralGet ? 1 : 0));
 		}
 		else
 		{
-			out.writeShort(1); //stack,default 1,long or double shoud be 2.
+			out.writeShort(1 + (this.isGeneralGet ? 1 : 0)); //stack,default 1,long or double shoud be 2.
 		}
 
 		out.writeShort(3); //local var
@@ -287,6 +302,14 @@ public class FieldAccessBCW implements BCW
 		out.writeByte(this.CHECK_CAST);
 		short classIndex = this.registerClass(this.targetCls);
 		out.writeShort(classIndex);
+		if (this.isGeneralGet)
+		{
+			out.writeByte(ALOAD_2);
+			out.writeByte(this.CHECK_CAST);
+			classIndex = this.registerClass("java/lang/String");
+			out.writeShort(classIndex);
+
+		}
 
 		out.writeByte(INVOKE_VIRTUAL);
 		int methodIndex = registerMethod(this.targetCls, this.targetFunction, this.targetFunctionDesc);
@@ -329,8 +352,7 @@ public class FieldAccessBCW implements BCW
 			methodIndex = registerMethod(this.byteClass, this.valueOfFunction, this.booleanValueOfFunctionDesc);
 			out.writeShort(methodIndex);
 		}
-		
-		
+
 		out.writeByte(ARETURN - 256);
 		return bs.toByteArray();
 

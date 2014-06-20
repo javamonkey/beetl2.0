@@ -27,6 +27,9 @@
  */
 package org.beetl.core.exception;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.statement.GrammarToken;
 
@@ -49,6 +52,9 @@ public class BeetlException extends RuntimeException
 	 * 资源id
 	 */
 	public String resourceId = null;
+
+	public List<String> errorResourceStack = new ArrayList<String>(2);
+	public List<GrammarToken> errorTokenStack = new ArrayList<GrammarToken>(2);
 
 	/**
 	 * GroupTemplate
@@ -179,7 +185,7 @@ public class BeetlException extends RuntimeException
 	//语法错误
 	public static final String ERROR = "ERROR";
 	public static final String OPT_ERROR = "OPT_ERROR";
-
+	public static final String TOKEN_ERROR = "TOKEN_ERROR";
 	public static final String PARSER_UNKNOW_ERROR = "PARSER_UNKNOW_ERROR";
 	public static final String PARSER_VIABLE_ERROR = "PARSER_VIABLE_ERROR";
 	public static final String PARSER_MISS_ERROR = "PARSER_MISS_ERROR";
@@ -225,6 +231,25 @@ public class BeetlException extends RuntimeException
 	{
 		return detailCode;
 		//		return "Error:" + detailCode + "at " + token.line + super.getMessage() != null ? super.getMessage() : "";
+	}
+
+	public void pushResource(String resourceId)
+	{
+		if (this.resourceId == null)
+		{
+			this.resourceId = resourceId;
+		}
+		this.errorResourceStack.add(resourceId);
+
+	}
+
+	public void pushToken(GrammarToken token)
+	{
+		if (this.token == null)
+		{
+			this.token = token;
+		}
+		this.errorTokenStack.add(token);
 	}
 
 }

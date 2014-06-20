@@ -86,13 +86,13 @@ public class TagStatement extends Statement
 		}
 		catch (BeetlException ex)
 		{
-			ex.token = this.token;
+			ex.pushToken(this.token);
 			throw ex;
 		}
 		catch (RuntimeException ex)
 		{
 			BeetlException bex = new BeetlException(BeetlException.TAG_INSTANCE_ERROR, ex.getMessage(), ex);
-			bex.token = this.token;
+			bex.pushToken(token);
 			throw bex;
 		}
 
@@ -113,7 +113,7 @@ public class TagStatement extends Statement
 		catch (RuntimeException ex)
 		{
 			BeetlException be = new BeetlException(BeetlException.ERROR, "tag执行抛错", ex);
-			be.token = this.token;
+			be.pushToken(token);
 			throw be;
 		}
 	}

@@ -36,5 +36,9 @@ public class User {
 	public void setPrice(double price) {
 		this.price = price;
 	}
+	
+	public Object get(String cr){
+		return "";
+	}
 
 }

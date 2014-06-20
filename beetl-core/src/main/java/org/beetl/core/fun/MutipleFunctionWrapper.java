@@ -220,9 +220,17 @@ public class MutipleFunctionWrapper extends FunctionWrapper
 		}
 		catch (InvocationTargetException e)
 		{
-			BeetlException ex = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "调用方法出错 " + this.functionName,
-					e);
-			throw ex;
+			Throwable t = e.getTargetException();
+			if (t instanceof BeetlException)
+			{
+				throw (BeetlException) t;
+			}
+			else
+			{
+				BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "调用方法出错 "
+						+ this.functionName, t);
+				throw be;
+			}
 
 		}
 		BeetlException ex = new BeetlException(BeetlException.NATIVE_CALL_INVALID, "找不到方法 " + this.functionName);

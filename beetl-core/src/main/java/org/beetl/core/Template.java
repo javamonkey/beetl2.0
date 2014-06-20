@@ -51,6 +51,7 @@ public class Template
 	public Program program;
 	public Configuration cf;
 	public GroupTemplate gt;
+	public boolean isRoot = true;
 
 	Context ctx = new Context();
 
@@ -122,12 +123,20 @@ public class Template
 		}
 		catch (BeetlException e)
 		{
-			//			e.printStackTrace();
+			e.pushResource(this.program.id);
+			// 是否打印异常，只有根模板才能打印异常
+			if (!isRoot)
+				throw e;
 			Writer w = BeetlUtil.getWriterByByteWriter(ctx.byteWriter);
-			e.resourceId = this.program.id;
+
 			e.gt = this.program.gt;
 			e.cr = this.program.metaData.lineSeparator;
 			ErrorHandler errorHandler = this.gt.getErrorHandler();
+
+			if (errorHandler == null)
+			{
+				throw e;
+			}
 			errorHandler.processExcption(e, w);
 		}
 		catch (IOException e)

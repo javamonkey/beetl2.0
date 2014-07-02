@@ -1,5 +1,5 @@
 /*
- [The "BSD license"]
+\ [The "BSD license"]
  Copyright (c) 2011-2014 Joel Li (李家智)
  All rights reserved.
 

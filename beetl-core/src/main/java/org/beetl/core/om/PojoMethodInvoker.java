@@ -46,6 +46,7 @@ public class PojoMethodInvoker implements MethodInvoker
 	public PojoMethodInvoker(Method m)
 	{
 		this.method = m;
+		//	this.method.setAccessible(true);
 	}
 
 	@Override

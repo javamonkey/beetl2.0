@@ -66,7 +66,7 @@ public class TruncFunction implements Function
 			{
 				//todo:还原成输入类型
 				BigDecimal c = new BigDecimal(n.doubleValue());
-				return ((BigDecimal) n).setScale(pos, RoundingMode.UP).doubleValue();
+				return ((BigDecimal) c).setScale(pos, RoundingMode.UP).doubleValue();
 
 			}
 

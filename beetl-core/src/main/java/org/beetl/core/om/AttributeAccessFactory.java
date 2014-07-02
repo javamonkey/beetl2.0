@@ -196,6 +196,8 @@ public class AttributeAccessFactory
 			{
 				resetFindResult(findMethod, result);
 			}
+			return result;
+
 		}
 
 		Class parent = c.getSuperclass();

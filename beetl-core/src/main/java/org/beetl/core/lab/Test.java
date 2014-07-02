@@ -24,7 +24,7 @@ public class Test
 
 			t.binding("array", new Integer[]
 			{ 1, 2, 3, 4 });
-			t.binding("user", new TestUser(""));
+			t.binding("pt", new TestUser("").getPt());
 			ByteArrayOutputStream bs = new ByteArrayOutputStream();
 			t.renderTo(bs);
 			System.out.println(new String(bs.toByteArray()));
@@ -32,4 +32,5 @@ public class Test
 		}
 
 	}
+
 }

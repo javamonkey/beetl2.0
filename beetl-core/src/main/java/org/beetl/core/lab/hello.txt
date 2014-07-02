@@ -1,5 +1,4 @@
 <%
-var k="aaaa"
-;
-var c = "123";
+//directive dynamic  ;
 %>
+${pt.name}

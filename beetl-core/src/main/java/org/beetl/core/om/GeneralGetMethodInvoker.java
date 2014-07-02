@@ -38,6 +38,7 @@ public class GeneralGetMethodInvoker implements MethodInvoker
 	public GeneralGetMethodInvoker(Method m, String name)
 	{
 		this.method = m;
+		this.method.setAccessible(true);
 		this.name = name;
 	}
 

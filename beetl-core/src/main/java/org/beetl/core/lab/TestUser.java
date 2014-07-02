@@ -21,6 +21,24 @@ public class TestUser
 	boolean isOk = false;
 	int id = 0;
 
+	private class MyPrivateTest implements PrivateTest
+	{
+
+		@Override
+		public String getName()
+		{
+			return "abc";
+		}
+
+	}
+
+	MyPrivateTest pt = new MyPrivateTest();
+
+	public PrivateTest getPt()
+	{
+		return pt;
+	}
+
 	public boolean isOk()
 	{
 		return isOk;

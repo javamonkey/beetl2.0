@@ -59,10 +59,26 @@ public class DateFormat implements Format
 			return sdf.format((Date) data);
 
 		}
+		else if (data.getClass() == Long.class)
+		{
+			Date date = new Date((Long) data);
+			SimpleDateFormat sdf = null;
+			if (pattern == null)
+			{
+				sdf = new SimpleDateFormat();
+			}
+			else
+			{
+				sdf = new SimpleDateFormat(pattern);
+			}
+			return sdf.format((Date) data);
+
+		}
 		else
 		{
 			throw new RuntimeException("Arg Error:Type should be Date:" + data.getClass());
 		}
+
 	}
 
 }

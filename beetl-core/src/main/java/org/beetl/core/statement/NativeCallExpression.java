@@ -56,6 +56,12 @@ public class NativeCallExpression extends Expression
 		else
 		{
 			targetCls = ctx.gt.loadClassBySimpleName(this.clsNode.cls);
+			if (targetCls == null)
+			{
+				BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "该类不存在");
+				be.pushToken(GrammarToken.createToken(clsNode.cls, token.line));
+				throw be;
+			}
 
 		}
 
@@ -220,6 +226,12 @@ public class NativeCallExpression extends Expression
 		else
 		{
 			Class cls = inferCtx.gt.loadClassBySimpleName(this.clsNode.cls);
+			if (cls == null)
+			{
+				BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "该类不存在");
+				be.pushToken(GrammarToken.createToken(clsNode.cls, token.line));
+				throw be;
+			}
 			type = new Type(cls);
 
 		}

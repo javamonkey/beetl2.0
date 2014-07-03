@@ -66,7 +66,8 @@ public class ClasspathResource extends Resource
 
 		if (url == null)
 		{
-			BeetlException be = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR, " classpath resource 未发现:" + id);
+			BeetlException be = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR);
+			be.resourceId = this.id;
 			throw be;
 		}
 		InputStream is;
@@ -76,14 +77,15 @@ public class ClasspathResource extends Resource
 		}
 		catch (IOException e1)
 		{
-			BeetlException be = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR, " classpath resource 未发现:" + id);
+			BeetlException be = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR);
+			be.resourceId = this.id;
 			throw be;
 		}
 
 		if (is == null)
 		{
-			BeetlException be = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR, "classpath resource not found:"
-					+ id);
+			BeetlException be = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR);
+			be.resourceId = this.id;
 			throw be;
 		}
 

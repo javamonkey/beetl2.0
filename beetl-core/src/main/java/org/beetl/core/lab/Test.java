@@ -20,7 +20,7 @@ public class Test
 		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 		for (int i = 0; i < 2; i++)
 		{
-			Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
+			Template t = gt.getTemplate("/org/beetl/core/lab/hello1.txt");
 
 			t.binding("array", new Integer[]
 			{ 1, 2, 3, 4 });

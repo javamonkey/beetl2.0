@@ -392,6 +392,7 @@ public class GroupTemplate
 		{
 			ErrorGrammarProgram ep = new ErrorGrammarProgram(res, this, sf.lineSeparator);
 			BeetlException ex = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR);
+			//			ex.resourceId = res.id;
 			ep.setException(ex);
 			return ep;
 		}

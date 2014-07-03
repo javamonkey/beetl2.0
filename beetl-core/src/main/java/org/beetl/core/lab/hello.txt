@@ -1,4 +1,1 @@
-<%
-//directive dynamic  ;
-%>
-${pt.name}
+${@xxx.ccc.TTT.aa}

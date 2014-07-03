@@ -52,7 +52,8 @@ public class ConsoleErrorHandler implements ErrorHandler
 
 		if (error.getErrorCode().equals(BeetlException.TEMPLATE_LOAD_ERROR))
 		{
-			sb.append(error.getMsg());
+			if (error.getMsg() != null)
+				sb.append(error.getMsg());
 			println(writer, sb.toString());
 			return;
 		}

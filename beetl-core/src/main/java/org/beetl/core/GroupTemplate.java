@@ -385,19 +385,22 @@ public class GroupTemplate
 		{
 			ErrorGrammarProgram ep = new ErrorGrammarProgram(res, this, sf.lineSeparator);
 			ep.setException(e);
-
+			e.pushResource(res.id);
 			return ep;
 		}
 		catch (IOException e)
 		{
 			ErrorGrammarProgram ep = new ErrorGrammarProgram(res, this, sf.lineSeparator);
 			BeetlException ex = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR);
+			ex.pushResource(res.id);
 			ep.setException(ex);
+
 			return ep;
 		}
 		catch (BeetlException ex)
 		{
 			ErrorGrammarProgram ep = new ErrorGrammarProgram(res, this, sf != null ? sf.lineSeparator : null);
+			ex.pushResource(res.id);
 			ep.setException(ex);
 			return ep;
 		}

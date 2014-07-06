@@ -1,4 +1,11 @@
 <%
-//directive dynamic  ;
+var a = [1,2];
+layout("/org/beetl/core/lab/layout.txt"){
+for(id in a){
+	print(id.name);
+}
 %>
-${pt.name}
+main content
+<%
+}
+%>

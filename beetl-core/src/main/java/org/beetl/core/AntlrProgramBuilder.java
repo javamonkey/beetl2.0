@@ -593,9 +593,15 @@ public class AntlrProgramBuilder
 		{
 			BlockContext blockCtx = fc.block();
 			Statement block = parseBlock(blockCtx.statement(), blockCtx);
-
-			TagStatement tag = new TagStatement(this.gt.getTagFactory(id), expList, block, this.getBTToken(id, fc
-					.functionNs().getStart().getLine()));
+			TagFactory tf = this.gt.getTagFactory(id);
+			if (tf == null)
+			{
+				BeetlException ex = new BeetlException(BeetlException.TAG_NOT_FOUND);
+				ex.pushToken(this.getBTToken(id, fc.functionNs().getStart().getLine()));
+				throw ex;
+			}
+			TagStatement tag = new TagStatement(tf, expList, block, this.getBTToken(id, fc.functionNs().getStart()
+					.getLine()));
 			return tag;
 		}
 

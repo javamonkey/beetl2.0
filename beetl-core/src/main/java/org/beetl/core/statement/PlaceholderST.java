@@ -65,7 +65,7 @@ public final class PlaceholderST extends Statement
 						}
 						else if (c == Float.class)
 						{
-							ctx.byteWriter.writeDouble((Double) value);
+							ctx.byteWriter.writeFloat((Float) value);
 							return;
 						}
 						else if (c == Short.class)

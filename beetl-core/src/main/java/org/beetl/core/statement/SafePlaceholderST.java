@@ -62,7 +62,7 @@ public class SafePlaceholderST extends Statement
 		}
 		catch (Exception ex)
 		{
-			//
+
 		}
 
 	}
@@ -70,7 +70,7 @@ public class SafePlaceholderST extends Statement
 	@Override
 	public void infer(InferContext inferCtx)
 	{
-		// do nothing
+		exp.infer(inferCtx);
 	}
 
 }

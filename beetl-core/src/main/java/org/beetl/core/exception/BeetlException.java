@@ -98,6 +98,11 @@ public class BeetlException extends RuntimeException
 	public static final String TAG_NOT_FOUND = "TAG_NOT_FOUND";
 
 	/**
+	 * 虚拟属性未定义错误
+	 */
+	public static final String VIRTUAL_NOT_FOUND = "VIRTUAL_NOT_FOUND";
+
+	/**
 	 * 标签实例化错误
 	 */
 	public static final String TAG_INSTANCE_ERROR = "TAG_INSTANCE_ERROR";

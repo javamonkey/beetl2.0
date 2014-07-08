@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -20,24 +21,6 @@ public class TestUser
 	List friends = new ArrayList();
 	boolean isOk = false;
 	int id = 0;
-
-	private class MyPrivateTest implements PrivateTest
-	{
-
-		@Override
-		public String getName()
-		{
-			return "abc";
-		}
-
-	}
-
-	MyPrivateTest pt = new MyPrivateTest();
-
-	public PrivateTest getPt()
-	{
-		return pt;
-	}
 
 	public boolean isOk()
 	{
@@ -130,6 +113,11 @@ public class TestUser
 	public void setId(int id)
 	{
 		this.id = id;
+	}
+
+	public Object getMap()
+	{
+		return new HashMap();
 	}
 
 	public static TestUser getTestUser()

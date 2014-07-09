@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.beetl</groupId>
 		<artifactId>beetl-parent</artifactId>
-		<version>2.0.9-SNAPSHOT</version>
+		<version>2.0.10-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<packaging>jar</packaging>
@@ -23,6 +23,11 @@
 			<artifactId>nutz</artifactId>
 			<scope>provided</scope>
 			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.3.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>

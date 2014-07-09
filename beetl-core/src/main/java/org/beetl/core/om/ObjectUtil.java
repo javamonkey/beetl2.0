@@ -406,7 +406,7 @@ public class ObjectUtil
 		int i = 0;
 		for (Object para : paras)
 		{
-			parameterType[i++] = para.getClass();
+			parameterType[i++] = para == null ? null : para.getClass();
 		}
 		ObjectMethodMatchConf mf = findMethod(target, methodName, parameterType);
 		if (mf == null)

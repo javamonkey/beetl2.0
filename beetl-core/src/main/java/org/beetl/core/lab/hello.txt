@@ -1,1 +1,1 @@
-${@xxx.ccc.TTT.aa}
+${Strings.isEmpty(map.name)}

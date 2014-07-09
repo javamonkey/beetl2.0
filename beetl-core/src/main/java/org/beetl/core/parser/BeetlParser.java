@@ -1794,8 +1794,8 @@ public class BeetlParser extends Parser {
 		public TextVarContext textVar() {
 			return getRuleContext(TextVarContext.class,0);
 		}
-		public TerminalNode NOT() { return getToken(BeetlParser.NOT, 0); }
 		public TerminalNode RIGHT_TOKEN() { return getToken(BeetlParser.RIGHT_TOKEN, 0); }
+		public TerminalNode NOT() { return getToken(BeetlParser.NOT, 0); }
 		public TerminalNode LEFT_TOKEN() { return getToken(BeetlParser.LEFT_TOKEN, 0); }
 		public TextStatmentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1813,19 +1813,19 @@ public class BeetlParser extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(363); match(LEFT_TOKEN);
-				setState(364); textVar();
-				setState(365); match(RIGHT_TOKEN);
+				setState(364); match(NOT);
+				setState(365); match(LEFT_PAR);
+				setState(366); textVar();
+				setState(367); match(RIGHT_PAR);
+				setState(368); match(RIGHT_TOKEN);
 				}
 				break;
 
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(367); match(LEFT_TOKEN);
-				setState(368); match(NOT);
-				setState(369); match(LEFT_PAR);
-				setState(370); textVar();
-				setState(371); match(RIGHT_PAR);
+				setState(370); match(LEFT_TOKEN);
+				setState(371); textVar();
 				setState(372); match(RIGHT_TOKEN);
 				}
 				break;
@@ -3548,10 +3548,10 @@ public class BeetlParser extends Parser {
 		"\61\3\2\2\2\u0163\u0168\5@!\2\u0164\u0165\7\61\2\2\u0165\u0167\5@!\2\u0166"+
 		"\u0164\3\2\2\2\u0167\u016a\3\2\2\2\u0168\u0166\3\2\2\2\u0168\u0169\3\2"+
 		"\2\2\u0169\63\3\2\2\2\u016a\u0168\3\2\2\2\u016b\u016c\5@!\2\u016c\65\3"+
-		"\2\2\2\u016d\u016e\7\65\2\2\u016e\u016f\58\35\2\u016f\u0170\7\66\2\2\u0170"+
-		"\u0179\3\2\2\2\u0171\u0172\7\65\2\2\u0172\u0173\7(\2\2\u0173\u0174\7\25"+
-		"\2\2\u0174\u0175\58\35\2\u0175\u0176\7\26\2\2\u0176\u0177\7\66\2\2\u0177"+
-		"\u0179\3\2\2\2\u0178\u016d\3\2\2\2\u0178\u0171\3\2\2\2\u0179\67\3\2\2"+
+		"\2\2\2\u016d\u016e\7\65\2\2\u016e\u016f\7(\2\2\u016f\u0170\7\25\2\2\u0170"+
+		"\u0171\58\35\2\u0171\u0172\7\26\2\2\u0172\u0173\7\66\2\2\u0173\u0179\3"+
+		"\2\2\2\u0174\u0175\7\65\2\2\u0175\u0176\58\35\2\u0176\u0177\7\66\2\2\u0177"+
+		"\u0179\3\2\2\2\u0178\u016d\3\2\2\2\u0178\u0174\3\2\2\2\u0179\67\3\2\2"+
 		"\2\u017a\u017d\5@!\2\u017b\u017c\7\61\2\2\u017c\u017e\5:\36\2\u017d\u017b"+
 		"\3\2\2\2\u017d\u017e\3\2\2\2\u017e9\3\2\2\2\u017f\u0182\5N(\2\u0180\u0181"+
 		"\7#\2\2\u0181\u0183\7<\2\2\u0182\u0180\3\2\2\2\u0182\u0183\3\2\2\2\u0183"+

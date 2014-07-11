@@ -35,6 +35,7 @@ package org.beetl.core;
  * @author joelli
  *
  */
+
 public interface TagVarBinding
 {
 

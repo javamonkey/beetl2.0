@@ -1,1 +1,3 @@
-${@xxx.ccc.TTT.aa}
+@ if(@user.getAge()==18){
+@ print("a");
+@}

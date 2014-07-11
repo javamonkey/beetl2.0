@@ -82,15 +82,7 @@ public class ClasspathResourceLoader implements ResourceLoader
 	public ClasspathResourceLoader(String root, String charset)
 	{
 
-		if (root.equals("/"))
-		{
-			this.root = "";
-		}
-		else
-		{
-			this.root = root;
-		}
-
+		this(root);
 		this.charset = charset;
 	}
 
@@ -160,7 +152,16 @@ public class ClasspathResourceLoader implements ResourceLoader
 			}
 			else
 			{
-				this.root = this.root + "/" + resourceMap.get("root");
+
+				if (this.root.endsWith("/"))
+				{
+					this.root = this.root + resourceMap.get("root");
+				}
+				else
+				{
+					this.root = this.root + "/" + resourceMap.get("root");
+				}
+
 			}
 
 		}
@@ -214,6 +215,12 @@ public class ClasspathResourceLoader implements ResourceLoader
 				gt.registerFunction(functionName, fun);
 			}
 		}
+	}
+
+	@Override
+	public boolean exist(String key)
+	{
+		return this.classLoader.getClass().getResource(root + key) != null;
 	}
 
 }

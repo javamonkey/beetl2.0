@@ -27,7 +27,10 @@
  */
 package org.beetl.ext.tag;
 
+import java.util.Map;
+
 import org.beetl.core.Context;
+import org.beetl.core.GeneralVarTagBinding;
 import org.beetl.core.Tag;
 import org.beetl.core.TagFactory;
 import org.beetl.core.TagVarBinding;
@@ -49,6 +52,15 @@ public class HTMLTagVarBindingWrapper extends Tag implements TagVarBinding
 	{
 
 		return ((TagVarBinding) tag).bindVars();
+	}
+
+	public void mapName2Index(Map<String, Integer> map)
+	{
+		if (tag instanceof GeneralVarTagBinding)
+		{
+			GeneralVarTagBinding mapTag = (GeneralVarTagBinding) tag;
+			mapTag.mapName2Index(map);
+		}
 	}
 
 	public void init(Context ctx, Object[] args, Statement st)

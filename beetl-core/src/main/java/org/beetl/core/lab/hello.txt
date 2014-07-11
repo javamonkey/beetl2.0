@@ -1,4 +1,4 @@
 <#tag limit="3" ; value>
-	${value}
+	${value.age}
  </#tag>
  

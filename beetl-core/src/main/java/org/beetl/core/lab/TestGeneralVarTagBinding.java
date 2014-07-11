@@ -8,7 +8,8 @@ public class TestGeneralVarTagBinding extends GeneralVarTagBinding
 	@Override
 	public void render()
 	{
-		for (int i = 0; i < 5; i++)
+		int limit = Integer.parseInt((String) this.getAttributeValue("limit"));
+		for (int i = 0; i < limit; i++)
 		{
 			this.bind("value", i);
 			this.doBodyRender();

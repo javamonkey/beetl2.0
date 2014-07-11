@@ -19,11 +19,11 @@ public class Test
 		Configuration cfg = Configuration.defaultConfiguration();
 		cfg.setDirectByteOutput(true);
 		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
-		cfg.setStatementStart("@");
-		cfg.setStatementEnd(null);
+		cfg.setStatementStart("<%");
+		cfg.setStatementEnd("%>");
 		gt.registerFunctionPackage("strings", new StringUtils());
-		gt.registerTag("tag", TestGeneralVarTagBinding.class);
-		for (int i = 0; i < 2; i++)
+		gt.registerTag("menu", TestGeneralVarTagBinding.class);
+		for (int i = 0; i < 1; i++)
 		{
 
 			Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");

@@ -11,7 +11,7 @@ public class TestGeneralVarTagBinding extends GeneralVarTagBinding
 		int limit = Integer.parseInt((String) this.getAttributeValue("limit"));
 		for (int i = 0; i < limit; i++)
 		{
-			this.bind("value", i);
+			this.bind("value", new TestUser("a"));
 			this.doBodyRender();
 		}
 

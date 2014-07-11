@@ -19,6 +19,8 @@ public class Test
 		Configuration cfg = Configuration.defaultConfiguration();
 		cfg.setDirectByteOutput(true);
 		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
+		cfg.setStatementStart("@");
+		cfg.setStatementEnd(null);
 		gt.registerFunctionPackage("strings", new StringUtils());
 		gt.registerTag("tag", TestGeneralVarTagBinding.class);
 		for (int i = 0; i < 2; i++)

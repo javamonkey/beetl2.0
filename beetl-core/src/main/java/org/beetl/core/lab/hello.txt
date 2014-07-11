@@ -1,1 +1,3 @@
-${Strings.isEmpty(map.name)}
+@ if(@user.getAge()==18){
+@ print("a");
+@}

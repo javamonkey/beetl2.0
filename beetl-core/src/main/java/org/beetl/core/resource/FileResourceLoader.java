@@ -182,4 +182,11 @@ public class FileResourceLoader implements ResourceLoader
 		}
 	}
 
+	@Override
+	public boolean exist(String key)
+	{
+		// TODO Auto-generated method stub
+		return new File(root, key).exists();
+	}
+
 }

@@ -52,6 +52,8 @@ public interface ResourceLoader
 	 */
 	public boolean isModified(Resource key);
 
+	public boolean exist(String key);
+
 	/**
 	 * 关闭ResouceLoader，通常是GroupTemplate关闭的时候也关闭对应的ResourceLoader
 	 */

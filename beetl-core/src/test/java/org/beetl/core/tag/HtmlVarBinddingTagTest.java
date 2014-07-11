@@ -31,7 +31,7 @@ public class HtmlVarBinddingTagTest extends BasicTestCase
 
 		//将默认搜索路径更改到tag目录下
 		gt.registerTag("tagloopbinding", VarBindingLoopSampleTag.class);
-
+		//todo 会多出一个空行
 		Template t = gt.getTemplate("/tag/binding/tagloopbinding_template.html");
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/tag/binding/tagloopbinding_expected.html"), str);

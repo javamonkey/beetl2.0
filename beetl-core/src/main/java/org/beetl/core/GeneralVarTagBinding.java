@@ -74,7 +74,7 @@ public abstract class GeneralVarTagBinding extends Tag implements TagVarBinding
 		name2Index = map;
 	}
 
-	protected void bind(String name, Object value)
+	public void bind(String name, Object value)
 	{
 		if (name2Index == null)
 		{
@@ -86,6 +86,18 @@ public abstract class GeneralVarTagBinding extends Tag implements TagVarBinding
 			throw new RuntimeException();
 		}
 		ctx.vars[index] = value;
+	}
+
+	public Object getAttributeValue(String attrName)
+	{
+		Map map = (Map) this.args[1];
+		return map.get(attrName);
+
+	}
+
+	public String getHtmlTagName()
+	{
+		return (String) this.args[0];
 	}
 
 }

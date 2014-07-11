@@ -1,3 +1,4 @@
-@ if(@user.getAge()==18){
-@ print("a");
-@}
+<#tag limit="3" ; value>
+	${value}
+ </#tag>
+ 

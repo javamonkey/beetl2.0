@@ -223,4 +223,14 @@ public class ClasspathResourceLoader implements ResourceLoader
 		return this.classLoader.getClass().getResource(root + key) != null;
 	}
 
+	public String getCharset()
+	{
+		return charset;
+	}
+
+	public void setCharset(String charset)
+	{
+		this.charset = charset;
+	}
+
 }

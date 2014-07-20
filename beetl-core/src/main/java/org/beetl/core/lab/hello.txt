@@ -1,15 +1,5 @@
-
-  	<#menu plid="12" parentId="-1" level="2" type="1" ; menu,imenu,index>
-    <li class="${index == 0 ? '' : index == 1 ? 'category_two' : 'category_three'} trade_cate_show">
-      <div class="t_search_li">
-          <s class="s_icon s_family"></s>
-          <h2><a href="${menu.name}" title="${menu.name}" target="_blank">${menu.name}</a></h2>
-          <s class="s_icon s_go"></s>
-          <h3>
-          <%debug(imenu.name);%>
-	          <a href="${imenu.name}" title="${imenu.name}" target="_blank"><% print(imenu.name);%></a>
-          </h3>
-      </div>
-    </li>
-    </#menu>
-
+<%
+include("cxxx",
+{a:123}
+){};
+%>

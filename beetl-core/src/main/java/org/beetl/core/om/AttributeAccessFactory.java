@@ -207,8 +207,8 @@ public class AttributeAccessFactory
 			if (result != null)
 			{
 				resetFindResult(findMethod, result);
+				return result;
 			}
-			return result;
 
 		}
 

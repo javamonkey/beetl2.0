@@ -6,7 +6,6 @@ import java.util.Map;
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
 import org.beetl.core.Tag;
-import org.beetl.core.TagFactory;
 import org.beetl.core.exception.BeetlException;
 import org.beetl.ext.tag.HTMLTagVarBindingWrapper;
 
@@ -14,10 +13,10 @@ public class TagVarBindingStatement extends TagStatement
 {
 	VarDefineNode[] varIndexs;
 
-	public TagVarBindingStatement(TagFactory tagFactory, Expression[] paras, Statement block,
-			VarDefineNode[] varDefine, GrammarToken token)
+	public TagVarBindingStatement(String tagName, Expression[] paras, Statement block, VarDefineNode[] varDefine,
+			GrammarToken token)
 	{
-		super(tagFactory, paras, block, token);
+		super(tagName, paras, block, token);
 		this.varIndexs = varDefine;
 	}
 

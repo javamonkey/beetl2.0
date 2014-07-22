@@ -46,14 +46,15 @@ import org.beetl.core.om.ObjectUtil;
  */
 public class TagStatement extends Statement
 {
-	TagFactory tagFactory;
+
+	String tagName;
 	public Expression[] paras;
 	public Statement block;
 
-	public TagStatement(TagFactory tagFactory, Expression[] paras, Statement block, GrammarToken token)
+	public TagStatement(String tagName, Expression[] paras, Statement block, GrammarToken token)
 	{
 		super(token);
-		this.tagFactory = tagFactory;
+		this.tagName = tagName;
 		this.paras = paras;
 		this.block = block;
 
@@ -65,7 +66,8 @@ public class TagStatement extends Statement
 		Tag tag = null;
 		try
 		{
-			tag = this.tagFactory.createTag();
+			TagFactory tagFactory = ctx.gt.getTagFactory(this.tagName);
+			tag = tagFactory.createTag();
 			Object[] args = null;
 			if (paras.length == 0)
 			{

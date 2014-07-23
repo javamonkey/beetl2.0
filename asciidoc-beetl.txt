@@ -1,4 +1,4 @@
-Beetl2.0使用说明书20140703
+Beetl2.0使用说明书20140711
 ===================
 李家智 <xiandafu@126.com>
 :toc:
@@ -10,10 +10,10 @@ Beetl2.0使用说明书20140703
 
 
 == 什么是Beetl ==
-Beetl目前版本是2.0.7，大小650K，相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及及其编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
+Beetl目前版本是2.0.10，大小650K，相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及及其编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
 
 - 功能完备：同主流的java模板引擎相比，Beetl具有绝大多数功能。适用于*各种应用场景*，从对响应速度有很高要求的大网站到功能繁多的CMS管理系统都适合。Beetl本身还具有很多独特功能来完成模板编写和维护，这是其他模板引擎所不具有的。
-- 非常简单：类似Javascript语法和习俗，只要半小时就能通过半学半猜完全掌握用法。拒绝其他模板引擎那种非人性化的语法和习俗。
+- 非常简单：类似Javascript语法和习俗，只要半小时就能通过半学半猜完全掌握用法。拒绝其他模板引擎那种非人性化的语法和习俗。同时也能支持html 标签，使得开发CMS系统比较容易
 - 超高的性能：Beetl 远超过主流java模板引擎性能(引擎性能3-4倍与freemaker，参考附录），而且消耗较低的CPU
 - 易于整合：Beetl能很容易的与各种web框架整合，如Spring MVC，JFinal,Struts,Nutz，Jodd，Servlet等。
 - 支持模板单独开发和测试，即在MVC架构中，即使没有M和C部分，也能开发和测试模板。
@@ -53,8 +53,6 @@ Beetl主页：ibeetl.com
 源码主页：https://github.com/javamonkey/beetl2.0
 
 在线体验和代码分享  http://ibeetl.com:8080/beetlonline/
-
-工作单位：中国电信
 
 如果有任何疑问或者提交bug，可以直接联系我
 
@@ -1129,91 +1127,54 @@ Beetl 也支持HTML tag形式的标签， 区分beetl的html tag 与 标准html 
 - 如果在htmltag目录下找不到同名的模板文件，则beetl再次寻找是否有同名注册的标签函数（关于如何写标签函数，参考高级用法），如果存在，则调用标签函数
 
 
-Beetl 支持将标签实现类（java代码）里的对象作为临时变量，被标签体引用。形式如下：
-
-[source,javascript]
-----------------------------
-
-<#tag attr="" attr1=""; var1,var2 >
-	<%for(item in var1) ..... %>
-<#/tag>
 
 
-----------------------------
+Beetl 支持将标签实现类（java代码）里的对象作为临时变量，被标签体引用。此时需要实现GeneralVarTagBinding 类。
+该类提供俩个个方法
 
-如上例所示 需要在标签的最后的属性定义后面加上分号";" 表示这个标签实现类里的对象将绑定到变量var1,var2 上。如果后面没有变量列表，则默认绑定到
-标签名同名的变量上，如下例子绑定了一个叫customerList的临时变量：
-
-[source,javascript]
-----------------------------
-
-<#customerList attr="" attr1="";  >
-	<%for(item in customerList) ..... %>
-<#/tag>
+-  void bind(String name, Object value)    子类在render方法里调用此类以实现变量绑定
+-  Object getAttributeValue 获得标签的属性 
 
 
-----------------------------
-
-标签实现类同普通标签类一样，但还必须实现TagVarBinding接口：
-
+**********************************************************************
+原有实现接口TagVarBinding来绑定仍然允许使用，未来继续支持，但文档不在体现。因为不如GeneralVarTagBinding实现的优雅
+**********************************************************************
 [source,java]
 ----------------------------
 
-public interface TagVarBinding
-{
-
-	/** 调用此方法获得tag返回的变量，并赋值标签定义的临时变量
-	 * @return
-	 */
-	public Object[] bindVars();
-
-}
-
-
-----------------------------
-
-
-
-
-Beetl引擎将会在初始化Tag后，调用此方法，获取绑定的变量并按照标签的描述，依次赋值给各个变量，如下是一个通常的例子：
-根据客户名查询客户列表
-
-[source,java]
-----------------------------
-
-public class VarBindingSampleTag extends Tag implements TagVarBinding
+public class TagSample extends GeneralVarTagBinding
 {
 
 	@Override
 	public void render()
 	{
-		this.doBodyRender();
+		int limit = Integer.parseInt((String) this.getAttributeValue("limit"));
+		for (int i = 0; i < limit; i++)
+		{
+			this.bind("value", i);
+			this.doBodyRender();
+		}
 
-	}
-
-	@Override
-	public Object[] bindVars()
-	{
-		Map map = (Map) this.args[1];
-		String name = (String)map.get("name")
-		return new Object[]{dao.getCustomerList()};
 	}
 
 }
 
 
+//在某处注册一下标签TagSample
+//gt.registerTag("tag", TagSample.class);
 ----------------------------
-此标签类对应的html tag 如下：
+
+如上例子，render方法将循环渲染标签体limit次，且每次都将value赋值为i。我们再看看模板如何写的
 
 [source,html]
 ----------------------------
-
-<#customerList name="xxx" ; customerList >
-	<%for(item in customerList) ..... %>
-<#/customerList>
-
+ <#tag limit="3" ; value>
+	${value}
+ </#tag>
 
 ----------------------------
+
+类似于常规html标签，需要在标签的最后的属性定义后面加上分号（前面保留一个空格）";" 此分号表示这个是一个需要在标签运行时需要绑定变量的标签。后跟上要绑定的变量列表，如上例只绑定了一个value变量，如果需要绑定多个变量，则用逗号分开，如var1,var2 上。如果后面没有变量列表，只有分号，则默认绑定到标签名同名的变量上. 如果标签有namesapce，则默认绑定订的变量名不包含namespace
 
 
 === 直接调用java方法和属性 ===

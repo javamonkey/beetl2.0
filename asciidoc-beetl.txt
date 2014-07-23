@@ -2285,7 +2285,7 @@ Web集成模块需要向模板提供web标准的变量，做如下说明
 
 - ctxPath  Web应用ContextPath
 
-- servlet  是WebVariable的实例，包含了HTTPSession,HTTPSerlvetRequest,HTTPSerlvetResponse.三个属性，模板中可以通过request.response,sessin 来引用，如 ${serlvet.request.url};
+- servlet  是WebVariable的实例，包含了HTTPSession,HTTPSerlvetRequest,HTTPSerlvetResponse.三个属性，模板中可以通过request.response,session 来引用，如 ${serlvet.request.url};
 
 -  request 中的所有attribute.在模板中可以直接通过attribute name 来引用，如在controller层 request.setAttribute("user",user),则在模板中可以直接用${user.name}
 

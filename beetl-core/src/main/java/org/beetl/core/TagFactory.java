@@ -4,7 +4,7 @@ package org.beetl.core;
  * @author joelli
  *
  */
-public interface TagFactory extends java.io.Serializable
+public interface TagFactory
 {
 	public Tag createTag();
 }

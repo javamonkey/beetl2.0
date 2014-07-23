@@ -374,7 +374,7 @@ public class AntlrProgramBuilder
 
 		else
 		{
-			throw new UnsupportedOperationException();
+			throw new UnsupportedOperationException("未识别，确认模板书写是否正确");
 		}
 
 	}
@@ -584,9 +584,14 @@ public class AntlrProgramBuilder
 			Statement block = parseBlock(blockCtx.statement(), blockCtx);
 
 			this.pbCtx.exitBlock();
-
-			TagStatement tag = new TagVarBindingStatement(this.gt.getTagFactory(id), expList, block, varDefine,
-					this.getBTToken(id, line));
+			TagFactory tf = this.gt.getTagFactory(id);
+			if (tf == null)
+			{
+				BeetlException ex = new BeetlException(BeetlException.TAG_NOT_FOUND);
+				ex.pushToken(this.getBTToken(id, fc.functionNs().getStart().getLine()));
+				throw ex;
+			}
+			TagStatement tag = new TagVarBindingStatement(id, expList, block, varDefine, this.getBTToken(id, line));
 			return tag;
 		}
 		else
@@ -600,7 +605,7 @@ public class AntlrProgramBuilder
 				ex.pushToken(this.getBTToken(id, fc.functionNs().getStart().getLine()));
 				throw ex;
 			}
-			TagStatement tag = new TagStatement(tf, expList, block, this.getBTToken(id, fc.functionNs().getStart()
+			TagStatement tag = new TagStatement(id, expList, block, this.getBTToken(id, fc.functionNs().getStart()
 					.getLine()));
 			return tag;
 		}
@@ -1284,7 +1289,7 @@ public class AntlrProgramBuilder
 		{
 			//变量的属性引用,回到第一个，构造一个变量
 			String varName = ids.get(0).getText();
-			VarRef ref = new VarRef(new VarAttribute[0], false, null, this.getBTToken("varName", ncc.start.getLine()));
+			VarRef ref = new VarRef(new VarAttribute[0], false, null, this.getBTToken(varName, ncc.start.getLine()));
 			this.pbCtx.setVarPosition(varName, ref);
 			insNode = new InstanceNode(ref);
 			i = 1;

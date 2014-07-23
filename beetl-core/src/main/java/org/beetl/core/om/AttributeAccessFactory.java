@@ -28,10 +28,10 @@
 package org.beetl.core.om;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.beetl.core.exception.BeetlException;
 
@@ -50,8 +50,8 @@ public class AttributeAccessFactory
 {
 
 	// 已经为属性生成的访问代理类
-	static Map<String, AttributeAccess> pojoCache = new HashMap<String, AttributeAccess>();
-	static Map<String, AttributeAccess> generalGetCache = new HashMap<String, AttributeAccess>();
+	static Map<String, AttributeAccess> pojoCache = new ConcurrentHashMap<String, AttributeAccess>();
+	static Map<String, AttributeAccess> generalGetCache = new ConcurrentHashMap<String, AttributeAccess>();
 
 	public static MapAA mapAA = new MapAA();
 	public static ListAA listAA = new ListAA();
@@ -93,7 +93,7 @@ public class AttributeAccessFactory
 		}
 
 		String name = (String) attrExp;
-		String className = c + "$_$" + name;
+		String className = c + "_" + name;
 		AttributeAccess aa = pojoCache.get(className);
 		if (aa != null)
 			return aa;
@@ -101,7 +101,7 @@ public class AttributeAccessFactory
 		FindResult pojoResult = findCommonInterfaceOrClass(c, name);
 		if (pojoResult != null)
 		{
-			className = pojoResult.c + "$_$" + name;
+			className = pojoResult.c + "_" + name;
 			aa = pojoCache.get(className);
 			if (aa != null)
 			{
@@ -109,11 +109,17 @@ public class AttributeAccessFactory
 			}
 			else
 			{
-				aa = AttributeCodeGen.createAAClass(pojoResult.c, name, pojoResult.realMethodName,
-						pojoResult.returnType);
+				synchronized (pojoResult.c)
+				{
+					aa = pojoCache.get(className);
+					if (aa != null)
+						return aa;
+					aa = AttributeCodeGen.createAAClass(pojoResult.c, name, pojoResult.realMethodName,
+							pojoResult.returnType);
 
-				pojoCache.put(className, aa);
-				return aa;
+					pojoCache.put(className, aa);
+					return aa;
+				}
 
 			}
 
@@ -121,7 +127,7 @@ public class AttributeAccessFactory
 		else
 		{
 			// General Get
-			className = c + "$_get";
+			className = c + "_get";
 			aa = generalGetCache.get(className);
 			if (aa != null)
 			{
@@ -134,8 +140,16 @@ public class AttributeAccessFactory
 				{
 					Method m = c.getMethod("get", new Class[]
 					{ String.class });
-					aa = AttributeCodeGen.createAAClass(c, "get", "get", Object.class, String.class);
-					generalGetCache.put(className, aa);
+					synchronized (c)
+					{
+						aa = generalGetCache.get(className);
+						if (aa != null)
+							return aa;
+						aa = AttributeCodeGen.createAAClass(c, "get", "get", Object.class, String.class);
+						generalGetCache.put(className, aa);
+						return aa;
+					}
+
 				}
 				catch (Exception e)
 				{
@@ -147,8 +161,6 @@ public class AttributeAccessFactory
 			}
 
 		}
-
-		return aa;
 
 	}
 
@@ -195,8 +207,8 @@ public class AttributeAccessFactory
 			if (result != null)
 			{
 				resetFindResult(findMethod, result);
+				return result;
 			}
-			return result;
 
 		}
 

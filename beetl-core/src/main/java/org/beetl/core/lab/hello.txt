@@ -1,5 +1,5 @@
-<#tag limit="3" ; value>
-	${value.age!user.name}
-	
- </#tag>
- 
+<%
+include("cxxx",
+{a:123}
+){};
+%>

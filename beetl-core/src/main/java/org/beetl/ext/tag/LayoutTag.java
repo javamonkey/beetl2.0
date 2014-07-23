@@ -86,7 +86,7 @@ public class LayoutTag extends Tag
 		{
 			throw new RuntimeException("参数错误，期望child,map");
 		}
-		String layoutFile = BeetlUtil.getRelPath(ctx.getResourceId(), (String) args[0]);
+		String layoutFile = getRelResourceId();
 		Template t = this.gt.getTemplate(layoutFile, this.ctx.getResourceId());
 
 		t.binding(ctx.globalVar);
@@ -112,6 +112,13 @@ public class LayoutTag extends Tag
 			t.binding(defaultLayoutName, content);
 		}
 		t.renderTo(ctx.byteWriter);
+
+	}
+
+	protected String getRelResourceId()
+	{
+
+		return BeetlUtil.getRelPath(ctx.getResourceId(), (String) this.args[0]);
 
 	}
 

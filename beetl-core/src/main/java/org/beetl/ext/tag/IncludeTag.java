@@ -42,7 +42,7 @@ public class IncludeTag extends Tag
 	@Override
 	public void render()
 	{
-		String resourceId = BeetlUtil.getRelPath(ctx.getResourceId(), (String) this.args[0]);
+		String resourceId = getRelResourceId();
 		;
 
 		Template t = gt.getTemplate(resourceId, this.ctx.getResourceId());
@@ -80,43 +80,7 @@ public class IncludeTag extends Tag
 	protected String getRelResourceId()
 	{
 
-		String resourceId = ((String) this.args[0]);
-		String relResourceId = null;
-		if (resourceId != null && resourceId.length() != 0)
-		{
-			char cs = resourceId.charAt(0);
-			if (!(cs == '\\' || cs == '/'))
-			{
-				//相对路径
-				String siblings = this.ctx.getResourceId();
-				int i = siblings.length() - 1;
-				for (; i > 0; i--)
-				{
-					char c = siblings.charAt(i);
-					if (c == '\\' || c == '/')
-					{
-						break;
-					}
-				}
-
-				String parent = siblings.substring(0, i + 1);
-
-				relResourceId = parent.concat(resourceId);
-			}
-			else
-			{
-				relResourceId = resourceId;
-			}
-			if (BeetlUtil.isOutsideOfRoot(relResourceId))
-			{
-				throw new RuntimeException("不能访问外部文件或者模板");
-			}
-			return relResourceId;
-		}
-		else
-		{
-			throw new RuntimeException("资源ID为空，参数错");
-		}
+		return BeetlUtil.getRelPath(ctx.getResourceId(), (String) this.args[0]);
 
 	}
 }

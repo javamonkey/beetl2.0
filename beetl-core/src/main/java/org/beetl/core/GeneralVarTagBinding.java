@@ -27,6 +27,7 @@
  */
 package org.beetl.core;
 
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -72,6 +73,14 @@ public abstract class GeneralVarTagBinding extends Tag implements TagVarBinding
 	public void mapName2Index(Map<String, Integer> map)
 	{
 		name2Index = map;
+	}
+	
+	public void bind(Object... array){
+		Iterator<Integer> it = name2Index.values().iterator();
+		for(int i=0;i<array.length;i++){
+			int index = it.next();
+			ctx.vars[index] = array[i];
+		}
 	}
 
 	public void bind(String name, Object value)

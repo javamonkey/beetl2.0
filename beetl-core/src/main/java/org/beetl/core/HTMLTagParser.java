@@ -354,7 +354,7 @@ class HTMLTagParser
 
 	public static void main(String[] args)
 	{
-		String input = "<#a k='1'>fff</#a>";
+		String input = "<#a k='1'; c>fff</#a>";
 		HTMLTagParser htmltag = new HTMLTagParser(input.toCharArray(), 2, true);
 		htmltag.parser();
 		System.out.println(htmltag.getTagName());

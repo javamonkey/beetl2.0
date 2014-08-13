@@ -1,5 +1,6 @@
 <%
-include("cxxx",
-{a:123}
-){};
+var a = "\ttttt";
+var b = "\"aaaa";
 %>
+${a}
+${b}

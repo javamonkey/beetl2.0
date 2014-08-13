@@ -874,7 +874,7 @@ public class Transformator
 		{
 
 			// String str = "   #:var u='hello';:#  \n  $u$";
-			String str = "<#bbsListTag ;page></#bbsListTag>";
+			String str = "<#bbsListTag ;page , dd ></#bbsListTag>";
 
 			BufferedReader reader = new BufferedReader(p.transform(str));
 			String line = null;

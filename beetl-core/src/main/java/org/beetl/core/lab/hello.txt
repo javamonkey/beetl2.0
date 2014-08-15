@@ -1,6 +1,7 @@
 <%
-var a = "\ttttt";
-var b = "\"aaaa";
+if(footer){
+print("hello");
+}else{
+	print("else");
+}
 %>
-${a}
-${b}

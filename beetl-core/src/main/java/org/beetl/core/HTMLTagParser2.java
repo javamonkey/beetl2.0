@@ -50,6 +50,9 @@ class HTMLTagParser2
 	String varBidingStr = null;
 	//0开始 1 属性name 2 属性value 3 绑定 4 绑定变量 5 结束符号 99 结束
 	int status = 0;
+	//token 起始索引
+	int ts;
+	int te;
 
 	public HTMLTagParser2(char[] cs, int index, boolean isStart)
 	{
@@ -69,42 +72,175 @@ class HTMLTagParser2
 			parserEnd();
 		}
 
-		if (!findTagName())
-			return;
-		while (isStart && next())
-			;
 	}
 
 	public void parserStart()
 	{
-		while (status != 99)
-		{
-			char ch = cs[index];
+		findTagName2();
+		findAttrs();
+		findBindingFlag();
+		findVars();
+		endTag();
 
-			switch (ch)
-			{
-				case ' ':
-				case '\t':
-					index++;
-					continue;
-				default:
-			}
+	}
+
+	public void findTagName2()
+	{
+		stripSpace();
+		StringBuilder tagSb = new StringBuilder();
+		idToken();
+		tagSb.append(this.subString());
+		while (match(':'))
+		{
+
+			idToken();
+			tagSb.append(":").append(this.subString());
 		}
 
 	}
 
-	protected void readTagName()
+	public boolean match(char c)
 	{
-		int start = index;
-		while (start < cs.length)
+		if (cs[index] == c)
 		{
-			char c = cs[start];
-			start++;
-			switch (c)
+			movePoint(1);
+			this.resetPoint();
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	protected void findAttrs()
+	{
+		while (findAttr())
+			;
+	}
+
+	protected boolean findAttr()
+	{
+		this.stripSpace();
+		idToken();
+		String key = this.subString();
+		this.resetPoint();
+		this.stripSpace();
+		if (match('='))
+		{
+			this.stripSpace();
+
+		}
+
+	}
+
+	protected void findAttrValue()
+	{
+
+	}
+
+	protected void findBindingFlag()
+	{
+
+	}
+
+	protected void findVars()
+	{
+
+	}
+
+	protected void endTag()
+	{
+
+	}
+
+	protected void strToken()
+	{
+
+	}
+
+	protected void idToken()
+	{
+		ts = index;
+
+		if (ts > cs.length)
+		{
+			throw new RuntimeException("解析错");
+		}
+		char c = cs[ts];
+
+		if (this.isID(c))
+		{
+			int i = 1;
+			while (ts < cs.length)
 			{
+				c = cs[ts + i];
+				i++;
+				if (isID(c) || isDigit(c))
+				{
+					continue;
+				}
+				else
+				{
+					break;
+				}
 
 			}
+
+			movePoint(i);
+
 		}
+		else
+		{
+			throw new RuntimeException("解析错");
+		}
+
+	}
+
+	protected void stripSpace()
+	{
+		ts = index;
+		int i = 0;
+		while (ts < cs.length)
+		{
+			char c = cs[ts + i];
+			i++;
+			if (c == ' ')
+			{
+				continue;
+			}
+			else
+			{
+				break;
+			}
+
+		}
+		movePoint(i);
+		resetPoint();
+	}
+
+	protected void movePoint(int i)
+	{
+		te = ts + i;
+
+	}
+
+	protected void resetPoint()
+	{
+		index = te;
+		ts = te;
+	}
+
+	protected String subString()
+	{
+		String str = new String(cs, ts, te - ts);
+		resetPoint();
+		return str;
+	}
+
+	protected void find(char[] cs)
+	{
+
 	}
 
 	public void parserEnd()
@@ -203,7 +339,12 @@ class HTMLTagParser2
 		}
 	}
 
-	private boolean next()
+	private boolean isDigit(char c)
+	{
+		return c > '0' && c < '9';
+	}
+
+	private boolean enxt()
 	{
 		StringBuilder keySb = new StringBuilder();
 		StringBuilder expSb = new StringBuilder();

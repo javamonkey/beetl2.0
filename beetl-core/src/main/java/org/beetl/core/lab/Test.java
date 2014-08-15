@@ -1,8 +1,6 @@
 package org.beetl.core.lab;
 
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.beetl.core.Configuration;
@@ -29,9 +27,8 @@ public class Test
 		{
 
 			Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
-			t.binding("user", new TestUser(""));
-			Map map = new HashMap();
-			t.binding("map", map);
+			t.binding("footer", Boolean.TRUE);
+
 			ByteArrayOutputStream bs = new ByteArrayOutputStream();
 			t.renderTo(bs);
 			System.out.println(new String(bs.toByteArray()));

@@ -48,7 +48,7 @@ class HTMLTagParser2
 	Map<String, Character> quatMap = new HashMap<String, Character>();
 	boolean hasVarBinding = false;
 	String varBidingStr = null;
-	//0开始 1 属性name 2 属性value 3 绑定 4 绑定变量 5 结束符号 99 结束
+	// -1非期望， 0开始 1 属性name 2 属性value 3 绑定 4 绑定变量 5 结束符号 99 结束
 	int status = 0;
 	//token 起始索引
 	int ts;
@@ -79,7 +79,11 @@ class HTMLTagParser2
 		findTagName2();
 		findAttrs();
 		findBindingFlag();
-		findVars();
+		if (status == 4)
+		{
+			findVars();
+		}
+
 		endTag();
 
 	}
@@ -115,14 +119,24 @@ class HTMLTagParser2
 
 	protected void findAttrs()
 	{
-		while (findAttr())
-			;
+		findAttr();
+		while (status != -1)
+		{
+			findAttr();
+		}
+		;
 	}
 
-	protected boolean findAttr()
+	protected void findAttr()
 	{
 		this.stripSpace();
 		idToken();
+		if (status == -1)
+		{
+			this.resetPoint();
+			return;
+		}
+
 		String key = this.subString();
 		this.resetPoint();
 		this.stripSpace();
@@ -130,6 +144,10 @@ class HTMLTagParser2
 		{
 			this.stripSpace();
 
+		}
+		else
+		{
+			throw new RuntimeException("没有找到属性");
 		}
 
 	}
@@ -192,7 +210,7 @@ class HTMLTagParser2
 		}
 		else
 		{
-			throw new RuntimeException("解析错");
+			status = -1;
 		}
 
 	}
@@ -248,77 +266,6 @@ class HTMLTagParser2
 
 	}
 
-	private boolean findTagName()
-	{
-		int start = index;
-		boolean hasLetter = false;
-		char c = 0;
-		while (start < cs.length)
-		{
-			c = cs[start];
-			start++;
-			if (isStart)
-			{
-				if (hasLetter)
-				{
-					if (c == ' ')
-					{
-						this.tagName = new String(cs, index, start - index - 1).trim();
-						index = start;
-						return true;
-					}
-					else if (c == '>')
-					{
-						this.tagName = new String(cs, index, start - index - 1).trim();
-						index = start;
-						return false;
-					}
-					else if (c == '/' && cs[start] == '>')
-					{
-						this.tagName = new String(cs, index, start - index - 1);
-						index = start + 1;
-						isEmptyTag = true;
-						return false;
-					}
-					else if (!isID(c))
-					{
-						throw new RuntimeException("解析出错，html tag不合法：" + new String(cs, index, start - index));
-					}
-
-				}
-				else if (c != ' ')
-				{
-					if (!isID(c))
-					{
-						throw new RuntimeException("解析出错，html tag不合法：" + new String(cs, index, start - index));
-					}
-					hasLetter = true;
-				}
-			}
-			else
-			{
-				// </@input>
-				if (hasLetter && c == '>')
-				{
-					this.tagName = new String(cs, index, start - index - 1).trim();
-					index = start;
-					return false;
-				}
-				else if (c != ' ')
-				{
-					if (!isID(c))
-					{
-						throw new RuntimeException("解析出错，html tag不合法：" + new String(cs, index, start - index));
-					}
-					hasLetter = true;
-
-				}
-			}
-
-		}
-		throw new RuntimeException("ERROR");
-	}
-
 	public boolean isEmptyTag()
 	{
 		return this.isEmptyTag;
@@ -342,178 +289,6 @@ class HTMLTagParser2
 	private boolean isDigit(char c)
 	{
 		return c > '0' && c < '9';
-	}
-
-	private boolean enxt()
-	{
-		StringBuilder keySb = new StringBuilder();
-		StringBuilder expSb = new StringBuilder();
-		String key = null;
-		String exp = null;
-		//0 属性 1 属性值采用的双引号或者单引号 2 属性值
-		int status = 0;
-		char quot = '\'';
-
-		while (index < cs.length)
-		{
-			char ch = cs[index];
-			index++;
-			switch (status)
-			{
-				case 0: //开始
-				{
-					if (ch == '>')
-					{
-						return false;
-					}
-					else if (ch == '/')
-					{
-						//emtyp tag
-						status = 4;
-						continue;
-					}
-					else if (ch == ';')
-					{
-						//标签绑定变量
-						status = 5;
-						continue;
-					}
-					else if (ch != '=')
-					{
-						if (ch == ' ')
-						{
-							continue;
-						}
-						else if (!isID(ch))
-						{
-							throw new RuntimeException("解析出错，html tag '" + this.tagName + "' 属性不合法：" + keySb.toString()
-									+ ch);
-						}
-						keySb.append(ch);
-						continue;
-					}
-					else
-					{
-						key = keySb.toString().trim();
-						status = 1;
-						continue;
-					}
-
-				}
-				case 1:
-				{
-					if (ch == '\'')
-					{
-						quot = '\'';
-						status = 2;
-
-					}
-					else if (ch == '\"')
-					{
-						quot = '\"';
-						status = 2;
-					}
-					else if (ch != ' ')
-					{
-						throw new RuntimeException("解析出错，html tag '" + this.tagName + "' 属性不合法：" + keySb.toString());
-
-					}
-					continue;
-				}
-				case 2:
-				{
-					if (ch == quot)
-					{
-						if (cs[index - 1] != '\\')
-						{
-							// 结束
-							exp = expSb.toString().trim();
-							status = 3;
-							continue;
-
-						}
-						else
-						{
-							// escape
-							expSb.append(ch);
-							continue;
-						}
-					}
-					else
-					{
-						expSb.append(ch);
-						continue;
-					}
-				}
-
-				case 3:
-				{
-					this.expMap.put(key, exp);
-					quatMap.put(key, Character.valueOf(quot));
-					// 继续往前，如果碰到了'>'或者'/>'者表示结束，如果碰到其他分空字符，则是下一个属性
-					if (ch == '>')
-					{
-						return false;
-					}
-					else if (ch == '/' && cs[index] == '>')
-					{
-						this.isEmptyTag = true;
-						index = index + 1;
-						return false;
-
-					}
-					else
-					{
-						index--;
-						return true;
-					}
-
-				}
-				case 4:
-				{
-					if (ch == ' ')
-					{
-						continue;
-					}
-					else if (ch == '>')
-					{
-						this.isEmptyTag = true;
-						return false;
-					}
-					else
-					{
-						throw new RuntimeException("解析出错，html tag '" + this.tagName + "' 错误的结尾");
-
-					}
-
-				}
-				case 5:
-				{
-					if (ch == '>')
-					{
-						hasVarBinding = true;
-						this.varBidingStr = keySb.toString().trim();
-						return false;
-					}
-					else if (ch == '/' && cs[index] == '>')
-					{
-						this.isEmptyTag = true;
-						index++;
-						hasVarBinding = true;
-						this.varBidingStr = keySb.toString().trim();
-						return false;
-
-					}
-					else
-					{
-						keySb.append(ch);
-					}
-				}
-
-			}
-		}
-		throw new RuntimeException("解析出错，html tag '" + this.tagName + "' 属性不合法");
-
 	}
 
 	public int getIndex()

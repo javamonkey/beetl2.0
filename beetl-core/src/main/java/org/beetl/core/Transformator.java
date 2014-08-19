@@ -318,6 +318,10 @@ public class Transformator
 
 				String key = entry.getKey();
 				String value = entry.getValue();
+				if (html.crKey.contains(key))
+				{
+					script.append(this.lineSeparator);
+				}
 				script.append(key).append(":");
 				if (!value.startsWith(this.placeholderStart))
 				{
@@ -874,7 +878,7 @@ public class Transformator
 		{
 
 			// String str = "   #:var u='hello';:#  \n  $u$";
-			String str = "<#bbsListTag ;page , dd ></#bbsListTag>";
+			String str = "<#bbsListTag a='1' \n  c='${ kk }'; page , dd >hello ${a}</#bbsListTag>";
 
 			BufferedReader reader = new BufferedReader(p.transform(str));
 			String line = null;

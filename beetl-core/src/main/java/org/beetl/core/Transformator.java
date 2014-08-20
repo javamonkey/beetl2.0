@@ -386,6 +386,7 @@ public class Transformator
 			sb.append(script);
 			this.index = html.getIndex();
 			status = 1;
+			this.lineStatus.setStatment();
 		}
 		catch (RuntimeException re)
 		{
@@ -431,6 +432,7 @@ public class Transformator
 			}
 			this.index = html.getIndex();
 			status = 1;
+			this.lineStatus.setStatment();
 		}
 		catch (RuntimeException re)
 		{
@@ -878,7 +880,7 @@ public class Transformator
 		{
 
 			// String str = "   #:var u='hello';:#  \n  $u$";
-			String str = "<#bbsListTag a='1' \n  c='${ kk }'; page , dd >hello ${a}</#bbsListTag>";
+			String str = "<#bbsListTag a='1' \n  c='${ kk }'; page , dd >\nhello </#bbsListTag>";
 
 			BufferedReader reader = new BufferedReader(p.transform(str));
 			String line = null;

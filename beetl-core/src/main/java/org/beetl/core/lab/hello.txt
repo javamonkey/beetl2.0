@@ -1,7 +1,5 @@
 <%
-if(footer){
-print("hello");
-}else{
-	print("else");
-}
+var len = strutil.length(1234);
 %>
+${len}
+

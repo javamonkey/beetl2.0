@@ -1,7 +1,6 @@
 package org.beetl.core.statement;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashMap;
 
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
@@ -38,7 +37,7 @@ public class TagVarBindingStatement extends TagStatement
 					}
 				}
 
-				Map<String, Integer> indexMap = new HashMap<String, Integer>(this.varIndexs.length);
+				LinkedHashMap<String, Integer> indexMap = new LinkedHashMap<String, Integer>(this.varIndexs.length);
 				for (VarDefineNode node : this.varIndexs)
 				{
 					indexMap.put(node.token.text, node.varIndex);

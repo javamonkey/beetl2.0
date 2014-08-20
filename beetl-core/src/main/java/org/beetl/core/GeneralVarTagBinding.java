@@ -28,11 +28,12 @@
 package org.beetl.core;
 
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * 此类子类将可以作为html 标签使用，除了能实现bindVars来初始化绑定的变量外，允许render方法里通过调用
- * 方法bing(name,value) 来绑定变量，如下是一个例子
+ * 方法bind(name,value) 来绑定变量，或者更常用的是binds(Object... array)如下是一个例子
  * <pre>
  * public class TestGeneralVarTagBinding extends GeneralVarTagBinding
 {
@@ -42,7 +43,7 @@ import java.util.Map;
 	{
 		for (int i = 0; i < 5; i++)
 		{
-			this.bind("value", i);
+			this.bind("value", i);// or this.binds(i);
 			this.doBodyRender();
 		}
 
@@ -61,28 +62,37 @@ import java.util.Map;
  */
 public abstract class GeneralVarTagBinding extends Tag implements TagVarBinding
 {
-	private Map<String, Integer> name2Index = null;
+	private LinkedHashMap<String, Integer> name2Index = null;
 
 	@Override
 	public Object[] bindVars()
 	{
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
-	public void mapName2Index(Map<String, Integer> map)
+	public void mapName2Index(LinkedHashMap<String, Integer> map)
 	{
 		name2Index = map;
 	}
-	
-	public void bind(Object... array){
+
+	/**按照标签变量声明的顺序绑定
+	 * @param array
+	 */
+	public void binds(Object... array)
+	{
 		Iterator<Integer> it = name2Index.values().iterator();
-		for(int i=0;i<array.length;i++){
+		for (int i = 0; i < array.length; i++)
+		{
 			int index = it.next();
 			ctx.vars[index] = array[i];
 		}
 	}
 
+	/** 按照标签申明的变量名字来绑定
+	 * @param name
+	 * @param value
+	 */
 	public void bind(String name, Object value)
 	{
 		if (name2Index == null)

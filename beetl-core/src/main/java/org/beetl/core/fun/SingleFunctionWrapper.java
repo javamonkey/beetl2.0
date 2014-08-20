@@ -104,6 +104,10 @@ public class SingleFunctionWrapper extends FunctionWrapper
 				throw be;
 			}
 		}
+		catch (BeetlException ex)
+		{
+			throw ex;
+		}
 		catch (Exception ex)
 		{
 			BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "调用方法出错 " + this.functionName,

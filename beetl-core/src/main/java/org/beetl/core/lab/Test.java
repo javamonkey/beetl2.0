@@ -13,8 +13,6 @@ public class Test
 	public static void main(String[] args) throws Exception
 	{
 
-		String tt = "\ttt";
-		System.out.println(tt);
 		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader();
 		Configuration cfg = Configuration.defaultConfiguration();
 		cfg.setDirectByteOutput(true);

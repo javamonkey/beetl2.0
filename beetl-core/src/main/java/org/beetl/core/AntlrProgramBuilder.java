@@ -1683,7 +1683,24 @@ public class AntlrProgramBuilder
 					}
 					else
 					{
-						value = Integer.parseInt(strValue);
+						if (strValue.length() < 10)
+						{
+							value = Integer.parseInt(strValue);
+						}
+						else if (strValue.length() > 10)
+						{
+							value = Long.parseLong(strValue);
+						}
+						else if (strValue.compareTo("2147483647") > 0)
+						{
+
+							value = Long.parseLong(strValue);
+						}
+						else
+						{
+							value = Integer.parseInt(strValue);
+						}
+
 					}
 
 					break;

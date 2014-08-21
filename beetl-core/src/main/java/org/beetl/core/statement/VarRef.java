@@ -85,10 +85,11 @@ public class VarRef extends Expression implements IVarIndex
 		{
 			return value;
 		}
-		Object attrExp = null;
-		for (VarAttribute attr : attributes)
+
+		for (int i = 0; i < attributes.length; i++)
 		{
 
+			VarAttribute attr = attributes[i];
 			if (value == null)
 			{
 				if (hasSafe)
@@ -98,7 +99,15 @@ public class VarRef extends Expression implements IVarIndex
 				else
 				{
 					BeetlException be = new BeetlException(BeetlException.NULL, "空指针");
-					be.pushToken(attr.token);
+					if (i == 0)
+					{
+						be.pushToken(this.token);
+					}
+					else
+					{
+						be.pushToken(attributes[i - 1].token);
+					}
+
 					throw be;
 				}
 

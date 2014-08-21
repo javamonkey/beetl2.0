@@ -1,5 +1,5 @@
 <%
-var len = strutil.length(1234);
+
 %>
-${len}
+${user.name}
 

@@ -48,10 +48,11 @@ class HTMLTagParser
 	boolean isEmptyTag = false;
 	Map<String, String> expMap = new LinkedHashMap<String, String>();
 	Map<String, Character> quatMap = new LinkedHashMap<String, Character>();
+	//支持换行，记录属性后是否有换行。
 	List<String> crKey = new ArrayList<String>(1);
 	boolean hasVarBinding = false;
 	String varBidingStr = null;
-	// -1非期望， 0开始 1 属性name 2 属性value 3 绑定 4 绑定变量 5 结束符号 99 结束
+	// -1非期望
 	int status = 0;
 	//token 起始索引
 	int ts;
@@ -88,7 +89,7 @@ class HTMLTagParser
 
 	public void parserStart()
 	{
-		findTagName2();
+		findTagName();
 
 		findAttrs();
 		findBindingFlag();
@@ -101,15 +102,15 @@ class HTMLTagParser
 
 	}
 
-	public void findTagName2()
+	public void findTagName()
 	{
 
-		StringBuilder tagSb = new StringBuilder();
 		idToken();
 		if (status == -1)
 		{
 			throw new RuntimeException("非法标签名");
 		}
+		StringBuilder tagSb = new StringBuilder();
 		tagSb.append(this.subString());
 		this.t_consume();
 		while (match(':'))
@@ -273,8 +274,17 @@ class HTMLTagParser
 		}
 		else
 		{
+			char illegal = cs[index];
+			if (illegal == '\r' || illegal == '\n')
+			{
+				throw new RuntimeException("标签未正确结束:" + this.tagName + ",碰到换行符号");
 
-			throw new RuntimeException("标签未正确结束:" + this.tagName + ",碰到非法符号'" + cs[index] + "'");
+			}
+			else
+			{
+				throw new RuntimeException("标签未正确结束:" + this.tagName + ",碰到非法符号'" + cs[index] + "'");
+
+			}
 		}
 	}
 
@@ -482,7 +492,7 @@ class HTMLTagParser
 
 	public void parserEnd()
 	{
-		this.findTagName2();
+		this.findTagName();
 		if (match('>'))
 		{
 			move(1);

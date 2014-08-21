@@ -26,6 +26,7 @@ public class Test
 
 			Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
 			t.binding("footer", Boolean.TRUE);
+			t.binding("user", null);
 
 			ByteArrayOutputStream bs = new ByteArrayOutputStream();
 			t.renderTo(bs);

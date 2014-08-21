@@ -81,6 +81,8 @@ public class Transformator
 
 	String VCR = "<$__VCR>>";
 	String lineSeparator = System.getProperty("line.separator");
+	//回车换行
+	char[] lineSeparatorCharArray = null;
 	// 设置最多max-line行合并输出，现在不支持
 	static int MAX_LINE = 78;
 	// 转义符号
@@ -239,6 +241,7 @@ public class Transformator
 					}
 				}
 				lineSeparator = cr.toString();
+				this.lineSeparatorCharArray = lineSeparator.toCharArray();
 				// this.textMap.put("__VCR", lineSeparator);
 				return;
 			}
@@ -293,6 +296,7 @@ public class Transformator
 		{
 			StringBuilder script = new StringBuilder();
 			HTMLTagParser html = new HTMLTagParser(cs, index, true);
+			html.cr = this.lineSeparatorCharArray;
 			html.parser();
 			if (html.hasVarBinding)
 			{

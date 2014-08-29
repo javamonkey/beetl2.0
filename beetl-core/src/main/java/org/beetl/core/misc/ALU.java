@@ -650,6 +650,14 @@ public class ALU
 					return b1.equals(b2);
 			}
 		}
+		else if (o1 instanceof Enum)
+		{
+			return (o1.toString()).equals(o2);
+		}
+		else if (o2 instanceof Enum)
+		{
+			return (o2.toString()).equals(o1);
+		}
 
 		return false;
 	}

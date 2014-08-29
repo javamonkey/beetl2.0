@@ -1,5 +1,5 @@
 <%
 
 %>
-${user.name}
+${color=="READ"}
 

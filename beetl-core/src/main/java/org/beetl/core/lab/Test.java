@@ -13,6 +13,7 @@ public class Test
 	public static void main(String[] args) throws Exception
 	{
 
+		System.out.println(System.currentTimeMillis());
 		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader();
 		Configuration cfg = Configuration.defaultConfiguration();
 		cfg.setDirectByteOutput(true);
@@ -27,6 +28,7 @@ public class Test
 			Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
 			t.binding("footer", Boolean.TRUE);
 			t.binding("user", null);
+			t.binding("color", Color.READ);
 
 			ByteArrayOutputStream bs = new ByteArrayOutputStream();
 			t.renderTo(bs);

@@ -92,7 +92,7 @@ public final class ForStatement extends Statement implements IGoto
 		}
 		else
 		{
-			it = IteratorStatus.getIteratorStatus(exp.evaluate(ctx), itType);
+			it = IteratorStatus.getIteratorStatusByType(exp.evaluate(ctx), itType);
 			if (it == null)
 			{
 				BeetlParserException ex = new BeetlParserException(BeetlParserException.COLLECTION_EXPECTED_ERROR);

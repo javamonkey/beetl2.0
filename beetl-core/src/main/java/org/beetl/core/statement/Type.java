@@ -59,6 +59,11 @@ public class Type implements java.io.Serializable
 	public static final Type BodyContentType = new Type(BodyContent.class);
 	public static final Type mapEntryType = new Type(Entry.class);
 
+	public static final Type IntegerType = new Type(Integer.class);
+	public static final Type ShortType = new Type(Short.class);
+	public static final Type FloatType = new Type(Float.class);
+	public static final Type DoubleType = new Type(Double.class);
+
 	public static final Class[] StringPara = new Class[]
 	{ String.class };
 	public static final Class[] GetMethodPara = new Class[]

@@ -78,7 +78,7 @@ public final class IteratorStatus
 		}
 	}
 
-	public static IteratorStatus getIteratorStatus(Object o, int type)
+	public static IteratorStatus getIteratorStatusByType(Object o, int type)
 	{
 		switch (type)
 		{

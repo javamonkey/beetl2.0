@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 import org.beetl.core.Context;
 import org.beetl.core.Listener;
 import org.beetl.core.cache.Cache;
-import org.beetl.core.statement.ForStatement;
 import org.beetl.core.statement.Program;
 import org.beetl.core.statement.VarRef;
 
@@ -31,7 +30,7 @@ public class BasicProgramOptProbe extends Probe
 	{
 		Map<Class, Listener> map = new HashMap<Class, Listener>();
 		map.put(VarRef.class, new VarAttributeNodeListener());
-		map.put(ForStatement.class, new ForNodeListener());
+		//map.put(ForStatement.class, new ForNodeListener());
 		return map;
 
 	}

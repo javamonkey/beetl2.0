@@ -11,7 +11,9 @@ import org.beetl.core.resource.StringTemplateResourceLoader;
 import org.beetl.ext.fn.GetValueFunction;
 
 /**
- * beetl小工具,加载classpath下的beetl.properties 来配置模板引擎，通常用于测试，或者 性能要求不高的场景 * @author
+ * beetl小工具,加载classpath下的beetl.properties 来配置模板引擎，通常用于简单测试，或者性能要求不高的场景 
+ * 不要用于生产环境
+ * * @author
  * 
  * 
  */

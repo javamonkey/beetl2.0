@@ -1,11 +1,11 @@
 package org.beetl.core.lab;
 
-import java.io.ByteArrayOutputStream;
+import java.util.Collections;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
-import org.beetl.core.Template;
 import org.beetl.core.resource.ClasspathResourceLoader;
 
 public class Test
@@ -25,14 +25,17 @@ public class Test
 		for (int i = 0; i < 1; i++)
 		{
 
-			Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
-			t.binding("footer", Boolean.TRUE);
-			t.binding("user", null);
-			t.binding("color", Color.READ);
-
-			ByteArrayOutputStream bs = new ByteArrayOutputStream();
-			t.renderTo(bs);
-			System.out.println(new String(bs.toByteArray()));
+			Map result = gt.runScript("/org/beetl/core/lab/hello.txt", Collections.EMPTY_MAP);
+			System.out.println(result);
+			//			Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
+			//			t.binding("footer", Boolean.TRUE);
+			//			t.binding("user", null);
+			//			t.binding("date1", new Date(10002));
+			//			t.binding("date2", new Date(10002));
+			//
+			//			ByteArrayOutputStream bs = new ByteArrayOutputStream();
+			//			t.renderTo(bs);
+			//			System.out.println(new String(bs.toByteArray()));
 
 		}
 

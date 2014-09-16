@@ -1,4 +1,4 @@
-Beetl2.0使用说明书20140831
+Beetl2.0使用说明书20140916
 ===================
 李家智 <xiandafu@126.com>
 :toc:
@@ -1205,7 +1205,7 @@ var max = @com.xxxx.constants.Order.MAX_NUM;
 
 - 请按照java规范写类名和方法名，属性名。这样便于beetl识别到底调用的是哪个类，哪个方法
 
-- 可以省略包名，只用类名。beetl将搜索包路径找到合适的类（需要设置配置IMPORT_PACKAGE=包名;包名，或者调用Configuration.addPkg)方法具体请参考附件配置文件说明
+- 可以省略包名，只用类名。beetl将搜索包路径找到合适的类（需要设置配置“IMPORT_PACKAGE=包名.;包名.”，包名后需要跟一个“.”, 或者调用Configuration.addPkg)方法具体请参考附件配置文件说明
 
 *************************************************
 
@@ -2285,11 +2285,11 @@ Web集成模块需要向模板提供web标准的变量，做如下说明
 
 - session  提供了session会话，模板通过session["name"],或者session.name 引用session里的变量
 
-- request  标准的HTTPSerlvetRequest,可以在模板里引用request属性（getter），如${request.url}。
+- request  标准的HTTPServletRequest,可以在模板里引用request属性（getter），如${request.url}。
 
 - ctxPath  Web应用ContextPath
 
-- servlet  是WebVariable的实例，包含了HTTPSession,HTTPSerlvetRequest,HTTPSerlvetResponse.三个属性，模板中可以通过request.response,session 来引用，如 ${serlvet.request.url};
+- servlet  是WebVariable的实例，包含了HTTPSession,HTTPServletRequest,HTTPServletResponse.三个属性，模板中可以通过request.response,session 来引用，如 ${Servlet.request.url};
 
 -  request 中的所有attribute.在模板中可以直接通过attribute name 来引用，如在controller层 request.setAttribute("user",user),则在模板中可以直接用${user.name}
 
@@ -2443,7 +2443,7 @@ public class WebRender
 
 
 
-=== Serlvet集成 ===
+=== Servlet集成 ===
 
 只需要在Servlet代码里引用ServletGroupTemplate就能集成Beetl，他提供了一个render(String child, HttpServletRequest request, HttpServletResponse response)方法。例子如下：
 
@@ -2462,7 +2462,7 @@ protected void doGet(HttpServletRequest request,
 
 ----------------------------
 
-ServletGroupTemplate同其他web集成一样，将读取配置文件来配置，如果需要通过代码配置，可以在Serlvet listener里 ServletGroupTemplate.instance().getGroupTemplate()方法获取GroupTemplate
+ServletGroupTemplate同其他web集成一样，将读取配置文件来配置，如果需要通过代码配置，可以在Servlet listener里 ServletGroupTemplate.instance().getGroupTemplate()方法获取GroupTemplate
 
 
 

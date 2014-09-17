@@ -29,8 +29,10 @@ package org.beetl.core;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -309,6 +311,80 @@ public class GroupTemplate
 
 	}
 
+	/** 执行某个脚本，参数是paras，返回的是顶级变量
+	 * @param key
+	 * @param paras
+	 * @return
+	 */
+	public Map runScript(String key, Map<String, Object> paras)
+	{
+		Template t = loadScriptTemplate(key);
+		t.fastBinding(paras);
+		t.render();
+		return getSrirptTopScopeVars(t);
+
+	}
+
+	/**执行某个脚本，参数是paras，返回的是顶级变量 ,如果script有输出，则输出到writer里
+	 * @param key
+	 * @param paras
+	 * @param w
+	 * @return
+	 */
+	public Map runScript(String key, Map<String, Object> paras, Writer w)
+	{
+		Template t = loadScriptTemplate(key);
+		t.fastBinding(paras);
+		t.renderTo(w);
+		return getSrirptTopScopeVars(t);
+
+	}
+
+	private Map getSrirptTopScopeVars(Template t)
+	{
+		Map<String, Integer> idnexMap = t.program.metaData.getTemplateRootScopeIndexMap();
+		Object[] values = t.ctx.vars;
+		Map<String, Object> result = new HashMap<String, Object>();
+		for (Entry<String, Integer> entry : idnexMap.entrySet())
+		{
+			String name = entry.getKey();
+			int index = entry.getValue();
+			Object value = values[index];
+			result.put(name, value);
+		}
+		return result;
+	}
+
+	private Template loadScriptTemplate(String key)
+	{
+		Program program = (Program) this.programCache.get(key);
+		if (program == null)
+		{
+			synchronized (key)
+			{
+				if (program == null)
+				{
+					Resource resource = resourceLoader.getResource(key);
+					program = this.loadScript(resource);
+					this.programCache.set(key, program);
+					return new Template(this, program, this.conf);
+				}
+			}
+		}
+
+		if (resourceLoader.isModified(program.rs))
+		{
+			synchronized (key)
+			{
+				Resource resource = resourceLoader.getResource(key);
+				program = this.loadTemplate(resource);
+				this.programCache.set(key, program);
+			}
+		}
+
+		return new Template(this, program, this.conf);
+	}
+
 	public Template getTemplate(String key, String parent)
 	{
 		Template template = this.getTemplate(key);
@@ -401,6 +477,28 @@ public class GroupTemplate
 		catch (BeetlException ex)
 		{
 			ErrorGrammarProgram ep = new ErrorGrammarProgram(res, this, sf != null ? sf.lineSeparator : null);
+			ex.pushResource(res.id);
+			ep.setException(ex);
+			return ep;
+		}
+
+	}
+
+	private Program loadScript(Resource res)
+	{
+
+		try
+		{
+			Reader scriptReader = res.openReader();
+			Program program = engine.createProgram(res, scriptReader, Collections.EMPTY_MAP,
+					System.getProperty("line.separator"), this);
+			return program;
+
+		}
+
+		catch (BeetlException ex)
+		{
+			ErrorGrammarProgram ep = new ErrorGrammarProgram(res, this, System.getProperty("line.separator"));
 			ex.pushResource(res.id);
 			ep.setException(ex);
 			return ep;

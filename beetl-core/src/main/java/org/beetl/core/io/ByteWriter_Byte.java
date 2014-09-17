@@ -204,15 +204,13 @@ public class ByteWriter_Byte extends ByteWriter
 	{
 
 		byte[] bs = ctx.localBuffer.getByteBuffer(len);
-		for (int i = 0; i < 1; i++)
+		for (int i = 0; i < len; i++)
 		{
-			//	byte bs = (byte) (chars[i] & 0xFF);
-			//this.os.write(bs);
+
 			bs[i] = (byte) chars[i];
 
 		}
 		this.os.write(bs, 0, len);
 
 	}
-
 }

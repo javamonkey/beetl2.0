@@ -126,10 +126,6 @@ public class BeetlException extends RuntimeException
 	public static final String DEFAULT_FORMAT_NOT_FOUND = "DEFAULT_FORMAT_NOT_FOUND";
 
 	/**
-	 * 表达式运行错误
-	 */
-	public static final String EXPRESSION_INVALID = "EXPRESSION_INVALID";
-	/**
 	 * 引用属性错误
 	 */
 	public static final String ATTRIBUTE_INVALID = "ATTRIBUTE_INVALID";
@@ -140,12 +136,8 @@ public class BeetlException extends RuntimeException
 	public static final String CAST_LIST_OR_MAP_ERROR = "CAST_LIST_OR_MAP_ERROR";
 	public static final String NULL = "NULL";
 	/**
-	 * 虚拟属性使用错误
-	 */
-	public static final String VIRTUAL_ATTRIBUTE_NOT_FOUND_EVAL = "VIRTUAL_ATTRIBUTE_NOT_FOUND_EVAL";
-	/**
-	 * 除0错误
-	 */
+	* 除0错误
+	*/
 	public static final String DIV_ZERO_ERROR = "DIV_ZERO_ERROR";
 	/**
 	 * 数组index错
@@ -184,12 +176,9 @@ public class BeetlException extends RuntimeException
 	//对象的属性get方法出错
 	public static final String GET_CALL_ERROR = "GET_CALL_ERROR";
 
-	//断言异常，与assert函数一起使用
-	public static final String ASSERT_ERROR = "ASSERT_ERROR";
-
 	//语法错误
 	public static final String ERROR = "ERROR";
-	public static final String OPT_ERROR = "OPT_ERROR";
+
 	public static final String TOKEN_ERROR = "TOKEN_ERROR";
 	public static final String PARSER_UNKNOW_ERROR = "PARSER_UNKNOW_ERROR";
 	public static final String PARSER_VIABLE_ERROR = "PARSER_VIABLE_ERROR";

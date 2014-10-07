@@ -48,6 +48,7 @@ public class HTMLTagVarBindingWrapper extends Tag implements TagVarBinding
 
 	}
 
+	@Deprecated
 	public Object[] bindVars()
 	{
 

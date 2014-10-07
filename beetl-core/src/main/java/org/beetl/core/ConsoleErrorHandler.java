@@ -45,6 +45,14 @@ public class ConsoleErrorHandler implements ErrorHandler
 	{
 
 		ErrorInfo error = new ErrorInfo(ex);
+
+		if (error.getErrorCode().equals(BeetlException.CLIENT_IO_ERROR_ERROR))
+		{
+			//不输出详细提示信息
+			println(writer, getResourceName(ex.resourceId) + ":" + error.getMsg());
+			return;
+		}
+
 		int line = error.getErrorTokenLine();
 		StringBuilder sb = new StringBuilder(">>").append(error.getType()).append(":")
 				.append(error.getErrorTokenText()).append(" 位于").append(line).append("行").append(" 资源:")

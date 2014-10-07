@@ -40,4 +40,10 @@ public class NativeMethodNode extends NativeNode
 		this.paras = paras;
 	}
 
+	@Override
+	public String getName()
+	{
+		return method + "()";
+	}
+
 }

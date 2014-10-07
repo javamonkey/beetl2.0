@@ -30,7 +30,7 @@ public class Test
 			//			System.out.println(result);
 			Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
 			t.binding("footer", Boolean.TRUE);
-			t.binding("user", null);
+			t.binding("user", new TestUser(null));
 			t.binding("date1", new Date(10002));
 			t.binding("date2", new Date(10002));
 			t.binding("total", 15);

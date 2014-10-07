@@ -56,7 +56,8 @@ public class WebAppResourceLoader extends FileResourceLoader
 	{
 
 		this();
-		this.root = root;
+		if (root != null)
+			this.root = root;
 
 	}
 

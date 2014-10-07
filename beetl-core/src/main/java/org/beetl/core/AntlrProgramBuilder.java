@@ -69,6 +69,7 @@ import org.beetl.core.parser.BeetlParser.ContinueStContext;
 import org.beetl.core.parser.BeetlParser.DirectiveExpContext;
 import org.beetl.core.parser.BeetlParser.DirectiveExpIDListContext;
 import org.beetl.core.parser.BeetlParser.DirectiveStContext;
+import org.beetl.core.parser.BeetlParser.EndContext;
 import org.beetl.core.parser.BeetlParser.ExpressionContext;
 import org.beetl.core.parser.BeetlParser.ExpressionListContext;
 import org.beetl.core.parser.BeetlParser.ForControlContext;
@@ -267,7 +268,14 @@ public class AntlrProgramBuilder
 		}
 		else if (node instanceof ReturnStContext)
 		{
-			ReturnStatement st = new ReturnStatement(null);
+			ReturnStContext rtnCtx = (ReturnStContext) node;
+			ExpressionContext expCtx = rtnCtx.expression();
+			Expression exp = null;
+			if (expCtx != null)
+			{
+				exp = this.parseExpress(expCtx);
+			}
+			ReturnStatement st = new ReturnStatement(exp, null);
 			pbCtx.current.gotoValue = IGoto.RETURN;
 			return st;
 		}
@@ -370,6 +378,11 @@ public class AntlrProgramBuilder
 			SelectStContext selectCtx = (SelectStContext) node;
 
 			return this.parseSelect(selectCtx);
+		}
+
+		else if (node instanceof EndContext)
+		{
+			return null;
 		}
 
 		else

@@ -1,4 +1,6 @@
 <%
-var i = 12;
+ var a = 1;
+ var b = 2;
+ var c = user.age;
+ return a ;
 %>
-${i}

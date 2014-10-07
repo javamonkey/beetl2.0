@@ -42,6 +42,7 @@ import org.beetl.core.cache.Cache;
 import org.beetl.core.cache.ProgramCacheFactory;
 import org.beetl.core.exception.BeetlException;
 import org.beetl.core.exception.HTMLTagParserException;
+import org.beetl.core.exception.ScriptEvalError;
 import org.beetl.core.fun.FunctionWrapper;
 import org.beetl.core.misc.ClassSearch;
 import org.beetl.core.om.ObjectUtil;
@@ -331,12 +332,28 @@ public class GroupTemplate
 	 * @param w
 	 * @return
 	 */
-	public Map runScript(String key, Map<String, Object> paras, Writer w)
+	public Map runScript(String key, Map<String, Object> paras, Writer w) throws ScriptEvalError
 	{
 		Template t = loadScriptTemplate(key);
 		t.fastBinding(paras);
 		t.renderTo(w);
-		return getSrirptTopScopeVars(t);
+		try
+		{
+			Map map = getSrirptTopScopeVars(t);
+			if (map == null)
+			{
+				throw new ScriptEvalError();
+			}
+			return map;
+		}
+		catch (ScriptEvalError ex)
+		{
+			throw ex;
+		}
+		catch (Exception ex)
+		{
+			throw new ScriptEvalError(ex);
+		}
 
 	}
 
@@ -352,6 +369,16 @@ public class GroupTemplate
 			Object value = values[index];
 			result.put(name, value);
 		}
+		if (values == null)
+		{
+			return null;
+		}
+		Object ret = t.ctx.vars[t.ctx.vars.length - 1];
+		if (ret != Context.NOT_EXIST_OBJECT)
+		{
+			result.put("return", ret);
+		}
+
 		return result;
 	}
 
@@ -377,7 +404,7 @@ public class GroupTemplate
 			synchronized (key)
 			{
 				Resource resource = resourceLoader.getResource(key);
-				program = this.loadTemplate(resource);
+				program = this.loadScript(resource);
 				this.programCache.set(key, program);
 			}
 		}
@@ -385,6 +412,28 @@ public class GroupTemplate
 		return new Template(this, program, this.conf);
 	}
 
+	public Template getTemplate(String key, ResourceLoader loader)
+	{
+		return this.getTemplateByLoader(key, loader);
+	}
+
+	/** 得到模板，并指明父模板
+	 * @param key
+	 * @param parent
+	 * @return
+	 */
+	public Template getTemplate(String key, String parent, ResourceLoader loader)
+	{
+		Template template = this.getTemplate(key, loader);
+		template.isRoot = false;
+		return template;
+	}
+
+	/** 得到模板，并指明父模板，通过用于
+	 * @param key
+	 * @param parent
+	 * @return
+	 */
 	public Template getTemplate(String key, String parent)
 	{
 		Template template = this.getTemplate(key);
@@ -399,6 +448,12 @@ public class GroupTemplate
 	 */
 	public Template getTemplate(String key)
 	{
+
+		return getTemplateByLoader(key, this.resourceLoader);
+	}
+
+	private Template getTemplateByLoader(String key, ResourceLoader loader)
+	{
 		key = key.intern();
 		Program program = (Program) this.programCache.get(key);
 		if (program == null)
@@ -407,7 +462,7 @@ public class GroupTemplate
 			{
 				if (program == null)
 				{
-					Resource resource = resourceLoader.getResource(key);
+					Resource resource = loader.getResource(key);
 					program = this.loadTemplate(resource);
 					this.programCache.set(key, program);
 					return new Template(this, program, this.conf);
@@ -419,24 +474,37 @@ public class GroupTemplate
 		{
 			synchronized (key)
 			{
-				Resource resource = resourceLoader.getResource(key);
+				Resource resource = loader.getResource(key);
 				program = this.loadTemplate(resource);
 				this.programCache.set(key, program);
 			}
 		}
 
 		return new Template(this, program, this.conf);
-
 	}
 
-	/** 判断缓存中是否存在模板
-	 * @param key
-	 * @return
-	 */
 	public Program getProgram(String key)
 	{
 		Program program = (Program) this.programCache.get(key);
 		return program;
+	}
+
+	/** 判断是否加载过模板
+	 * @param key
+	 * @return
+	 */
+	public boolean hasTemplate(String key)
+	{
+		Program program = (Program) this.programCache.get(key);
+		return program != null;
+	}
+
+	/** 手工删除加载过的模板
+	 * @param key
+	 */
+	public void removeTemplate(String key)
+	{
+		programCache.remove(key);
 	}
 
 	private Program loadTemplate(Resource res)

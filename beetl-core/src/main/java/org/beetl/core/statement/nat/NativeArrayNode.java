@@ -38,4 +38,10 @@ public class NativeArrayNode extends NativeNode
 		this.exp = expression;
 	}
 
+	@Override
+	public String getName()
+	{
+		return exp.token.text + "[]";
+	}
+
 }

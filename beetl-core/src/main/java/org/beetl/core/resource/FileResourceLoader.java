@@ -45,8 +45,8 @@ public class FileResourceLoader implements ResourceLoader
 	String root = null;
 	String charset = "UTF-8";
 	boolean autoCheck = false;
-	String functionRoot = "functions";
-	String functionSuffix = "html";
+	String functionRoot = "fn";
+	String functionSuffix = "fn";
 	GroupTemplate gt = null;
 
 	public FileResourceLoader()
@@ -149,7 +149,7 @@ public class FileResourceLoader implements ResourceLoader
 		}
 
 		this.autoCheck = Boolean.parseBoolean(resourceMap.get("autoCheck"));
-
+		this.functionRoot = resourceMap.get("functionRoot");
 		File root = new File(this.root, this.functionRoot);
 		this.gt = gt;
 		if (root.exists())

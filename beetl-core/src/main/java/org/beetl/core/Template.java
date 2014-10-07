@@ -220,6 +220,11 @@ public class Template
 		ctx.globalVar = map;
 	}
 
+	public Context getCtx()
+	{
+		return this.ctx;
+	}
+
 	//	public void fastRender(Map map, ByteWriter byteWriter)
 	//	{
 	//		if (ctx.isInit)

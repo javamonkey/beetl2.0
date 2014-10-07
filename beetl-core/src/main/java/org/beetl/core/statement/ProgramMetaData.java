@@ -113,8 +113,9 @@ public class ProgramMetaData implements java.io.Serializable
 
 		// 临时标量所在空间
 		ctx.tempVarStartIndex = tempVarStartIndex;
-		// 分配变量空间
-		ctx.vars = new Object[varIndexSize];
+		// 分配变量空间,最后一个为模板的返回值
+		ctx.vars = new Object[varIndexSize + 1];
+		ctx.vars[varIndexSize] = Context.NOT_EXIST_OBJECT;
 
 		// 将全局变量放到数组
 		putGlobaToArray(ctx);

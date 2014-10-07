@@ -37,8 +37,6 @@ public class NativeCallExpression extends Expression
 	public NativeCallExpression(ClassNode clsNode, NativeNode[] chain, GrammarToken token)
 	{
 		super(token);
-		//可以做某些优化，如提前得到final 属性
-
 		this.clsNode = clsNode;
 		this.chain = chain;
 	}
@@ -47,26 +45,39 @@ public class NativeCallExpression extends Expression
 	{
 		Class targetCls = null;
 		Object targetObj = null;
+		NativeNode lastNode = null;
 		if (insNode != null)
 		{
 			targetObj = insNode.ref.evaluate(ctx);
-			//todo check nullpointer
-			targetCls = targetObj.getClass();
+			if (targetObj != null)
+			{
+				targetCls = targetObj.getClass();
+			}
+
+			lastNode = insNode;
 		}
 		else
 		{
 			targetCls = ctx.gt.loadClassBySimpleName(this.clsNode.cls);
+
 			if (targetCls == null)
 			{
 				BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "该类不存在");
 				be.pushToken(GrammarToken.createToken(clsNode.cls, token.line));
 				throw be;
 			}
+			lastNode = clsNode;
 
 		}
 
 		for (NativeNode node : chain)
 		{
+			if (targetObj == null)
+			{
+				BeetlException be = new BeetlException(BeetlException.NULL);
+				be.pushToken(GrammarToken.createToken(lastNode.getName(), token.line));
+				throw be;
+			}
 			if (node instanceof NativeAtrributeNode)
 			{
 				String attr = ((NativeAtrributeNode) node).attribute;
@@ -208,6 +219,8 @@ public class NativeCallExpression extends Expression
 					throw be;
 				}
 			}
+
+			lastNode = node;
 
 		}
 		return targetObj;

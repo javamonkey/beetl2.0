@@ -32,12 +32,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.beetl.core.BodyContent;
+import org.beetl.core.Context;
 import org.beetl.core.Tag;
 import org.beetl.core.TagFactory;
 import org.beetl.core.Template;
+import org.beetl.core.statement.Statement;
 
 public class HTMLTagSupportWrapper extends Tag
 {
+
+	protected String tagRoot = null;
+	protected String tagSuffix = null;
 
 	@Override
 	public void render()
@@ -68,7 +73,9 @@ public class HTMLTagSupportWrapper extends Tag
 	protected String getHtmlTagResourceId(String child)
 	{
 		String path = child.replace(':', File.separatorChar);
-		return "/htmltag/" + path + ".tag";
+		StringBuilder sb = new StringBuilder("/");
+		sb.append(this.tagRoot).append("/").append(path).append(".").append(this.tagSuffix);
+		return sb.toString();
 	}
 
 	protected void callHtmlTag(String path)
@@ -103,6 +110,13 @@ public class HTMLTagSupportWrapper extends Tag
 		tag.init(ctx, args, bs);
 		tag.render();
 
+	}
+
+	public void init(Context ctx, Object[] args, Statement st)
+	{
+		super.init(ctx, args, st);
+		tagRoot = ctx.gt.getConf().getResourceMap().get("tagRoot");
+		tagSuffix = ctx.gt.getConf().getResourceMap().get("tagSuffix");
 	}
 
 }

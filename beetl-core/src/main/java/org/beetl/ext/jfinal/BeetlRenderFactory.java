@@ -17,7 +17,19 @@ public class BeetlRenderFactory implements IMainRenderFactory
 
 	public BeetlRenderFactory()
 	{
+		init(null);
 
+	}
+
+	public BeetlRenderFactory(String templateRoot)
+	{
+
+		init(templateRoot);
+
+	}
+
+	private void init(String root)
+	{
 		if (groupTemplate != null)
 		{
 			groupTemplate.close();
@@ -27,7 +39,7 @@ public class BeetlRenderFactory implements IMainRenderFactory
 		{
 
 			Configuration cfg = Configuration.defaultConfiguration();
-			WebAppResourceLoader resourceLoader = new WebAppResourceLoader();
+			WebAppResourceLoader resourceLoader = new WebAppResourceLoader(root);
 			groupTemplate = new GroupTemplate(resourceLoader, cfg);
 
 		}
@@ -35,7 +47,6 @@ public class BeetlRenderFactory implements IMainRenderFactory
 		{
 			throw new RuntimeException("加载GroupTemplate失败", e);
 		}
-
 	}
 
 	public Render getRender(String view)

@@ -97,7 +97,7 @@ public class TestUser
 
 	public List getFriends()
 	{
-		return friends;
+		return null;
 	}
 
 	public void setFriends(List friends)

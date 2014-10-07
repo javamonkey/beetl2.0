@@ -12,9 +12,6 @@ public class HtmlTagTest extends BasicTestCase
 	public void testHtmlTag() throws Exception
 	{
 
-		//将默认搜索路径更改到tag目录下
-		gt.registerTag("htmltag", MyHTMLTagSupportWrapper.class);
-
 		Template t = gt.getTemplate("/tag/html_template.html");
 		this.bind(t, "list", User.getTestUsers());
 		String str = t.render();
@@ -30,9 +27,6 @@ public class HtmlTagTest extends BasicTestCase
 	@Test
 	public void testNS() throws Exception
 	{
-
-		//将默认搜索路径更改到tag目录下
-		gt.registerTag("htmltag", MyHTMLTagSupportWrapper.class);
 
 		Template t = gt.getTemplate("/tag/html2_template.html");
 		this.bind(t, "list", User.getTestUsers());
@@ -50,9 +44,6 @@ public class HtmlTagTest extends BasicTestCase
 	public void testMutilTagInSamePage() throws Exception
 	{
 
-		//将默认搜索路径更改到tag目录下
-		gt.registerTag("htmltag", MyHTMLTagSupportWrapper.class);
-
 		Template t = gt.getTemplate("/tag/html3_template.html");
 		this.bind(t, "list", User.getTestUsers());
 		String str = t.render();
@@ -68,9 +59,6 @@ public class HtmlTagTest extends BasicTestCase
 	@Test
 	public void testEmptyTag() throws Exception
 	{
-
-		//将默认搜索路径更改到tag目录下
-		gt.registerTag("htmltag", MyHTMLTagSupportWrapper.class);
 
 		Template t = gt.getTemplate("/tag/html4_template.html");
 		this.bind(t, "list", User.getTestUsers());

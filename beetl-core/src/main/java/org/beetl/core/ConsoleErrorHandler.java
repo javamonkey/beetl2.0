@@ -49,8 +49,13 @@ public class ConsoleErrorHandler implements ErrorHandler
 		if (error.getErrorCode().equals(BeetlException.CLIENT_IO_ERROR_ERROR))
 		{
 			//不输出详细提示信息
-			println(writer, getResourceName(ex.resourceId) + ":" + error.getMsg());
+			println(writer, "客户端IO异常:" + getResourceName(ex.resourceId) + ":" + error.getMsg());
+			if (ex.getCause() != null)
+			{
+				this.printThrowable(writer, ex.getCause());
+			}
 			return;
+
 		}
 
 		int line = error.getErrorTokenLine();

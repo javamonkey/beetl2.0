@@ -72,4 +72,20 @@ public class HtmlTagTest extends BasicTestCase
 
 	}
 
+	@Test
+	public void testJavaTag() throws Exception
+	{
+
+		gt.registerTag("simpleTag", SimpleHtmlTag.class);
+		Template t = gt.getTemplate("/tag/html5_template.html");
+
+		String str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/tag/html5_expected.html"), str);
+
+		t = gt.getTemplate("/tag/html5_template.html");
+		str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/tag/html5_expected.html"), str);
+
+	}
+
 }

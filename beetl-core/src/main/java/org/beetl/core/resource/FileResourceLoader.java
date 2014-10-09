@@ -45,7 +45,7 @@ public class FileResourceLoader implements ResourceLoader
 	String root = null;
 	String charset = "UTF-8";
 	boolean autoCheck = false;
-	String functionRoot = "fn";
+	String functionRoot = "funtion";
 	String functionSuffix = "fn";
 	GroupTemplate gt = null;
 

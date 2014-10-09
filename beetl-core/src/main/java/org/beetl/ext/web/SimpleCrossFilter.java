@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.beetl.core.GroupTemplate;
+import org.beetl.core.exception.ScriptEvalError;
 
 public abstract class SimpleCrossFilter implements Filter
 {
@@ -41,8 +42,17 @@ public abstract class SimpleCrossFilter implements Filter
 			WebRender render = new WebRender(gt);
 
 			String commonFile = getCommonValueFile(req, rsp);
-			Map commonData = gt.runScript(commonFile, null);
-			Map data = gt.runScript(valueFile, null);
+			Map commonData = null, data = null;
+			try
+			{
+				commonData = gt.runScript(commonFile, null);
+				data = gt.runScript(valueFile, null);
+			}
+			catch (ScriptEvalError e)
+			{
+				throw new RuntimeException("伪模型脚本有错！");
+			}
+
 			commonData.putAll(data);
 			Iterator it = commonData.keySet().iterator();
 			while (it.hasNext())

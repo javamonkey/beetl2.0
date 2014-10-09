@@ -317,12 +317,9 @@ public class GroupTemplate
 	 * @param paras
 	 * @return
 	 */
-	public Map runScript(String key, Map<String, Object> paras)
+	public Map runScript(String key, Map<String, Object> paras) throws ScriptEvalError
 	{
-		Template t = loadScriptTemplate(key);
-		t.fastBinding(paras);
-		t.render();
-		return getSrirptTopScopeVars(t);
+		return this.runScript(key, paras, null);
 
 	}
 
@@ -334,9 +331,31 @@ public class GroupTemplate
 	 */
 	public Map runScript(String key, Map<String, Object> paras, Writer w) throws ScriptEvalError
 	{
-		Template t = loadScriptTemplate(key);
+		return this.runScript(key, paras, w, this.resourceLoader);
+	}
+
+	/**
+	 * 执行某个脚本，参数是paras，返回的是顶级变量 
+	 * @param key
+	 * @param paras
+	 * @param w
+	 * @param loader 额外的资源管理器就在脚本
+	 * @return
+	 * @throws ScriptEvalError
+	 */
+	public Map runScript(String key, Map<String, Object> paras, Writer w, ResourceLoader loader) throws ScriptEvalError
+	{
+		Template t = loadScriptTemplate(key, loader);
 		t.fastBinding(paras);
-		t.renderTo(w);
+		if (w == null)
+		{
+			t.render();
+		}
+		else
+		{
+			t.renderTo(w);
+		}
+
 		try
 		{
 			Map map = getSrirptTopScopeVars(t);
@@ -382,7 +401,7 @@ public class GroupTemplate
 		return result;
 	}
 
-	private Template loadScriptTemplate(String key)
+	private Template loadScriptTemplate(String key, ResourceLoader loader)
 	{
 		Program program = (Program) this.programCache.get(key);
 		if (program == null)
@@ -391,7 +410,7 @@ public class GroupTemplate
 			{
 				if (program == null)
 				{
-					Resource resource = resourceLoader.getResource(key);
+					Resource resource = loader.getResource(key);
 					program = this.loadScript(resource);
 					this.programCache.set(key, program);
 					return new Template(this, program, this.conf);
@@ -403,7 +422,7 @@ public class GroupTemplate
 		{
 			synchronized (key)
 			{
-				Resource resource = resourceLoader.getResource(key);
+				Resource resource = loader.getResource(key);
 				program = this.loadScript(resource);
 				this.programCache.set(key, program);
 			}
@@ -412,6 +431,11 @@ public class GroupTemplate
 		return new Template(this, program, this.conf);
 	}
 
+	/**使用额外的资源加载器加载模板
+	 * @param key
+	 * @param loader 
+	 * @return
+	 */
 	public Template getTemplate(String key, ResourceLoader loader)
 	{
 		return this.getTemplateByLoader(key, loader);

@@ -27,23 +27,163 @@
  */
 package org.beetl.ext.spring;
 
-import org.springframework.web.servlet.view.AbstractTemplateViewResolver;
-import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
+import java.nio.charset.Charset;
 
-public class BeetlSpringViewResolver extends AbstractTemplateViewResolver
+import org.beetl.core.GroupTemplate;
+import org.beetl.core.ResourceLoader;
+import org.beetl.core.resource.ClasspathResourceLoader;
+import org.beetl.core.resource.FileResourceLoader;
+import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.NoUniqueBeanDefinitionException;
+import org.springframework.web.servlet.view.AbstractTemplateViewResolver;
+import org.springframework.web.servlet.view.AbstractUrlBasedView;
+
+/**
+ * Beetl ViewResolver视图解析器
+ *
+ * @author Chen Rui
+ */
+public class BeetlSpringViewResolver extends AbstractTemplateViewResolver implements InitializingBean, BeanNameAware
 {
-	public BeetlSpringViewResolver()
+	/* ----- ----- ----- ----- 其他方法 ----- ----- ----- ----- */
+	/**
+	 * 这个GroupTemplate的BeanName
+	 */
+	private String beanName = null;
+
+	/**
+	 * 这个GroupTemplate的BeanName
+	 *
+	 * @param beanName
+	 */
+	@Override
+	public void setBeanName(String beanName)
 	{
-		setViewClass(requiredViewClass());
+		this.beanName = beanName;
 	}
 
 	/**
-	 * Requires {@link FreeMarkerView}.
+	 * 视图使用的Beetl GroupTemplate，如果不设置，取上下文中唯一的GroupTemplate对象
 	 */
+	private GroupTemplate groupTemplate = null;
 
-	protected Class requiredViewClass()	{
+	/**
+	 * 视图使用的Beetl GroupTemplate，如果不设置，取上下文中唯一的GroupTemplate对象
+	 *
+	 * @param groupTemplate
+	 *            视图使用的Beetl GroupTemplate，由ViewResolver注入，如果不设置，取上下文中唯一的GroupTemplate对象
+	 */
+	public void setGroupTemplate(GroupTemplate groupTemplate)
+	{
+		this.groupTemplate = groupTemplate;
+	}
 
-		
+	/* ----- ----- ----- ----- 构造函数 ----- ----- ----- ----- */
+	/**
+	 * 缺省构造函数
+	 */
+	public BeetlSpringViewResolver()
+	{
+		setViewClass(BeetlSpringView.class);
+	}
+
+	/**
+	 * 初始化检查GroupTemplate<br>
+	 * 实现InitializingBean，在Bean IOC注入结束后自动调用
+	 *
+	 * @throws NoSuchBeanDefinitionException
+	 *             如果未设置GroupTemplate，且Spring上下文中也没有唯一的GroupTemplate bean
+	 * @throws NoUniqueBeanDefinitionException
+	 *             如果未设置GroupTemplate，且Spring上下文中有多个GroupTemplate bean
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 */
+	@Override
+	public void afterPropertiesSet() throws NoSuchBeanDefinitionException, NoUniqueBeanDefinitionException,
+			SecurityException, NoSuchFieldException
+	{
+		// 如果未指定groupTemplate，取上下文中唯一的GroupTemplate对象
+		if (groupTemplate == null)
+		{
+			groupTemplate = getApplicationContext().getBean(GroupTemplate.class);
+		}
+
+		// 如果没有设置ContentType，设置个默认的
+		if (getContentType() == null)
+		{
+			String charset = null;
+			ResourceLoader resourceLoader = groupTemplate.getResourceLoader();
+
+			// 取ResourceLoader的charset
+			if (resourceLoader instanceof FileResourceLoader)
+			{
+				charset = ((FileResourceLoader) resourceLoader).getCharset();
+			}
+			else if (resourceLoader instanceof ClasspathResourceLoader)
+			{
+				charset = ((ClasspathResourceLoader) resourceLoader).getCharset();
+			}
+
+			// 如果仍然取不到charset，取当前上下文的charset
+			if (charset == null)
+			{
+				charset = Charset.defaultCharset().name();
+			}
+
+			setContentType("text/html;charset=" + charset);
+		}
+
+	}
+
+	/* ----- ----- ----- ----- 其他方法 ----- ----- ----- ----- */
+	/**
+	 * 视图类
+	 *
+	 * @return
+	 */
+	@Override
+	protected Class<BeetlSpringView> requiredViewClass()
+	{
 		return BeetlSpringView.class;
+	}
+
+	/**
+	 * 实例化GroupTemplate
+	 *
+	 * @param viewName
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	protected AbstractUrlBasedView buildView(String viewName) throws Exception
+	{
+		BeetlSpringView beetlView = (BeetlSpringView) super.buildView(viewName);
+		// 为视图对象注入GroupTemplate
+		beetlView.setGroupTemplate(groupTemplate);
+		return beetlView;
+	}
+
+	/**
+	 * 生成重定向请求，这类请求不会产生BeetlView而是通过Servlet自身机制重定向到其他url资源
+	 *
+	 * @param url
+	 * @return
+	 */
+	public static String redirect(String url)
+	{
+		return "redirect:" + url;
+	}
+
+	/**
+	 * 生成转发请求，这类请求不会产生BeetlView而是通过Servlet自身机制转发到其他url资源
+	 *
+	 * @param url
+	 * @return
+	 */
+	public static String forward(String url)
+	{
+		return "forward:" + url;
 	}
 }

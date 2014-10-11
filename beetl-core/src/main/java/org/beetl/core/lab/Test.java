@@ -1,6 +1,7 @@
 package org.beetl.core.lab;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +35,7 @@ public class Test
 			t.binding("date1", new Date(10002));
 			t.binding("date2", new Date(10002));
 			t.binding("total", 15);
+			t.binding("list", new ArrayList());
 
 			ByteArrayOutputStream bs = new ByteArrayOutputStream();
 			t.renderTo(bs);

@@ -28,6 +28,7 @@
 package org.beetl.ext.spring;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
@@ -37,9 +38,9 @@ import javax.servlet.ServletContext;
 import org.beetl.core.Configuration;
 import org.beetl.core.ErrorHandler;
 import org.beetl.core.GroupTemplate;
-import org.beetl.core.Resource;
 import org.beetl.core.ResourceLoader;
 import org.beetl.core.resource.WebAppResourceLoader;
+import org.springframework.core.io.Resource;
 import org.springframework.web.context.ServletContextAware;
 
 /**
@@ -65,7 +66,6 @@ public class BeetlGroupUtilConfiguration extends AbstractGroupTemplateConfig imp
 	protected String root = "/";
 	protected String webPath = null;
 	protected String suffix = "";
-
 	/**
 	 * 配置属性
 	 */
@@ -86,6 +86,23 @@ public class BeetlGroupUtilConfiguration extends AbstractGroupTemplateConfig imp
 	 * 共享变量
 	 */
 	protected Map<String, Object> sharedVars = null;
+
+	public void init()
+	{
+		try
+		{
+			initGroupTemplate();
+
+			config(groupTemplate);
+
+			initOther();
+
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException("加载GroupTemplate失败", e);
+		}
+	}
 
 	/**
 	 * 配置属性
@@ -140,26 +157,10 @@ public class BeetlGroupUtilConfiguration extends AbstractGroupTemplateConfig imp
 	public void setServletContext(ServletContext sc)
 	{
 
+		//如果没有指定ResourceLoader，将使用WebResourceLoader,然后此为根目录
 		webPath = sc.getRealPath("/");
 		root = webPath + root;
 
-	}
-
-	public void init()
-	{
-		try
-		{
-			initGroupTemplate();
-
-			config(groupTemplate);
-
-			initOther();
-
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException("加载GroupTemplate失败", e);
-		}
 	}
 
 	private void initGroupTemplate() throws IOException
@@ -173,13 +174,42 @@ public class BeetlGroupUtilConfiguration extends AbstractGroupTemplateConfig imp
 		}
 		else
 		{
+
 			Properties properties = new Properties();
-			for (Enumeration<?> keys = configProperties.propertyNames(); keys.hasMoreElements();)
+			if (configFileResource != null)
 			{
-				String key = (String) keys.nextElement();
-				String value = configProperties.getProperty(key);
-				properties.setProperty(key, value);
+				InputStream in = null;
+				try
+				{
+					// 如果指定了配置文件，先加载配置文件
+
+					in = configFileResource.getInputStream();
+					properties.load(in);
+				}
+				catch (IOException ex)
+				{
+					throw ex;
+				}
+				finally
+				{
+					if (in != null)
+					{
+						in.close();
+						in = null;
+					}
+				}
 			}
+
+			if (configProperties != null)
+			{
+				for (Enumeration<?> keys = configProperties.propertyNames(); keys.hasMoreElements();)
+				{
+					String key = (String) keys.nextElement();
+					String value = configProperties.getProperty(key);
+					properties.setProperty(key, value);
+				}
+			}
+
 			// 使用配置项配置properties
 			configuration = new Configuration(properties);
 		}

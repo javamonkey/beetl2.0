@@ -1,0 +1,10 @@
+<%
+var i= para0;
+if(i==0){
+	return ;
+}else{
+	print(i);
+	i=i-1;
+	recur(i);
+}
+%>

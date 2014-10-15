@@ -2,6 +2,7 @@ package org.beetl.core.statement;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
@@ -72,18 +73,18 @@ public class NativeCallExpression extends Expression
 
 		for (NativeNode node : chain)
 		{
-			if (targetObj == null)
-			{
-				BeetlException be = new BeetlException(BeetlException.NULL);
-				be.pushToken(GrammarToken.createToken(lastNode.getName(), token.line));
-				throw be;
-			}
+
 			if (node instanceof NativeAtrributeNode)
 			{
 				String attr = ((NativeAtrributeNode) node).attribute;
 				try
 				{
+					checkNull(targetCls, lastNode);
 					Field f = targetCls.getField(attr);
+					if (!Modifier.isStatic(f.getModifiers()))
+					{
+						checkNull(targetObj, lastNode);
+					}
 					targetObj = f.get(targetObj);
 					targetCls = f.getType();
 
@@ -116,6 +117,7 @@ public class NativeCallExpression extends Expression
 			}
 			else if (node instanceof NativeArrayNode)
 			{
+				checkNull(targetCls, lastNode);
 				if (!targetCls.isArray())
 				{
 					BeetlException be = new BeetlException(BeetlException.ARRAY_TYPE_ERROR);
@@ -174,6 +176,7 @@ public class NativeCallExpression extends Expression
 					}
 					else
 					{
+						checkNull(targetCls, lastNode);
 						targetObj = ObjectUtil.invokeStatic(targetCls, method, args);
 					}
 
@@ -335,4 +338,15 @@ public class NativeCallExpression extends Expression
 
 	}
 
+	private void checkNull(Object o, NativeNode node)
+	{
+		if (o == null)
+		{
+
+			BeetlException be = new BeetlException(BeetlException.NULL);
+			be.pushToken(GrammarToken.createToken(node.getName(), token.line));
+			throw be;
+
+		}
+	}
 }

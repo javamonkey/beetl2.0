@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
 
 public class ScriptTest extends BasicTestCase
 {
-	//@Test
+	@Test
 	public void testFileFunctionRetrun() throws Exception
 	{
 

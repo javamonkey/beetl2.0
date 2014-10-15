@@ -26,7 +26,7 @@ public class LayoutTagTest extends BasicTestCase
 		//
 	}
 
-	//@Test
+	@Test
 	public void testLayoutInclude() throws Exception
 	{
 

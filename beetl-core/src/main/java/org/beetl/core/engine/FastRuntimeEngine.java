@@ -16,9 +16,10 @@ public class FastRuntimeEngine extends DefaultTemplateEngine
 	{
 
 		Program program = super.createProgram(rs, reader, textMap, cr, gt);
-		Probe nextFilter = new BasicProgramOptProbe(program);
+		Probe nextFilter = new BasicProgramOptProbe();
 		Probe filter = new TypeBindingProbe(program, nextFilter);
 		FilterProgram filterProgram = new FilterProgram(program, filter);
+		nextFilter.setProgram(filterProgram);
 		return filterProgram;
 	}
 

@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 import org.beetl.core.Context;
 import org.beetl.core.Listener;
 import org.beetl.core.cache.Cache;
-import org.beetl.core.statement.Program;
 import org.beetl.core.statement.VarRef;
 
 /**
@@ -19,12 +18,6 @@ public class BasicProgramOptProbe extends Probe
 {
 
 	Cache cache = null;
-
-	public BasicProgramOptProbe(Program program)
-	{
-		super(program);
-
-	}
 
 	protected Map<Class, Listener> initProbeNode()
 	{

@@ -211,7 +211,7 @@ public class CompositeResourceLoader implements ResourceLoader
 		public boolean isModified()
 		{
 
-			return false;
+			return true;
 		}
 	}
 }

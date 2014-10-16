@@ -32,13 +32,8 @@ public class TypeBindingProbe extends Probe
 		super();
 		this.setProgram(p);
 		// 一个新的copy，用于分析
-		ProgramMetaData metaData = p.metaData.copy();
-		Program copyProgram = new Program();
-		copyProgram.metaData = metaData;
-		copyProgram.id = p.id;
-		copyProgram.gt = p.gt;
-		copyProgram.rs = p.rs;
-		this.program = copyProgram;
+		ProgramMetaData metaData = p.metaData;
+
 		this.nextFilter = nextFilter;
 		for (Entry<String, Integer> entry : this.program.metaData.globalIndexMap.entrySet())
 		{
@@ -83,6 +78,17 @@ public class TypeBindingProbe extends Probe
 			}
 		}
 
+	}
+
+	public TypeBindingProbe copy()
+	{
+
+		return this;
+	}
+
+	public Program getCopyProgram()
+	{
+		return this.program;
 	}
 
 	@Override

@@ -48,7 +48,7 @@ public class ErrorInfo
 	String errorCode = null;
 	List<String> resourceCallStack = null;
 	List<GrammarToken> tokenCallStack = null;
-	static Map<String, String> errorLocalMap = new HashMap<String, String>();
+	public static Map<String, String> errorLocalMap = new HashMap<String, String>();
 	static
 	{
 		errorLocalMap.put(BeetlException.ERROR, "错误");
@@ -64,7 +64,7 @@ public class ErrorInfo
 		errorLocalMap.put(BeetlException.NATIVE_CALL_INVALID,
 				concat("本地调用不合法，找不到类或者方法", BeetlException.NATIVE_CALL_INVALID));
 		errorLocalMap.put(BeetlException.NATIVE_CALL_EXCEPTION,
-				concat("调用Java方法抛出了异常", BeetlException.NATIVE_CALL_EXCEPTION));
+				concat("调用方法抛出了异常", BeetlException.NATIVE_CALL_EXCEPTION));
 		errorLocalMap.put(BeetlException.NATIVE_SECUARITY_EXCEPTION,
 				concat("安全管理器不允许的本地调用", BeetlException.NATIVE_SECUARITY_EXCEPTION));
 		errorLocalMap.put(BeetlException.FORMAT_NOT_FOUND, concat("未注册的格式化函数", BeetlException.FORMAT_NOT_FOUND));

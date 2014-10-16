@@ -9,12 +9,13 @@ Beetl2.0使用说明书20140831
 
 
 
+
 == 什么是Beetl ==
-Beetl目前版本是2.0.12，大小656K，相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及及其编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
+Beetl目前版本是2.1.0，大小660K，相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
 
 - 功能完备：同主流的java模板引擎相比，Beetl具有绝大多数功能。适用于*各种应用场景*，从对响应速度有很高要求的大网站到功能繁多的CMS管理系统都适合。Beetl本身还具有很多独特功能来完成模板编写和维护，这是其他模板引擎所不具有的。
 - 非常简单：类似Javascript语法和习俗，只要半小时就能通过半学半猜完全掌握用法。拒绝其他模板引擎那种非人性化的语法和习俗。同时也能支持html 标签，使得开发CMS系统比较容易
-- 超高的性能：Beetl 远超过主流java模板引擎性能(引擎性能3-4倍与freemaker，参考附录），而且消耗较低的CPU
+- 超高的性能：Beetl 远超过主流java模板引擎性能(引擎性能5倍与freemaker，参考附录），而且消耗较低的CPU
 - 易于整合：Beetl能很容易的与各种web框架整合，如Spring MVC，JFinal,Struts,Nutz，Jodd，Servlet等。
 - 支持模板单独开发和测试，即在MVC架构中，即使没有M和C部分，也能开发和测试模板。
 - 扩展和个性化：Beetl支持自定义方法，格式化函数，虚拟属性，标签，和HTML标签. 同时Beetl也支持自定义占位符和控制语句起始符号也支持使用者完全可以打造适合自己的工具包.
@@ -36,7 +37,7 @@ Beetl有些功能是发展了10多年的模板引擎所不具备的，这些功�
 6. 类型推测，能在运行的时候推测模板变量类型，从而优化性能，也可以通过注解的方法显示的说明模板变量属性（这是非必须的，但有助于IDE自动提示功能）
 7. 可插拔的设计，错误信息提示，模板引擎缓存机制，模板资源管理，本地调用的安全管理器,严格MVC限制，模板引擎本身都有默认的实现，但又完全可以自定义以适合特定需求
 8. 增强的语法，如for-elsefor, select-case，安全输出符号! 等，这些语法特别适合模板开发
-9. 性能超高,具有最快的模板解释引擎，同时，又有较低的CPU消耗。4倍于国内使用的Freemaker，。适合各类模板应用，如代码生成工具，CMS系统，普通网站，超高访问量的门户系统，和富客户端JS框架整合的后台管理应用
+9. 性能超高,具有最快的模板解释引擎，同时，又有较低的CPU消耗。5倍于国内使用的Freemaker。适合各类模板应用，如代码生成工具，CMS系统，普通网站，超高访问量的门户系统，和富客户端JS框架整合的后台管理应用
 **********************************************************************
 
 
@@ -81,7 +82,7 @@ Beetl的核心是GroupTemplate，创建GroupTemplate需要俩个参数，一个�
 - StringTemplateResourceLoader：字符串模板加载器，用于加载字符串模板，如本例所示
 - FileResourceLoader：文件模板加载器，需要一个根目录作为参数构造，，传入getTemplate方法的String是模板文件相对于Root目录的相对路径
 - ClasspathResourceLoader：文件模板加载器，模板文件位于Classpath里
-- WebAppResourceLoader：用于webapp集成，假定模板跟目录就是WebRoot目录
+- WebAppResourceLoader：用于webapp集成，假定模板根目录就是WebRoot目录
 
 
 代码第5行将变量name传入模板里，其值是“Beetl”。
@@ -100,7 +101,7 @@ Beetl的核心是GroupTemplate，创建GroupTemplate需要俩个参数，一个�
 
 === 模板基础配置 ===
 
-Beetl提供不但功能齐全，而且还有你很多独特功能，通过简单的配置文件，就可以定义众多的功能，默认情况下，Configuration类总是会先加载默认的配置文件（位于/org/beetl/core/beetl-default.properties）下，其内容片断如下：
+Beetl提供不但功能齐全，而且还有你很多独特功能，通过简单的配置文件，就可以定义众多的功能，默认情况下，Configuration类总是会先加载默认的配置文件（位于/org/beetl/core/beetl-default.properties，作为新手，通常只需要关注3,4,5,6行定界符的配置，以及11行模板字符集的配置就可以了，其他配置会在后面章节陆续提到）下，其内容片断如下：
 [source,java]
 ----------------------------
 #默认配置
@@ -116,17 +117,35 @@ NATIVE_CALL = TRUE
 TEMPLATE_CHARSET = UTF-8
 ERROR_HANDLER = org.beetl.core.ConsoleErrorHandler
 NATIVE_SECUARTY_MANAGER= org.beetl.core.DefaultNativeSecurityManager
-RESOURCE_LOADER=org.beetl.core.resource.ClasspathResourceLoader
 MVC_STRICT = FALSE
 
 #资源配置，resource后的属性只限于特定ResourceLoader 
+RESOURCE_LOADER=org.beetl.core.resource.ClasspathResourceLoader
 #classpath 根路径
 RESOURCE.root= /
 #是否检测文件变化
 RESOURCE.autoCheck= true
+RESOURCE.functionSuffix = fn
+#自定义标签文件位置
+RESOURCE.tagRoot = htmltag
+#自定义标签文件后缀
+RESOURCE.tagSuffix = tag
 
-
+#####  扩展 ##############
+## 内置的方法
+FN.date = org.beetl.ext.fn.DateFunction
+......
+##内置的功能包
+FNP.strutil = org.beetl.ext.fn.StringUtil
+......
+##内置的默认格式化函数
+FTC.java.util.Date = org.beetl.ext.format.DateFormat
+.....
+## 标签类
+TAG.include= org.beetl.ext.tag.IncludeTag
 ----------------------------
+
+
 
 第2行配置引擎实现类，默认即可.
 
@@ -134,7 +153,7 @@ RESOURCE.autoCheck= true
 
 第4,5行指定了语句的定界符号，默认是<% %>,也可以指定为其他定界符号
 
-第6行指定IO输出模式，默认是FALSE,即通常的字符输出，再考虑高性能情况下，可以设置成true。相信请参考高级用法
+第6行指定IO输出模式，默认是FALSE,即通常的字符输出，再考虑高性能情况下，可以设置成true。详细请参考高级用法
 
 第8,9行指定了支持HTML标签，且符号为#（只能用一个符号标示），默认配置下，模板引擎识别<#tag ></#tag>这样的类似html标签，并能调用相应的标签函数。
 
@@ -146,15 +165,25 @@ RESOURCE.autoCheck= true
 
 第13行指定了本地Class调用的安全策略
 
-第14行指定了默认使用的模板资源加载器
+第14行配置了是否进行严格MVC，通常情况下，此处设置为false.
 
-第15行配置了是否进行严格MVC，通常情况下，此处设置为false.
+第17行指定了默认使用的模板资源加载器
 
-第20行和22行配置了模板资源加载器的一些属性，如设置根路径为/,即Classpath的顶级路径，并且总是检测模板是否更改
+第19到21行配置了模板资源加载器的一些属性，如设置根路径为/,即Classpath的顶级路径，并且总是检测模板是否更改
 
-作为新手，通常只需要关注3,4,5,6行定界符的配置，以及11行模板字符集的配置就可以了，其他配置会在后面章节陆续提到
+第22行配置了自定义的方法所在的目录以及文件名后缀。beetl即支持通过java类定义方法，也支持通过模板文件来定义方法
 
-模板开发者可以创建一个beetl.properties的配置文件，此时，该配置文件将覆盖默认的配置文件属性，比如，你的定界符考虑是<!--: 和 -->,则在beetl.properties加入一行即可,并将此配置文件放入Classpath根目录下即可。 Configuration.defaultConfiguration()总是先加载系统默认的，然后再加载Beetl.properties的配置属性，如果用重复，用后者代替前者的配置
+第24行配置了自定义的html标签所在的目录以及文件名后缀。beetl即支持通过java类定义标签，也支持通过模板文件来定义标签
+
+第30行注册了一个date方法，其实现类是org.beetl.ext.fn.DateFunction
+
+第33行注册了一个方法包strutil，其实现类org.beetl.ext.fn.StringUtil，此类的每个public方法都将注册为beetl的方法
+
+第36行注册了一个日期格式化函数
+
+第39行注册了一个include标签函数
+
+模板开发者可以创建一个beetl.properties的配置文件，此时，该配置文件将覆盖默认的配置文件属性，比如，你的定界符考虑是<!--: 和 --> ,则在beetl.properties加入一行即可,并将此配置文件放入Classpath根目录下即可。 Configuration.defaultConfiguration()总是先加载系统默认的，然后再加载Beetl.properties的配置属性，如果有重复，用后者代替前者的配置
 
 [source,java]
 ----------------------------
@@ -190,7 +219,7 @@ System.out.println(str);
 ----------------------------
 
 第1行代码指定了模板根目录，即位于项目工程下的template目录
-第2行构造了一个资源加载器，并指定字符集为UTF-8 (也不许指定，因为配置文件默认就是UTF-8);
+第2行构造了一个资源加载器，并指定字符集为UTF-8 (也可不指定，因为配置文件默认就是UTF-8);
 第5行通过模板的相对路径/s01/hello.txt来加载模板
 
 
@@ -228,11 +257,16 @@ WebAppResourceLoader resourceLoader = new WebAppResourceLoader();
 groupTemplate = new GroupTemplate(resourceLoader, cfg);
 ----------------------------
 
+
 *************************************************
 
 WebAppResourceLoader 假定 beetl.jar 是位于	WEB-INF/lib 目录下，因此，可以通过WebAppResourceLoader类的路径来推断出WebRoot路径从而指定模板根路径。所有线上环境一般都是如此，如果是开发环境或者其他环境部符合此假设，你需要调用resourceLoader.setRoot() 来指定模板更路径
 
 *************************************************
+
+==== 自定义资源模板加载器 ====
+
+有时候模板可能来自文件系统不同目录，或者模板一部分来自某个文件系统，另外一部分来自数据库，还有的情况模板可能是加密混淆的模板，此时需要自定义资源加载，继承ResouceLoader才能实现模板功能，这部分请参考高级部分
 
 
 
@@ -278,7 +312,7 @@ ${ {key:1,value:2 \}  } //输出一个json map，} 需要加上\
 
 ----------------------------
 
-定界符很占位符 通常还有别的选择，如下定界符
+定界符和占位符 通常还有别的选择，如下定界符
 
 - @ 和回车换行 (此时,模板配置DELIMITER_STATEMENT_END= 或者 DELIMITER_STATEMENT_END=null 都可以)
 - #: 和回车换行
@@ -1036,9 +1070,9 @@ FTC.java.util.concurrent.atomic.AtomicInteger = org.beetl.ext.format.NumberForma
 ----------------------------
 
 
-=== 标签 ===
+=== 标签函数 ===
 
-所谓标签，即允许处理模板文件里的一块内容，功能等于同jsp tag。如Beetl内置的layout标签
+所谓标签函数，即允许处理模板文件里的一块内容，功能等于同jsp tag。如Beetl内置的layout标签
 
 index.html
 [source,javascript]
@@ -1076,7 +1110,26 @@ include("/inc/header.html"){}
 
 在标签中，{} 内容将依据标签的实现而执行，layout标签将执行{}中的内容，而include标签则忽略标签体内容。
 
-关于如何实现标签函数，请参考高级主体
+关于如何实现标签函数，请参考高级主体,如下是一个简单的的标签函数：
+
+[source,java]
+----------------------------
+public class CompressTag extends Tag
+{
+
+        @Override
+        public void render()
+        {
+                BodyContent  content = getBodyContent();
+                String content = content.getBody();
+                String zip = compress(conent);
+                ctx.byteWriter.write(zip);
+
+        }
+
+}
+
+----------------------------
 
 === HTML标签 ===
 
@@ -1092,7 +1145,7 @@ Beetl 也支持HTML tag形式的标签， 区分beetl的html tag 与 标准html 
 ----------------------------
 
 
-如对于标签footer,Beetl默认会寻找htmltag/footer.tag ,内容如下:
+如对于标签footer,Beetl默认会寻找WebRoot/htmltag/footer.tag(可以通过配置文件修改路径和后缀) ,内容如下:
 
 
 [source,javascript]
@@ -1125,22 +1178,55 @@ Beetl 也支持HTML tag形式的标签， 区分beetl的html tag 与 标准html 
 
 - 默认机制下，全局变量都将传给html tag对应的模板文件，这个跟include一样。当然，这机制也可以改变，对于标签来说，通常是作为一个组件存在，也不一定需要完全传送所有全局变量，而只传送（request,session,这样变量），因此需要重新继承org.beetl.ext.tag.HTMLTagSupportWrapper.并重载callHtmlTag方法。并注册为htmltag标签。具体请参考https://github.com/javamonkey/beetl2.0/blob/master/beetl-core/src/test/java/org/beetl/core/tag/HtmlTagTest.java
 
-- 如果在htmltag目录下找不到同名的模板文件，则beetl再次寻找是否有同名注册的标签函数（关于如何写标签函数，参考高级用法），如果存在，则调用标签函数
+
+如果采用模板来写html标签功能不够强大，beetl支持写标签函数（参考上一节）来实现html标签，标签函数args[0]表示标签名，这通常没有什么用处，args[1] 则是标签的属性，参数是个map，key是html tag的属性，value是其属性值，如下用java完成的html 标签用于输出属性值
+
+[source,java]
+----------------------------
+public class SimpleHtmlTag extends Tag
+{
+
+	@Override
+	public void render()
+	{
+		String tagName = (String) this.args[0];
+		Map attrs = (Map) args[1];
+		String value = (String) attrs.get("attr");
+		try
+		{
+			this.ctx.byteWriter.writeString(value);
+		}
+		catch (IOException e)
+		{
+
+		}
+
+	}
+
+}
+
+----------------------------
+
+如果注册gt.registerTag("simpleTag", SimpleHtmlTag.class);
+则如下模板输出了attr属性值abc
+
+[source,html]
+----------------------------
+<#simpleTag attr="abc"></#simpleTag>
+
+----------------------------
 
 
 
+=== 绑定变量的HTML标签 ===
 
-Beetl 支持将标签实现类（java代码）里的对象作为临时变量，被标签体引用。此时需要实现GeneralVarTagBinding 类。
-该类提供3个个方法
-
+对于html标签（参考上一节），Beetl还 支持将标签实现类（java代码）里的对象作为临时变量，被标签体引用。此时需要实现GeneralVarTagBinding (此类是Tag的子类）
+该类提供另外3个个方法
 -  void binds(Object... array)    子类在render方法里调用此类以实现变量绑定，绑定顺序同在模板中申明的顺序
--  void bind(String name, Object value)    子类在render方法里调用此类以实现变量绑定，name是模板中申明的变量名，用此方法绑定不如binds更灵活
+-  void bind(String name, Object value)    子类在render方法里调用此类以实现变量绑定，name是模板中申明的变量名，用此方法绑定不如binds更灵活，不再推荐
 -  Object getAttributeValue 获得标签的属性 
 
 
-**********************************************************************
-原有实现接口TagVarBinding来绑定仍然允许使用，未来继续支持，但文档不在体现。因为不如GeneralVarTagBinding实现的优雅
-**********************************************************************
 [source,java]
 ----------------------------
 
@@ -1195,17 +1281,17 @@ var max = @com.xxxx.constants.Order.MAX_NUM;
 
 ----------------------------
 
-可以调用instance的public方法和属性，也可以调用静态类的属性和方法 ,需要加一个/@指示此调用是直接调用class，其后的表达式是java风格的。
+可以调用instance的public方法和属性，也可以调用静态类的属性和方法 ,需要加一个  @指示此调用是直接调用class，其后的表达式是java风格的。
 
 *************************************************
 
-- GroupTemplate可以配置为不允许直接调用Class，具体请参考配置文件
+- GroupTemplate可以配置为不允许直接调用Class，具体请参考配置文件.
 
-- 也可以通过安全管理器配置到底哪些类Beetl不允许调用，具体请参考高级用法。默认情况，java.lang.Runtime,和 java.lang.Process不允许在模板里调用
+- 也可以通过安全管理器配置到底哪些类Beetl不允许调用，具体请参考高级用法。默认情况，java.lang.Runtime,和 java.lang.Process不允许在模板里调用。你自己的安全管理器也许可以配置为不能直接访问DAO类（避免了以前jsp可以访问任意代码带来的危害）
 
-- 请按照java规范写类名和方法名，属性名。这样便于beetl识别到底调用的是哪个类，哪个方法
+- 请按照java规范写类名和方法名，属性名。这样便于beetl识别到底调用的是哪个类，哪个方法。否则会抛出错误
 
-- 可以省略包名，只用类名。beetl将搜索包路径找到合适的类（需要设置配置IMPORT_PACKAGE=包名;包名，或者调用Configuration.addPkg)方法具体请参考附件配置文件说明
+- 可以省略包名，只用类名。beetl将搜索包路径找到合适的类（需要设置配置“IMPORT_PACKAGE=包名.;包名.”，包名后需要跟一个“.”, 或者调用Configuration.addPkg)方法具体请参考附件配置文件说明
 
 *************************************************
 
@@ -1379,7 +1465,8 @@ BeetlKit 提供了一些便利的方法让你立刻能使用Beetl模板引擎。
 - public static String testTemplate(String template, String initValue)
 渲染模板template，其变量来源于intValue脚本运行的结果，其所有顶级Scope的变量都将作为template的变量
 
-
+- public static String testTemplate(String template, String initValue)
+渲染模板template，其变量来源于intValue脚本运行的结果，其所有顶级Scope的变量都将作为template的变量
 
 [source,java]
 ----------------------------
@@ -1391,11 +1478,19 @@ System.out.println(result);
 
 ----------------------------
 
+
+**********************************************************************
+BeetlKit　不要用于线上系统。仅仅作为体验Beetl功能而提供的，如果需要在线上使用这些功能，请参考该类源码自行扩展
+**********************************************************************
+
+
+
+
 === 琐碎功能 ===
 
-- 对齐： 我发现别的模板语言要是做到对齐，非常困难,Beetl你完全不用担心，比如velocty，stringtemlate，freemarker例子都出现了不对齐的情况，影响了美观，Beetl完全无需担心输出对齐
+- 对齐:我发现别的模板语言要是做到对齐，非常困难,使用Beetl你完全不用担心，比如velocty，stringtemlate，freemarker例子都出现了不对齐的情况，影响了美观，Beetl完全无需担心输出对齐
 
-- Escape：可以使用\ 做escape 符号，如\$monkey\$ 将作为一个普通的文本，输出为$monkey$.再如为了在钱后加上美元符号（占位符恰好又是美元符号）可以用这俩种方式hello,it's
+- Escape:可以使用\ 做escape 符号，如\$monkey\$ 将作为一个普通的文本，输出为$monkey$.再如为了在钱后加上美元符号（占位符恰好又是美元符号）可以用这俩种方式hello,it's
 $money$\$, 或者Hello,it's $money+"\$"$ 。如果要输出\符号本生，则需要用俩个\\,这点与javascript，java 语义一致. 
 
 
@@ -1542,10 +1637,10 @@ public class util
 
 ==== 使用模板文件作为方法 ====
 
-可以不用写java代码，模板文件也能作为一个方法。默认情况下，需要将模板文件放到Root的functions目录下，且扩展名为.html(可以通过ResourceLoader配置文件属性来修改此俩默认值)
+可以不用写java代码，模板文件也能作为一个方法。默认情况下，需要将模板文件放到Root的functions目录下，且扩展名为.fn(可以配置文件属性来修改此俩默认值)
 方法参数分别是para1,para2.....
 
-如下root/functions/page.html
+如下root/functions/page.fn
 
 [source,javascript]
 
@@ -1568,6 +1663,29 @@ page(current,total);
 %>
 
 -------------------------
+
+允许使用return 表达式返回一个变量给调用者，如模板文件functions\now.fn
+
+[source,javascript]
+
+-------------------------
+<%
+	return date();
+%>
+
+-------------------------
+
+在任何模板里都可以调用：
+[source,javascript]
+
+-------------------------
+
+hello time is ${now(),‘yyyy-MM-dd’}
+
+
+-------------------------
+
+
 
 也可以在functions建立子目录，这样function则具有namespace，其值就是文件夹名
 
@@ -1753,6 +1871,30 @@ public interface VirtualAttributeEval extends VirtualClassAttribute
 
 -------------------------
 
+=== 使用额外的资源加载器 ===
+
+某些情况下，模板来源不止一处，GroupTemplate配置了一个默认的资源加载器，如果通过gt.getTemplate(key),将调用默认的ResourceLoader，获取模板内容，然后转化为beetl脚本放入到缓存里。你也可以传入额外的资源管理器加载模板，通过调用gt.getTemplate(key,otherLoader);
+
+[source,java]
+-------------------------
+
+GroupTemplate gt = new GroupTemplate(conf,fileLoader)
+DBResourceLoader dbLoader = new DBResourceLoader(getData());
+Template t = gt.getTemplate("db:2", dbLoader);
+
+
+private Map getData()
+{
+	Map data = new HashMap();
+	data.put("db:1", "${a}");
+	data.put("db:2", "<%include('/resourceloader/justtest.txt'){}%>");
+
+	return data;
+}
+
+-------------------------
+
+对于更复杂的模板资源来源，也可以自定义一个资源加载来完成，参考下一节
 
 === 自定义资源加载器 ===
 
@@ -2060,21 +2202,7 @@ ${htmlSection}
 
 -------------------------
 
-=== 模板测试 ===
 
-模板允许被单独测试，即使缺少模型。beetl可以通过BeetlKit类来单独测试模板，BeetlKi的方法 public static String testTemplate(String template, String initValue)。要求输入俩个String，第一个是模板本身，第二个是模板的变量，BeetlKit会计算initValue,并得出所有顶层的所有变量周围模型，来渲染Template，比如
-
-[source,java]
--------------------------
-String initValue = "var a=1;var session = {user:{id,1,name:'xiandafu'}}";
-String template = "${session["user"].name}";
-String result = BeetlKit.testTemplate(template,initValue);
-
--------------------------
-
-运行testTemplate，可以返回"xiandafu";
-
-Beetl在线体验就是采用BeetlKit来完成的
 
 === 性能优化 ===
 
@@ -2273,6 +2401,41 @@ ENGINE=org.bee.tl.online.OnlineTemplateEngine
 -------------------------
 
 这样就完成了模板引擎定制。
+
+
+=== 直接运行Beetl脚本 ===
+
+Beetl模板本质上会转化为Beetl脚本来执行，这点跟jsp转为servlet来执行类似。GroupTemplate提供方法可以直接执行Beetl脚本
+
+- public Map runScript(String key, Map<String, Object> paras) throws ScriptEvalError
+
+- public Map runScript(String key, Map<String, Object> paras, Writer w) throws ScriptEvalError
+
+- public Map runScript(String key, Map<String, Object> paras, Writer w, ResourceLoader loader) throws ScriptEvalError
+
+
+key为资源名，paras为脚本的全局变量，w可选参数，如果执行脚本有输出，则输出到w里,loader参数可选，如果指定，则使用此laoder加载脚本
+
+执行脚本完毕后，返回到Map里的值可能包含如下：
+
+- 模板的**顶级**的临时变量,key为临时变量名
+- return 值将返回到map里 ，key为return
+
+如下脚本（此时就不需要脚本定界符了）
+
+[source,java]
+----------------------------
+
+var a = 1;
+var b = date();
+var c = '2';
+return a+1;
+
+----------------------------
+
+调用runScript后，map里将返回key分别为a,b,c，return。 值分别为1，当前日期，字符串'2，以及3.
+
+
 
 
 
@@ -2931,6 +3094,43 @@ public class Struts2BeetlActionResult extends StrutsResultSupport
 
 **********************************************************************
 
+
+=== 直接Web中运行Beetl模板 ===
+
+对于web应用来说，必须通过controller才能渲染模板，beetl也可以写完模板后，在未完成controller情况下，直接渲染模板
+此方法既可以作为通常的全栈式开发人员使用，也可以用于前端人员单独开发模板用。
+
+步骤如下：
+
+- 配置监听器，监听器指定对*.html的请求进行监听。
+
+- 实现监听器，该监听器继承父类 org.beetl.ext.web.SimpleCrossFilter，实现getGroupTemplate方法。
+
+- SimpleCrossFilter 提供一些有用的方法，可以帮助你定制一些特性，可以参考源码了解
+
+- 配置完成后，对于要测试的模板，可以新建一个伪模型文件，比如要测试模板WebRoot/user/userList.html,可以新建立WebRoot/values/user/userList.html.var 。 values是监听器默认的伪模型的根目录
+
+- 编辑伪模型文件，对应于userList.html需要的全局变量，userList.html.var可以申明这些些变量
+
+[source,java]
+----------------------------
+
+var proudct = {id:1,name:'测试产品',pic:'xxxx.jpg'};
+var userList = [{id:2,name:'用户一'}];
+var session= {admin:{id:1,name:'admin'}};
+
+----------------------------
+
+- 通过浏览器直接访问http://ip:port/user/userList.html,监听器会预先执行userList.html.var，并将返回值作为模板的全局变量，传给userList.html
+
+- 可以将一些公共的变量放到WebRoot/values/common.var里（比如上面代码的session）. 监听器会先执行common.var,然后再执行userList.html.var
+
+
+*************************************************
+
+直接访问模板前提是使用了伪模型，这与实际的项目采用的模型并不一致，因此当模板采用伪模型验证后，需要重启web应用，才能使用真正的模型去测试，否则，模板引擎会报错，这是因为beetl默认的FastRuntimeEngine会根据模型优化模板，对同一个模板不同的模型会报错，除非采用DefaultTemplateEngine 或者页面申明类型变量是动态的。
+
+*************************************************
 
 == 附录 ==
 

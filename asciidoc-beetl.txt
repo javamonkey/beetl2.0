@@ -40,6 +40,16 @@ Beetl有些功能是发展了10多年的模板引擎所不具备的，这些功�
 9. 性能超高,具有最快的模板解释引擎，同时，又有较低的CPU消耗。5倍于国内使用的Freemaker。适合各类模板应用，如代码生成工具，CMS系统，普通网站，超高访问量的门户系统，和富客户端JS框架整合的后台管理应用
 **********************************************************************
 
+.新手如何开始
+**********************************************************************
+需要通读基本用法，大部分都是讲解语法，而语法跟js很接近，所以可以快速预览，但Beetl是针对模板设计，
+所以像安全输出，标签和html标签，全局变量，临时变量和共享变量，以及直接调用java代码等还需要认真读一遍。
+
+如果从事web开发，还需要阅读web集成里的第一节“web提供的全局变量”
+
+如果熟悉了基础，再可以考虑看高级部分，对模板引擎做定制和扩展
+
+**********************************************************************
 
 .联系作者
 **********************************************************************
@@ -2314,7 +2324,7 @@ class RestrictForStatement extends GeneralForStatement
 		{
 			try
 			{
-				ctx.byteWriter.write("--Too may Data in loop，Ignore the left Data  for Online Engine--");
+				ctx.byteWriter.writeString("--Too may Data in loop，Ignore the left Data  for Online Engine--");
 				ctx.byteWriter.flush();
 				
 				
@@ -2350,21 +2360,44 @@ public class OnlineTemplateEngine extends DefaultTemplateEngine
 			GroupTemplate gt)
 	{
 		Program program = super.createProgram(resource, reader, textMap, cr, gt);
+		modifyStatemetn(resource,program,gt);
+		return program;
+	}
+	private void modifyStatemetn(Resource resource,Program program,GroupTemplate gt){
 		Statement[] sts = program.metaData.statements;
 		StatementParser parser = new StatementParser(sts, gt, resource.getId());
-		//parser.addListener(WhileStatement.class, new RestrictLoopNodeListener());
+		parser.addListener(WhileStatement.class, new RestrictLoopNodeListener());
 		parser.addListener(GeneralForStatement.class, new RestrictLoopNodeListener());
-		
 		parser.parse();
-		return program;
 	}
 }
 
 -------------------------
 
-- 因为是在线体验，所以继承了DefaultTemplateEngine，在其他场景，也可以集成FastRuntimeTemplateEngine
+继承FastRuntimeEngine有所不同，因为改引擎会copy出一个脚本做分析优化，因此，俩个脚本都需要做修改
+
+[source,java]
+-------------------------
+public class OnlineTemplateEngine extends FastRuntimeEngine
+{
+	public Program createProgram(Resource resource, Reader reader, Map<Integer, String> textMap, String cr,
+			GroupTemplate gt)
+	{
+		FilterProgram program = (FilterProgram)super.createProgram(resource, reader, textMap, cr, gt);
+		modifyStatemetn(resource,program,gt);
+		modifyStatemetn(resource,program.getCopy(),gt);
+		return program;
+	}
+	
+	
+}
+
+-------------------------
+
 
 - StatementParser 是关键类，他允许对模板的Program进行解析，并替换其中的Statement。parser.addListener 方法接受俩个参数，第一个是需要找的类，第二个是执行的监听器。
+
+- 可以参考在线体验的源码：http://git.oschina.net/xiandafu/beetlonline/blob/master/src/org/bee/tl/online/OnlineTemplateEngine.java
 
 [source,java]
 -------------------------
@@ -2442,9 +2475,9 @@ return a+1;
 
 == Web集成 ==
 
-=== 集成技术开发指南 ===
+=== Web提供的全局变量 ===
 
-Web集成模块需要向模板提供web标准的变量，做如下说明
+Web集成模块向模板提供web标准的变量，做如下说明
 
 - session  提供了session会话，模板通过session["name"],或者session.name 引用session里的变量
 
@@ -2458,9 +2491,11 @@ Web集成模块需要向模板提供web标准的变量，做如下说明
 
 - 所有的GroupTemplate的共享变量
 
+你可以在模板任何地方访问这些变量
+
+=== 集成技术开发指南 ===
 
 
-Web集成模块还需要根据是否采用二进制输出模板，来决定是否采用OutputStream 还是Writer。
 
 Beetl默认提供了WebRender用于帮助web集成开发，所有内置的集成均基于此方法。如果你认为Beetl内置的各个web框架集成功能不够，你可以继承此类，或者参考此类源码重新写，其代码如下
 

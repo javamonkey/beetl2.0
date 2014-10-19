@@ -29,9 +29,11 @@ public class Test
 
 			//			Map result = gt.runScript("/org/beetl/core/lab/hello.txt", Collections.EMPTY_MAP);
 			//			System.out.println(result);
+			TestUser user = new TestUser("lijz");
+
 			Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
 			t.binding("footer", Boolean.TRUE);
-			t.binding("user", new TestUser(null));
+			t.binding("user", user);
 			t.binding("date1", new Date(10002));
 			t.binding("date2", new Date(10002));
 			t.binding("total", 15);

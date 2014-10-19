@@ -32,6 +32,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.beetl.core.statement.GrammarToken;
+
 /**
  * 模板渲染的Context
  * @author joelli
@@ -78,6 +80,9 @@ public class Context
 	 * 这些变量来自于ProgrameMeta，模板的静态文本
 	 */
 	public Object[] staticTextArray;
+
+	/*上一个表达式出错的token，用于精确提示*/
+	public GrammarToken lastErrorToken;
 
 	/**
 	 * 临时变量开始计数的位置

@@ -75,7 +75,7 @@ public class ErrorInfo
 		errorLocalMap.put(BeetlException.CAST_LIST_OR_MAP_ERROR,
 				concat("模板里使用了[]指示应该是Map或者List，但实际上不是此类型", BeetlException.CAST_LIST_OR_MAP_ERROR));
 		errorLocalMap.put(BeetlException.ATTRIBUTE_NOT_FOUND, concat("未找到属性", BeetlException.ATTRIBUTE_NOT_FOUND));
-		errorLocalMap.put(BeetlException.NULL, concat("变量为空", BeetlException.NULL));
+		errorLocalMap.put(BeetlException.NULL, concat("表达式值为空", BeetlException.NULL));
 		errorLocalMap.put(BeetlException.DIV_ZERO_ERROR, concat("除0错误", BeetlException.DIV_ZERO_ERROR));
 		errorLocalMap.put(BeetlException.ARRAY_INDEX_ERROR, concat("数组index错", BeetlException.ARRAY_INDEX_ERROR));
 		errorLocalMap.put(BeetlException.ARRAY_TYPE_ERROR, concat("本地调用[] 期望类型是数组", BeetlException.ARRAY_TYPE_ERROR));
@@ -102,7 +102,6 @@ public class ErrorInfo
 				concat("本地调用格式出错，不允许此格式", BeetlException.PARSER_NATIVE_ERROR));
 		errorLocalMap.put(BeetlException.TEMPLATE_LOAD_ERROR,
 				concat("错找不到指定模板或者加载错", BeetlException.TEMPLATE_LOAD_ERROR));
-		errorLocalMap.put(BeetlException.NULL, concat("变量为空", BeetlException.NULL));
 		errorLocalMap
 				.put(BeetlException.CLIENT_IO_ERROR_ERROR, concat("客户端IO出错", BeetlException.CLIENT_IO_ERROR_ERROR));
 		errorLocalMap.put(BeetlException.EXPRESSION_NOT_COMPATIBLE,

@@ -1,3 +1,5 @@
 <%
-var a = list.aa;
+for(u in user.lover.name){
 %>
+${u.name}
+<%}%>

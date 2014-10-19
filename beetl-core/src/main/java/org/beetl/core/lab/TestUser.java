@@ -17,8 +17,8 @@ public class TestUser
 	int age = 18;
 	Date bir = null;
 	double salary = 890.12;
-	TestUser lover = null;
-	List friends = new ArrayList();
+	public TestUser lover = null;
+	List friends = null;
 	boolean isOk = false;
 	int id = 0;
 

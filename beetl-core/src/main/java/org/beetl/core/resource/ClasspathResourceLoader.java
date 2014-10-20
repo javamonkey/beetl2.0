@@ -35,6 +35,7 @@ import org.beetl.core.GroupTemplate;
 import org.beetl.core.Resource;
 import org.beetl.core.ResourceLoader;
 import org.beetl.core.fun.FileFunctionWrapper;
+import org.beetl.core.misc.BeetlUtil;
 
 /**
  * ClassPath加载器
@@ -232,6 +233,15 @@ public class ClasspathResourceLoader implements ResourceLoader
 	public void setCharset(String charset)
 	{
 		this.charset = charset;
+	}
+
+	@Override
+	public String getResourceId(Resource resource, String id)
+	{
+		if (resource == null)
+			return id;
+		else
+			return BeetlUtil.getRelPath(resource.getId(), id);
 	}
 
 }

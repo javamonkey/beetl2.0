@@ -49,7 +49,7 @@ public class ErrorGrammarProgram extends Program
 	public ErrorGrammarProgram(Resource res, GroupTemplate gt, String cr)
 	{
 		super();
-		this.id = res.getId();
+		this.res = res;
 		this.rs = res;
 		this.gt = gt;
 		this.metaData = new ProgramMetaData() {

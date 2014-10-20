@@ -32,9 +32,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.beetl.core.ByteWriter;
+import org.beetl.core.Resource;
 import org.beetl.core.Tag;
 import org.beetl.core.Template;
-import org.beetl.core.misc.BeetlUtil;
 
 public class IncludeTag extends Tag
 {
@@ -80,7 +80,8 @@ public class IncludeTag extends Tag
 	protected String getRelResourceId()
 	{
 
-		return BeetlUtil.getRelPath(ctx.getResourceId(), (String) this.args[0]);
+		Resource sibling = ctx.getResource();
+		return gt.getResourceLoader().getResourceId(sibling, (String) this.args[0]);
 
 	}
 }

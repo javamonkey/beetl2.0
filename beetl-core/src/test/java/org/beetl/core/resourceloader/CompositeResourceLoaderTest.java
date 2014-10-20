@@ -31,8 +31,8 @@ public class CompositeResourceLoaderTest extends BasicTestCase
 		// 根据id加载
 		DBResourceLoader strLoader = new DBResourceLoader(data);
 
-		loader.addResourceLoader(new StartsWithMatcher("/file/var2:").withoutPrefix(), fileLoader2);
-		loader.addResourceLoader(new StartsWithMatcher("/db:").withoutPrefix(), strLoader);
+		loader.addResourceLoader(new StartsWithMatcher("http:").withoutPrefix(), fileLoader2);
+		loader.addResourceLoader(new StartsWithMatcher("db:").withoutPrefix(), strLoader);
 		loader.addResourceLoader(new AllowAllMatcher(), fileLoader1);
 
 		GroupTemplate gt = new GroupTemplate(loader, conf);

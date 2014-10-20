@@ -21,7 +21,7 @@ public class FastRuntimeEngine extends DefaultTemplateEngine
 		ProgramMetaData metaData = orginalProgram.metaData.copy();
 		Program copyProgram = new Program();
 		copyProgram.metaData = metaData;
-		copyProgram.id = orginalProgram.id;
+		copyProgram.res = orginalProgram.res;
 		copyProgram.gt = orginalProgram.gt;
 		copyProgram.rs = orginalProgram.rs;
 		Probe nextFilter = new BasicProgramOptProbe();

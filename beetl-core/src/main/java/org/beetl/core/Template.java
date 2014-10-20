@@ -124,7 +124,7 @@ public class Template
 		}
 		catch (BeetlException e)
 		{
-			e.pushResource(this.program.id);
+			e.pushResource(this.program.res.id);
 			// 是否打印异常，只有根模板才能打印异常
 			if (!isRoot)
 				throw e;
@@ -152,8 +152,8 @@ public class Template
 			{
 
 				BeetlException be = new BeetlException(BeetlException.CLIENT_IO_ERROR_ERROR, e.getMessage(), e);
-				be.pushResource(this.program.id);
-				be.pushToken(new GrammarToken(this.program.id, 0, 0));
+				be.pushResource(this.program.res.id);
+				be.pushToken(new GrammarToken(this.program.res.id, 0, 0));
 				ErrorHandler errorHandler = this.gt.getErrorHandler();
 
 				if (errorHandler == null)

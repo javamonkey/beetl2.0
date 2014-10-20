@@ -146,7 +146,8 @@ public class TypeBindingProbe extends Probe
 			catch (BeetlException bex)
 			{
 				//	bex.printStackTrace();
-				ProgramReplaceErrorEvent event = new ProgramReplaceErrorEvent(program.id, bex.getMessage(), bex);
+				ProgramReplaceErrorEvent event = new ProgramReplaceErrorEvent(program.res.getId(), bex.getMessage(),
+						bex);
 				program.gt.fireEvent(event);
 				isCompleted = true;
 			}

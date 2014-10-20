@@ -64,4 +64,11 @@ public interface ResourceLoader
 	 */
 	public void init(GroupTemplate gt);
 
+	/**  用于include，layout等根据相对路径计算资源实际的位置
+	 * @param resource
+	 * @param id
+	 * @return
+	 */
+	public String getResourceId(Resource resource, String id);
+
 }

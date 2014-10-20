@@ -80,4 +80,10 @@ public class StringTemplateResourceLoader implements ResourceLoader
 		return true;
 	}
 
+	@Override
+	public String getResourceId(Resource resource, String id)
+	{
+		return id;
+	}
+
 }

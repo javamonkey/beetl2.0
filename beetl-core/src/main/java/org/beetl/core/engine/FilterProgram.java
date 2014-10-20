@@ -12,14 +12,15 @@ public class FilterProgram extends Program
 	{
 		this.metaData = program.metaData;
 		this.filter = filter;
-		this.id = program.id;
+		this.res = program.res;
 		this.gt = program.gt;
 		this.rs = program.rs;
 		this.copyProgram = copyProgram;
 
 	}
-	
-	public Program getCopy(){
+
+	public Program getCopy()
+	{
 		return this.copyProgram;
 	}
 

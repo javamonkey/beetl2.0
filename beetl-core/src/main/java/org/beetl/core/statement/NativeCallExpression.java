@@ -356,7 +356,7 @@ public class NativeCallExpression extends Expression
 	{
 		if (targetCls == null)
 			return;
-		if (!ctx.gt.getNativeSecurity().permit(ctx.template.program.id, targetCls, targetObj, method))
+		if (!ctx.gt.getNativeSecurity().permit(ctx.template.program.res.getId(), targetCls, targetObj, method))
 		{
 			BeetlException be = new BeetlException(BeetlException.NATIVE_SECUARITY_EXCEPTION);
 			be.pushToken(GrammarToken.createToken(method, token.line));

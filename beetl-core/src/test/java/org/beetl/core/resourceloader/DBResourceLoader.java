@@ -53,4 +53,10 @@ public class DBResourceLoader implements ResourceLoader
 
 	}
 
+	@Override
+	public String getResourceId(Resource resource, String id)
+	{
+		return id;
+	}
+
 }

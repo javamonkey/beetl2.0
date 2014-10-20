@@ -214,4 +214,21 @@ public class CompositeResourceLoader implements ResourceLoader
 			return true;
 		}
 	}
+
+	@Override
+	public String getResourceId(Resource resource, String id)
+	{
+		if (resource == null)
+			return id;
+		//判断如果是同一前缀，则需要考虑相对路径
+		ResourceLoaderKeyEntry rlke = this.match(id);
+		if (resource.getResourceLoader() == rlke.getResourceLoader())
+		{
+			return resource.getResourceLoader().getResourceId(resource, id);
+		}
+		else
+		{
+			return id;
+		}
+	}
 }

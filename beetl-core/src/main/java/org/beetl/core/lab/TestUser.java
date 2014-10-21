@@ -47,7 +47,8 @@ public class TestUser
 
 	public String getName()
 	{
-		return name;
+		throw new RuntimeException();
+		//		return name;
 	}
 
 	public void setName(String name)

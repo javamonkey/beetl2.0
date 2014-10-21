@@ -30,7 +30,7 @@ public class Test
 			//			Map result = gt.runScript("/org/beetl/core/lab/hello.txt", Collections.EMPTY_MAP);
 			//			System.out.println(result);
 			TestUser user = new TestUser("lijz");
-
+			//	user.setLover(new TestUser("miaojun"));
 			Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
 			t.binding("footer", Boolean.TRUE);
 			t.binding("user", user);

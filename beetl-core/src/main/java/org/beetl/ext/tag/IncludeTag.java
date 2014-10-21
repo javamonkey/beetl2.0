@@ -81,6 +81,7 @@ public class IncludeTag extends Tag
 	{
 
 		Resource sibling = ctx.getResource();
+		//不要使用resource的loder，因为有可能是
 		return gt.getResourceLoader().getResourceId(sibling, (String) this.args[0]);
 
 	}

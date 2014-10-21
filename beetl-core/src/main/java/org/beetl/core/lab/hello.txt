@@ -1,5 +1,1 @@
-<%
-for(u in user.lover.name){
-%>
-${u.name}
-<%}%>
+${strutil.trim(user.lover.name)}

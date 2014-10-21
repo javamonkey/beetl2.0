@@ -258,4 +258,9 @@ public class BeetlGroupUtilConfiguration extends AbstractGroupTemplateConfig imp
 		this.suffix = suffix;
 	}
 
+	public void setRoot(String root)
+	{
+		this.root = root;
+	}
+
 }

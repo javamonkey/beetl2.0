@@ -11,11 +11,11 @@ Beetl2.0使用说明书20140831
 
 
 == 什么是Beetl ==
-Beetl目前版本是2.1.0，大小660K，相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
+Beetl目前版本是2.1.0，大小667K，相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
 
 - 功能完备：同主流的java模板引擎相比，Beetl具有绝大多数功能。适用于*各种应用场景*，从对响应速度有很高要求的大网站到功能繁多的CMS管理系统都适合。Beetl本身还具有很多独特功能来完成模板编写和维护，这是其他模板引擎所不具有的。
 - 非常简单：类似Javascript语法和习俗，只要半小时就能通过半学半猜完全掌握用法。拒绝其他模板引擎那种非人性化的语法和习俗。同时也能支持html 标签，使得开发CMS系统比较容易
-- 超高的性能：Beetl 远超过主流java模板引擎性能(引擎性能5倍与freemaker，参考附录），而且消耗较低的CPU
+- 超高的性能：Beetl 远超过主流java模板引擎性能(引擎性能5-6倍与freemaker，2倍于JSP。参考附录），而且消耗较低的CPU
 - 易于整合：Beetl能很容易的与各种web框架整合，如Spring MVC，JFinal,Struts,Nutz，Jodd，Servlet等。
 - 支持模板单独开发和测试，即在MVC架构中，即使没有M和C部分，也能开发和测试模板。
 - 扩展和个性化：Beetl支持自定义方法，格式化函数，虚拟属性，标签，和HTML标签. 同时Beetl也支持自定义占位符和控制语句起始符号也支持使用者完全可以打造适合自己的工具包.
@@ -47,7 +47,6 @@ Beetl有些功能是发展了10多年的模板引擎所不具备的，这些功�
 
 如果从事web开发，还需要阅读web集成里的第一节“web提供的全局变量”
 
-如果熟悉了基础，再可以考虑看高级部分，对模板引擎做定制和扩展
 
 **********************************************************************
 
@@ -2689,6 +2688,149 @@ GroupTemplate group = config.getGroupTemplate();
 
 
 ----------------------------
+
+=== SpringMVC集成高级 ===
+
+spring集成还允许注册被spring容器管理的Function，Tag等，也还允许配置多个视图解析器等功能
+
+[source,xml]
+----------------------------
+
+<bean name="beetlConfig" class="org.beetl.ext.spring.BeetlGroupUtilConfiguration" init-method="init">
+	<property name="configFileResource" value="/WEB-INF/beetl.properties"/>
+	<property name="functions">
+	     <map>
+	       <entry key="testFunction" value-ref="testFunction"/>
+	    </map> 
+	</property>
+		 
+	<property name="functionPackages">
+	     <map>
+	       <entry key="fp" value-ref="testFunctionPackage"/>
+	    </map> 
+	</property>
+		 
+	<property name="tagFactorys">
+	     <map>
+	       <entry key="html.output" value-ref="testTagFactory"/>
+	       <entry key="html.output2" value-ref="testTagFactory2"/>
+	    </map> 
+	</property>
+		 
+</bean>
+
+<bean name="testTagFactory" class="org.beetl.ext.spring.SpringBeanTagFactory">
+     <property name="name" value="testTag"/>
+</bean>
+<bean name="testTagFactory2" class="org.beetl.ext.spring.SpringBeanTagFactory">
+     <property name="name" value="testTag2"/>
+</bean>
+
+
+<bean name="beetlViewResolver" class="org.beetl.ext.spring.BeetlSpringViewResolver">
+	<property name="config" ref="beetlConfig"/>	
+	<property name="contentType" value="text/html;charset=UTF-8"/>
+</bean>
+
+----------------------------
+
+如上图所示，BeetlGroupUtilConfiguration有很多属性，列举如下
+
+- configFileResource 属性指定了配置文件所在路径，如果不指定，则默认在classpath下
+- functions 指定了被spring容器管理的function，key为注册的方法名，value-ref 指定的bean的名称
+- functionPackages，指定了被spring容器管理的functionPackage，key为注册的方法包名，value-ref 指定的bean的名称
+- tagFactorys ，注册tag类，key是tag类的名称，value-ref指向一个org.beetl.ext.spring.SpringBeanTagFactory实例，该子类是一个Spring管理的Bean。属性name对应的bean就是tag类。需要注意，由于Tag是有状态的，因此，必须申明Scope为 "prototype"。如代码:
+[source,java]
+----------------------------
+@Service
+@Scope("prototype")
+public class TestTag extends Tag {
+}
+----------------------------
+- typeFormats: 同functions，参数是 Map<Class<?>, Format>，其中key为类型Class
+- formats：同functions，参数是 Map<String, Format>，其中key为格式化函数名
+- virtualClassAttributes 同functions，参数Map<Class<?>, VirtualClassAttribute>，其中key为类型Class
+- virtualAttributeEvals ，类型为List<VirtualAttributeEval>
+- resourceLoader，资源加载器 ，值是 实现ResourceLoader的一个Bean
+- errorHandler ，错误处理，值是实现ErrorHandler的一个Bean
+- sharedVars,同functions，类型是Map<String, Object>，可以在此设置共享变量
+- configProperties，类型是Properties，可以覆盖配置文件的某些属性
+
+
+
+
+如下配置，指定了三个视图解析器，一个用于beetl页面渲染，一个用于cms，采用了beetl技术，另外一个一些遗留的页面采用jsp
+
+
+[source,xml]
+----------------------------
+<bean name="beetlConfig" class="org.beetl.ext.spring.BeetlGroupUtilConfiguration" init-method="init">
+	<property name="configFileResource" value="/WEB-INF/beetl.properties"/>
+</bean>
+	
+	
+<bean name="cmsbeetlConfig" class="org.beetl.ext.spring.BeetlGroupUtilConfiguration" init-method="init">
+	<property name="configFileResource" value="/WEB-INF/cms-beetl.properties"/>	
+</bean>
+	
+		
+<!-- Beetl视图解析器1 -->
+<bean name="beetlViewResolver" class="org.beetl.ext.spring.BeetlSpringViewResolver">
+	<!-- 多视图解析器，需要设置viewNames和order -->
+	<property name="viewNames">
+		<list>
+			<value>/template/**</value>
+		</list>
+	</property>
+	<property name="contentType" value="text/html;charset=UTF-8"/>
+	<property name="order" value="0"/>
+	<!-- 多GroupTemplate，需要指定使用的bean -->
+	<property name="config" ref="beetlConfig"/>
+	
+</bean>
+
+<!-- Beetl视图解析器2 -->
+<bean name="cmsBeetlViewResolver" class="org.beetl.ext.spring.BeetlSpringViewResolver">
+	<!-- 多视图解析器，需要设置viewNames和order -->
+	<property name="viewNames">
+		<list>
+			<value>/cmstemplate/**</value>
+		</list>
+	</property>
+	<property name="contentType" value="text/html;charset=UTF-8"/>
+	<property name="order" value="1"/>
+	<!-- 多GroupTemplate，需要指定使用的bean -->
+	<property name="config" ref="cmsbeetlConfig"/>
+
+</bean>
+
+<!-- JSP视图解析器 -->
+<bean name="JSPViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	<!-- 注意JSP的这个视图解析器order必须在最后 -->
+	<property name="order" value="256"/>
+	<property name="prefix" value="/WEB-INF/"/>
+	<property name="suffix" value=".jsp"/>
+	<property name="contentType" value="text/html;charset=UTF-8"/>
+</bean>
+
+----------------------------
+
+Beetl视图解析器属性同spring自带的视图解析器一样，支持contentType,order,prefix,suffix等属性。
+
+注意视图解析器里属性viewNames，这个用于判断controller返回的path到底应该交给哪个视图解析器来做。
+
+- 以/template开头的是beetlViewResolver来渲染。
+- 以/cmstemplate是交给cmsBeetlViewResolver渲染。
+- 如果都没有匹配上，则是jsp渲染
+
+如果你想更改此规则，你只能增加canHandle方法指定你的逻辑了。详情参考org.springframework.web.servlet.view.UrlBasedViewResolver.canHandle
+
+
+对于仅仅需要redirect和forward的那些请求，需要加上相应的前缀
+
+- 以"redirect:"为前缀时：表示重定向，不产生BeetlView渲染模版，而直接通过Servlet的机制返回重定向响应.redirect:前缀后面的内容为重定向地址，可以采用相对地址（相对当前url)，绝对地址(完整的url)，如果采用/开头的地址，会自动的在前面接上当前Web应用的contextPath，即contextPath为test的Web应用中使用redirect:/admin/login.html 实际重定向地址为 /test/admin/login.html
+
+- 以"forward:"为前缀时：表示转发，不产生BeetlView渲染模版。而是直接通过Servlet的机制转发请求（关于转发和重定向的区别，请自行查看Servlet API) forward:前缀后面的内容为转发地址，一般都是以/开头相对于当前Web应用的根目录
 
 
 

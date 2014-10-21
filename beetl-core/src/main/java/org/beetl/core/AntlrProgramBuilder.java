@@ -1619,7 +1619,7 @@ public class AntlrProgramBuilder
 		}
 
 		VarRef var = new VarRef(vas, hasSafe, safeExp, this.getBTToken(varRef.getText(), varRef.Identifier()
-				.getSymbol().getLine()));
+				.getSymbol().getLine()), this.getBTToken(varRef.Identifier().getSymbol()));
 		pbCtx.setVarPosition(varRef.Identifier().getText(), var);
 		return var;
 	}

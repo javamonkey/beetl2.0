@@ -1,4 +1,4 @@
-Beetl2.0使用说明书20140831
+Beetl2.1使用说明书20141021
 ===================
 李家智 <xiandafu@126.com>
 :toc:
@@ -37,7 +37,7 @@ Beetl有些功能是发展了10多年的模板引擎所不具备的，这些功�
 6. 类型推测，能在运行的时候推测模板变量类型，从而优化性能，也可以通过注解的方法显示的说明模板变量属性（这是非必须的，但有助于IDE自动提示功能）
 7. 可插拔的设计，错误信息提示，模板引擎缓存机制，模板资源管理，本地调用的安全管理器,严格MVC限制，模板引擎本身都有默认的实现，但又完全可以自定义以适合特定需求
 8. 增强的语法，如for-elsefor, select-case，安全输出符号! 等，这些语法特别适合模板开发
-9. 性能超高,具有最快的模板解释引擎，同时，又有较低的CPU消耗。5倍于国内使用的Freemaker。适合各类模板应用，如代码生成工具，CMS系统，普通网站，超高访问量的门户系统，和富客户端JS框架整合的后台管理应用
+9. 性能超高,具有最快的模板解释引擎，同时，又有较低的CPU消耗。5-6倍于国内使用的Freemaker。适合各类模板应用，如代码生成工具，CMS系统，普通网站，超高访问量的门户系统，和富客户端JS框架整合的后台管理应用
 **********************************************************************
 
 .新手如何开始
@@ -111,7 +111,7 @@ Beetl的核心是GroupTemplate，创建GroupTemplate需要俩个参数，一个�
 === 模板基础配置 ===
 
 Beetl提供不但功能齐全，而且还有你很多独特功能，通过简单的配置文件，就可以定义众多的功能，默认情况下，Configuration类总是会先加载默认的配置文件（位于/org/beetl/core/beetl-default.properties，作为新手，通常只需要关注3,4,5,6行定界符的配置，以及11行模板字符集的配置就可以了，其他配置会在后面章节陆续提到）下，其内容片断如下：
-[source,java]
+[source,text]
 ----------------------------
 #默认配置
 ENGINE=org.beetl.core.engine.FastRuntimeEngine
@@ -128,18 +128,18 @@ ERROR_HANDLER = org.beetl.core.ConsoleErrorHandler
 NATIVE_SECUARTY_MANAGER= org.beetl.core.DefaultNativeSecurityManager
 MVC_STRICT = FALSE
 
-#资源配置，resource后的属性只限于特定ResourceLoader 
+\#资源配置，resource后的属性只限于特定ResourceLoader 
 RESOURCE_LOADER=org.beetl.core.resource.ClasspathResourceLoader
 #classpath 根路径
 RESOURCE.root= /
 #是否检测文件变化
 RESOURCE.autoCheck= true
-RESOURCE.functionSuffix = fn
-#自定义标签文件位置
+#自定义脚本方法文件的Root目录和后缀
+RESOURCE.functionRoot = functions
+RESOURCE.functionSuffix = html
+#自定义标签文件Root目录和后缀
 RESOURCE.tagRoot = htmltag
-#自定义标签文件后缀
 RESOURCE.tagSuffix = tag
-
 #####  扩展 ##############
 ## 内置的方法
 FN.date = org.beetl.ext.fn.DateFunction
@@ -182,7 +182,7 @@ TAG.include= org.beetl.ext.tag.IncludeTag
 
 第22行配置了自定义的方法所在的目录以及文件名后缀。beetl即支持通过java类定义方法，也支持通过模板文件来定义方法
 
-第24行配置了自定义的html标签所在的目录以及文件名后缀。beetl即支持通过java类定义标签，也支持通过模板文件来定义标签
+第25行配置了自定义的html标签所在的目录以及文件名后缀。beetl即支持通过java类定义标签，也支持通过模板文件来定义标签
 
 第30行注册了一个date方法，其实现类是org.beetl.ext.fn.DateFunction
 
@@ -194,7 +194,7 @@ TAG.include= org.beetl.ext.tag.IncludeTag
 
 模板开发者可以创建一个beetl.properties的配置文件，此时，该配置文件将覆盖默认的配置文件属性，比如，你的定界符考虑是<!--: 和 --> ,则在beetl.properties加入一行即可,并将此配置文件放入Classpath根目录下即可。 Configuration.defaultConfiguration()总是先加载系统默认的，然后再加载Beetl.properties的配置属性，如果有重复，用后者代替前者的配置
 
-[source,java]
+[source,text]
 ----------------------------
 #自定义配置
 DELIMITER_STATEMENT_START=<!--:
@@ -1384,7 +1384,7 @@ for(value in idList) .....
 
 - 最重要的是，提高了模板的可维护性。可以让模板维护者知道变量类型，也可以让未来的ide插件根据类型声明来提供属性提示，重构等高级功能
 
-需要注意的是，如果在类型声明里提供的是类名，而不是类全路径，这样必须在配置文件里申明类的搜索路径(（需要设置配置IMPORT_PACKAGE=包名;包名，或者调用Configuration.addPkg))，默认的搜索路径有java.util.* 和 java.lang.*
+需要注意的是，如果在类型声明里提供的是类名，而不是类全路径，这样必须在配置文件里申明类的搜索路径(（需要设置配置IMPORT_PACKAGE=包名.;包名.，或者调用Configuration.addPkg))，默认的搜索路径有java.util. 和 java.lang.
 
 === 错误处理 ===
 
@@ -1882,22 +1882,20 @@ public interface VirtualAttributeEval extends VirtualClassAttribute
 
 === 使用额外的资源加载器 ===
 
-某些情况下，模板来源不止一处，GroupTemplate配置了一个默认的资源加载器，如果通过gt.getTemplate(key),将调用默认的ResourceLoader，获取模板内容，然后转化为beetl脚本放入到缓存里。你也可以传入额外的资源管理器加载模板，通过调用gt.getTemplate(key,otherLoader);
+某些情况下，模板来源不止一处，GroupTemplate配置了一个默认的资源加载器，如果通过gt.getTemplate(key),将调用默认的ResourceLoader，获取模板内容，然后转化为beetl脚本放入到缓存里。你也可以传入额外的资源管理器加载模板，通过调用gt.getTemplate(key,otherLoader)来完成;
 
 [source,java]
 -------------------------
 
 GroupTemplate gt = new GroupTemplate(conf,fileLoader)
-DBResourceLoader dbLoader = new DBResourceLoader(getData());
-Template t = gt.getTemplate("db:2", dbLoader);
-
+//自定义，参考下一节
+MapResourceLoader dbLoader = new MapResourceLoader(getData());
+Template t = gt.getTemplate("db:1", dbLoader);
 
 private Map getData()
 {
 	Map data = new HashMap();
 	data.put("db:1", "${a}");
-	data.put("db:2", "<%include('/resourceloader/justtest.txt'){}%>");
-
 	return data;
 }
 
@@ -1907,7 +1905,7 @@ private Map getData()
 
 === 自定义资源加载器 ===
 
-如果模板资源来自其他地方，如数据库，或者混合了数据库和物理文件，则需要自定义一个资源加载器。资源加载器需要实现ResourceLoader类。如下：
+如果模板资源来自其他地方，如数据库，或者混合了数据库和物理文件，或者模板是加密的，则需要自定义一个资源加载器。资源加载器需要实现ResourceLoader类。如下：
 
 
 [source,javascript]
@@ -1939,9 +1937,80 @@ public interface ResourceLoader
 	 * @param gt
 	 */
 	public void init(GroupTemplate gt);
+	
+	/**  用于include，layout等根据相对路径计算资源实际的位置.
+	 * @param resource 当前资源
+	 * @param key
+	 * @return
+	 */
+	public String getResourceId(Resource resource, String key);
+
+
 
 }
+
+
 -------------------------
+
+
+如下是一个简单的内存ResourceLoader
+
+[source,javascript]
+
+-------------------------
+public class MapResourceLoader implements ResourceLoader
+{
+	Map data;
+
+	public MapResourceLoader(Map data)
+	{
+		this.data = data;
+	}
+
+	@Override
+	public Resource getResource(String key)
+	{
+		String content = (String) data.get(key);
+		if (content == null)
+			return null;
+		return new StringTemplateResource(content, this);
+	}
+
+	@Override
+	public boolean isModified(Resource key)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean exist(String key)
+	{
+	
+		return data.contain(key);
+	}
+
+	@Override
+	public void close()
+	{
+		
+	}
+
+	@Override
+	public void init(GroupTemplate gt)
+	{
+		
+	}
+
+	@Override
+	public String getResourceId(Resource resource, String id)
+	{
+		//不需要计算相对路径
+		return id;
+	}
+}
+-------------------------
+
+
 
 init方法可以初始化GroupTemplate，比如读取配置文件的root属性，autoCheck属性，字符集属性，以及加载functions目录下的所有模板方法
 如FileResourceLoader 的 init方法
@@ -2035,12 +2104,58 @@ public abstract class Resource
 
 	
 
-』
+
 -------------------------
 
 
 
 参考例子可以参考beetl自带的ResourceLoader
+
+=== 使用CompositeResourceLoader ===
+
+组合加载器，可以包含多个已有的ResourceLoader，如下代码创建一个包含俩个文件和内存的ResourceLoader
+
+[source,java]
+
+-------------------------
+FileResourceLoader fileLoader1 = new FileResourceLoader(path1);
+FileResourceLoader fileLoader2 = new FileResourceLoader(path2);
+Map data = getData();
+// 根据id加载
+MapResourceLoader mapLoader = new MapResourceLoader(data);
+
+
+CompositeResourceLoader loader = new CompositeResourceLoader();
+loader.addResourceLoader(new StartsWithMatcher("http:").withoutPrefix(), fileLoader2);
+loader.addResourceLoader(new StartsWithMatcher("db:"), mapLoader);
+loader.addResourceLoader(new AllowAllMatcher(), fileLoader1);
+
+GroupTemplate gt = new GroupTemplate(loader, conf);
+Template t = gt.getTemplate("/xxx.html");
+-------------------------
+
+如上例子，groupTemplate从CompositeResourceLoader里加载/xxx.html，由于http:和db:前缀都不匹配，因此，将实际采用fileLoader1加载path1+/xxx.html，如下是xxx.html文件内容 
+
+[source,java]
+
+-------------------------
+<%
+include("/xxx2.html"){}
+include("http:/xxx.html"){}
+%>
+-------------------------
+
+第2行仍然是由fileLoader1加载，但第3行以http:前缀开头，因此将fileLoader2加载path2+/xxx.html.xxx.html内容如下
+[source,java]
+
+-------------------------
+<%
+include("db:1"){}
+%>
+-------------------------
+
+因为以db:开头，因此会采用MapResourceLoader加载，内容是key为db:1对模板
+
 
 
 === 自定义错误处理器 ===
@@ -3279,13 +3394,13 @@ public class Struts2BeetlActionResult extends StrutsResultSupport
 
 步骤如下：
 
-- 配置监听器，监听器指定对*.html的请求进行监听。
+- 配置监听器，监听器指定对*.btl的请求进行监听(假定模板名字都是以btl.结尾)。
 
-- 实现监听器，该监听器继承父类 org.beetl.ext.web.SimpleCrossFilter，实现getGroupTemplate方法。
+- 实现监听器，该监听器继承父类 org.beetl.ext.web.SimpleCrossFilter，实现protected abstract GroupTemplate getGroupTemplate()方法。依据不同的集成方式，比如你的环境是Servlet，则只需要调用ServletGroupTemplate.instance().getGroupTemplate(),如果是Jfinal，需要调用BeetlRenderFactory.groupTemplate等
 
 - SimpleCrossFilter 提供一些有用的方法，可以帮助你定制一些特性，可以参考源码了解
 
-- 配置完成后，对于要测试的模板，可以新建一个伪模型文件，比如要测试模板WebRoot/user/userList.html,可以新建立WebRoot/values/user/userList.html.var 。 values是监听器默认的伪模型的根目录
+- 置完成后，对于要测试的模板，可以新建一个对应的伪模型文件，比如要测试模板WebRoot/user/userList.html,可以新建立WebRoot/values/user/userList.html.var 。 values是监听器默认的伪模型的根目录
 
 - 编辑伪模型文件，对应于userList.html需要的全局变量，userList.html.var可以申明这些些变量
 

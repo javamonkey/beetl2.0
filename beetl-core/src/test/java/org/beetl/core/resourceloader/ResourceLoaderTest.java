@@ -30,7 +30,7 @@ public class ResourceLoaderTest extends BasicTestCase
 	{
 
 		Map data = getData();
-		DBResourceLoader strLoader = new DBResourceLoader(data);
+		MapResourceLoader strLoader = new MapResourceLoader(data);
 		Template t = gt.getTemplate("db:1", strLoader);
 		t.binding("a", "abc");
 		String result = t.render();
@@ -43,7 +43,7 @@ public class ResourceLoaderTest extends BasicTestCase
 	{
 
 		Map data = getData();
-		DBResourceLoader strLoader = new DBResourceLoader(data);
+		MapResourceLoader strLoader = new MapResourceLoader(data);
 		Template t = gt.getTemplate("db:2", strLoader);
 		String result = t.render();
 		this.assertEquals("hello", result);
@@ -55,7 +55,7 @@ public class ResourceLoaderTest extends BasicTestCase
 	{
 
 		Map data = getData();
-		DBResourceLoader strLoader = new DBResourceLoader(data);
+		MapResourceLoader strLoader = new MapResourceLoader(data);
 		Template t = gt.getTemplate("db:2", strLoader);
 		String result = t.render();
 		gt.removeTemplate("db:2");

@@ -29,10 +29,10 @@ public class CompositeResourceLoaderTest extends BasicTestCase
 		FileResourceLoader fileLoader2 = new FileResourceLoader(path2);
 		Map data = getData();
 		// 根据id加载
-		DBResourceLoader strLoader = new DBResourceLoader(data);
+		MapResourceLoader mapLoader = new MapResourceLoader(data);
 
 		loader.addResourceLoader(new StartsWithMatcher("http:").withoutPrefix(), fileLoader2);
-		loader.addResourceLoader(new StartsWithMatcher("db:").withoutPrefix(), strLoader);
+		loader.addResourceLoader(new StartsWithMatcher("db:").withoutPrefix(), mapLoader);
 		loader.addResourceLoader(new AllowAllMatcher(), fileLoader1);
 
 		GroupTemplate gt = new GroupTemplate(loader, conf);

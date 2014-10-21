@@ -1,1 +1,1 @@
-${strutil.trim(user.lover.name)}
+${strutil.trim(user.name1)}

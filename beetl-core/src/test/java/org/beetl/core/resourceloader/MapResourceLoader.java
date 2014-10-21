@@ -7,11 +7,11 @@ import org.beetl.core.Resource;
 import org.beetl.core.ResourceLoader;
 import org.beetl.core.resource.StringTemplateResource;
 
-public class DBResourceLoader implements ResourceLoader
+public class MapResourceLoader implements ResourceLoader
 {
 	Map data;
 
-	public DBResourceLoader(Map data)
+	public MapResourceLoader(Map data)
 	{
 		this.data = data;
 	}

@@ -243,6 +243,7 @@ public class BeetlException extends RuntimeException
 		{
 			this.token = token;
 		}
+
 		this.errorTokenStack.add(token);
 	}
 

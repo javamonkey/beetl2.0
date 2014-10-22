@@ -1,1 +1,5 @@
-${strutil.trim(user.name1)}
+<%
+var a = 1/0
+var tt = 1;
+%>
+ccs

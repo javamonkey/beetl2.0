@@ -40,6 +40,7 @@ import org.beetl.core.exception.BeetlException;
 import org.beetl.core.io.ByteWriter_Byte;
 import org.beetl.core.io.ByteWriter_Char;
 import org.beetl.core.misc.BeetlUtil;
+import org.beetl.core.statement.ErrorGrammarProgram;
 import org.beetl.core.statement.GrammarToken;
 import org.beetl.core.statement.Program;
 
@@ -124,7 +125,11 @@ public class Template
 		}
 		catch (BeetlException e)
 		{
-			e.pushResource(this.program.res.id);
+			if (!(program instanceof ErrorGrammarProgram))
+			{
+				e.pushResource(this.program.res.id);
+			}
+
 			// 是否打印异常，只有根模板才能打印异常
 			if (!isRoot)
 				throw e;

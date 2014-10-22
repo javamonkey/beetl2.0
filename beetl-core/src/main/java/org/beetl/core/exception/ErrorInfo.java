@@ -126,7 +126,15 @@ public class ErrorInfo
 		}
 		else if (errorCode.startsWith("PARSER"))
 		{
-			this.errorTokenText = ex.getMessage();
+			if (ex.token != null)
+			{
+				this.errorTokenText = ex.token.text;
+			}
+			else
+			{
+				this.errorTokenText = ex.getMessage();
+			}
+
 		}
 		else
 		{

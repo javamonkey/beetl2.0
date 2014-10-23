@@ -27,14 +27,11 @@
  */
 package org.beetl.core.statement;
 
-import java.io.Writer;
-
 import org.beetl.core.Context;
 import org.beetl.core.ErrorHandler;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Resource;
 import org.beetl.core.exception.BeetlException;
-import org.beetl.core.misc.BeetlUtil;
 
 /**
  * 语法错的时候处理错误
@@ -49,7 +46,7 @@ public class ErrorGrammarProgram extends Program
 	public ErrorGrammarProgram(Resource res, GroupTemplate gt, String cr)
 	{
 		super();
-		this.id = res.getId();
+		this.res = res;
 		this.rs = res;
 		this.gt = gt;
 		this.metaData = new ProgramMetaData() {
@@ -71,8 +68,9 @@ public class ErrorGrammarProgram extends Program
 		ErrorHandler errorHandler = this.gt.getErrorHandler();
 		if (errorHandler == null)
 			throw exception;
-		Writer w = BeetlUtil.getWriterByByteWriter(ctx.byteWriter);
-		errorHandler.processExcption(exception, w);
+		//		Writer w = BeetlUtil.getWriterByByteWriter(ctx.byteWriter);
+		//		errorHandler.processExcption(exception, w);
+		throw exception;
 	}
 
 	public BeetlException getException()

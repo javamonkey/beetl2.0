@@ -7,14 +7,13 @@
 	</parent>
 	<groupId>org.beetl</groupId>
 	<artifactId>beetl-parent</artifactId>
-	<version>2.0.13-SNAPSHOT</version>
+	<version>2.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<description>Bee Template Language</description>
 	<url>https://github.com/javamonkey/beetl2.0</url>
 	<modules>
 		<module>beetl-core</module>
-		<module>beetl-performance</module>
-		<module>beetl-samples</module>
+	
 	</modules>
 	<dependencyManagement>
 		<dependencies>

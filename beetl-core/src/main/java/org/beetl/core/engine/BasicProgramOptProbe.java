@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 import org.beetl.core.Context;
 import org.beetl.core.Listener;
 import org.beetl.core.cache.Cache;
-import org.beetl.core.statement.Program;
 import org.beetl.core.statement.VarRef;
 
 /**
@@ -19,12 +18,6 @@ public class BasicProgramOptProbe extends Probe
 {
 
 	Cache cache = null;
-
-	public BasicProgramOptProbe(Program program)
-	{
-		super(program);
-
-	}
 
 	protected Map<Class, Listener> initProbeNode()
 	{
@@ -38,7 +31,7 @@ public class BasicProgramOptProbe extends Probe
 	@Override
 	public void check(Context ctx)
 	{
-		StatementParser seacher = new StatementParser(program.metaData.statements, program.gt, program.id);
+		StatementParser seacher = new StatementParser(program.metaData.statements, program.gt, program.res.getId());
 		Map<Class, Listener> map = initProbeNode();
 		for (Entry<Class, Listener> entry : map.entrySet())
 		{
@@ -47,7 +40,7 @@ public class BasicProgramOptProbe extends Probe
 
 		this.initProbeNode();
 		seacher.parse();
-		this.program.gt.getProgramCache().set(program.id, program);
+		this.program.gt.getProgramCache().set(program.res.getId(), program);
 		ProgramReplaceEvent event = new ProgramReplaceEvent(program);
 		this.program.gt.fireEvent(event);
 

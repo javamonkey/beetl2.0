@@ -34,6 +34,7 @@ import org.beetl.core.GroupTemplate;
 import org.beetl.core.Resource;
 import org.beetl.core.ResourceLoader;
 import org.beetl.core.fun.FileFunctionWrapper;
+import org.beetl.core.misc.BeetlUtil;
 
 /** 文件模板加载器
  * @author joelli
@@ -45,8 +46,8 @@ public class FileResourceLoader implements ResourceLoader
 	String root = null;
 	String charset = "UTF-8";
 	boolean autoCheck = false;
-	String functionRoot = "functions";
-	String functionSuffix = "html";
+	String functionRoot = "funtion";
+	String functionSuffix = "fn";
 	GroupTemplate gt = null;
 
 	public FileResourceLoader()
@@ -149,7 +150,7 @@ public class FileResourceLoader implements ResourceLoader
 		}
 
 		this.autoCheck = Boolean.parseBoolean(resourceMap.get("autoCheck"));
-
+		this.functionRoot = resourceMap.get("functionRoot");
 		File root = new File(this.root, this.functionRoot);
 		this.gt = gt;
 		if (root.exists())
@@ -187,6 +188,15 @@ public class FileResourceLoader implements ResourceLoader
 	{
 		// TODO Auto-generated method stub
 		return new File(root, key).exists();
+	}
+
+	@Override
+	public String getResourceId(Resource resource, String id)
+	{
+		if (resource == null)
+			return id;
+		else
+			return BeetlUtil.getRelPath(resource.getId(), id);
 	}
 
 }

@@ -1,4 +1,5 @@
 <%
-var i = 12;
+var a = 1/0
+var tt = 1;
 %>
-${i}
+ccs

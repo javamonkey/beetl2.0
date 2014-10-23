@@ -40,4 +40,10 @@ public class NativeAtrributeNode extends NativeNode
 	{
 		return this.attribute;
 	}
+
+	@Override
+	public String getName()
+	{
+		return attribute;
+	}
 }

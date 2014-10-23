@@ -82,7 +82,7 @@ public final class PlaceholderST extends Statement
 		}
 		catch (IOException e)
 		{
-			BeetlException be = new BeetlException(BeetlException.CLIENT_IO_ERROR_ERROR, "Client IO Error", e);
+			BeetlException be = new BeetlException(BeetlException.CLIENT_IO_ERROR_ERROR, e.getMessage(), e);
 			be.pushToken(this.token);
 			throw be;
 		}

@@ -66,7 +66,16 @@ public class FileFunctionWrapper implements Function
 			}
 
 			template.renderTo(ctx.byteWriter);
-			return null;
+			Object[] vars = template.getCtx().vars;
+			Object o = vars[vars.length - 1];
+			if (o != Context.NOT_EXIST_OBJECT)
+			{
+				return o;
+			}
+			else
+			{
+				return null;
+			}
 
 		}
 		catch (Exception ex)

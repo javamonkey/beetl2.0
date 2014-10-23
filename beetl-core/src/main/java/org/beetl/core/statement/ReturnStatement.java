@@ -38,23 +38,35 @@ import org.beetl.core.InferContext;
 public class ReturnStatement extends Statement
 {
 
-	public ReturnStatement(GrammarToken token)
+	Expression exp = null;
+
+	public ReturnStatement(Expression exp, GrammarToken token)
 	{
 		super(token);
-		// TODO Auto-generated constructor stub
+		this.exp = exp;
 	}
 
 	@Override
 	public void execute(Context ctx)
 	{
 		ctx.gotoFlag = IGoto.RETURN;
+		if (this.exp != null)
+		{
+			Object value = exp.evaluate(ctx);
+			//最后一个存放返回值
+			ctx.vars[ctx.vars.length - 1] = value;
+		}
 
 	}
 
 	@Override
 	public void infer(InferContext inferCtx)
 	{
-		// TODO Auto-generated method stub
+		if (exp != null)
+		{
+			exp.infer(inferCtx);
+
+		}
 
 	}
 

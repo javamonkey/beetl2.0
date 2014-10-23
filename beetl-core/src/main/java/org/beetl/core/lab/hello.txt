@@ -1,5 +1,7 @@
 <%
-var a = 1/0
-var tt = 1;
+var a =1 ;
+if(a==2){
+return ;
+}
 %>
 ccs

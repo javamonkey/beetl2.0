@@ -38,6 +38,12 @@ import org.beetl.core.TagFactory;
 import org.beetl.core.Template;
 import org.beetl.core.statement.Statement;
 
+/**
+ * 封装了html标签调用的标签，先寻找是否有注册的标签类，如果没有，再调用
+ * htmltags目录下的html标签文件
+ * @author joelli
+ *
+ */
 public class HTMLTagSupportWrapper extends Tag
 {
 

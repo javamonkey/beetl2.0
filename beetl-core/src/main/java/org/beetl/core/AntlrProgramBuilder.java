@@ -225,6 +225,12 @@ public class AntlrProgramBuilder
 
 		}
 
+		if (pbCtx.current.gotoValue == IGoto.RETURN || pbCtx.current.gotoValue == IGoto.BREAK)
+		{
+			//如果顶级scope也有return 和break，则检测
+			data.hasGoto = true;
+		}
+
 		pbCtx.anzlyszeGlobal();
 		pbCtx.anzlyszeLocal();
 		data.varIndexSize = pbCtx.varIndexSize;

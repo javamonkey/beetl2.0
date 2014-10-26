@@ -40,7 +40,7 @@ public class Program
 {
 	// 模板的所有脚本语句
 	public ProgramMetaData metaData = null;
-	public String id = null;
+	public Resource res = null;
 	public GroupTemplate gt = null;
 	public Resource rs = null;
 

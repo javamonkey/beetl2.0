@@ -40,8 +40,10 @@ public interface TagVarBinding
 {
 
 	/** 调用此方法获得tag返回的变量，并赋值标签定义的临时变量
+	 *  请使用GeneralVarTagBinding.binds 代替
 	 * @return
 	 */
+	@Deprecated
 	public Object[] bindVars();
 
 }

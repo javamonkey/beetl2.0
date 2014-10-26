@@ -60,7 +60,7 @@ public class DefaultTemplateEngine implements TemplateEngine
 		ProgramMetaData data = pb.build(tree);
 		Program program = new Program();
 		program.metaData = data;
-		program.id = resource.getId();
+		program.res = resource;
 		program.rs = resource;
 		program.gt = gt;
 

@@ -29,17 +29,11 @@ public class TypeBindingProbe extends Probe
 
 	public TypeBindingProbe(Program p, Probe nextFilter)
 	{
-		super(p);
+		super();
+		this.setProgram(p);
 		// 一个新的copy，用于分析
-		ProgramMetaData metaData = p.metaData.copy();
-		Program copyProgram = new Program();
-		copyProgram.metaData = metaData;
-		copyProgram.id = p.id;
-		copyProgram.gt = p.gt;
-		copyProgram.rs = p.rs;
-		this.program = copyProgram;
+		ProgramMetaData metaData = p.metaData;
 
-		nextFilter.program = this.program;
 		this.nextFilter = nextFilter;
 		for (Entry<String, Integer> entry : this.program.metaData.globalIndexMap.entrySet())
 		{
@@ -84,6 +78,17 @@ public class TypeBindingProbe extends Probe
 			}
 		}
 
+	}
+
+	public TypeBindingProbe copy()
+	{
+
+		return this;
+	}
+
+	public Program getCopyProgram()
+	{
+		return this.program;
 	}
 
 	@Override
@@ -135,12 +140,14 @@ public class TypeBindingProbe extends Probe
 				infer();
 				isCompleted = true;
 				// 调用下一个filter
+				nextFilter.setProgram(this.program);
 				nextFilter.check(ctx);
 			}
 			catch (BeetlException bex)
 			{
 				//	bex.printStackTrace();
-				ProgramReplaceErrorEvent event = new ProgramReplaceErrorEvent(program.id, bex.getMessage(), bex);
+				ProgramReplaceErrorEvent event = new ProgramReplaceErrorEvent(program.res.getId(), bex.getMessage(),
+						bex);
 				program.gt.fireEvent(event);
 				isCompleted = true;
 			}

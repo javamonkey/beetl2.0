@@ -248,6 +248,7 @@ public class Transformator
 		}
 		//
 
+		this.lineSeparatorCharArray = lineSeparator.toCharArray();
 	}
 
 	public void parser() throws HTMLTagParserException

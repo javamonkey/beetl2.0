@@ -7,7 +7,12 @@ public abstract class Probe
 {
 	Program program = null;
 
-	public Probe(Program program)
+	public Program getProgram()
+	{
+		return program;
+	}
+
+	public void setProgram(Program program)
 	{
 		this.program = program;
 	}

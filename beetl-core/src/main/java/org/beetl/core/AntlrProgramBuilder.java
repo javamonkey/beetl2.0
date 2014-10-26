@@ -69,6 +69,7 @@ import org.beetl.core.parser.BeetlParser.ContinueStContext;
 import org.beetl.core.parser.BeetlParser.DirectiveExpContext;
 import org.beetl.core.parser.BeetlParser.DirectiveExpIDListContext;
 import org.beetl.core.parser.BeetlParser.DirectiveStContext;
+import org.beetl.core.parser.BeetlParser.EndContext;
 import org.beetl.core.parser.BeetlParser.ExpressionContext;
 import org.beetl.core.parser.BeetlParser.ExpressionListContext;
 import org.beetl.core.parser.BeetlParser.ForControlContext;
@@ -224,6 +225,12 @@ public class AntlrProgramBuilder
 
 		}
 
+		if (pbCtx.current.gotoValue == IGoto.RETURN || pbCtx.current.gotoValue == IGoto.BREAK)
+		{
+			//如果顶级scope也有return 和break，则检测
+			data.hasGoto = true;
+		}
+
 		pbCtx.anzlyszeGlobal();
 		pbCtx.anzlyszeLocal();
 		data.varIndexSize = pbCtx.varIndexSize;
@@ -267,7 +274,14 @@ public class AntlrProgramBuilder
 		}
 		else if (node instanceof ReturnStContext)
 		{
-			ReturnStatement st = new ReturnStatement(null);
+			ReturnStContext rtnCtx = (ReturnStContext) node;
+			ExpressionContext expCtx = rtnCtx.expression();
+			Expression exp = null;
+			if (expCtx != null)
+			{
+				exp = this.parseExpress(expCtx);
+			}
+			ReturnStatement st = new ReturnStatement(exp, null);
 			pbCtx.current.gotoValue = IGoto.RETURN;
 			return st;
 		}
@@ -370,6 +384,11 @@ public class AntlrProgramBuilder
 			SelectStContext selectCtx = (SelectStContext) node;
 
 			return this.parseSelect(selectCtx);
+		}
+
+		else if (node instanceof EndContext)
+		{
+			return null;
 		}
 
 		else
@@ -1605,7 +1624,8 @@ public class AntlrProgramBuilder
 
 		}
 
-		VarRef var = new VarRef(vas, hasSafe, safeExp, this.getBTToken(varRef.Identifier().getSymbol()));
+		VarRef var = new VarRef(vas, hasSafe, safeExp, this.getBTToken(varRef.getText(), varRef.Identifier()
+				.getSymbol().getLine()), this.getBTToken(varRef.Identifier().getSymbol()));
 		pbCtx.setVarPosition(varRef.Identifier().getText(), var);
 		return var;
 	}

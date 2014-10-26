@@ -31,9 +31,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.beetl.core.BodyContent;
+import org.beetl.core.Resource;
 import org.beetl.core.Tag;
 import org.beetl.core.Template;
-import org.beetl.core.misc.BeetlUtil;
 
 /**
  * 提供一个布局功能，每个页面总是由一定布局，如页面头，菜单，页面脚，以及正文 layout标签允许为正文指定一个布局，如下使用方式
@@ -118,7 +118,8 @@ public class LayoutTag extends Tag
 	protected String getRelResourceId()
 	{
 
-		return BeetlUtil.getRelPath(ctx.getResourceId(), (String) this.args[0]);
+		Resource sibling = ctx.getResource();
+		return gt.getResourceLoader().getResourceId(sibling, (String) this.args[0]);
 
 	}
 

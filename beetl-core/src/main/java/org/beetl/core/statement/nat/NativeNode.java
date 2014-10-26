@@ -27,7 +27,8 @@
  */
 package org.beetl.core.statement.nat;
 
-public class NativeNode implements java.io.Serializable
+public abstract class NativeNode implements java.io.Serializable
 {
+	abstract public String getName();
 
 }

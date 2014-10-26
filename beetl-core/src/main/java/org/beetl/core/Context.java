@@ -155,7 +155,15 @@ public class Context
 
 	public String getResourceId()
 	{
-		return this.template.program.id;
+		return this.template.program.res.getId();
+	}
+
+	/** 当前处于哪个Resource
+	 * @return
+	 */
+	public Resource getResource()
+	{
+		return this.template.program.res;
 	}
 
 }

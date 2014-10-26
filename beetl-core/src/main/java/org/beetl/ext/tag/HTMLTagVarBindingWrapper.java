@@ -36,6 +36,11 @@ import org.beetl.core.TagFactory;
 import org.beetl.core.TagVarBinding;
 import org.beetl.core.statement.Statement;
 
+/**
+ * 封装了带变量绑定的html标签调用的标签
+ * @author joelli
+ *
+ */
 public class HTMLTagVarBindingWrapper extends Tag implements TagVarBinding
 {
 
@@ -48,6 +53,7 @@ public class HTMLTagVarBindingWrapper extends Tag implements TagVarBinding
 
 	}
 
+	@Deprecated
 	public Object[] bindVars()
 	{
 

@@ -442,7 +442,7 @@ public class ObjectUtil
 
 	}
 
-	private static Object invoke(Object o, ObjectMethodMatchConf conf, Object[] paras) throws IllegalAccessException,
+	public static Object invoke(Object o, ObjectMethodMatchConf conf, Object[] paras) throws IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException
 	{
 
@@ -464,7 +464,7 @@ public class ObjectUtil
 			//check static 
 			if (!Modifier.isStatic(conf.method.getModifiers()))
 			{
-				throw new BeetlException(BeetlException.NATIVE_CALL_INVALID, "该方法是非静态方法，不能静态形式调用");
+				throw new BeetlException(BeetlException.NULL, "该方法是非静态方法，不能静态形式调用");
 			}
 		}
 		return conf.method.invoke(o, targets);

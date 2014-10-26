@@ -29,8 +29,10 @@ package org.beetl.core;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +42,7 @@ import org.beetl.core.cache.Cache;
 import org.beetl.core.cache.ProgramCacheFactory;
 import org.beetl.core.exception.BeetlException;
 import org.beetl.core.exception.HTMLTagParserException;
+import org.beetl.core.exception.ScriptEvalError;
 import org.beetl.core.fun.FunctionWrapper;
 import org.beetl.core.misc.ClassSearch;
 import org.beetl.core.om.ObjectUtil;
@@ -309,6 +312,152 @@ public class GroupTemplate
 
 	}
 
+	/** 执行某个脚本，参数是paras，返回的是顶级变量
+	 * @param key
+	 * @param paras
+	 * @return
+	 */
+	public Map runScript(String key, Map<String, Object> paras) throws ScriptEvalError
+	{
+		return this.runScript(key, paras, null);
+
+	}
+
+	/**执行某个脚本，参数是paras，返回的是顶级变量 ,如果script有输出，则输出到writer里
+	 * @param key
+	 * @param paras
+	 * @param w
+	 * @return
+	 */
+	public Map runScript(String key, Map<String, Object> paras, Writer w) throws ScriptEvalError
+	{
+		return this.runScript(key, paras, w, this.resourceLoader);
+	}
+
+	/**
+	 * 执行某个脚本，参数是paras，返回的是顶级变量 
+	 * @param key
+	 * @param paras
+	 * @param w
+	 * @param loader 额外的资源管理器就在脚本
+	 * @return
+	 * @throws ScriptEvalError
+	 */
+	public Map runScript(String key, Map<String, Object> paras, Writer w, ResourceLoader loader) throws ScriptEvalError
+	{
+		Template t = loadScriptTemplate(key, loader);
+		t.fastBinding(paras);
+		if (w == null)
+		{
+			t.render();
+		}
+		else
+		{
+			t.renderTo(w);
+		}
+
+		try
+		{
+			Map map = getSrirptTopScopeVars(t);
+			if (map == null)
+			{
+				throw new ScriptEvalError();
+			}
+			return map;
+		}
+		catch (ScriptEvalError ex)
+		{
+			throw ex;
+		}
+		catch (Exception ex)
+		{
+			throw new ScriptEvalError(ex);
+		}
+
+	}
+
+	private Map getSrirptTopScopeVars(Template t)
+	{
+		Map<String, Integer> idnexMap = t.program.metaData.getTemplateRootScopeIndexMap();
+		Object[] values = t.ctx.vars;
+		Map<String, Object> result = new HashMap<String, Object>();
+		for (Entry<String, Integer> entry : idnexMap.entrySet())
+		{
+			String name = entry.getKey();
+			int index = entry.getValue();
+			Object value = values[index];
+			result.put(name, value);
+		}
+		if (values == null)
+		{
+			return null;
+		}
+		Object ret = t.ctx.vars[t.ctx.vars.length - 1];
+		if (ret != Context.NOT_EXIST_OBJECT)
+		{
+			result.put("return", ret);
+		}
+
+		return result;
+	}
+
+	private Template loadScriptTemplate(String key, ResourceLoader loader)
+	{
+		Program program = (Program) this.programCache.get(key);
+		if (program == null)
+		{
+			synchronized (key)
+			{
+				if (program == null)
+				{
+					Resource resource = loader.getResource(key);
+					program = this.loadScript(resource);
+					this.programCache.set(key, program);
+					return new Template(this, program, this.conf);
+				}
+			}
+		}
+
+		if (resourceLoader.isModified(program.rs))
+		{
+			synchronized (key)
+			{
+				Resource resource = loader.getResource(key);
+				program = this.loadScript(resource);
+				this.programCache.set(key, program);
+			}
+		}
+
+		return new Template(this, program, this.conf);
+	}
+
+	/**使用额外的资源加载器加载模板
+	 * @param key
+	 * @param loader 
+	 * @return
+	 */
+	public Template getTemplate(String key, ResourceLoader loader)
+	{
+		return this.getTemplateByLoader(key, loader);
+	}
+
+	/** 得到模板，并指明父模板
+	 * @param key
+	 * @param parent
+	 * @return
+	 */
+	public Template getTemplate(String key, String parent, ResourceLoader loader)
+	{
+		Template template = this.getTemplate(key, loader);
+		template.isRoot = false;
+		return template;
+	}
+
+	/** 得到模板，并指明父模板，通过用于
+	 * @param key
+	 * @param parent
+	 * @return
+	 */
 	public Template getTemplate(String key, String parent)
 	{
 		Template template = this.getTemplate(key);
@@ -323,6 +472,12 @@ public class GroupTemplate
 	 */
 	public Template getTemplate(String key)
 	{
+
+		return getTemplateByLoader(key, this.resourceLoader);
+	}
+
+	private Template getTemplateByLoader(String key, ResourceLoader loader)
+	{
 		key = key.intern();
 		Program program = (Program) this.programCache.get(key);
 		if (program == null)
@@ -331,7 +486,7 @@ public class GroupTemplate
 			{
 				if (program == null)
 				{
-					Resource resource = resourceLoader.getResource(key);
+					Resource resource = loader.getResource(key);
 					program = this.loadTemplate(resource);
 					this.programCache.set(key, program);
 					return new Template(this, program, this.conf);
@@ -343,24 +498,37 @@ public class GroupTemplate
 		{
 			synchronized (key)
 			{
-				Resource resource = resourceLoader.getResource(key);
+				Resource resource = loader.getResource(key);
 				program = this.loadTemplate(resource);
 				this.programCache.set(key, program);
 			}
 		}
 
 		return new Template(this, program, this.conf);
-
 	}
 
-	/** 判断缓存中是否存在模板
-	 * @param key
-	 * @return
-	 */
 	public Program getProgram(String key)
 	{
 		Program program = (Program) this.programCache.get(key);
 		return program;
+	}
+
+	/** 判断是否加载过模板
+	 * @param key
+	 * @return
+	 */
+	public boolean hasTemplate(String key)
+	{
+		Program program = (Program) this.programCache.get(key);
+		return program != null;
+	}
+
+	/** 手工删除加载过的模板
+	 * @param key
+	 */
+	public void removeTemplate(String key)
+	{
+		programCache.remove(key);
 	}
 
 	private Program loadTemplate(Resource res)
@@ -401,6 +569,28 @@ public class GroupTemplate
 		catch (BeetlException ex)
 		{
 			ErrorGrammarProgram ep = new ErrorGrammarProgram(res, this, sf != null ? sf.lineSeparator : null);
+			ex.pushResource(res.id);
+			ep.setException(ex);
+			return ep;
+		}
+
+	}
+
+	private Program loadScript(Resource res)
+	{
+
+		try
+		{
+			Reader scriptReader = res.openReader();
+			Program program = engine.createProgram(res, scriptReader, Collections.EMPTY_MAP,
+					System.getProperty("line.separator"), this);
+			return program;
+
+		}
+
+		catch (BeetlException ex)
+		{
+			ErrorGrammarProgram ep = new ErrorGrammarProgram(res, this, System.getProperty("line.separator"));
 			ex.pushResource(res.id);
 			ep.setException(ex);
 			return ep;

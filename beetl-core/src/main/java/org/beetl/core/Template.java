@@ -40,6 +40,8 @@ import org.beetl.core.exception.BeetlException;
 import org.beetl.core.io.ByteWriter_Byte;
 import org.beetl.core.io.ByteWriter_Char;
 import org.beetl.core.misc.BeetlUtil;
+import org.beetl.core.statement.ErrorGrammarProgram;
+import org.beetl.core.statement.GrammarToken;
 import org.beetl.core.statement.Program;
 
 /** 模板类
@@ -123,10 +125,20 @@ public class Template
 		}
 		catch (BeetlException e)
 		{
-			e.pushResource(this.program.id);
+			if (!(program instanceof ErrorGrammarProgram))
+			{
+				e.pushResource(this.program.res.id);
+			}
+
 			// 是否打印异常，只有根模板才能打印异常
 			if (!isRoot)
 				throw e;
+
+			if (e.detailCode == BeetlException.CLIENT_IO_ERROR_ERROR && ctx.gt.conf.isIgnoreClientIOError)
+			{
+				return;
+			}
+
 			Writer w = BeetlUtil.getWriterByByteWriter(ctx.byteWriter);
 
 			e.gt = this.program.gt;
@@ -143,7 +155,19 @@ public class Template
 		{
 			if (!ctx.gt.conf.isIgnoreClientIOError)
 			{
-				throw new RuntimeException(e);
+
+				BeetlException be = new BeetlException(BeetlException.CLIENT_IO_ERROR_ERROR, e.getMessage(), e);
+				be.pushResource(this.program.res.id);
+				be.pushToken(new GrammarToken(this.program.res.id, 0, 0));
+				ErrorHandler errorHandler = this.gt.getErrorHandler();
+
+				if (errorHandler == null)
+				{
+					throw be;
+				}
+				Writer w = BeetlUtil.getWriterByByteWriter(ctx.byteWriter);
+				errorHandler.processExcption(be, w);
+
 			}
 			else
 			{
@@ -218,6 +242,11 @@ public class Template
 	public void fastBinding(Map map)
 	{
 		ctx.globalVar = map;
+	}
+
+	public Context getCtx()
+	{
+		return this.ctx;
 	}
 
 	//	public void fastRender(Map map, ByteWriter byteWriter)

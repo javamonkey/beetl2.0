@@ -79,8 +79,16 @@ public class FormatExpression extends Expression
 			ex.pushToken(token);
 			throw ex;
 		}
-
-		return format.format(o, pattern);
+		try
+		{
+			return format.format(o, pattern);
+		}
+		catch (Exception e)
+		{
+			BeetlException ex = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "调用格式化函数抛出异常", e);
+			ex.pushToken(token);
+			throw ex;
+		}
 
 	}
 

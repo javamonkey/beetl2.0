@@ -38,6 +38,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.beetl.core.statement.ASTNode;
+import org.beetl.core.statement.GrammarToken;
 import org.beetl.core.statement.IGoto;
 import org.beetl.core.statement.IVarIndex;
 
@@ -110,6 +111,24 @@ public class ProgramBuilderContext
 	{
 		VarDescrption varDesc = findVar(varName);
 		varDesc.where.add(where);
+	}
+
+	protected GrammarToken hasDefined(String varName)
+	{
+		BlockEnvContext scope = current;
+		while (scope != null)
+		{
+			VarDescrption varDesc = scope.getVarDescrption(varName);
+			if (varDesc != null)
+			{
+				return varDesc.where.get(0).token;
+			}
+			else
+			{
+				scope = scope.parent;
+			}
+		}
+		return null;
 	}
 
 	protected VarDescrption findVar(String varName)

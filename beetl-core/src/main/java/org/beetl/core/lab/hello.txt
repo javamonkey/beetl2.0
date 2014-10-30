@@ -1,4 +1,8 @@
 <%
-include("/org/beetl/core/lab/inc.txt"){}
+var a=1;
+for(u in list){	
+}
+var a = 2;
+
 %>
 ccs

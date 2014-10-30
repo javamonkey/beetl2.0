@@ -45,7 +45,7 @@ public class NumberUtil
 
 	public static Integer valueOf(int i)
 	{
-		if (i < INTEGER.length)
+		if (i >= 0 && i < INTEGER.length)
 		{
 			return INTEGER[i];
 		}

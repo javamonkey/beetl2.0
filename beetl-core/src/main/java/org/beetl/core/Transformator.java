@@ -513,10 +513,21 @@ public class Transformator
 				if (appendCR)
 				{
 
-					sb.append(endStatement);
+					lineStatus.setStatment();
+					if (this.lineStatus.onlyStatment())
+					{
+						// 只有控制语句，则如果文本变量都是空格，这些文本变量则认为是格式化的，非输出语句
+						// 需要更改输出
+						reforamtStatmentLine();
+						lineStatus.reset();
+						sb.append(endStatement);
+					}
 
 				}
-				lineStatus.setStatment();
+				else
+				{
+					lineStatus.setStatment();
+				}
 				return;
 			}
 			else if (status != 4)
@@ -879,13 +890,13 @@ public class Transformator
 	public static void main(String[] args)
 	{
 		char c = '\\';
-		Transformator p = new Transformator("${", "}", "<%", "%>");
+		Transformator p = new Transformator("${", "}", "@", null);
 		p.enableHtmlTagSupport("<#", "</#");
 		try
 		{
 
 			// String str = "   #:var u='hello';:#  \n  $u$";
-			String str = "<#bbsListTag a='1' \n  c='${ kk }'; page , dd >\nhello </#bbsListTag>";
+			String str = "@{\n @x\n@}";
 
 			BufferedReader reader = new BufferedReader(p.transform(str));
 			String line = null;

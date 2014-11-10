@@ -1,4 +1,4 @@
-<%
-include("/org/beetl/core/lab/inc.txt"){}
-%>
-ccs
+@select(state) {
+   @case 11:
+		@var kkk = 1;
+@}

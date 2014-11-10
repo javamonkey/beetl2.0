@@ -1076,6 +1076,13 @@ public class AntlrProgramBuilder
 		{
 			VarAssignStatement vas = this.parseAssign(amc);
 			listNode.add(vas);
+			if (pbCtx.hasDefined(vas.token.text) != null)
+			{
+				GrammarToken token = pbCtx.hasDefined(vas.token.text);
+				BeetlException ex = new BeetlException(BeetlException.VAR_ALREADY_DEFINED, "已经在第" + token.line + "行定义");
+				ex.pushToken(vas.token);
+				throw ex;
+			}
 			pbCtx.addVar(vas.token.text);
 			pbCtx.setVarPosition(vas.token.text, vas);
 

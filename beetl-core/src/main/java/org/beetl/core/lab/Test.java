@@ -50,4 +50,10 @@ public class Test
 		}
 
 	}
+
+	public static void test(Object[] abc, int c)
+	{
+
+	}
+
 }

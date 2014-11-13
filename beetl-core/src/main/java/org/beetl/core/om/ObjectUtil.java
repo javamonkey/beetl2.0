@@ -36,6 +36,7 @@ import static org.beetl.core.om.ObjectMethodMatchConf.INT_CONVERT;
 import static org.beetl.core.om.ObjectMethodMatchConf.LONG_CONVERT;
 import static org.beetl.core.om.ObjectMethodMatchConf.NO_CONVERT;
 import static org.beetl.core.om.ObjectMethodMatchConf.SHORT_CONVERT;
+import static org.beetl.core.om.ObjectMethodMatchConf.VARIABLE_ARRAY;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -228,8 +229,22 @@ public class ObjectUtil
 	public static ObjectMethodMatchConf match(Method method, Class[] paras)
 	{
 		Class[] metodParaTypes = method.getParameterTypes();
-		if (paras.length != metodParaTypes.length)
+		if (paras.length < metodParaTypes.length)
 		{
+
+			return null;
+		}
+		else if (paras.length == metodParaTypes.length)
+		{
+			//精确匹配或者可变参数
+		}
+		else if (paras.length > metodParaTypes.length && metodParaTypes[metodParaTypes.length - 1].isArray())
+		{
+			//可变参数，
+		}
+		else
+		{
+			//不匹配
 			return null;
 		}
 		int parameterCount = metodParaTypes.length;
@@ -367,6 +382,31 @@ public class ObjectUtil
 					convert[j] = CHAR_CONVERT;
 					continue;
 				}
+			}
+			else if (metodParaTypes[j].isArray())
+			{
+				if (j == parameterCount - 1)
+				{
+					convert[j] = VARIABLE_ARRAY;
+					break;
+				}
+				else if (paras[j].isArray())
+				{
+					Class metodParaTypeComponent = metodParaTypes[j].getComponentType();
+					Class paraTypeComponent = paras[j].getComponentType();
+					if (metodParaTypeComponent == paraTypeComponent)
+					{
+						//不做转化了
+						convert[j] = NO_CONVERT;
+						continue;
+					}
+					return null;
+				}
+				else
+				{
+					return null;
+				}
+
 			}
 
 			return null;

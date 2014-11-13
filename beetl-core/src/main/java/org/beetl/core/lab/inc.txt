@@ -1,4 +1,1 @@
-<%
-var a  = '';
-%>
-${a,dateFormat='yyyy'}
+${"abc"?1}

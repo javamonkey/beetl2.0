@@ -1,3 +1,9 @@
 <%
-include("/org/beetl/core/lab/inc.txt"){};
+var fLP = 1;
+for(f in user.friends){
+	println(f.name);
+	for(f in f.friends){
+		print(f.name);
+	}
+}
 %>

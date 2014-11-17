@@ -73,10 +73,8 @@ public class SingleFunctionWrapper extends FunctionWrapper
 			}
 			else
 			{
-				Object[] newParas = new Object[paras.length + 1];
-				System.arraycopy(paras, 0, newParas, 0, paras.length);
-				newParas[paras.length] = ctx;
 
+				Object[] newParas = getContextParas(paras, ctx);
 				if (target != null)
 				{
 					return ObjectUtil.invokeObject(this.target, m.getName(), newParas);

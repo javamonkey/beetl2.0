@@ -39,6 +39,7 @@ public class ObjectMethodMatchConf
 	public Method method;
 	//如何转化
 	public int[] convert;
+
 	// 是否需要转化
 	public boolean isNeedConvert;
 
@@ -66,7 +67,40 @@ public class ObjectMethodMatchConf
 		return str;
 	}
 
-	public Object convert(Object o, int i)
+	public Object[] convert(Object[] args)
+	{
+		if (isNeedConvert)
+		{
+			Object[] newArgs = new Object[convert.length];
+			for (int i = 0; i < convert.length; i++)
+			{
+				if (convert[i] != VARIABLE_ARRAY)
+				{
+					Object obj = this.convert(args[i], i);
+					newArgs[i] = obj;
+				}
+				else
+				{
+					Object[] objs = new Object[args.length - i];
+					for (int j = 0; j < objs.length; j++)
+					{
+						objs[j] = args[i + j];
+					}
+					newArgs[i] = objs;
+
+				}
+
+			}
+			return newArgs;
+		}
+		else
+		{
+			return args;
+		}
+
+	}
+
+	private Object convert(Object o, int i)
 	{
 		switch (convert[i])
 		{

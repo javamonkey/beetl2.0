@@ -221,7 +221,7 @@ public class ObjectUtil
 		}
 	}
 
-	/**看给定的参数是否匹配给定方法的前parameterCount参数 
+	/**看给定的参数是否匹配给定方法的参数 
 	 * @param method 
 	 * @param paras 输入的参数
 	 * @return 如果不为null，则匹配，其包含了匹配信息
@@ -247,8 +247,8 @@ public class ObjectUtil
 			//不匹配
 			return null;
 		}
-		int parameterCount = metodParaTypes.length;
-		int[] convert = new int[parameterCount];
+
+		int[] convert = new int[metodParaTypes.length];
 
 		for (int j = 0; j < paras.length; j++)
 		{
@@ -385,12 +385,8 @@ public class ObjectUtil
 			}
 			else if (metodParaTypes[j].isArray())
 			{
-				if (j == parameterCount - 1)
-				{
-					convert[j] = VARIABLE_ARRAY;
-					break;
-				}
-				else if (paras[j].isArray())
+
+				if (paras[j].isArray())
 				{
 					Class metodParaTypeComponent = metodParaTypes[j].getComponentType();
 					Class paraTypeComponent = paras[j].getComponentType();
@@ -401,6 +397,11 @@ public class ObjectUtil
 						continue;
 					}
 					return null;
+				}
+				else if (j == metodParaTypes.length - 1)
+				{
+					convert[j] = VARIABLE_ARRAY;
+					break;
 				}
 				else
 				{
@@ -486,19 +487,8 @@ public class ObjectUtil
 			IllegalArgumentException, InvocationTargetException
 	{
 
-		Object[] targets = null;
-		if (conf.isNeedConvert)
-		{
-			targets = new Object[paras.length];
-			for (int i = 0; i < paras.length; i++)
-			{
-				targets[i] = conf.convert(paras[i], i);
-			}
-		}
-		else
-		{
-			targets = paras;
-		}
+		Object[] targets = conf.convert(paras);
+
 		if (o == null)
 		{
 			//check static 

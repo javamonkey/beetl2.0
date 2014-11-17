@@ -197,4 +197,14 @@ public class ArrayUtil
 		}
 		return false;
 	}
+
+	public Object[] toArray(Object... objects)
+	{
+		return objects;
+	}
+
+	public Object[] collection2Array(Collection cols)
+	{
+		return cols.toArray();
+	}
 }

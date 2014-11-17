@@ -53,6 +53,9 @@ public class ObjectMethodMatchConf
 
 	public final static int NO_CONVERT = 0;
 
+	//可变数组
+	public final static int VARIABLE_ARRAY = 9;
+
 	public String toString()
 	{
 		String str = method.toString() + ",";

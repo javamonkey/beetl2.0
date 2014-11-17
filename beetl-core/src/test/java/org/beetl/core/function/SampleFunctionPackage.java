@@ -56,4 +56,14 @@ public class SampleFunctionPackage
 		return (a + "").length();
 	}
 
+	public String format(String str, Object... args)
+	{
+		for (Object obj : args)
+		{
+			str = str + obj.toString();
+		}
+
+		return str;
+	}
+
 }

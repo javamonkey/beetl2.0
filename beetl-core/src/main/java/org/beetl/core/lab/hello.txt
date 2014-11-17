@@ -1,4 +1,3 @@
-@select(state) {
-   @case 11:
-		@var kkk = 1;
-@}
+<%
+var a = "1">user.age;
+%>

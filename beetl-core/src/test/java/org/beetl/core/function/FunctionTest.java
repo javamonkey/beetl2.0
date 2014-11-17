@@ -68,7 +68,6 @@ public class FunctionTest extends BasicTestCase
 
 	}
 
-
 	public void testToolKit() throws Exception
 	{
 		gt.registerFunction("str2Json", new Str2Json());

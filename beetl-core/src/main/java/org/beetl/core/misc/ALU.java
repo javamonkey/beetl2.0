@@ -847,8 +847,7 @@ public class ALU
 
 			catch (RuntimeException e)
 			{
-				BeetlException ex = new BeetlException(BeetlException.EXPRESSION_NOT_COMPATIBLE, a.getClass() + type
-						+ b.getClass(), e);
+				BeetlException ex = new BeetlException(BeetlException.EXPRESSION_NOT_COMPATIBLE, e);
 				GrammarToken token = GrammarToken.createToken(node1.token.text + " " + node2.token.text,
 						node1.token.line);
 				ex.pushToken(token);

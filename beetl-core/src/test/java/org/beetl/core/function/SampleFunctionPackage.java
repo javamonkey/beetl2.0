@@ -66,4 +66,10 @@ public class SampleFunctionPackage
 		return str;
 	}
 
+	public String format(String str, Context ctx)
+	{
+
+		return str + "ctx";
+	}
+
 }

@@ -1,3 +1,6 @@
 <%
-var a = "1">user.age;
+var array = array.collection2Array([1,2,3]);
+for(item in array){
+	print(item);
+}
 %>

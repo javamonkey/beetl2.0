@@ -1,4 +1,4 @@
-Beetl2.1使用说明书20141021
+Beetl2.1使用说明书20141119
 ===================
 李家智 <xiandafu@126.com>
 :toc:
@@ -11,7 +11,7 @@ Beetl2.1使用说明书20141021
 
 
 == 什么是Beetl ==
-Beetl目前版本是2.1.0，大小667K，相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
+Beetl目前版本是2.1.1，大小665K，相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
 
 - 功能完备：同主流的java模板引擎相比，Beetl具有绝大多数功能。适用于*各种应用场景*，从对响应速度有很高要求的大网站到功能繁多的CMS管理系统都适合。Beetl本身还具有很多独特功能来完成模板编写和维护，这是其他模板引擎所不具有的。
 - 非常简单：类似Javascript语法和习俗，只要半小时就能通过半学半猜完全掌握用法。拒绝其他模板引擎那种非人性化的语法和习俗。同时也能支持html 标签，使得开发CMS系统比较容易
@@ -1634,11 +1634,15 @@ public class util
 
 *************************************************
 
-1 从beetl效率角度来讲，采用的普通java类尽量少同名方法。
 
-2 如果确实有同名方法，尽量少的具有同样参数长度的同名方法
 
-3 如果以上俩种情况避免不了，则方法调用效率比较低，beetl将根据参数类型在运行时刻判断是调用哪个方法。找到第一个能调用的方法为此次调用的function。这和java是一样的。
+1 从beetl效率角度来讲，采用普通类效率不如实现Function调用
+
+2 采用的普通java类尽量少同名方法。这样效率更低。beetl调用到第一个适合的同名方法。而不像java那样找到最匹配的
+
+3 方法名支持可变数组作为参数
+
+4 方法名最后一个参数如果是Context，则beetl会传入这个参数。
 
 *************************************************
 
@@ -3477,7 +3481,7 @@ var session= {admin:{id:1,name:'admin'}};
 
 - strutil.replace	${ strutil.replace (“Hello”,”lo”,”loooo”),输出是helloooo
 
-- strutil.format	${ strutil.format (“hello,{0}, my age is {1}”,”joeli”,15),输出是hello,joelli, my age is 15.
+- strutil.format	${ strutil.format (“hello,{0\}, my age is {1\}”,”joeli”,15),输出是hello,joelli, my age is 15.
 具体请参考http://docs.oracle.com/javase/6/docs/api/java/text/MessageFormat.html
 
 - strutil.trim	去掉字符串的尾部空格
@@ -3485,7 +3489,7 @@ var session= {admin:{id:1,name:'admin'}};
 - strutil.formatDate	Var a = strutil.formatDate(user.bir,’yyyy-MM-dd’);
 
 *************************************************
-strutil方法对参数均不做检测，你可自定义方法来覆盖这些内置的方法
+strutil方法对参数均不做空指针检测，你可自定义方法来覆盖这些内置的方法
 *************************************************
 ==== 数组相关方法 ====
 
@@ -3497,6 +3501,9 @@ strutil方法对参数均不做检测，你可自定义方法来覆盖这些内�
 
 - array.contain 判断数组或者元素是否包含元素，如果包含，返回true。否则false。第一个是数组或者Collection子类,第二个参数是元素
 
+- array.toArray 转化成数组,如array.toArray(1,2,"a");
+
+-- array.collection2Array 将java集合转化为数组 array.collection2Array([1,2,''])
  
 === 内置格式化方法 ===
 

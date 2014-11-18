@@ -125,7 +125,7 @@
 
     <target name="jar" depends="compile">
         <mkdir dir="${build.dist.dir}" />
-        <jar jarfile="${dist.jar}" whenempty="fail" >
+        <jar jarfile="${dist.jar}" whenempty="fail" level="9">
             <fileset dir="${build.classes.dir}" includes="**" excludes="**/*.g4,**/*.xml, **/lab/**" />
         	<zipfileset includes="**/*.class" src="build/lib/antlr4-runtime-4.2.jar">
         		<exclude name="**/tree/gui/**"/>
@@ -180,7 +180,7 @@
 
     <target name="javadoc.jar" depends="javadoc">
         <mkdir dir="${build.dist.dir}" />
-        <jar jarfile="${dist.javadoc.jar}" whenempty="fail">
+        <jar jarfile="${dist.javadoc.jar}" whenempty="fail" level="9">
             <fileset dir="${build.javadoc.dir}" includes="**" />
             <manifest>
                 <attribute name="Built-By" value="${product.author}" />

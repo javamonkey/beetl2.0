@@ -215,6 +215,13 @@ public class BeetlException extends RuntimeException
 		this.detailCode = detailCode;
 	}
 
+	public BeetlException(String detailCode, Throwable cause)
+	{
+		super(cause);
+		this.detailCode = detailCode;
+
+	}
+
 	public BeetlException(String detailCode, String msg, Throwable cause)
 	{
 		super(msg, cause);

@@ -29,6 +29,7 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
+import org.beetl.core.exception.BeetlException;
 
 /**
  * for(var a=0;a<10;i++){}elsefor{}
@@ -78,7 +79,19 @@ public class GeneralForStatement extends Statement implements IGoto
 		boolean hasLooped = false;
 		for (;;)
 		{
-			boolean bool = (Boolean) condtion.evaluate(ctx);
+			Object val = condtion.evaluate(ctx);
+			boolean bool = false;
+			if (val instanceof Boolean)
+			{
+				bool = ((Boolean) val).booleanValue();
+			}
+			else
+			{
+				BeetlException be = new BeetlException(BeetlException.BOOLEAN_EXPECTED_ERROR);
+				be.pushToken(condtion.token);
+				throw be;
+			}
+
 			if (bool)
 			{
 				hasLooped = true;

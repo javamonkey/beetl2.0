@@ -695,7 +695,7 @@ public class ALU
 					b2 = getBigDecimal(o2);
 					return b1.compareTo(b2) > 0;
 				default:
-					int result = compareObject(o1, o2);
+					int result = compareObject(o1, o2, node1, node2, ">");
 					if (result == -2)
 						throw UnsupportedTypeException(o1, o2, node1, node2, ">");
 					else
@@ -735,7 +735,7 @@ public class ALU
 					b2 = getBigDecimal(o2);
 					return b1.compareTo(b2) >= 0;
 				default:
-					int result = compareObject(o1, o2);
+					int result = compareObject(o1, o2, node1, node2, ">=");
 					if (result == -2)
 						throw UnsupportedTypeException(o1, o2, node1, node2, ">=");
 					else
@@ -775,7 +775,7 @@ public class ALU
 					b2 = getBigDecimal(o2);
 					return b1.compareTo(b2) < 0;
 				default:
-					int result = compareObject(o1, o2);
+					int result = compareObject(o1, o2, node1, node2, "<");
 					if (result == -2)
 						throw UnsupportedTypeException(o1, o2, node1, node2, "<");
 					else
@@ -815,7 +815,7 @@ public class ALU
 					b2 = getBigDecimal(o2);
 					return b1.compareTo(b2) <= 0;
 				default:
-					int result = compareObject(o1, o2);
+					int result = compareObject(o1, o2, node1, node2, "<=");
 					if (result == -2)
 						throw UnsupportedTypeException(o1, o2, node1, node2, "<=");
 					else
@@ -830,17 +830,29 @@ public class ALU
 
 	// *******************
 
-	private static int compareObject(Object a, Object b)
+	private static int compareObject(Object a, Object b, final ASTNode node1, final ASTNode node2, String type)
 	{
 		if (a instanceof Comparable && b instanceof Comparable)
 		{
 			Comparable ac = (Comparable) a;
-			int result = ac.compareTo(b);
-			if (result > 0)
-				return 1;
-			else if (result < 0)
-				return -1;
-			return result;
+			try
+			{
+				int result = ac.compareTo(b);
+				if (result > 0)
+					return 1;
+				else if (result < 0)
+					return -1;
+				return result;
+			}
+
+			catch (RuntimeException e)
+			{
+				BeetlException ex = new BeetlException(BeetlException.EXPRESSION_NOT_COMPATIBLE, e);
+				GrammarToken token = GrammarToken.createToken(node1.token.text + " " + node2.token.text,
+						node1.token.line);
+				ex.pushToken(token);
+				throw ex;
+			}
 
 		}
 		else

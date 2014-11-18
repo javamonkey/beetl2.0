@@ -901,10 +901,26 @@ public class AntlrProgramBuilder
 			ForInControlContext forCtx = forTypeCtx.forInControl();
 			VarDefineNode forVar = new VarDefineNode(this.getBTToken(forCtx.Identifier().getSymbol()));
 
+			if (pbCtx.hasDefined(forVar.token.text) != null)
+			{
+				GrammarToken token = pbCtx.hasDefined(forVar.token.text);
+				BeetlException ex = new BeetlException(BeetlException.VAR_ALREADY_DEFINED, "已经在第" + token.line + "行定义");
+				ex.pushToken(forVar.token);
+				throw ex;
+			}
+
 			VarDefineNode loopStatusVar = new VarDefineNode(new org.beetl.core.statement.GrammarToken(forCtx
 					.Identifier().getSymbol().getText()
 					+ "LP", forCtx.Identifier().getSymbol().getLine(), 0));
 
+			if (pbCtx.hasDefined(loopStatusVar.token.text) != null)
+			{
+				GrammarToken token = pbCtx.hasDefined(loopStatusVar.token.text);
+				BeetlException ex = new BeetlException(BeetlException.VAR_ALREADY_DEFINED, "For循环隐含变量，已经在第"
+						+ token.line + "行定义");
+				ex.pushToken(loopStatusVar.token);
+				throw ex;
+			}
 			pbCtx.addVarAndPostion(forVar);
 
 			pbCtx.addVarAndPostion(loopStatusVar);
@@ -1076,6 +1092,13 @@ public class AntlrProgramBuilder
 		{
 			VarAssignStatement vas = this.parseAssign(amc);
 			listNode.add(vas);
+			if (pbCtx.hasDefined(vas.token.text) != null)
+			{
+				GrammarToken token = pbCtx.hasDefined(vas.token.text);
+				BeetlException ex = new BeetlException(BeetlException.VAR_ALREADY_DEFINED, "已经在第" + token.line + "行定义");
+				ex.pushToken(vas.token);
+				throw ex;
+			}
 			pbCtx.addVar(vas.token.text);
 			pbCtx.setVarPosition(vas.token.text, vas);
 

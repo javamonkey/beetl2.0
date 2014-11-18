@@ -1,7 +1,6 @@
 <%
-var a =1 ;
-if(a==2){
-return ;
+var array = array.collection2Array([1,2,3]);
+for(item in array){
+	print(item);
 }
 %>
-ccs

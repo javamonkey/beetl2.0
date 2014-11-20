@@ -144,11 +144,7 @@ public class FileResourceLoader implements ResourceLoader
 			this.charset = resourceMap.get("charset");
 
 		}
-		if (this.functionSuffix == null)
-		{
-			this.functionSuffix = resourceMap.get("functionSuffix");
-		}
-
+		this.functionSuffix = resourceMap.get("functionSuffix");
 		this.autoCheck = Boolean.parseBoolean(resourceMap.get("autoCheck"));
 		this.functionRoot = resourceMap.get("functionRoot");
 		File root = new File(this.root, this.functionRoot);

@@ -42,6 +42,8 @@ public class Test
 			t.binding("date2", new Date(10002));
 			t.binding("total", 15);
 			t.binding("list", list);
+			t.binding("array", new int[]
+			{ 1, 2, 3 });
 
 			ByteArrayOutputStream bs = new ByteArrayOutputStream();
 			t.renderTo(bs);

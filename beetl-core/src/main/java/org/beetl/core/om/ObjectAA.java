@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.beetl.core.exception.BeetlException;
+import org.beetl.core.misc.PrimitiveArrayUtil;
 
 /**
  * 默认的，通用的属性读取器,适用于map.list,[] ,以及通常pojo
@@ -76,7 +77,15 @@ public class ObjectAA extends AttributeAccess
 		{
 			try
 			{
-				return ((Object[]) o)[(((Number) name).intValue())];
+				if (o.getClass().getComponentType().isPrimitive())
+				{
+					return PrimitiveArrayUtil.getObject(o, (((Number) name).intValue()));
+				}
+				else
+				{
+					return ((Object[]) o)[(((Number) name).intValue())];
+				}
+
 			}
 			catch (ClassCastException ex)
 			{

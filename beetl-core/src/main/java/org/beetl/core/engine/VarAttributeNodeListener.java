@@ -12,6 +12,7 @@ import org.beetl.core.InferContext;
 import org.beetl.core.Listener;
 import org.beetl.core.exception.BeetlException;
 import org.beetl.core.misc.NumberUtil;
+import org.beetl.core.misc.PrimitiveArrayUtil;
 import org.beetl.core.om.AttributeAccess;
 import org.beetl.core.om.AttributeAccessFactory;
 import org.beetl.core.statement.Expression;
@@ -189,7 +190,15 @@ public class VarAttributeNodeListener implements Listener
 		public Object evaluate(Context ctx, Object o)
 		{
 
-			return NumberUtil.valueOf(((Object[]) o).length);
+			if (o.getClass().getComponentType().isPrimitive())
+			{
+				return PrimitiveArrayUtil.getSize(o);
+			}
+			else
+			{
+				return NumberUtil.valueOf(((Object[]) o).length);
+
+			}
 		}
 
 		@Override

@@ -1,6 +1,2 @@
-<%
-
-for(item in array){
-	print(item);
-}
-%>
+	<%var a = 1; %> 
+${a}

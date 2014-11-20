@@ -45,6 +45,7 @@ import org.beetl.core.exception.HTMLTagParserException;
 import org.beetl.core.exception.ScriptEvalError;
 import org.beetl.core.fun.FunctionWrapper;
 import org.beetl.core.misc.ClassSearch;
+import org.beetl.core.misc.PrimitiveArrayUtil;
 import org.beetl.core.om.ObjectUtil;
 import org.beetl.core.resource.ClasspathResourceLoader;
 import org.beetl.core.statement.ErrorGrammarProgram;
@@ -268,7 +269,15 @@ public class GroupTemplate
 					}
 					else if (o.getClass().isArray())
 					{
-						return ((Object[]) o).length;
+
+						if (o.getClass().getComponentType().isPrimitive())
+						{
+							return PrimitiveArrayUtil.getSize(o);
+						}
+						else
+						{
+							return ((Object[]) o).length;
+						}
 
 					}
 					else

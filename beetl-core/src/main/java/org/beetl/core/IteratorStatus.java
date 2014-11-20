@@ -31,6 +31,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.beetl.core.misc.PrimitiveArrayUtil;
+
 /**
  * 用于遍历
  * @author joelli
@@ -70,7 +72,7 @@ public final class IteratorStatus
 		}
 		else if (o.getClass().isArray())
 		{
-			return new IteratorStatus((Object[]) o);
+			return new IteratorStatus(o, o.getClass().getComponentType().isPrimitive());
 		}
 		else
 		{
@@ -91,7 +93,7 @@ public final class IteratorStatus
 			case 3:
 				return new IteratorStatus((Iterable) o);
 			case 4:
-				return new IteratorStatus((Object[]) o);
+				return new IteratorStatus(o, o.getClass().getComponentType().isPrimitive());
 		}
 		throw new RuntimeException("Object:" + o.getClass() + " 不能使用在For循环里");
 
@@ -120,6 +122,22 @@ public final class IteratorStatus
 	{
 		it = new ArrayIterator(array);
 		size = array.length;
+
+	}
+
+	public IteratorStatus(Object o, boolean isPrimitive)
+	{
+		if (isPrimitive)
+		{
+			it = new PrimitiveIterator(o);
+			size = ((PrimitiveIterator) it).length;
+		}
+		else
+		{
+			Object[] array = ((Object[]) o);
+			it = new ArrayIterator(array);
+			size = (array).length;
+		}
 
 	}
 
@@ -209,6 +227,37 @@ public final class IteratorStatus
 		public Object next()
 		{
 			return array[i++];
+		}
+
+		public void remove()
+		{
+			// TODO Auto-generated method stub
+
+		}
+
+	}
+
+	static class PrimitiveIterator implements Iterator
+	{
+		Object o = null;
+		int i = 0;
+		int length = 0;
+
+		PrimitiveIterator(Object o)
+		{
+			this.o = o;
+			this.length = PrimitiveArrayUtil.getSize(o);
+		}
+
+		public boolean hasNext()
+		{
+			// TODO Auto-generated method stub
+			return length > i;
+		}
+
+		public Object next()
+		{
+			return PrimitiveArrayUtil.getObject(o, i++);
 		}
 
 		public void remove()

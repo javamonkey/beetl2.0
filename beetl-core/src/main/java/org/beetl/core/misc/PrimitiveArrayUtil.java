@@ -4,35 +4,36 @@ public class PrimitiveArrayUtil
 {
 	public static int getSize(Object o)
 	{
-		if (o == int[].class)
+		Class type = o.getClass();
+		if (type == int[].class)
 		{
 			return ((int[]) o).length;
 		}
-		else if (o == long[].class)
+		else if (type == long[].class)
 		{
 			return ((long[]) o).length;
 		}
-		else if (o == short[].class)
+		else if (type == short[].class)
 		{
 			return ((short[]) o).length;
 		}
-		else if (o == double[].class)
+		else if (type == double[].class)
 		{
 			return ((double[]) o).length;
 		}
-		else if (o == float[].class)
+		else if (type == float[].class)
 		{
 			return ((float[]) o).length;
 		}
-		else if (o == char[].class)
+		else if (type == char[].class)
 		{
 			return ((char[]) o).length;
 		}
-		else if (o == byte[].class)
+		else if (type == byte[].class)
 		{
 			return ((byte[]) o).length;
 		}
-		else if (o == boolean[].class)
+		else if (type == boolean[].class)
 		{
 			return ((boolean[]) o).length;
 		}
@@ -44,35 +45,36 @@ public class PrimitiveArrayUtil
 
 	public static Object getObject(Object o, int index)
 	{
-		if (o == int[].class)
+		Class type = o.getClass();
+		if (type == int[].class)
 		{
 			return ((int[]) o)[index];
 		}
-		else if (o == long[].class)
+		else if (type == long[].class)
 		{
 			return ((long[]) o)[index];
 		}
-		else if (o == short[].class)
+		else if (type == short[].class)
 		{
 			return ((short[]) o)[index];
 		}
-		else if (o == double[].class)
+		else if (type == double[].class)
 		{
 			return ((double[]) o)[index];
 		}
-		else if (o == float[].class)
+		else if (type == float[].class)
 		{
 			return ((float[]) o)[index];
 		}
-		else if (o == char[].class)
+		else if (type == char[].class)
 		{
 			return ((char[]) o)[index];
 		}
-		else if (o == byte[].class)
+		else if (type == byte[].class)
 		{
 			return ((byte[]) o)[index];
 		}
-		else if (o == boolean[].class)
+		else if (type == boolean[].class)
 		{
 			return ((boolean[]) o)[index];
 		}

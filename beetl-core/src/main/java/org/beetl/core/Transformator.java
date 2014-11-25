@@ -542,7 +542,13 @@ public class Transformator
 					{
 						index++;
 					}
-					this.lineStatus.reset();
+					if (this.lineStatus.onlyStatment())
+					{
+						// 只有控制语句，则如果文本变量都是空格，这些文本变量则认为是格式化的，非输出语句
+						// 需要更改输出
+						reforamtStatmentLine();
+						lineStatus.reset();
+					}
 
 				}
 				else
@@ -678,9 +684,12 @@ public class Transformator
 					{
 						// 只有控制语句，则如果文本变量都是空格，这些文本变量则认为是格式化的，非输出语句
 						// 需要更改输出
+						if (temp.length() != 0)
+							createTextNode(temp);
 						reforamtStatmentLine();
 						lineStatus.reset();
 						sb.append(lineSeparator);
+						continue;
 					}
 					else
 					{
@@ -761,6 +770,7 @@ public class Transformator
 		}
 
 		this.sb.append(textVarName);
+		str.setLength(0);
 
 	}
 
@@ -791,7 +801,7 @@ public class Transformator
 			}
 
 		}
-
+		str.setLength(0);
 	}
 
 	private boolean isSpace(StringBuilder str)
@@ -890,13 +900,13 @@ public class Transformator
 	public static void main(String[] args)
 	{
 		char c = '\\';
-		Transformator p = new Transformator("${", "}", "@", null);
+		Transformator p = new Transformator("${", "}", "<%", "%>");
 		p.enableHtmlTagSupport("<#", "</#");
 		try
 		{
 
 			// String str = "   #:var u='hello';:#  \n  $u$";
-			String str = "@{\n @x\n@}";
+			String str = "  <%%>   \na }";
 
 			BufferedReader reader = new BufferedReader(p.transform(str));
 			String line = null;

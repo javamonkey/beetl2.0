@@ -1,6 +1,2 @@
-<%
-var array = array.collection2Array([1,2,3]);
-for(item in array){
-	print(item);
-}
-%>
+<#menu ;menu ,index>
+</#menu>

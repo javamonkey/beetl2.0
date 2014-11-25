@@ -98,12 +98,12 @@ public abstract class GeneralVarTagBinding extends Tag implements TagVarBinding
 	{
 		if (name2Index == null)
 		{
-			throw new RuntimeException();
+			throw new RuntimeException("申明的绑定和代码里实际绑定不一致");
 		}
 		Integer index = name2Index.get(name);
 		if (index == null)
 		{
-			throw new RuntimeException();
+			throw new RuntimeException("申明的绑定和代码里实际绑定不一致:试图绑定未申明的变量" + name);
 		}
 		ctx.vars[index] = value;
 	}

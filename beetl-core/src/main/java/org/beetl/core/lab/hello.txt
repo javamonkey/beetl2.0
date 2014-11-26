@@ -1,2 +1,5 @@
-<#menu ;menu ,index>
-</#menu>
+<%
+for(item in testFun()){
+	print(item);
+}
+%>

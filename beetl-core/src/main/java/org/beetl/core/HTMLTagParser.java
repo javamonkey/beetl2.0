@@ -370,7 +370,7 @@ class HTMLTagParser
 		{
 			char c = cs[ts + i];
 
-			if (c == ' ')
+			if (c == ' ' || c == '\t')
 			{
 				i++;
 				continue;

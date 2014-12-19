@@ -497,6 +497,7 @@ public class ObjectUtil
 				throw new BeetlException(BeetlException.NULL, "该方法是非静态方法，不能静态形式调用");
 			}
 		}
+		conf.method.setAccessible(true);
 		return conf.method.invoke(o, targets);
 	}
 

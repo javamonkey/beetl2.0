@@ -28,6 +28,7 @@
 package org.beetl.core.om;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -198,22 +199,27 @@ public class AttributeAccessFactory
 		Class[] interfaces = c.getInterfaces();
 		for (Class inc : interfaces)
 		{
-			if (inc.getName().startsWith("java."))
+			if (Modifier.isPublic(inc.getModifiers()))
 			{
-				// java包不需要考虑
-				continue;
-			}
-			result = findResult(inc, getName, isName);
-			if (result != null)
-			{
-				resetFindResult(findMethod, result);
-				return result;
+
+				if (inc.getName().startsWith("java."))
+				{
+					// java包不需要考虑
+					continue;
+				}
+
+				result = findResult(inc, getName, isName);
+				if (result != null)
+				{
+					resetFindResult(findMethod, result);
+					return result;
+				}
 			}
 
 		}
 
 		Class parent = c.getSuperclass();
-		if (parent != null && !parent.getName().startsWith("java."))
+		if (parent != null && Modifier.isPublic(parent.getModifiers()) && !parent.getName().startsWith("java."))
 		{
 			result = findResult(parent, getName, isName);
 			if (result != null)
@@ -225,6 +231,7 @@ public class AttributeAccessFactory
 
 		if (findMethod != null)
 		{
+
 			result = new FindResult();
 			result.realMethodName = findMethod.getName();
 			result.c = c;

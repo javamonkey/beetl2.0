@@ -3,6 +3,7 @@ package org.beetl.core.lab;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +34,11 @@ public class Test
 
 			//			Map result = gt.runScript("/org/beetl/core/lab/hello.txt", Collections.EMPTY_MAP);
 			//			System.out.println(result);
+
+			Hashtable table = new Hashtable();
+			table.put("a", "b");
+			table.put("c", "d");
+
 			TestUser user = new TestUser("lijz");
 			List list = new ArrayList();
 			list.add(user);
@@ -47,6 +53,7 @@ public class Test
 			t.binding("list", list);
 			t.binding("array", new int[]
 			{ 1, 2, 3 });
+			t.binding("table", table.elements());
 
 			ByteArrayOutputStream bs = new ByteArrayOutputStream();
 			t.renderTo(bs);

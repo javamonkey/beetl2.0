@@ -71,19 +71,49 @@ public class HtmlTagTest extends BasicTestCase
 	//
 	//	}
 
+	//	@Test
+	//	public void testJavaTag() throws Exception
+	//	{
+	//
+	//		gt.registerTag("simpleTag", SimpleHtmlTag.class);
+	//		Template t = gt.getTemplate("/tag/html5_template.html");
+	//
+	//		String str = t.render();
+	//		AssertJUnit.assertEquals(this.getFileContent("/tag/html5_expected.html"), str);
+	//
+	//		t = gt.getTemplate("/tag/html5_template.html");
+	//		str = t.render();
+	//		AssertJUnit.assertEquals(this.getFileContent("/tag/html5_expected.html"), str);
+	//
+	//	}
+
+	//	@Test
+	//	public void testExpTag() throws Exception
+	//	{
+	//
+	//		Template t = gt.getTemplate("/tag/html6_template.html");
+	//
+	//		String str = t.render();
+	//		AssertJUnit.assertEquals(this.getFileContent("/tag/html6_expected.html"), str);
+	//
+	//		t = gt.getTemplate("/tag/html6_template.html");
+	//		str = t.render();
+	//		AssertJUnit.assertEquals(this.getFileContent("/tag/html6_expected.html"), str);
+	//
+	//	}
+
 	@Test
-	public void testJavaTag() throws Exception
+	public void testCallMutipleTag() throws Exception
 	{
 
-		gt.registerTag("simpleTag", SimpleHtmlTag.class);
-		Template t = gt.getTemplate("/tag/html5_template.html");
+		Template t = gt.getTemplate("/tag/html7_template.html");
 
 		String str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/tag/html5_expected.html"), str);
+		AssertJUnit.assertEquals(this.getFileContent("/tag/html7_expected.html"), str);
 
-		t = gt.getTemplate("/tag/html5_template.html");
+		t = gt.getTemplate("/tag/html7_template.html");
 		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/tag/html5_expected.html"), str);
+		AssertJUnit.assertEquals(this.getFileContent("/tag/html7_expected.html"), str);
 
 	}
 

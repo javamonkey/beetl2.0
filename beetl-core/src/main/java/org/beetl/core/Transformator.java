@@ -339,6 +339,7 @@ public class Transformator
 				{
 					value = new String(value.toCharArray(), this.placeholderStart.length(), value.length()
 							- this.placeholderStart.length() - this.placeholderEnd.length());
+					//script.append("(").append(value).append(")");
 					script.append(value);
 				}
 				script.append(",");

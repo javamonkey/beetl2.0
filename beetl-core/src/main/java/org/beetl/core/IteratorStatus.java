@@ -28,7 +28,10 @@
 package org.beetl.core;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.beetl.core.misc.PrimitiveArrayUtil;
@@ -50,6 +53,7 @@ public final class IteratorStatus
 	public final static short MAP = 2;
 	public final static short ITERABLE = 3;
 	public final static short ARRAY = 4;
+	public final static short ENUM = 5;
 
 	public static IteratorStatus getIteratorStatus(Object o)
 	{
@@ -74,6 +78,10 @@ public final class IteratorStatus
 		{
 			return new IteratorStatus(o, o.getClass().getComponentType().isPrimitive());
 		}
+		else if (o instanceof Enumeration)
+		{
+			return new IteratorStatus((Enumeration) o);
+		}
 		else
 		{
 			return null;
@@ -94,6 +102,8 @@ public final class IteratorStatus
 				return new IteratorStatus((Iterable) o);
 			case 4:
 				return new IteratorStatus(o, o.getClass().getComponentType().isPrimitive());
+			case 5:
+				return new IteratorStatus((Enumeration) o);
 		}
 		throw new RuntimeException("Object:" + o.getClass() + " 不能使用在For循环里");
 
@@ -102,6 +112,14 @@ public final class IteratorStatus
 	public IteratorStatus(Iterator it)
 	{
 		this.it = it;
+
+	}
+
+	public IteratorStatus(Enumeration e)
+	{
+		List list = Collections.list(e);
+		this.it = list.iterator();
+		this.size = list.size();
 
 	}
 

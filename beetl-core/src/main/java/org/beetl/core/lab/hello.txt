@@ -1,5 +1,5 @@
 <%
-for(item in testFun()){
+for(item in table){
 	print(item);
 }
 %>

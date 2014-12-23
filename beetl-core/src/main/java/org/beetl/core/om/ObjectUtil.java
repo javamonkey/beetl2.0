@@ -424,7 +424,7 @@ public class ObjectUtil
 				break;
 			}
 		}
-
+		mc.method.setAccessible(true);
 		return mc;
 
 	}

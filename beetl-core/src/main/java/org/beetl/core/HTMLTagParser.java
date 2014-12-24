@@ -400,7 +400,7 @@ class HTMLTagParser
 		{
 			char c = cs[ts + i];
 
-			if (c == ' ' || c == '\n' || c == '\r')
+			if (c == ' ' || c == '\t' || c == '\n' || c == '\r')
 			{
 				i++;
 				continue;

@@ -1,5 +1,5 @@
 <%
-for(item in table){
-	print(item);
-}
+
+print("hello");;
+
 %>

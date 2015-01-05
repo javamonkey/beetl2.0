@@ -1,5 +1,1 @@
-<%
-
-print("hello");;
-
-%>
+${test.printUsers("abc")}

@@ -29,6 +29,7 @@ public class Test
 		gt.registerFunctionPackage("strings", new StringUtils());
 		gt.registerTag("menu", TestGeneralVarTagBinding.class);
 		gt.registerFunction("testFun", new TestFun());
+		gt.registerFunctionPackage("test", new TestUser(""));
 		for (int i = 0; i < 1; i++)
 		{
 

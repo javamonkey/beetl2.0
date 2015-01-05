@@ -32,6 +32,11 @@ public class TestUser
 		this.isOk = isOk;
 	}
 
+	public int getCTitle()
+	{
+		return 0;
+	}
+
 	public TestUser(String name)
 	{
 		this.name = name;
@@ -134,6 +139,16 @@ public class TestUser
 		joelli.setSalary(10000.01);
 		return joelli;
 
+	}
+
+	public int printUsers(String... strings)
+	{
+		return strings.length;
+	}
+
+	public int printUsers(String str)
+	{
+		return 0;
 	}
 
 	public static List<TestUser> getTestUsers()

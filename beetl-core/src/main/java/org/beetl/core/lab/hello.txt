@@ -1,1 +1,4 @@
-${test.printUsers("abc")}
+<%
+var a = "1"; 
+var b =parsInt(a);
+%>

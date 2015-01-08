@@ -141,7 +141,7 @@ public class TestUser
 
 	}
 
-	public int printUsers(String... strings)
+	public int printUsers1(String... strings)
 	{
 		return strings.length;
 	}

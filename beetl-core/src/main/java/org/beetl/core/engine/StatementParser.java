@@ -148,7 +148,7 @@ public class StatementParser
 							//替换原有节点
 							try
 							{
-								f.set(astNode, values);
+								f.set(astNode, newASTNode);
 							}
 							catch (Exception ex)
 							{

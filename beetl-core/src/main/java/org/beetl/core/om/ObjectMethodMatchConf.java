@@ -27,6 +27,7 @@
  */
 package org.beetl.core.om;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
@@ -81,12 +82,15 @@ public class ObjectMethodMatchConf
 				}
 				else
 				{
+					Class c = this.method.getParameterTypes()[i].getComponentType();
+					Object arrayObj = Array.newInstance(c, args.length - i);
 					Object[] objs = new Object[args.length - i];
 					for (int j = 0; j < objs.length; j++)
 					{
-						objs[j] = args[i + j];
+
+						Array.set(arrayObj, j, args[i + j]);
 					}
-					newArgs[i] = objs;
+					newArgs[i] = arrayObj;
 
 				}
 

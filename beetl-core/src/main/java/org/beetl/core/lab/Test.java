@@ -19,7 +19,21 @@ public class Test
 	public static void main(String[] args) throws Exception
 	{
 
-		System.out.println(System.currentTimeMillis());
+		//		Object obj = new TestUser("");
+		//		Method[] ms = obj.getClass().getMethods();
+		//		for (Method m : ms)
+		//		{
+		//			if (m.getName().equals("printUsers1"))
+		//			{
+		//				Object arrayObj = Array.newInstance(String.class, 2);
+		//				Array.set(arrayObj, 0, "Hello");
+		//				Array.set(arrayObj, 1, "World");
+		//
+		//				m.invoke(obj, new Object[]
+		//				{ arrayObj });
+		//			}
+		//		}
+
 		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader();
 		Configuration cfg = Configuration.defaultConfiguration();
 		cfg.setDirectByteOutput(true);

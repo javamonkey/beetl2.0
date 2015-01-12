@@ -42,7 +42,11 @@ import org.beetl.core.Format;
  */
 public class DateFormat implements Format
 {
+	/**
+	 * 是否应该考虑回收？？
+	 */
 	private ThreadLocal<Map<String,SimpleDateFormat>> threadlocal=new ThreadLocal<Map<String,SimpleDateFormat>>();
+	
 	public Object format(Object data, String pattern)
 	{
 		if (data == null)

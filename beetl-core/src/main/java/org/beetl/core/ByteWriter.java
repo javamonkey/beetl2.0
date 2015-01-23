@@ -69,6 +69,7 @@ public abstract class ByteWriter
 
 	protected ContextLocalBuffer localBuffer = null;
 	protected Context ctx = null;
+	protected ByteWriter parent;
 
 	public ByteWriter(Context ctx)
 	{
@@ -95,7 +96,7 @@ public abstract class ByteWriter
 
 	//	public abstract void write(BodyContent bc) throws IOException;
 
-	public abstract ByteWriter getTempWriter();
+	public abstract ByteWriter getTempWriter(ByteWriter parent);
 
 	public abstract BodyContent getTempConent();
 

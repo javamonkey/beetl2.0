@@ -65,7 +65,7 @@ public abstract class Tag
 	protected BodyContent getBodyContent()
 	{
 		ByteWriter writer = ctx.byteWriter;
-		ByteWriter tempWriter = ctx.byteWriter.getTempWriter();
+		ByteWriter tempWriter = ctx.byteWriter.getTempWriter(writer);
 		ctx.byteWriter = tempWriter;
 		doBodyRender();
 		ctx.byteWriter = writer;

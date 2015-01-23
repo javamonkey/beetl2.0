@@ -1,4 +1,5 @@
 <%
-var a = "1"; 
-var b =parsInt(a);
+var a = {
+	print(1);
+};
 %>

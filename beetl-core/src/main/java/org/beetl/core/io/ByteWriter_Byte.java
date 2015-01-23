@@ -79,9 +79,13 @@ public class ByteWriter_Byte extends ByteWriter
 		this.os = os;
 		this.cs = cs;
 		encode = new DefaultEncoder(cs, this.localBuffer);
-		//		charset = Charset.forName(cs);
-		//		encoder = charset.newEncoder();
-		//		byteBuffer = ByteBuffer.wrap(bs);
+
+	}
+
+	public ByteWriter_Byte(OutputStream os, String cs, Context ctx, ByteWriter parent)
+	{
+		this(os, cs, ctx);
+		this.parent = parent;
 
 	}
 
@@ -151,15 +155,17 @@ public class ByteWriter_Byte extends ByteWriter
 	}
 
 	@Override
-	public ByteWriter getTempWriter()
+	public ByteWriter getTempWriter(ByteWriter parent)
 	{
-		return new ByteWriter_Byte(new NoLockByteArrayOutputStream(), cs, this.ctx);
+		return new ByteWriter_Byte(new NoLockByteArrayOutputStream(), cs, this.ctx, parent);
 	}
 
 	@Override
 	public void flush() throws IOException
 	{
 		this.os.flush();
+		if (parent != null)
+			parent.flush();
 
 	}
 

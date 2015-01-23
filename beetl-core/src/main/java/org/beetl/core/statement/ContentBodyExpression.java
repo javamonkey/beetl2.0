@@ -50,7 +50,7 @@ public class ContentBodyExpression extends Expression
 	public Object evaluate(Context ctx)
 	{
 		ByteWriter real = ctx.byteWriter;
-		ByteWriter temp = real.getTempWriter();
+		ByteWriter temp = real.getTempWriter(real);
 		ctx.byteWriter = temp;
 		block.execute(ctx);
 		ctx.byteWriter = real;

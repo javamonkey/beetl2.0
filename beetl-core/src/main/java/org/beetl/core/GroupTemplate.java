@@ -44,6 +44,7 @@ import org.beetl.core.exception.BeetlException;
 import org.beetl.core.exception.HTMLTagParserException;
 import org.beetl.core.exception.ScriptEvalError;
 import org.beetl.core.fun.FunctionWrapper;
+import org.beetl.core.misc.BeetlUtil;
 import org.beetl.core.misc.ClassSearch;
 import org.beetl.core.misc.PrimitiveArrayUtil;
 import org.beetl.core.om.ObjectUtil;
@@ -674,6 +675,10 @@ public class GroupTemplate
 			throw new RuntimeException("Function和Tag方法名不能重复:" + name);
 		}
 		*/
+		if(!BeetlUtil.checkNameing(name)){
+			int[] log=BeetlUtil.getLog();
+			throw new RuntimeException("注册方法名不合法:"+name+",错误位置:"+log[0]+",出现错误的字符:"+log[1]);
+		}
 		this.fnMap.put(name, fn);
 	}
 
@@ -686,7 +691,7 @@ public class GroupTemplate
 	 */
 	public void registerFunctionPackage(String packageName, Object o)
 	{
-
+		
 		registerFunctionPackage(packageName, o.getClass(), o);
 
 	}
@@ -729,6 +734,14 @@ public class GroupTemplate
 
 	public void registerTag(String name, Class tagCls)
 	{
+		if(!BeetlUtil.checkNameing(name)){
+			int[] log=BeetlUtil.getLog();
+			if(log[1]==58){
+				throw new RuntimeException("注册Tag名称不合法:"+name+",错误位置:"+log[0]+",出现错误的字符:"+log[1]+",请使用\'.\'");
+			}else{
+				throw new RuntimeException("注册Tag名称不合法:"+name+",错误位置:"+log[0]+",出现错误的字符:"+log[1]);
+			}
+		}
 		this.tagFactoryMap.put(name, new DefaultTagFactory(tagCls));
 	}
 

@@ -29,6 +29,8 @@ package org.beetl.ext.format;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.beetl.core.Format;
 
@@ -40,6 +42,9 @@ import org.beetl.core.Format;
  */
 public class DateFormat implements Format
 {
+	private static final String DEFAULT_KEY = "default";
+
+	private ThreadLocal<Map<String, SimpleDateFormat>> threadlocal = new ThreadLocal<Map<String, SimpleDateFormat>>();
 
 	public Object format(Object data, String pattern)
 	{
@@ -50,11 +55,11 @@ public class DateFormat implements Format
 			SimpleDateFormat sdf = null;
 			if (pattern == null)
 			{
-				sdf = new SimpleDateFormat();
+				sdf = getDateFormat(DEFAULT_KEY);
 			}
 			else
 			{
-				sdf = new SimpleDateFormat(pattern);
+				sdf = getDateFormat(pattern);
 			}
 			return sdf.format((Date) data);
 
@@ -65,11 +70,11 @@ public class DateFormat implements Format
 			SimpleDateFormat sdf = null;
 			if (pattern == null)
 			{
-				sdf = new SimpleDateFormat();
+				sdf = getDateFormat(DEFAULT_KEY);
 			}
 			else
 			{
-				sdf = new SimpleDateFormat(pattern);
+				sdf = getDateFormat(pattern);
 			}
 			return sdf.format((Date) data);
 
@@ -81,4 +86,30 @@ public class DateFormat implements Format
 
 	}
 
+	private SimpleDateFormat getDateFormat(String pattern)
+	{
+		Map<String, SimpleDateFormat> map = null;
+		if ((map = threadlocal.get()) == null)
+		{
+			/**
+			 * 初始化2个空间
+			 */
+			map = new HashMap<String, SimpleDateFormat>(4, 0.65f);
+			threadlocal.set(map);
+		}
+		SimpleDateFormat format = map.get(pattern);
+		if (format == null)
+		{
+			if (DEFAULT_KEY.equals(pattern))
+			{
+				format = new SimpleDateFormat();
+			}
+			else
+			{
+				format = new SimpleDateFormat(pattern);
+			}
+			map.put(pattern, format);
+		}
+		return format;
+	}
 }

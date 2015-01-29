@@ -1,4 +1,4 @@
 <%
 var date = date('2014-10-04','yyyy-MM-dd');
-return date;
+return date ;
 %>

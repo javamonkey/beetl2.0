@@ -22,6 +22,15 @@ public class TestUser
 	boolean isOk = false;
 	int id = 0;
 
+	public static enum ORDER
+	{
+		OK, CANCEL
+	};
+
+	public static int MAX = 1;
+
+	public static ORDER tt = ORDER.OK;
+
 	public boolean isOk()
 	{
 		return isOk;
@@ -169,6 +178,7 @@ public class TestUser
 		all.add(joelli);
 		all.add(lucy);
 		all.add(lyy);
+
 		return all;
 
 	}

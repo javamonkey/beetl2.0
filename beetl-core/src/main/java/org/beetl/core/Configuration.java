@@ -183,7 +183,7 @@ public class Configuration
 		{
 			String key = (String) entry.getKey();
 			String value = (String) entry.getValue();
-			setValue(key, value);
+			setValue(key, value.trim());
 		}
 	}
 

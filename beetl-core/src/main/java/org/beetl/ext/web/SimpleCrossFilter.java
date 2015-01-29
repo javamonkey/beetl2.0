@@ -28,6 +28,7 @@
 package org.beetl.ext.web;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -70,18 +71,28 @@ public abstract class SimpleCrossFilter implements Filter
 			String path = req.getServletPath();
 			String valueFile = getValueFile(path, req, rsp);
 			GroupTemplate gt = getGroupTemplate();
+
 			WebRender render = new WebRender(gt);
 
 			String commonFile = getCommonValueFile(req, rsp);
-			Map commonData = null, data = null;
+			Map commonData = new HashMap(), data = new HashMap();
 			try
 			{
-				commonData = gt.runScript(commonFile, null);
-				data = gt.runScript(valueFile, null);
+				if (gt.getResourceLoader().exist(commonFile))
+				{
+					commonData = gt.runScript(commonFile, null);
+
+				}
+
+				if (gt.getResourceLoader().exist(valueFile))
+				{
+					data = gt.runScript(valueFile, null);
+				}
+
 			}
 			catch (ScriptEvalError e)
 			{
-				throw new RuntimeException("伪模型脚本有错！");
+				throw new RuntimeException("伪模型脚本有错！", e);
 			}
 
 			commonData.putAll(data);

@@ -78,10 +78,17 @@ public class FileFunctionWrapper implements Function
 			}
 
 		}
+
+		catch (BeetlException ex)
+		{
+
+			throw ex;
+		}
 		catch (Exception ex)
 		{
 			BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "调用方法出错 " + this.resourceId,
 					ex);
+
 			throw be;
 		}
 

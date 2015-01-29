@@ -1,5 +1,3 @@
 <%
-var a = {
-	print(1);
-};
+@user.MAX;
 %>

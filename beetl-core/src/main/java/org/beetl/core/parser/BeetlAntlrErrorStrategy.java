@@ -83,7 +83,9 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 		{
 			//			System.err.println("unknown recognition error type: " + e.getClass().getName());
 			BeetlException exception = new BeetlException(BeetlException.PARSER_UNKNOW_ERROR, e.getClass().getName(), e);
-			exception.token = this.getGrammarToken(e.getOffendingToken());
+			//			exception.token = this.getGrammarToken(e.getOffendingToken());
+			exception.pushToken(this.getGrammarToken(e.getOffendingToken()));
+
 			throw exception;
 		}
 	}
@@ -106,7 +108,9 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 		//		String msg = "no viable alternative at input " + escapeWSAndQuote(input);
 		BeetlException exception = new BeetlParserException(BeetlException.PARSER_VIABLE_ERROR,
 				escapeWSAndQuote(input), e);
-		exception.token = this.getGrammarToken(e.getOffendingToken());
+		//		exception.token = this.getGrammarToken(e.getOffendingToken());
+		exception.pushToken(this.getGrammarToken(e.getOffendingToken()));
+
 		throw exception;
 	}
 
@@ -115,7 +119,9 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 		String msg = "缺少输入 " + getTokenErrorDisplay(e.getOffendingToken()) + " 期望 "
 				+ e.getExpectedTokens().toString(recognizer.getTokenNames());
 		BeetlException exception = new BeetlParserException(BeetlException.PARSER_MISS_ERROR, msg, e);
-		exception.token = this.getGrammarToken(e.getOffendingToken());
+		//		exception.token = this.getGrammarToken(e.getOffendingToken());
+		exception.pushToken(this.getGrammarToken(e.getOffendingToken()));
+
 		throw exception;
 
 	}
@@ -124,7 +130,9 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 	{
 		String ruleName = recognizer.getRuleNames()[recognizer.getContext().getRuleIndex()];
 		BeetlException exception = new BeetlParserException(BeetlException.PARSER_PREDICATE_ERROR, ruleName, e);
-		exception.token = this.getGrammarToken(e.getOffendingToken());
+		//		exception.token = this.getGrammarToken(e.getOffendingToken());
+		exception.pushToken(this.getGrammarToken(e.getOffendingToken()));
+
 		throw exception;
 	}
 
@@ -159,7 +167,7 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 		// even that didn't work; must throw the exception
 
 		BeetlException exception = new BeetlParserException(BeetlException.PARSER_MISS_ERROR);
-		exception.token = this.getGrammarToken(recognizer.getCurrentToken());
+		exception.pushToken(this.getGrammarToken(recognizer.getCurrentToken()));
 		throw exception;
 		//		
 		//		throw new InputMismatchException(recognizer);
@@ -179,7 +187,8 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 		String msg = "缺少输入 " + expecting.toString(recognizer.getTokenNames()) + " 在 " + getTokenErrorDisplay(t);
 
 		BeetlException exception = new BeetlParserException(BeetlException.PARSER_MISS_ERROR, msg);
-		exception.token = this.getGrammarToken(t);
+		exception.pushToken(this.getGrammarToken(t));
+		//		exception.token = this.getGrammarToken(t);
 		throw exception;
 	}
 
@@ -197,7 +206,8 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 		IntervalSet expecting = getExpectedTokens(recognizer);
 		String msg = "多余输入 " + tokenName + " 期望 " + expecting.toString(recognizer.getTokenNames());
 		BeetlException exception = new BeetlParserException(BeetlException.PARSER_MISS_ERROR, msg);
-		exception.token = this.getGrammarToken(t);
+		//		exception.token = this.getGrammarToken(t);
+		exception.pushToken(this.getGrammarToken(t));
 		throw exception;
 	}
 

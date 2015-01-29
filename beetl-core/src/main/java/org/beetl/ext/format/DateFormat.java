@@ -81,7 +81,7 @@ public class DateFormat implements Format
 		}
 		else
 		{
-			throw new RuntimeException("Arg Error:Type should be Date:" + data.getClass());
+			throw new RuntimeException("参数错误，输入为日期或者Long:" + data.getClass());
 		}
 
 	}

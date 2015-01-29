@@ -670,15 +670,7 @@ public class GroupTemplate
 
 	public void registerFunction(String name, Function fn)
 	{
-		/*
-		if (this.containTag(name)) {
-			throw new RuntimeException("Function和Tag方法名不能重复:" + name);
-		}
-		*/
-		if(!BeetlUtil.checkNameing(name)){
-			int[] log=BeetlUtil.getLog();
-			throw new RuntimeException("注册方法名不合法:"+name+",错误位置:"+log[0]+",出现错误的字符:"+log[1]);
-		}
+		checkFunctionName(name);
 		this.fnMap.put(name, fn);
 	}
 
@@ -691,17 +683,27 @@ public class GroupTemplate
 	 */
 	public void registerFunctionPackage(String packageName, Object o)
 	{
-		
+		checkFunctionName(packageName);
 		registerFunctionPackage(packageName, o.getClass(), o);
 
 	}
 
 	public void registerFunctionPackage(String packageName, Class cls)
 	{
-
+		checkFunctionName(packageName);
 		Object o = ObjectUtil.tryInstance(cls.getName());
 		registerFunctionPackage(packageName, cls, o);
 
+	}
+
+	private void checkFunctionName(String name)
+	{
+
+		if (!BeetlUtil.checkNameing(name))
+		{
+			int[] log = BeetlUtil.getLog();
+			throw new RuntimeException("注册方法名不合法:" + name + ",错误位置:" + log[0] + ",出现错误的字符:" + (char) log[1]);
+		}
 	}
 
 	protected void registerFunctionPackage(String packageName, Class target, Object o)
@@ -734,20 +736,31 @@ public class GroupTemplate
 
 	public void registerTag(String name, Class tagCls)
 	{
-		if(!BeetlUtil.checkNameing(name)){
-			int[] log=BeetlUtil.getLog();
-			if(log[1]==58){
-				throw new RuntimeException("注册Tag名称不合法:"+name+",错误位置:"+log[0]+",出现错误的字符:"+log[1]+",请使用\'.\'");
-			}else{
-				throw new RuntimeException("注册Tag名称不合法:"+name+",错误位置:"+log[0]+",出现错误的字符:"+log[1]);
-			}
-		}
+		checkTagName(name);
 		this.tagFactoryMap.put(name, new DefaultTagFactory(tagCls));
 	}
 
 	public void registerTagFactory(String name, TagFactory tagFactory)
 	{
+		checkTagName(name);
 		this.tagFactoryMap.put(name, tagFactory);
+	}
+
+	private void checkTagName(String name)
+	{
+		if (!BeetlUtil.checkNameing(name))
+		{
+			int[] log = BeetlUtil.getLog();
+			if (log[1] == 58)
+			{
+				throw new RuntimeException("注册Tag名称不合法:" + name + ",错误位置:" + log[0] + ",出现错误的字符:" + (char) log[1]
+						+ ",请使用\'.\'");
+			}
+			else
+			{
+				throw new RuntimeException("注册Tag名称不合法:" + name + ",错误位置:" + log[0] + ",出现错误的字符:" + (char) log[1]);
+			}
+		}
 	}
 
 	public TagFactory getTagFactory(String name)

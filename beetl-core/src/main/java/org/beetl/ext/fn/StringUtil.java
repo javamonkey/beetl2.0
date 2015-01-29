@@ -105,6 +105,13 @@ public class StringUtil
 		SimpleDateFormat sd = new SimpleDateFormat(args);
 		return sd.format(o);
 	}
+	
+	public int index(String str,String search){
+		return str.indexOf(search);
+	}
+	public int lastIndex(String str,String search){
+		return str.lastIndexOf(search);
+	}
 
 	public int index(String str, String key)
 	{

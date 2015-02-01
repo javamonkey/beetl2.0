@@ -37,14 +37,15 @@ public class Test
 		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader();
 		Configuration cfg = Configuration.defaultConfiguration();
 		cfg.setDirectByteOutput(true);
+		cfg.getResourceMap().put("RESOURCE.autoCheck", "true");
 		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 		cfg.setStatementStart("<%");
 		cfg.setStatementEnd("%>");
 		gt.registerFunctionPackage("strings", new StringUtils());
 		gt.registerTag("menu", TestGeneralVarTagBinding.class);
-		gt.registerFunction("testFun.", new TestFun());
+		gt.registerFunction("testFun", new TestFun());
 		gt.registerFunctionPackage("test", new TestUser(""));
-		for (int i = 0; i < 1; i++)
+		for (int i = 0; i < 3; i++)
 		{
 
 			//			Map result = gt.runScript("/org/beetl/core/lab/hello.txt", Collections.EMPTY_MAP);
@@ -71,7 +72,15 @@ public class Test
 			t.binding("table", table.elements());
 
 			ByteArrayOutputStream bs = new ByteArrayOutputStream();
-			t.renderTo(bs);
+			try
+			{
+				t.renderTo(bs);
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+
 			System.out.println(new String(bs.toByteArray()));
 
 		}

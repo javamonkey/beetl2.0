@@ -6,7 +6,7 @@ import org.beetl.core.Context;
 import org.beetl.core.Function;
 import org.beetl.core.exception.BeetlException;
 
-public class flush implements Function
+public class Flush implements Function
 {
 
 	@Override

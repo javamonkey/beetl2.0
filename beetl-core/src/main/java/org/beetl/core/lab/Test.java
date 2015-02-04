@@ -45,7 +45,7 @@ public class Test
 		gt.registerTag("menu", TestGeneralVarTagBinding.class);
 		gt.registerFunction("testFun", new TestFun());
 		gt.registerFunctionPackage("test", new TestUser(""));
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < 1; i++)
 		{
 
 			//			Map result = gt.runScript("/org/beetl/core/lab/hello.txt", Collections.EMPTY_MAP);

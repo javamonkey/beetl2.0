@@ -105,9 +105,9 @@ public final class ByteWriter_Char extends ByteWriter
 	@Override
 	public void flush() throws IOException
 	{
-		this.w.flush();
 		if (parent != null)
 			parent.flush();
+		this.w.flush();
 
 	}
 

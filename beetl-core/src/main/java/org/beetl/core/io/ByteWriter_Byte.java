@@ -101,33 +101,10 @@ public class ByteWriter_Byte extends ByteWriter
 	@Override
 	public final void write(final char[] cbuf, final int len) throws IOException
 	{
-		//		se.write(cbuf, 0, cbuf.length);
 		byte[] bs = new String(cbuf, 0, len).getBytes(cs);
 		write(bs);
 
-		//		encoder.encode(in, out, endOfInput)
-		//		byte[] bs = charset.encode(CharBuffer.wrap(cbuf, 0, len)).array();
-		//		write(bs);
-
-		//		byteBuffer.clear();
-		//		this.encoder.reset().encode(CharBuffer.wrap(cbuf, 0, len), byteBuffer, true);
-		//		encoder.flush(byteBuffer);
-		//		os.write(bs, 0, byteBuffer.position());
-
 	}
-
-	//	public void write(String str) throws IOException
-	//	{
-	//
-	//		se.write(str);
-	//		
-	//		//		if (str != null)
-	//		//		{
-	//		//			byte[] bs = charset.encode(str).array();
-	//		//			write(bs);
-	//		//		}
-	//
-	//	}
 
 	@Override
 	public final void write(final byte[] bs) throws IOException
@@ -163,9 +140,9 @@ public class ByteWriter_Byte extends ByteWriter
 	@Override
 	public void flush() throws IOException
 	{
-		this.os.flush();
 		if (parent != null)
 			parent.flush();
+		this.os.flush();
 
 	}
 

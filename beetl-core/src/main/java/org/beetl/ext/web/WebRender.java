@@ -64,11 +64,25 @@ public class WebRender
 	{
 		Writer writer = null;
 		OutputStream os = null;
+		String ajaxId = null;
+		Template template = null;
 		try
 
 		{
 			//			response.setContentType(contentType);
-			Template template = gt.getTemplate(key);
+			int ajaxIdIndex = key.lastIndexOf("#");
+			if (ajaxIdIndex != -1)
+			{
+				ajaxId = key.substring(ajaxIdIndex + 1);
+				key = key.substring(0, ajaxIdIndex);
+				template = gt.getAjaxTemplate(key, ajaxId);
+
+			}
+			else
+			{
+				template = gt.getTemplate(key);
+			}
+
 			Enumeration<String> attrs = request.getAttributeNames();
 
 			while (attrs.hasMoreElements())

@@ -28,6 +28,7 @@
 package org.beetl.ext.web;
 
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -73,6 +74,7 @@ public abstract class SimpleCrossFilter implements Filter
 			GroupTemplate gt = getGroupTemplate();
 
 			WebRender render = new WebRender(gt);
+			Map paras = this.getScriptParas(req, rsp);
 
 			String commonFile = getCommonValueFile(req, rsp);
 			Map commonData = new HashMap(), data = new HashMap();
@@ -80,13 +82,13 @@ public abstract class SimpleCrossFilter implements Filter
 			{
 				if (gt.getResourceLoader().exist(commonFile))
 				{
-					commonData = gt.runScript(commonFile, null);
+					commonData = gt.runScript(commonFile, paras);
 
 				}
 
 				if (gt.getResourceLoader().exist(valueFile))
 				{
-					data = gt.runScript(valueFile, null);
+					data = gt.runScript(valueFile, paras);
 				}
 
 			}
@@ -104,7 +106,9 @@ public abstract class SimpleCrossFilter implements Filter
 				setValue(key, value, req);
 			}
 
-			render.render(path, req, rsp);
+			String renderPath = getRenderPath(path, req, rsp);
+
+			render.render(renderPath, req, rsp);
 		}
 		else
 		{
@@ -161,9 +165,44 @@ public abstract class SimpleCrossFilter implements Filter
 		return "/values/common.var";
 	}
 
+	/** 返回渲染的模板，默认就是path。
+	 * @param path
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	protected String getRenderPath(String path, HttpServletRequest request, HttpServletResponse response)
+	{
+		return path;
+	}
+
 	protected void output(String result, ServletResponse response) throws IOException
 	{
 		response.getWriter().print(result);
+	}
+
+	protected Map getScriptParas(HttpServletRequest request, HttpServletResponse response)
+	{
+		Map map = new HashMap();
+		Enumeration<String> attrs = request.getAttributeNames();
+
+		while (attrs.hasMoreElements())
+		{
+			String attrName = attrs.nextElement();
+			map.put(attrName, request.getAttribute(attrName));
+
+		}
+		WebVariable webVariable = new WebVariable();
+		webVariable.setRequest(request);
+		webVariable.setResponse(response);
+		webVariable.setSession(request.getSession());
+
+		map.put("session", new SessionWrapper(webVariable.getSession()));
+
+		map.put("servlet", webVariable);
+		map.put("request", request);
+		map.put("ctxPath", request.getContextPath());
+		return map;
 	}
 
 	/** 返回一个GroupTemlate

@@ -1,8 +1,8 @@
 <%
-var a = 1;
-var b = {
-	print(a);
-	flush();
-};
+println("start");
+#ajax tt:{
+print("ok");
+}
+println("end");
 
 %>

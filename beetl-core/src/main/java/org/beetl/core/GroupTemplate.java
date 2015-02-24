@@ -451,6 +451,19 @@ public class GroupTemplate
 		return this.getTemplateByLoader(key, loader);
 	}
 
+	/** 获取模板key的标有ajaxId的模板片段。
+	 * @param key
+	 * @param ajaxId
+	 * @param loader
+	 * @return
+	 */
+	public Template getAjaxTemplate(String key, String ajaxId, ResourceLoader loader)
+	{
+		Template template = this.getTemplateByLoader(key, loader);
+		template.ajaxId = ajaxId;
+		return template;
+	}
+
 	/** 得到模板，并指明父模板
 	 * @param key
 	 * @param parent
@@ -463,9 +476,9 @@ public class GroupTemplate
 		return template;
 	}
 
-	/** 得到模板，并指明父模板，通过用于
+	/** 得到模板，并指明父模板。
 	 * @param key
-	 * @param parent
+	 * @param parent，此参数目前未使用
 	 * @return
 	 */
 	public Template getTemplate(String key, String parent)
@@ -484,6 +497,19 @@ public class GroupTemplate
 	{
 
 		return getTemplateByLoader(key, this.resourceLoader);
+	}
+
+	/** 获取模板的ajax片段，
+	 * @param key ，key为模板resourceId
+	 * @param ajaxId,ajax标示
+	 * @return
+	 */
+	public Template getAjaxTemplate(String key, String ajaxId)
+	{
+
+		Template t = getTemplateByLoader(key, this.resourceLoader);
+		t.ajaxId = ajaxId;
+		return t;
 	}
 
 	private Template getTemplateByLoader(String key, ResourceLoader loader)

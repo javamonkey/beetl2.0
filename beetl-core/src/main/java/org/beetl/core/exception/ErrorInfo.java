@@ -107,6 +107,9 @@ public class ErrorInfo
 		errorLocalMap.put(BeetlException.EXPRESSION_NOT_COMPATIBLE,
 				concat("表达式类型不一致，无法运算", BeetlException.EXPRESSION_NOT_COMPATIBLE));
 
+		errorLocalMap.put(BeetlException.AJAX_ALREADY_DEFINED,
+				concat("Ajax 锚点已经定义", BeetlException.AJAX_ALREADY_DEFINED));
+
 	}
 
 	static String concat(String info, String code)

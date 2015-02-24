@@ -73,6 +73,12 @@ public class BeetlException extends RuntimeException
 	 * 变量已经定义过了
 	 */
 	public static final String VAR_ALREADY_DEFINED = "VAR_ALREADY_DEFINED";
+
+	/**
+	 * AJAX已经定义过了
+	 */
+	public static final String AJAX_ALREADY_DEFINED = "AJAX_ALREADY_DEFINED";
+
 	/**
 	 * 变量只读，通过template.set()的变量，即用于渲染模板的变量都是只读的，不能在模板中被改写
 	 */

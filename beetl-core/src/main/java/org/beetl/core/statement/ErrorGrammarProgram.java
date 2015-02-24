@@ -59,6 +59,17 @@ public class ErrorGrammarProgram extends Program
 			{
 				//do nothing;
 			}
+
+			public AjaxStatement getAjax(String anchor)
+			{
+				return new AjaxStatement(null, null) {
+					public void execute(Context ctx)
+					{
+						ErrorGrammarProgram.this.execute(ctx);
+
+					}
+				};
+			}
 		};
 		this.metaData.lineSeparator = cr;
 	}

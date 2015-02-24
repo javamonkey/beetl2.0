@@ -96,6 +96,8 @@ public class ProgramMetaData implements java.io.Serializable
 	 */
 	public Map<String, Type> globalType = new HashMap<String, Type>(0);
 
+	public Map<String, AjaxStatement> ajaxs = null;
+
 	/**
 	 * 模板里的顶级变量映射关系
 	 */
@@ -178,6 +180,11 @@ public class ProgramMetaData implements java.io.Serializable
 	public void setTemplateRootScopeIndexMap(Map<String, Integer> templateRootScopeIndexMap)
 	{
 		this.templateRootScopeIndexMap = templateRootScopeIndexMap;
+	}
+
+	public AjaxStatement getAjax(String anchor)
+	{
+		return ajaxs.get(anchor);
 	}
 
 }

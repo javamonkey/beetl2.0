@@ -22,7 +22,8 @@ Directive:'DIRECTIVE'|'directive';
 Case:'case';
 Default:'default';
 Try:'try';
-Catch:'catch';   
+Catch:'catch';  
+Ajax:'#ajax';
 
 LEFT_BRACE:'{';
 RIGHT_BRACE:'}';

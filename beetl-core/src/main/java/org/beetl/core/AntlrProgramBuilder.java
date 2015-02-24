@@ -49,6 +49,7 @@ import org.beetl.core.exception.NativeNotAllowedException;
 import org.beetl.core.om.ObjectAA;
 import org.beetl.core.parser.BeetlParser;
 import org.beetl.core.parser.BeetlParser.AddminExpContext;
+import org.beetl.core.parser.BeetlParser.AjaxStContext;
 import org.beetl.core.parser.BeetlParser.AndExpContext;
 import org.beetl.core.parser.BeetlParser.AssignGeneralContext;
 import org.beetl.core.parser.BeetlParser.AssignIdContext;
@@ -134,6 +135,7 @@ import org.beetl.core.parser.BeetlParser.VarRefExpContext;
 import org.beetl.core.parser.BeetlParser.VarStContext;
 import org.beetl.core.parser.BeetlParser.WhileStContext;
 import org.beetl.core.statement.ASTNode;
+import org.beetl.core.statement.AjaxStatement;
 import org.beetl.core.statement.AndExpression;
 import org.beetl.core.statement.ArthExpression;
 import org.beetl.core.statement.BlockStatement;
@@ -385,6 +387,10 @@ public class AntlrProgramBuilder
 
 			return this.parseSelect(selectCtx);
 		}
+		else if (node instanceof AjaxStContext)
+		{
+			return this.parseAjax((AjaxStContext) node);
+		}
 
 		else if (node instanceof EndContext)
 		{
@@ -436,6 +442,33 @@ public class AntlrProgramBuilder
 						.getSymbol()));
 
 		return select;
+	}
+
+	protected AjaxStatement parseAjax(AjaxStContext ajaxCtx)
+	{
+		GrammarToken token = this.getBTToken(ajaxCtx.Identifier().getSymbol());
+		BlockContext blockCtx = ajaxCtx.block();
+
+		BlockStatement block = (BlockStatement) this.parseBlock(blockCtx.statement(), blockCtx);
+
+		AjaxStatement ajaxStat = new AjaxStatement(block, token);
+
+		if (this.data.ajaxs == null)
+		{
+			this.data.ajaxs = new HashMap<String, AjaxStatement>();
+			String anchor = ajaxStat.token.text;
+			if (this.data.ajaxs.containsKey(anchor))
+			{
+				GrammarToken lastToken = this.data.ajaxs.get(anchor).token;
+				BeetlException ex = new BeetlException(BeetlException.AJAX_ALREADY_DEFINED, "已经在第" + lastToken.line
+						+ "行定义");
+				ex.pushToken(token);
+				throw ex;
+			}
+			this.data.ajaxs.put(anchor, ajaxStat);
+		}
+
+		return ajaxStat;
 	}
 
 	protected SwitchStatement parseSwitch(SiwchStContext sctx)

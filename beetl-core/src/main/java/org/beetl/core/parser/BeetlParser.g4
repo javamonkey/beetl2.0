@@ -37,10 +37,11 @@ statement
     |   assignMent END  #assignSt
     |   functionTagCall #functionTagSt 
     |   statementExpression END   #statmentExpSt 
+    |   Ajax Identifier COLON block   #ajaxSt 
     |   END   #end
       
     ;
-//æ³¨è§£:@type User user,List<User> userList
+//×¢½â:@type User user,List<User> userList
 commentTypeTag: LEFT_PAR1 commentTypeItemTag (COMMA1 commentTypeItemTag)* RIGHT_PAR1;
 commentTypeItemTag:    classOrInterfaceType   Identifier1    
                   ;
@@ -52,7 +53,7 @@ typeArgument
     :   classOrInterfaceType 
     ;
 
-//æŒ‡ä»¤  directive object xx,xx,xx                 
+//Ö¸Áî  directive object xx,xx,xx                 
 directiveExp:  Identifier (StringLiteral|directiveExpIDList)? END;
 directiveExpIDList: Identifier (COMMA Identifier)* ;
 
@@ -120,7 +121,7 @@ expressionList
 statementExpression
     :   expression
     ;
-textStatment:   //è¡¨è¾¾å¼è¾“å‡º
+textStatment:   //±í´ïÊ½Êä³ö
          LEFT_TOKEN NOT LEFT_PAR textVar RIGHT_PAR RIGHT_TOKEN 
       |    LEFT_TOKEN textVar RIGHT_TOKEN;
 textVar	
@@ -131,7 +132,7 @@ textformat:
         | StringLiteral  ;
 
 constantsTextStatment
-	:	LEFT_TEXT_TOKEN  DecimalLiteral RIGHT_TOKEN   ; // å¸¸é‡è¾“å‡º,ä»£è¡¨æ•°ç»„æœåº”
+	:	LEFT_TEXT_TOKEN  DecimalLiteral RIGHT_TOKEN   ; // ³£Á¿Êä³ö,´ú±íÊı×éËÑÓ¦
 
 
 constantExpression

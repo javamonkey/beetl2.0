@@ -123,6 +123,13 @@ public class Template
 			if (ajaxId != null)
 			{
 				AjaxStatement ajax = program.metaData.getAjax(ajaxId);
+				if (ajax == null)
+				{
+					BeetlException be = new BeetlException(BeetlException.AJAX_NOT_FOUND);
+
+					be.pushToken(new GrammarToken(ajaxId, 0, 0));
+					throw be;
+				}
 				ajax.execute(ctx);
 			}
 			else

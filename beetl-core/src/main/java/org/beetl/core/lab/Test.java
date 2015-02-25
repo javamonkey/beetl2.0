@@ -45,7 +45,7 @@ public class Test
 		gt.registerTag("menu", TestGeneralVarTagBinding.class);
 		gt.registerFunction("testFun", new TestFun());
 		gt.registerFunctionPackage("test", new TestUser(""));
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < 1; i++)
 		{
 
 			//			Map result = gt.runScript("/org/beetl/core/lab/hello.txt", Collections.EMPTY_MAP);
@@ -60,7 +60,7 @@ public class Test
 			list.add(user);
 
 			//	user.setLover(new TestUser("miaojun"));
-			Template t = gt.getAjaxTemplate("/org/beetl/core/lab/hello.txt", "tt");
+			Template t = gt.getAjaxTemplate("/org/beetl/core/lab/hello.txt", "tt1");
 			t.binding("footer", Boolean.TRUE);
 			t.binding("user", user);
 			t.binding("date1", new Date(10002));

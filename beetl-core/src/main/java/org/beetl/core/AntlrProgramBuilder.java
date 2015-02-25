@@ -456,17 +456,18 @@ public class AntlrProgramBuilder
 		if (this.data.ajaxs == null)
 		{
 			this.data.ajaxs = new HashMap<String, AjaxStatement>();
-			String anchor = ajaxStat.token.text;
-			if (this.data.ajaxs.containsKey(anchor))
-			{
-				GrammarToken lastToken = this.data.ajaxs.get(anchor).token;
-				BeetlException ex = new BeetlException(BeetlException.AJAX_ALREADY_DEFINED, "已经在第" + lastToken.line
-						+ "行定义");
-				ex.pushToken(token);
-				throw ex;
-			}
-			this.data.ajaxs.put(anchor, ajaxStat);
+
 		}
+
+		String anchor = ajaxStat.token.text;
+		if (this.data.ajaxs.containsKey(anchor))
+		{
+			GrammarToken lastToken = this.data.ajaxs.get(anchor).token;
+			BeetlException ex = new BeetlException(BeetlException.AJAX_ALREADY_DEFINED, "已经在第" + lastToken.line + "行定义");
+			ex.pushToken(token);
+			throw ex;
+		}
+		this.data.ajaxs.put(anchor, ajaxStat);
 
 		return ajaxStat;
 	}

@@ -1,8 +1,13 @@
 <%
-println("start");
-#ajax tt:{
+
+#ajax tt1:{
 print("ok");
 }
-println("end");
+
+#ajax tt1:{
+print("ok1");
+}
+
+
 
 %>

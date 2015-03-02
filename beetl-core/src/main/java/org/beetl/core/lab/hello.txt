@@ -4,5 +4,6 @@ var b = {
 	print(a);
 	flush();
 };
+include("beetl.txt"){};
 
 %>

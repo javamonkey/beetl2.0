@@ -58,16 +58,17 @@ class HTMLTagParser
 	int ts;
 	int te;
 	String lastKey = null;
-
+	String bindingAttr = null;
 	static char ENT_TAG = '>';
 	static char[] ENT_TAGS = new char[]
 	{ '/', '>' };
 	char[] cr = new char[]
 	{ '\n' };
 
-	public HTMLTagParser(char[] cs, int index, boolean isStart)
+	public HTMLTagParser(char[] cs, int index, String bindingAttr, boolean isStart)
 	{
 		this.cs = cs;
+		this.bindingAttr = bindingAttr;
 		this.index = index;
 		this.isStart = isStart;
 		this.ts = index;
@@ -199,6 +200,12 @@ class HTMLTagParser
 			String value = this.subString();
 			this.t_consume();
 			this.move(1);
+			if (lastKey.equals(this.bindingAttr))
+			{
+				this.hasVarBinding = true;
+				this.varBidingStr = value;
+				return;
+			}
 			this.quatMap.put(lastKey, isSingleQuat ? '\'' : '\"');
 			this.expMap.put(lastKey, value);
 			if (findCR)
@@ -557,12 +564,13 @@ class HTMLTagParser
 
 	public static void main(String[] args)
 	{
-		String input = "<#bbsListTag a='1' \nc='${ kk }'; page , dd >hello ${a}</#bbsListTag>";
-		HTMLTagParser htmltag = new HTMLTagParser(input.toCharArray(), 2, true);
+		String input = "<#bbsListTag a='1' \nc='${ kk }' var='page,dd' >hello ${a}</#bbsListTag>";
+		HTMLTagParser htmltag = new HTMLTagParser(input.toCharArray(), 2, "var", true);
 		htmltag.parser();
 		System.out.println(htmltag.getTagName());
 		System.out.println(htmltag.getExpMap());
 		System.out.println(htmltag.isEmptyTag());
+		System.out.println(htmltag.hasVarBinding);
 		System.out.println(htmltag.varBidingStr);
 
 	}

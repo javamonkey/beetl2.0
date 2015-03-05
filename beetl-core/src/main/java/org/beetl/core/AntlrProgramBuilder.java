@@ -629,7 +629,7 @@ public class AntlrProgramBuilder
 			VarDefineNode[] varDefine = new VarDefineNode[vars.length];
 			for (int i = 0; i < vars.length; i++)
 			{
-				VarDefineNode varNode = new VarDefineNode(this.getBTToken(vars[i], line));
+				VarDefineNode varNode = new VarDefineNode(this.getBTToken(vars[i].trim(), line));
 				this.pbCtx.addVarAndPostion(varNode);
 				varDefine[i] = varNode;
 			}

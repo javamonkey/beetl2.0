@@ -577,7 +577,8 @@ public class GroupTemplate
 			sf = new Transformator(conf.placeholderStart, conf.placeholderEnd, conf.statementStart, conf.statementEnd);
 			if (this.conf.isHtmlTagSupport())
 			{
-				sf.enableHtmlTagSupport(conf.getHtmlTagStart(), conf.getHtmlTagEnd());
+				sf.enableHtmlTagSupport(conf.getHtmlTagStart(), conf.getHtmlTagEnd(),
+						this.conf.getHtmlTagBindingAttribute());
 			}
 			Reader scriptReader;
 			scriptReader = sf.transform(reader);

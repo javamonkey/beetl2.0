@@ -88,6 +88,11 @@ public class Configuration
 	String htmlTagEnd = "</" + htmlTagFlag;
 
 	/**
+	 *  html 绑定的属性，如&lt;aa var="customer">
+	 */
+	String htmlTagBindingAttribute = "var";
+
+	/**
 	 * 类搜索的包名列表
 	 */
 	Set<String> pkgList = new HashSet<String>();
@@ -129,6 +134,7 @@ public class Configuration
 	public static String ENGINE = "ENGINE";
 	public static String NATIVE_SECUARTY_MANAGER = "NATIVE_SECUARTY_MANAGER";
 	public static String RESOURCE_LOADER = "RESOURCE_LOADER";
+	public static String HTML_TAG_BINDING_ATTRIBUTE = "HTML_TAG_BINDING_ATTRIBUTE";
 
 	Properties ps = null;
 
@@ -257,6 +263,10 @@ public class Configuration
 			htmlTagStart = "<" + htmlTagFlag;
 			htmlTagEnd = "</" + htmlTagFlag;
 
+		}
+		else if (key.equalsIgnoreCase(HTML_TAG_BINDING_ATTRIBUTE))
+		{
+			this.htmlTagBindingAttribute = value;
 		}
 		else if (key.equalsIgnoreCase(IMPORT_PACKAGE))
 		{
@@ -518,6 +528,16 @@ public class Configuration
 	public void setHtmlTagEnd(String htmlTagEnd)
 	{
 		this.htmlTagEnd = htmlTagEnd;
+	}
+
+	public String getHtmlTagBindingAttribute()
+	{
+		return htmlTagBindingAttribute;
+	}
+
+	public void setHtmlTagBindingAttribute(String htmlTagBindingAttribute)
+	{
+		this.htmlTagBindingAttribute = htmlTagBindingAttribute;
 	}
 
 	public void setCharset(String charset)

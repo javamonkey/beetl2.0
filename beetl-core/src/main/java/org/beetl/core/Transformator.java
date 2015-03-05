@@ -52,6 +52,7 @@ public class Transformator
 
 	String htmlTagStart = "<#";
 	String htmlTagEnd = "</#";
+	String htmlTagBindingAttribute = "var";
 
 	Stack htmlTagStack = new Stack();
 	boolean isSupportHtmlTag = false;
@@ -148,10 +149,11 @@ public class Transformator
 
 	}
 
-	public void enableHtmlTagSupport(String tagStart, String tagEnd)
+	public void enableHtmlTagSupport(String tagStart, String tagEnd, String htmlTagBindingAttribute)
 	{
 		this.htmlTagStart = tagStart;
 		this.htmlTagEnd = tagEnd;
+		this.htmlTagBindingAttribute = htmlTagBindingAttribute;
 		this.isSupportHtmlTag = true;
 	}
 
@@ -296,7 +298,7 @@ public class Transformator
 		try
 		{
 			StringBuilder script = new StringBuilder();
-			HTMLTagParser html = new HTMLTagParser(cs, index, true);
+			HTMLTagParser html = new HTMLTagParser(cs, index, htmlTagBindingAttribute, true);
 			html.cr = this.lineSeparatorCharArray;
 			html.parser();
 			if (html.hasVarBinding)
@@ -418,7 +420,7 @@ public class Transformator
 		String tagName = null;
 		try
 		{
-			HTMLTagParser html = new HTMLTagParser(cs, index, false);
+			HTMLTagParser html = new HTMLTagParser(cs, index, htmlTagBindingAttribute, false);
 
 			html.parser();
 			tagName = html.getTagName();
@@ -636,7 +638,7 @@ public class Transformator
 						createTextNode(temp);
 					}
 				}
-				index = index + 3;
+				index = index + this.htmlTagEnd.length();
 				status = 6;
 				return;
 
@@ -657,7 +659,7 @@ public class Transformator
 					}
 				}
 				status = 5;
-				index = index + 2;
+				index = index + this.htmlTagStart.length();
 				return;
 
 			}
@@ -902,12 +904,12 @@ public class Transformator
 	{
 		char c = '\\';
 		Transformator p = new Transformator("${", "}", "<%", "%>");
-		p.enableHtmlTagSupport("<#", "</#");
+		p.enableHtmlTagSupport("<ns:", "</ns:", "var");
 		try
 		{
 
 			// String str = "   #:var u='hello';:#  \n  $u$";
-			String str = "  <%%>   \na }";
+			String str = "<ns:a tt='a' var='c,b'></ns:a>";
 
 			BufferedReader reader = new BufferedReader(p.transform(str));
 			String line = null;

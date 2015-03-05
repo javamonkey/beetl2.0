@@ -140,18 +140,27 @@ public class BeetlUtil
 			{
 				//相对路径
 				int i = siblings.length() - 1;
+				boolean find = false;
 				for (; i > 0; i--)
 				{
 					char c = siblings.charAt(i);
 					if (c == '\\' || c == '/')
 					{
+						find = true;
 						break;
 					}
 				}
+				if (find)
+				{
+					String parent = siblings.substring(0, i + 1);
 
-				String parent = siblings.substring(0, i + 1);
+					relResourceId = parent.concat(resourceId);
+				}
+				else
+				{
+					relResourceId = resourceId;
+				}
 
-				relResourceId = parent.concat(resourceId);
 			}
 			else
 			{

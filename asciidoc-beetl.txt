@@ -1,4 +1,4 @@
-Beetl2.1使用说明书20141119
+Beetl2.1使用说明书20150305
 ===================
 李家智 <xiandafu@126.com>
 :toc:
@@ -11,7 +11,7 @@ Beetl2.1使用说明书20141119
 
 
 == 什么是Beetl ==
-Beetl目前版本是2.1.1，大小665K，相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
+Beetl目前版本是2.2.0,大小680K，从开发至今有4年历史。相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
 
 - 功能完备：同主流的java模板引擎相比，Beetl具有绝大多数功能。适用于*各种应用场景*，从对响应速度有很高要求的大网站到功能繁多的CMS管理系统都适合。Beetl本身还具有很多独特功能来完成模板编写和维护，这是其他模板引擎所不具有的。
 - 非常简单：类似Javascript语法和习俗，只要半小时就能通过半学半猜完全掌握用法。拒绝其他模板引擎那种非人性化的语法和习俗。同时也能支持html 标签，使得开发CMS系统比较容易
@@ -37,15 +37,16 @@ Beetl有些功能是发展了10多年的模板引擎所不具备的，这些功�
 6. 类型推测，能在运行的时候推测模板变量类型，从而优化性能，也可以通过注解的方法显示的说明模板变量属性（这是非必须的，但有助于IDE自动提示功能）
 7. 可插拔的设计，错误信息提示，模板引擎缓存机制，模板资源管理，本地调用的安全管理器,严格MVC限制，模板引擎本身都有默认的实现，但又完全可以自定义以适合特定需求
 8. 增强的语法，如for-elsefor, select-case，安全输出符号! 等，这些语法特别适合模板开发
-9. 性能超高,具有最快的模板解释引擎，同时，又有较低的CPU消耗。5-6倍于国内使用的Freemaker。适合各类模板应用，如代码生成工具，CMS系统，普通网站，超高访问量的门户系统，和富客户端JS框架整合的后台管理应用
+9. 局部渲染技术，结合现在js的ajax技术。
+10. 性能超高,具有最快的模板解释引擎，同时，又有较低的CPU消耗。5-6倍于国内使用的Freemaker。适合各类模板应用，如代码生成工具，CMS系统，普通网站，超高访问量的门户系统，和富客户端JS框架整合的后台管理应用
 **********************************************************************
 
 .新手如何开始
 **********************************************************************
 需要通读基本用法，大部分都是讲解语法，而语法跟js很接近，所以可以快速预览，但Beetl是针对模板设计，
-所以像安全输出，标签和html标签，全局变量，临时变量和共享变量，以及直接调用java代码等还需要认真读一遍。
+所以像安全输出，标签和html标签，全局变量，临时变量和共享变量，布局技术，以及直接调用java代码等还需要认真读一遍。
 
-如果从事web开发，还需要阅读web集成里的第一节“web提供的全局变量”
+如果从事web开发，还需要阅读web集成里的第一节“web提供的全局变量”，如果web里还使用ajax技术，可以阅读“整合ajax的局部渲染技术”
 
 
 **********************************************************************
@@ -67,6 +68,8 @@ Beetl主页：ibeetl.com
 如果有任何疑问或者提交bug，可以直接联系我
 
 **********************************************************************
+
+
 
 
 == 基本用法 ==
@@ -110,7 +113,7 @@ Beetl的核心是GroupTemplate，创建GroupTemplate需要俩个参数，一个�
 
 === 模板基础配置 ===
 
-Beetl提供不但功能齐全，而且还有你很多独特功能，通过简单的配置文件，就可以定义众多的功能，默认情况下，Configuration类总是会先加载默认的配置文件（位于/org/beetl/core/beetl-default.properties，作为新手，通常只需要关注3,4,5,6行定界符的配置，以及11行模板字符集的配置就可以了，其他配置会在后面章节陆续提到）下，其内容片断如下：
+Beetl提供不但功能齐全，而且还有很多独特功能，通过简单的配置文件，就可以定义众多的功能，默认情况下，Configuration类总是会先加载默认的配置文件（位于/org/beetl/core/beetl-default.properties，作为新手，**通常只需要关注3,4,5,6行定界符的配置，以及11行模板字符集的配置就可以了**，其他配置会在后面章节陆续提到）下，其内容片断如下：
 [source,text]
 ----------------------------
 #默认配置
@@ -122,6 +125,7 @@ DELIMITER_STATEMENT_END=%>
 DIRECT_BYTE_OUTPUT = FALSE
 HTML_TAG_SUPPORT = true
 HTML_TAG_FLAG = #
+HTML_TAG_BINDING_ATTRIBUTE = var
 NATIVE_CALL = TRUE
 TEMPLATE_CHARSET = UTF-8
 ERROR_HANDLER = org.beetl.core.ConsoleErrorHandler
@@ -162,35 +166,37 @@ TAG.include= org.beetl.ext.tag.IncludeTag
 
 第4,5行指定了语句的定界符号，默认是<% %>,也可以指定为其他定界符号
 
-第6行指定IO输出模式，默认是FALSE,即通常的字符输出，再考虑高性能情况下，可以设置成true。详细请参考高级用法
+第6行指定IO输出模式，默认是FALSE,即通常的字符输出，在考虑高性能情况下，可以设置成true。详细请参考高级用法
 
-第8,9行指定了支持HTML标签，且符号为#（只能用一个符号标示），默认配置下，模板引擎识别<#tag ></#tag>这样的类似html标签，并能调用相应的标签函数。
+第8,9行指定了支持HTML标签，且符号为#（只能用一个符号标示），默认配置下，模板引擎识别<#tag ></#tag>这样的类似html标签，并能调用相应的标签函数或者模板文件。
 
-第10行指定允许本地Class直接调用
+第10行 指定如果标签属性有var，则认为是需要绑定变量给模板的标签函数
 
-第11行指定模板字符集是UTF-8
+第11行指定允许本地Class直接调用
 
-第12行指定异常的解析类，默认是ConsoleErrorHandler，他将在render发生异常的时候在后台打印出错误信息（System.out)。
+第12行指定模板字符集是UTF-8
 
-第13行指定了本地Class调用的安全策略
+第13行指定异常的解析类，默认是ConsoleErrorHandler，他将在render发生异常的时候在后台打印出错误信息（System.out)。
 
-第14行配置了是否进行严格MVC，通常情况下，此处设置为false.
+第14行指定了本地Class调用的安全策略
 
-第17行指定了默认使用的模板资源加载器
+第15行配置了是否进行严格MVC，通常情况下，此处设置为false.
 
-第19到21行配置了模板资源加载器的一些属性，如设置根路径为/,即Classpath的顶级路径，并且总是检测模板是否更改
+第18行指定了默认使用的模板资源加载器
 
-第22行配置了自定义的方法所在的目录以及文件名后缀。beetl即支持通过java类定义方法，也支持通过模板文件来定义方法
+第20到22行配置了模板资源加载器的一些属性，如设置根路径为/,即Classpath的顶级路径，并且总是检测模板是否更改
 
-第25行配置了自定义的html标签所在的目录以及文件名后缀。beetl即支持通过java类定义标签，也支持通过模板文件来定义标签
+第23行配置了自定义的方法所在的目录以及文件名后缀。beetl既支持通过java类定义方法，也支持通过模板文件来定义方法
 
-第30行注册了一个date方法，其实现类是org.beetl.ext.fn.DateFunction
+第26行配置了自定义的html标签所在的目录以及文件名后缀。beetl既支持通过java类定义标签，也支持通过模板文件来定义标签
 
-第33行注册了一个方法包strutil，其实现类org.beetl.ext.fn.StringUtil，此类的每个public方法都将注册为beetl的方法
+第31行注册了一个date方法，其实现类是org.beetl.ext.fn.DateFunction
 
-第36行注册了一个日期格式化函数
+第34行注册了一个方法包strutil，其实现类org.beetl.ext.fn.StringUtil，此类的每个public方法都将注册为beetl的方法
 
-第39行注册了一个include标签函数
+第37行注册了一个日期格式化函数
+
+第40行注册了一个include标签函数
 
 模板开发者可以创建一个beetl.properties的配置文件，此时，该配置文件将覆盖默认的配置文件属性，比如，你的定界符考虑是<!--: 和 --> ,则在beetl.properties加入一行即可,并将此配置文件放入Classpath根目录下即可。 Configuration.defaultConfiguration()总是先加载系统默认的，然后再加载Beetl.properties的配置属性，如果有重复，用后者代替前者的配置
 
@@ -269,7 +275,7 @@ groupTemplate = new GroupTemplate(resourceLoader, cfg);
 
 *************************************************
 
-WebAppResourceLoader 假定 beetl.jar 是位于	WEB-INF/lib 目录下，因此，可以通过WebAppResourceLoader类的路径来推断出WebRoot路径从而指定模板根路径。所有线上环境一般都是如此，如果是开发环境或者其他环境部符合此假设，你需要调用resourceLoader.setRoot() 来指定模板更路径
+WebAppResourceLoader 假定 beetl.jar 是位于	WEB-INF/lib 目录下，因此，可以通过WebAppResourceLoader类的路径来推断出WebRoot路径从而指定模板根路径。所有线上环境一般都是如此，如果是开发环境或者其他环境不符合此假设，你需要调用resourceLoader.setRoot() 来指定模板更路径
 
 *************************************************
 
@@ -442,7 +448,7 @@ hello,${name}
 
 === 模板变量 ===
 
-模板变量是一种特殊的变量，即可以将模板中任何一段的输出赋值到改变量，并允许稍后再其他地方使用，如下代码
+模板变量是一种特殊的变量，即可以将模板中任何一段的输出赋值到该变量，并允许稍后在其他地方使用，如下代码
 
 [source,javascript]
 ----------------------------
@@ -579,7 +585,7 @@ for(user in userList){
 - userLP.first 是否是第一个
 - userLP.last 是否是最后一个
 - userLP.even 索引是否是偶数
-- userPL.odd 索引是否是奇数
+- userLP.odd 索引是否是奇数
 
 *************************************************
 
@@ -869,11 +875,7 @@ Beetl内置函数请参考附录，以下列出了常用的函数
 
 - range 接收三个参数，初始值，结束值，还有步增（可以不需要，则默认为1），返回一个Iterator，常用于循环中，如for(var i in range(1,5)) {print(i)},将依次打印1234.
 
-
-
-
-
-
+- flush 强制io输出
 
 
 
@@ -882,7 +884,7 @@ Beetl内置函数请参考附录，以下列出了常用的函数
 
 安全输出是任何一个模板引擎必须重视的问题，否则，将极大困扰模板开发者。Beetl中，如果要输出的模板变量为null，则beetl将不做输出，这点不同于JSP，JSP输出null，也不同于Feemarker，如果没有用!,它会报错.
 
-模板中还有俩中情况会导致模板输出异常
+模板中还有俩种情况会导致模板输出异常
 
 - 有时候模板变量并不存在（譬如子模板里）
 - 模板变量为null，但输出的是此变量的一个属性，如${user.wife.name}
@@ -898,7 +900,7 @@ ${user.wife.name!”单身”}，如果user为null，或者user.wife为null，�
 
 譬如
 
-${user. birthday!@System.constants.DefaultBir}， 表示如果user为null，或者user. birthday为null，输出System.constants.DefaultBir
+${user.birthday!@System.constants.DefaultBir}， 表示如果user为null，或者user. birthday为null，输出System.constants.DefaultBir
 
 
 
@@ -1052,7 +1054,7 @@ ${date,“yyyy-MM-dd”}.
 ----------------------------
 
 
-Beetl针对日期好数字类型提供的默认的格式化函数，在org/beetl/core/beetl-default.properties里，注册了
+Beetl针对日期和数字类型提供的默认的格式化函数，在org/beetl/core/beetl-default.properties里，注册了
 
 [source,javascript]
 ----------------------------
@@ -1225,7 +1227,12 @@ public class SimpleHtmlTag extends Tag
 
 ----------------------------
 
+*************************************************
 
+HTML_TAG_FLAG默认为#用来区别是否是beetl的html tag，你也可以设置成其他符号，比如
+"my:",这样，<my:table></my:table> 其实是一个指向table.tag的标签实现
+
+*************************************************
 
 === 绑定变量的HTML标签 ===
 
@@ -1248,7 +1255,7 @@ public class TagSample extends GeneralVarTagBinding
 		int limit = Integer.parseInt((String) this.getAttributeValue("limit"));
 		for (int i = 0; i < limit; i++)
 		{
-			this.binds(i) // or this.bind("value", i);
+			this.binds(i) 
 			this.doBodyRender();
 		}
 
@@ -1275,6 +1282,18 @@ public class TagSample extends GeneralVarTagBinding
 
 注意，由于标签使用因为太长可能换行或者是文本格式化导致换行，目前beetl只允许在属性之间换行，否则，将报标签解析错误。
 
+默认情况下，如果标签属性出现了var(可以通过配置文件改成其他属性名)，也认为是绑定变量的标签，如上面的例子也可以这么写
+
+
+[source,html]
+----------------------------
+ <#tag limit="3" var="value">
+	${value}
+ </#tag>
+
+----------------------------
+
+var属性的值可以是个以逗号分开的变量名列表，如var="total,customer,index"
 
 === 直接调用java方法和属性 ===
 
@@ -1284,6 +1303,7 @@ public class TagSample extends GeneralVarTagBinding
 ${@user.getMaxFriend(“lucy”)}
 ${@user.maxFriend[0].getName()}
 ${@com.xxxx.constants.Order.getMaxNum()}
+${@com.xxxx.User$Gender.MAN}
 <%
 var max = @com.xxxx.constants.Order.MAX_NUM;
 %>
@@ -1301,6 +1321,8 @@ var max = @com.xxxx.constants.Order.MAX_NUM;
 - 请按照java规范写类名和方法名，属性名。这样便于beetl识别到底调用的是哪个类，哪个方法。否则会抛出错误
 
 - 可以省略包名，只用类名。beetl将搜索包路径找到合适的类（需要设置配置“IMPORT_PACKAGE=包名.;包名.”，包名后需要跟一个“.”, 或者调用Configuration.addPkg)方法具体请参考附件配置文件说明
+
+- 内部类（包括枚举）访问同java一样，如User类有个内部枚举类Gender，访问是User$Gender
 
 *************************************************
 
@@ -1493,13 +1515,51 @@ BeetlKit　不要用于线上系统。仅仅作为体验Beetl功能而提供的�
 **********************************************************************
 
 
+=== 变量不存在 ===
 
+对于编程语言来说，变量不存在则在编译期就会报错，对于那种解释语言，变量也是要么存在，要么不存在，不可能一段代码里有俩种情况，但对于模板语言来说，一段模板里的变量可能有这俩种状态，如新增和修改共用一个模板文件就会出现这种情况。如果变量有可能不存在，则用安全输出符号"!"，如下代码：
+
+[source,html]
+----------------------------
+
+<span>${user.name!}</span>
+
+----------------------------
+
+对于逻辑表达式，也可以使用安全输出符号，如:
+[source,java]
+----------------------------
+
+<%
+if(null==user.name!) //安全输出符号后如果未有表达式，则返回null
+if(''==user.name!'') //如果user.name不存在或者为null，则返回空字符串。或者user.name本身是空字符串
+%>
+
+---------------------------
+
+系统提供了一些函数，也可以用于判断变量是否存在
+
+[source,jsp]
+----------------------------
+
+<%
+if(has(user))   //接受一个变量名,如果存在user变量,返回true
+if(isEmpty(user.name)
+/*
+如果user不存在，或者为null，或者user.name是空为null，
+或者user.name是空字符串，都返回true
+*/
+%>
+
+---------------------------
+
+isEmtpy 可以接受表达式，可以判断集合，数组，字符串为空情况，详细参考该函数说明
 
 === 琐碎功能 ===
 
 - 对齐:我发现别的模板语言要是做到对齐，非常困难,使用Beetl你完全不用担心，比如velocty，stringtemlate，freemarker例子都出现了不对齐的情况，影响了美观，Beetl完全无需担心输出对齐
 
-- Escape:可以使用\ 做escape 符号，如\$monkey\$ 将作为一个普通的文本，输出为$monkey$.再如为了在钱后加上美元符号（占位符恰好又是美元符号）可以用这俩种方式hello,it's
+- Escape:可以使用\ 做escape 符号，如\$monkey\$ 将作为一个普通的文本，输出为$monkey$.再如为了在后加上美元符号（占位符恰好又是美元符号）可以用这俩种方式hello,it's
 $money$\$, 或者Hello,it's $money+"\$"$ 。如果要输出\符号本生，则需要用俩个\\,这点与javascript，java 语义一致. 
 
 
@@ -2290,8 +2350,18 @@ GroupTemplate.setSharedVars(Map<String, Object> sharedVars)
 
 layoutContent 是默认变量，也可以改成其他名字，具体请参考layout标签函数
 
+全局变量总是能被布局用的页面所使用，如果布局页面需要临时变量，则需要显示的传入，如：
 
-- 采用模板变量和include
+[source,java]
+
+-------------------------
+ <%
+ var user= model.user;
+ include("/inc/header.html",{title:'这是一个测试页面',user:user}){} %> 
+
+-------------------------
+
+-  继承布局：采用模板变量和include
 
 [source,java]
 
@@ -2329,6 +2399,7 @@ ${htmlSection}
 </body>
 
 -------------------------
+
 
 
 
@@ -2791,7 +2862,7 @@ ServletGroupTemplate同其他web集成一样，将读取配置文件来配置，
 			
 	
 <bean id="viewResolver" class="org.beetl.ext.spring.BeetlSpringViewResolver">
-	<property name="contentType" value="text/html;charset=UTF-8">
+	<property name="contentType" value="text/html;charset=UTF-8"/>
 </bean>
 
 ----------------------------
@@ -3428,6 +3499,60 @@ var session= {admin:{id:1,name:'admin'}};
 
 *************************************************
 
+
+
+=== 整合ajax的局部渲染技术 ===
+
+越来越多web网站依赖于ajax，如table的翻页，流行方式是浏览器发出ajax请求，后台处理后返回一个json，浏览器端将json数据拆开，拼成一条一条的行数据，然后生成dom节点，追加到表格里。
+作为另外一种可选技术，beetl支持局部渲染技术，允许后台处理返回的是一个完成的html片段，这样，前端浏览器可以直接将这个html片段追加到表格里。在我做的性能测试里，俩种方式性能差别不大(http://beetlajax.oschina.mopaas.com/)
+
+比如模板index.html有很多动态内容，有动态生成的菜单，有右侧的top10，也有核心区域的表格，大概内容如下
+
+[source,html]
+----------------------------
+<#menu/>
+<#top10> ....</#top10>
+<div id="table-container" >
+<%
+//ajax片段开始
+#ajax userTable: {
+%>
+
+<table>
+	<tr><td width=100>id</td><td width=100>姓名</td></tr>
+	<%for(user in users){%>
+	<tr><td>${user.id}</td><td>${user.name}</td></tr>
+	<%}%>
+</table>
+
+当前页面<span id="current">${page!1}</span><span style="width:20px"></span> 
+<a href="#"><span  class="page">next</span></a> <a href="#" ><span  class="page">pre</span></a> 
+<%
+#ajax片段结尾
+}
+%>
+----------------------------
+
+#ajax 用于告诉告诉模板引擎，此处是个局部渲染标记，标记为"userTable",对于正常渲染视图"index.html"页面,#ajax标记会被忽略,table仍能得到正常渲染。如果渲染的视图是index.html#userTable,则模板只会渲染#ajax标记得模板片段，其他部分将忽略。关于完整例子，可以参考http://beetlajax.oschina.mopaas.com/
+
+
+*************************************************
+返回Json好还是返回html片段好？这个难以定论.
+
+- 从后台性能看，将模型序列化成json性能会比渲染模板性能更好，但是，json还需要前端重新解析生成最终html dom节点，这可能会延迟最终数据的现实效果。而返回的html片段就是已经生成好的dom
+
+-  从网络传入来看，json无疑更好的，html片段会有额外的html标记，css属性，以及有可能的js调用。传入流量有可能增加50%到100%。但是，对于web应用类，这些额外数据，并不算多。
+
+- 从开发效率来讲，返回html片段的开发效率更高一些，因为渲染在后台操作，可以随心所欲的用模板语言来渲染，来取得后台数据，完成复杂渲染，而json就比较困难，可以说所有的json lib都没有完美的解决办法。
+
+- 从用户体验上来讲，Beetl 采用ajax标记，混合了传统的模板渲染和ajax加载。用户进入页面即能看到数据，而经典的ajax json方式还需要异步加载，显示延迟。另外如果页面同时有多个ajax加载，则会对服务器造成很大的压力。
+
+- 关心服务器cpu消耗？ 模板方式消耗更多的cpu，json方式则少点。但是俩者差距并不大。而且更多的web网站面临的情况是有富余的服务器CPU能力
+
+- 关心客户端CPU消耗？ 过多的js无疑是客户端运行慢的主要原因。如果采用经典的json方式，返回的json数据必然还需要经过js的计算和渲染。会影响客户机器cpu。
+
+*************************************************
+
 == 附录 ==
 
 === 内置方法 ===
@@ -3459,6 +3584,8 @@ var session= {admin:{id:1,name:'admin'}};
 
 - range 接收三个参数，初始值，结束值，还有步增（可以不需要，则默认为1），返回一个Iterator，常用于循环中，如for(var i in range(1,5)) {print(i)},将依次打印1234.
 
+- flush 强制io输出。
+
 ==== 字符串相关方法 ====
 
 - strutil.startWith	${ strutil.startWith(“hello”,”he”) 输出是true
@@ -3486,7 +3613,10 @@ var session= {admin:{id:1,name:'admin'}};
 
 - strutil.trim	去掉字符串的尾部空格
 
-- strutil.formatDate	Var a = strutil.formatDate(user.bir,’yyyy-MM-dd’);
+- strutil.formatDate	var a = strutil.formatDate(user.bir,’yyyy-MM-dd’);
+
+- strutil.index  var index = strutil.index("abc","a");返回 索引0
+- strutil.lastIndex var index = strutil.lastIndex("aba","a");返回索引2
 
 *************************************************
 strutil方法对参数均不做空指针检测，你可自定义方法来覆盖这些内置的方法
@@ -3686,4 +3816,53 @@ image:performance.jpg[]
 测试用例二 http://git.oschina.net/kiang/teb
 
 image:performance2.png[]
+
+
+=== Beetl 开发团队 ===
+
+作者
+
+- 闲.大赋
+
+助手
+
+- 作死模式
+
+- 一粟蜉蝣
+
+代码捐助者
+
+- 逝水fox
+- kraken
+- 西安玛雅牛
+- 级?!
+- orangetys
+- Oo不懂oO
+- 原上一颗草
+
+文档校验
+
+- 九月
+- Daemons
+
+
+=== Beetl 捐助者 ===
+
+- 凌宇 100元
+- 程希来 50
+- 杜伟 10
+- 黄卫 10
+- 谭斌 5
+- 张伟 20
+- 杨鬼 200
+- 龙伟 5
+- 顾小李 5
+- 秦国庆 2
+- 张建 200
+- 张建 50 ：）
+- 孟凡曾 5
+- 马瑞 20
+- 一维可航 10
+
+捐助的钱将用于续购云主机和域名。
 

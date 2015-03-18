@@ -1,13 +1,12 @@
 <%
-
-#ajax tt1:{
-print("ok");
-}
-
-#ajax tt1:{
-print("ok1");
-}
-
-
+var xs = -2;
+select{
+        case xs<0:
+            print("未开始");
+        case xs>0&&xe<0:
+            print("进行中");
+        default:
+            print("已结束");
+        }
 
 %>

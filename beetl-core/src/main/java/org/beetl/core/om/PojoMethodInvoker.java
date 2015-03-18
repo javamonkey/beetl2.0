@@ -69,6 +69,11 @@ public class PojoMethodInvoker implements MethodInvoker
 		}
 		catch (InvocationTargetException e)
 		{
+			Throwable target = e.getTargetException();
+			if (target instanceof BeetlException)
+			{
+				throw (BeetlException) target;
+			}
 			throw new BeetlException(BeetlException.ATTRIBUTE_INVALID, "属性访问异常", e.getTargetException());
 		}
 	}

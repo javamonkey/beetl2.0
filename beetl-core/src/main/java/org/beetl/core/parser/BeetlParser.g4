@@ -41,7 +41,7 @@ statement
     |   END   #end
       
     ;
-//◊¢Ω‚:@type User user,List<User> userList
+//Ê≥®Ëß£:@type User user,List<User> userList
 commentTypeTag: LEFT_PAR1 commentTypeItemTag (COMMA1 commentTypeItemTag)* RIGHT_PAR1;
 commentTypeItemTag:    classOrInterfaceType   Identifier1    
                   ;
@@ -53,7 +53,7 @@ typeArgument
     :   classOrInterfaceType 
     ;
 
-//÷∏¡Ó  directive object xx,xx,xx                 
+//Êåá‰ª§  directive object xx,xx,xx                 
 directiveExp:  Identifier (StringLiteral|directiveExpIDList)? END;
 directiveExpIDList: Identifier (COMMA Identifier)* ;
 
@@ -72,7 +72,7 @@ varDeclareList :  assignMent (COMMA assignMent)*
 ;	
 assignMent	
 	:	Identifier                  #assignId
-	|	Identifier ASSIN expression #assignGeneral 
+	|	generalAssignExp            #assignGeneralInSt 
 	|	Identifier ASSIN  block     #assignTemplateVar
 
 
@@ -121,7 +121,7 @@ expressionList
 statementExpression
     :   expression
     ;
-textStatment:   //±Ì¥Ô Ω ‰≥ˆ
+textStatment:   //Ë°®ËææÂºèËæìÂá∫
          LEFT_TOKEN NOT LEFT_PAR textVar RIGHT_PAR RIGHT_TOKEN 
       |    LEFT_TOKEN textVar RIGHT_TOKEN;
 textVar	
@@ -132,7 +132,7 @@ textformat:
         | StringLiteral  ;
 
 constantsTextStatment
-	:	LEFT_TEXT_TOKEN  DecimalLiteral RIGHT_TOKEN   ; // ≥£¡ø ‰≥ˆ,¥˙±Ì ˝◊ÈÀ—”¶
+	:	LEFT_TEXT_TOKEN  DecimalLiteral RIGHT_TOKEN   ; // Â∏∏ÈáèËæìÂá∫,‰ª£Ë°®Êï∞ÁªÑÊêúÂ∫î
 
 
 constantExpression
@@ -156,11 +156,11 @@ constantExpression
     |   expression OR expression    #orExp
     |   expression QUESTOIN expression? COLON? expression?  #ternaryExp
     |   LEFT_PAR expression RIGHT_PAR #parExp
-  
+    |   generalAssignExp  #assignGeneralInExp 
     ;
     
-
- varRef:Identifier ( varAttribute)*  (safe_output)?
+generalAssignExp: Identifier ASSIN expression ;
+varRef:Identifier ( varAttribute)*  (safe_output)?
 ;
 varAttribute :PERIOD Identifier   #varAttributeGeneral
              | VIRTUAL Identifier #varAttributeVirtual

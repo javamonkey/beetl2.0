@@ -33,11 +33,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -51,7 +51,8 @@ import org.beetl.core.parser.BeetlParser;
 import org.beetl.core.parser.BeetlParser.AddminExpContext;
 import org.beetl.core.parser.BeetlParser.AjaxStContext;
 import org.beetl.core.parser.BeetlParser.AndExpContext;
-import org.beetl.core.parser.BeetlParser.AssignGeneralContext;
+import org.beetl.core.parser.BeetlParser.AssignGeneralInExpContext;
+import org.beetl.core.parser.BeetlParser.AssignGeneralInStContext;
 import org.beetl.core.parser.BeetlParser.AssignIdContext;
 import org.beetl.core.parser.BeetlParser.AssignMentContext;
 import org.beetl.core.parser.BeetlParser.AssignStContext;
@@ -175,6 +176,7 @@ import org.beetl.core.statement.TagVarBindingStatement;
 import org.beetl.core.statement.TernaryExpression;
 import org.beetl.core.statement.TryCatchStatement;
 import org.beetl.core.statement.Type;
+import org.beetl.core.statement.VarAssignExpression;
 import org.beetl.core.statement.VarAssignStatement;
 import org.beetl.core.statement.VarAssignStatementSeq;
 import org.beetl.core.statement.VarAttribute;
@@ -480,7 +482,7 @@ public class AntlrProgramBuilder
 		ExpressionContext ect = sctx.parExpression().expression();
 		Expression exp = this.parseExpress(ect);
 		List<SwitchBlockStatementGroupContext> list = sctx.switchBlock().switchBlockStatementGroup();
-		TreeMap<Expression, BlockStatement> condtionsStatementsMap = new TreeMap<Expression, BlockStatement>();
+		LinkedHashMap<Expression, BlockStatement> condtionsStatementsMap = new LinkedHashMap<Expression, BlockStatement>();
 		List<Expression> conditionList = new ArrayList<Expression>();
 		BlockStatement defaultBlock = null;
 		for (SwitchBlockStatementGroupContext group : list)
@@ -517,12 +519,12 @@ public class AntlrProgramBuilder
 	{
 
 		VarAssignStatement vas = null;
-		if (amc instanceof AssignGeneralContext)
+		if (amc instanceof AssignGeneralInStContext)
 		{
-			AssignGeneralContext agc = (AssignGeneralContext) amc;
-			ExpressionContext expCtx = agc.expression();
+			AssignGeneralInStContext agc = (AssignGeneralInStContext) amc;
+			ExpressionContext expCtx = agc.generalAssignExp().expression();
 			Expression exp = parseExpress(expCtx);
-			vas = new VarAssignStatement(exp, getBTToken(agc.Identifier().getSymbol()));
+			vas = new VarAssignStatement(exp, getBTToken(agc.generalAssignExp().Identifier().getSymbol()));
 
 			return vas;
 		}
@@ -1249,6 +1251,14 @@ public class AntlrProgramBuilder
 				throw new NativeNotAllowedException(exp.token);
 			}
 			return exp;
+
+		}
+		else if (ctx instanceof AssignGeneralInExpContext)
+		{
+			AssignGeneralInExpContext agc = (AssignGeneralInExpContext) ctx;
+			ExpressionContext expCtx = agc.generalAssignExp().expression();
+			Expression exp = parseExpress(expCtx);
+			return new VarAssignExpression(exp, getBTToken(agc.generalAssignExp().Identifier().getSymbol()));
 
 		}
 		else

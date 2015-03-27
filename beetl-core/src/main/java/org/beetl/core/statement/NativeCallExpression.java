@@ -204,7 +204,7 @@ public class NativeCallExpression extends Expression
 
 				catch (IllegalArgumentException e)
 				{
-					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "无法访问方法", e);
+					BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "错误的参数", e);
 					be.pushToken(GrammarToken.createToken(method, token.line));
 					throw be;
 				}

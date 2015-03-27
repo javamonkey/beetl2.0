@@ -1,4 +1,4 @@
-﻿Beetl2.2使用说明书20150305
+Beetl2.1使用说明书20150305
 ===================
 李家智 <xiandafu@126.com>
 :toc:
@@ -46,7 +46,7 @@ Beetl有些功能是发展了10多年的模板引擎所不具备的，这些功�
 需要通读基本用法，大部分都是讲解语法，而语法跟js很接近，所以可以快速预览，但Beetl是针对模板设计，
 所以像安全输出，标签和html标签，全局变量，临时变量和共享变量，布局技术，以及直接调用java代码等还需要认真读一遍。
 
-如果从事web开发，还需要阅读web集成里的第一节"web提供的全局变量"，如果web里还使用ajax技术，可以阅读"整合ajax的局部渲染技术"
+如果从事web开发，还需要阅读web集成里的第一节“web提供的全局变量”，如果web里还使用ajax技术，可以阅读“整合ajax的局部渲染技术”
 
 
 **********************************************************************
@@ -97,7 +97,7 @@ Beetl的核心是GroupTemplate，创建GroupTemplate需要俩个参数，一个�
 - WebAppResourceLoader：用于webapp集成，假定模板根目录就是WebRoot目录
 
 
-代码第5行将变量name传入模板里，其值是"Beetl"。
+代码第5行将变量name传入模板里，其值是“Beetl”。
 代码第6行是渲染模板，得到输出，template提供了多种获得渲染输出的方法，如下
 
 - tempalte.render() 返回渲染结果，如本例所示
@@ -164,9 +164,9 @@ TAG.include= org.beetl.ext.tag.IncludeTag
 
 第3,4行指定了占位符号，默认是${ }.也可以指定为其他占位符。
 
-第5,6行指定了语句的定界符号，默认是<% %>,也可以指定为其他定界符号
+第4,5行指定了语句的定界符号，默认是<% %>,也可以指定为其他定界符号
 
-第7行指定IO输出模式，默认是FALSE,即通常的字符输出，在考虑高性能情况下，可以设置成true。详细请参考高级用法
+第6行指定IO输出模式，默认是FALSE,即通常的字符输出，在考虑高性能情况下，可以设置成true。详细请参考高级用法
 
 第8,9行指定了支持HTML标签，且符号为#（只能用一个符号标示），默认配置下，模板引擎识别<#tag ></#tag>这样的类似html标签，并能调用相应的标签函数或者模板文件。
 
@@ -316,7 +316,7 @@ var c = ${a}+"beetl"; //应该是var c = a+"beetl"
 
 每次有人问我如上例子为啥不能运行的时候，我总是有点憎恶velocity 带来的这种非人性语法
 
-定界符号里是表达式，如果表达式跟定界符有冲突，可以在表达式里用 "\" 符号，如
+定界符号里是表达式，如果表达式跟定界符有冲突，可以在表达式里用 “\” 符号，如
 
 [source,javascript]
 
@@ -471,18 +471,18 @@ var content = {
 
 属性引用是模板中的重要一部分，beetl支持属性引用如果javascript的支持方式一样，如下
 
-1	 Beetl支持通过"."号来访问对象的的属性，如果javascript一样。如果User对象有个getName()方法，那么在模板中，可以通过${xxx.name}来访问
+1	 Beetl支持通过”.”号来访问对象的的属性，如果javascript一样。如果User对象有个getName()方法，那么在模板中，可以通过${xxx.name}来访问
 
 2   如果模板变量是数组或者List类，这可以通过[] 来访问，如${userList[0]}
 
-3   如果模板变量是Map类，这可以通过[]来访问，如${map["name"]},如果key值是字符串类型，也可以使用${map.name}.但不建议这么使用，因为会让模板阅读者误以为是一个Pojo对象
+3   如果模板变量是Map类，这可以通过[]来访问，如${map[“name”]},如果key值是字符串类型，也可以使用${map.name}.但不建议这么使用，因为会让模板阅读者误以为是一个Pojo对象
 
-4   Beetl也支持Generic Get方式，即如果对象有一个public Object get(String key)方法，可以通过"."号或者[]来访问，譬如
-${activityRecord.name}或者${activityRecord["name"] }都将调用activityRecord的 get(String key)方法。如果对象既有具体属性，又有Generic get（这种模型设计方式是不值得鼓励），则以具体属性优先级高.
+4   Beetl也支持Generic Get方式，即如果对象有一个public Object get(String key)方法，可以通过”.”号或者[]来访问，譬如
+${activityRecord.name}或者${activityRecord[“name”] }都将调用activityRecord的 get(String key)方法。如果对象既有具体属性，又有Generic get（这种模型设计方式是不值得鼓励），则以具体属性优先级高.
 
-5  Beetl也可以通过[]来引用属性，如${user["name"]} 相当于${user.name}.这跟javascript保持一致。但建议不这么做，因为容易让阅读模板的人误认为这是一个Map类型
+5  Beetl也可以通过[]来引用属性，如${user[“name”]} 相当于${user.name}.这跟javascript保持一致。但建议不这么做，因为容易让阅读模板的人误认为这是一个Map类型
 
-6 Beetl 还可以定位额外的对象属性，而无需更改java对象，这叫着虚拟属性，如，对于所有集合，数组，都有共同的虚拟熟悉size.虚拟属性是".~"+虚拟1属性名
+6 Beetl 还可以定位额外的对象属性，而无需更改java对象，这叫着虚拟属性，如，对于所有集合，数组，都有共同的虚拟熟悉size.虚拟属性是“.~”+虚拟1属性名
 
 
 [source,java]
@@ -738,7 +738,7 @@ select 后也不需要一个变量，这样case 后的逻辑表达式将决定�
 
 [source,javascript]
 ----------------------------
-select(){
+select {
 	case boolExp,orBoolExp2:
 		doSomething();
 	
@@ -753,7 +753,7 @@ select(){
 ----------------------------
 <% 
 var b = 1;
-select(){
+select{
 	case b<1,b>10:
 		print("it's out of range");
 		break;
@@ -896,7 +896,7 @@ Beetl内置函数请参考附录，以下列出了常用的函数
 
 可以在!后增加一个常量（字符串，数字类型等），或者另外一个变量，方法，本地调用，作为默认输出，譬如：
 
-${user.wife.name!"单身"}，如果user为null，或者user.wife为null，或者user.wife.name为null，输出"单身"
+${user.wife.name!”单身”}，如果user为null，或者user.wife为null，或者user.wife.name为null，输出”单身”
 
 譬如
 
@@ -1037,7 +1037,7 @@ flag!0 取值是这样的，如果flag不存在，则为0，如果存在，则�
 
 <% var date = date(); %>
 Today is ${date,dateFormat="yyyy-MM-dd"}.
-Today is $date,dateFormat$
+Today is ${date,dateFormat}$
 salary is ${salary,numberFormat="##.##"}
 
 ----------------------------
@@ -1049,7 +1049,7 @@ Beetl也允许为指定的java class设定格式化函数，譬如已经内置�
 [source,javascript]
 ----------------------------
 
-${date,"yyyy-MM-dd"}.
+${date,“yyyy-MM-dd”}.
 
 ----------------------------
 
@@ -1149,8 +1149,8 @@ Beetl 也支持HTML tag形式的标签， 区分beetl的html tag 与 标准html 
 [source,javascript]
 ----------------------------
 
-<#footer style="simple"/>
-<#richeditor id="rid" name="rname"  maxlength="${maxlength}"> ${html} …其他模板内容   </#richdeitor>
+<#footer style=”simple”/>
+<#richeditor id=”rid” name=”rname”  maxlength=”${maxlength}”> ${html} …其他模板内容   </#richdeitor>
 <#html:input  id=’aaaa’ />
 
 ----------------------------
@@ -1177,13 +1177,13 @@ Beetl 也支持HTML tag形式的标签， 区分beetl的html tag 与 标准html 
 
 - HTML标签支持namespace，如html:input,则beetl将寻找${root}/html/input.tag.
 
-- 可以在自定义标签里引用标签体的内容，标签体可以是普通文本，beetl模板，以及嵌套的自定义标签等。如上<#richeditor 标签体里，可用"tagBody"来引用
+- 可以在自定义标签里引用标签体的内容，标签体可以是普通文本，beetl模板，以及嵌套的自定义标签等。如上<#richeditor 标签体里，可用“tagBody”来引用
 
-- HTML自定义标签 的属性值均为字符串 如<#input value="123" />,在input.tag文件里 变量value的类型是字符串
+- HTML自定义标签 的属性值均为字符串 如<#input value=”123” />,在input.tag文件里 变量value的类型是字符串
 
-- 可以在属性标签里引用beetl变量，如<#input value="${user.age}" />，此时在input.tag里，value的类型取决于user.age
+- 可以在属性标签里引用beetl变量，如<#input value=”${user.age}” />，此时在input.tag里，value的类型取决于user.age
 
-- 在属性里引用beetl变量，不支持格式化，如<#input value="${user.date,‘yyyy-MM-dd’ }" />,如果需要格式化，需要在input.tag文件里自行格式化
+- 在属性里引用beetl变量，不支持格式化，如<#input value=”${user.date,‘yyyy-MM-dd’ }” />,如果需要格式化，需要在input.tag文件里自行格式化
 
 - html tag 属性名将作为 其对应模板的变量名。
 
@@ -1300,7 +1300,7 @@ var属性的值可以是个以逗号分开的变量名列表，如var="total,cus
 [source,javascript]
 ----------------------------
 
-${@user.getMaxFriend("lucy")}
+${@user.getMaxFriend(“lucy”)}
 ${@user.maxFriend[0].getName()}
 ${@com.xxxx.constants.Order.getMaxNum()}
 ${@com.xxxx.User$Gender.MAN}
@@ -1320,7 +1320,7 @@ var max = @com.xxxx.constants.Order.MAX_NUM;
 
 - 请按照java规范写类名和方法名，属性名。这样便于beetl识别到底调用的是哪个类，哪个方法。否则会抛出错误
 
-- 可以省略包名，只用类名。beetl将搜索包路径找到合适的类（需要设置配置"IMPORT_PACKAGE=包名.;包名."，包名后需要跟一个".", 或者调用Configuration.addPkg)方法具体请参考附件配置文件说明
+- 可以省略包名，只用类名。beetl将搜索包路径找到合适的类（需要设置配置“IMPORT_PACKAGE=包名.;包名.”，包名后需要跟一个“.”, 或者调用Configuration.addPkg)方法具体请参考附件配置文件说明
 
 - 内部类（包括枚举）访问同java一样，如User类有个内部枚举类Gender，访问是User$Gender
 
@@ -2361,6 +2361,9 @@ layoutContent 是默认变量，也可以改成其他名字，具体请参考lay
 
 -------------------------
 
+这样，title和user成为全局变量，能被header.html 及其子页面引用到
+
+
 -  继承布局：采用模板变量和include
 
 [source,java]
@@ -2670,11 +2673,11 @@ Web集成模块向模板提供web标准的变量，做如下说明
 
 - session  提供了session会话，模板通过session["name"],或者session.name 引用session里的变量
 
-- request  标准的HTTPSerlvetRequest,可以在模板里引用request属性（getter），如${request.url}。
+- request  标准的HTTPSerlvetRequest,可以在模板里引用request属性（getter），如${request.requestURL}。
 
 - ctxPath  Web应用ContextPath
 
-- servlet  是WebVariable的实例，包含了HTTPSession,HTTPSerlvetRequest,HTTPSerlvetResponse.三个属性，模板中可以通过request.response,session 来引用，如 ${serlvet.request.url};
+- servlet  是WebVariable的实例，包含了HTTPSession,HTTPSerlvetRequest,HTTPSerlvetResponse.三个属性，模板中可以通过request.response,session 来引用，如 ${serlvet.request.requestURL};
 
 -  request 中的所有attribute.在模板中可以直接通过attribute name 来引用，如在controller层 request.setAttribute("user",user),则在模板中可以直接用${user.name}
 
@@ -3260,7 +3263,7 @@ public class BeetlRender extends Render
 
 
 
-=== Nutz集成 ===
+=== Nuts集成 ===
 
 Nutz集成提供了 BeetlViewMaker ，实现了 ViewMaker方法，如下代码
 
@@ -3541,9 +3544,9 @@ var session= {admin:{id:1,name:'admin'}};
 
 - 从后台性能看，将模型序列化成json性能会比渲染模板性能更好，但是，json还需要前端重新解析生成最终html dom节点，这可能会延迟最终数据的现实效果。而返回的html片段就是已经生成好的dom
 
-- 从网络传入来看，json无疑更好的，html片段会有额外的html标记，css属性，以及有可能的js调用。传入流量有可能增加50%到100%。但是，对于web应用类，这些额外数据，并不算多。
+-  从网络传入来看，json无疑更好的，html片段会有额外的html标记，css属性，以及有可能的js调用。传入流量有可能增加50%到100%。但是，对于web应用类，这些额外数据，并不算多。
 
-- 从开发效率来讲，返回html片段的开发效率更高一些，因为渲染在后台操作，可以随心所欲的用模板语言来渲染，来取得后台数据，完成复杂渲染.而json就相对困难些，可以说所有的json lib都没有完美的解决办法。
+- 从开发效率来讲，返回html片段的开发效率更高一些，因为渲染在后台操作，可以随心所欲的用模板语言来渲染，来取得后台数据，完成复杂渲染，而json就比较困难，可以说所有的json lib都没有完美的解决办法。
 
 - 从用户体验上来讲，Beetl 采用ajax标记，混合了传统的模板渲染和ajax加载。用户进入页面即能看到数据，而经典的ajax json方式还需要异步加载，显示延迟。另外如果页面同时有多个ajax加载，则会对服务器造成很大的压力。
 
@@ -3588,32 +3591,32 @@ var session= {admin:{id:1,name:'admin'}};
 
 ==== 字符串相关方法 ====
 
-- strutil.startWith	${ strutil.startWith("hello","he") 输出是true
+- strutil.startWith	${ strutil.startWith(“hello”,”he”) 输出是true
 
-- strutil.endWith	${ strutil.endWith("hello","o") 输出是true
+- strutil.endWith	${ strutil.endWith(“hello”,”o”) 输出是true
 
-- strutil.length	${ strutil. length ("hello"),输出是5
+- strutil.length	${ strutil. length (“hello”),输出是5
 
-- strutil.subString	${ strutil.subString ("hello",1),输出是"ello"
+- strutil.subString	${ strutil.subString (“hello”,1),输出是“ello”
 
-- strutil.subStringTo	${ strutil.subStringTo ("hello",1,2),输出是"el"
+- strutil.subStringTo	${ strutil.subStringTo (“hello”,1,2),输出是“el”
 
-- strutil.split	${ strutil.split ("hello,joeli",","),输出是数组，有俩个元素，第一个是hello，第二个是joelli"
+- strutil.split	${ strutil.split (“hello,joeli”,”,”),输出是数组，有俩个元素，第一个是hello，第二个是joelli”
 
-- strutil.contain	${ strutil.contain ("hello,"el"),输出是true
+- strutil.contain	${ strutil.contain (“hello,”el”),输出是true
 
-- strutil.toUpperCase	${ strutil.toUpperCase ("hello"),输出是HELLO
+- strutil.toUpperCase	${ strutil.toUpperCase (“hello”),输出是HELLO
 
-- strutil.toLowerCase	${ strutil.toLowerCase ("Hello"),输出是hello
+- strutil.toLowerCase	${ strutil.toLowerCase (“Hello”),输出是hello
 
-- strutil.replace	${ strutil.replace ("Hello","lo","loooo"),输出是helloooo
+- strutil.replace	${ strutil.replace (“Hello”,”lo”,”loooo”),输出是helloooo
 
-- strutil.format	${ strutil.format ("hello,{0\}, my age is {1\}","joeli",15),输出是hello,joelli, my age is 15.
+- strutil.format	${ strutil.format (“hello,{0\}, my age is {1\}”,”joeli”,15),输出是hello,joelli, my age is 15.
 具体请参考http://docs.oracle.com/javase/6/docs/api/java/text/MessageFormat.html
 
 - strutil.trim	去掉字符串的尾部空格
 
-- strutil.formatDate	var a = strutil.formatDate(user.bir,'yyyy-MM-dd');
+- strutil.formatDate	var a = strutil.formatDate(user.bir,’yyyy-MM-dd’);
 
 - strutil.index  var index = strutil.index("abc","a");返回 索引0
 - strutil.lastIndex var index = strutil.lastIndex("aba","a");返回索引2
@@ -3774,7 +3777,7 @@ includeJSP("/xxxx.jsp",{"key":"value"})
 %>
 ----------------------------
 
-key value 都是字符串，将以paramenter的形式提供给jsp，因此jsp可以通过request.getParameter("key")来获取参数
+key value 都是字符串，将以parameter的形式提供给jsp，因此jsp可以通过request.getParameter("key")来获取参数
 
 主要注意的是，这个标签并非内置，需要手工注册一下
 

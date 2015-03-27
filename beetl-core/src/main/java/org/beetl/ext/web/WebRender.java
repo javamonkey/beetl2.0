@@ -94,9 +94,7 @@ public class WebRender
 			WebVariable webVariable = new WebVariable();
 			webVariable.setRequest(request);
 			webVariable.setResponse(response);
-			webVariable.setSession(request.getSession());
-
-			template.binding("session", new SessionWrapper(webVariable.getSession()));
+			template.binding("session", new SessionWrapper(webVariable.getRequest()));
 
 			template.binding("servlet", webVariable);
 			template.binding("request", request);

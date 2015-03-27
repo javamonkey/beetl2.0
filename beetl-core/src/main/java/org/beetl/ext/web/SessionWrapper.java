@@ -27,6 +27,7 @@
  */
 package org.beetl.ext.web;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -38,14 +39,24 @@ import javax.servlet.http.HttpSession;
 public class SessionWrapper
 {
 	HttpSession session = null;
+	HttpServletRequest request = null;
 
 	public SessionWrapper(HttpSession session)
 	{
 		this.session = session;
 	}
 
+	public SessionWrapper(HttpServletRequest request)
+	{
+		this.request = request;
+	}
+
 	public Object get(String key)
 	{
+		if (this.session == null)
+		{
+			session = request.getSession(true);
+		}
 		return session.getAttribute((String) key);
 	}
 

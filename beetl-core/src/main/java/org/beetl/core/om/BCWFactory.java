@@ -27,8 +27,6 @@
  */
 package org.beetl.core.om;
 
-import org.beetl.core.misc.ByteClassLoader;
-import org.beetl.ext.web.SessionWrapper;
 
 /** 可以设置{@link BCWFactory#defaultFactory} 来选择不同的字节码生成器，默认采用{@link FieldAccessBCW}
  * @author joelli
@@ -63,13 +61,13 @@ public class BCWFactory
 	public static void main(String[] args) throws Exception
 	{
 
-		BCWFactory f = new BCWFactory();
-		BCW bcw = f.getAttribyteBCW(SessionWrapper.class, "get", "get", Object.class, String.class);
-		byte[] bs = bcw.getClassByte();
-		ByteClassLoader loader = new ByteClassLoader(AttributeAccess.class.getClassLoader());
-		Class c = loader.defineClass("org.beetl.ext.web.SessionWrapper_get", bs);
-		AttributeAccess a = (AttributeAccess) c.newInstance();
-		a.value(new SessionWrapper(null), "ccc");
+		//		BCWFactory f = new BCWFactory();
+		//		BCW bcw = f.getAttribyteBCW(SessionWrapper.class, "get", "get", Object.class, String.class);
+		//		byte[] bs = bcw.getClassByte();
+		//		ByteClassLoader loader = new ByteClassLoader(AttributeAccess.class.getClassLoader());
+		//		Class c = loader.defineClass("org.beetl.ext.web.SessionWrapper_get", bs);
+		//		AttributeAccess a = (AttributeAccess) c.newInstance();
+		//		a.value(new SessionWrapper(null), "ccc");
 
 	}
 

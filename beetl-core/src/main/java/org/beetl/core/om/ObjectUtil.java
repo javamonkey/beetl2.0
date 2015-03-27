@@ -238,7 +238,8 @@ public class ObjectUtil
 		{
 			//精确匹配或者可变参数
 		}
-		else if (paras.length > metodParaTypes.length && metodParaTypes[metodParaTypes.length - 1].isArray())
+		else if (paras.length > metodParaTypes.length && metodParaTypes.length != 0
+				&& metodParaTypes[metodParaTypes.length - 1].isArray())
 		{
 			//可变参数，
 		}

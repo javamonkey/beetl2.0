@@ -68,6 +68,10 @@ public class WebVariable
 
 	public HttpSession getSession()
 	{
+		if (session == null)
+		{
+			session = request.getSession(true);
+		}
 		return session;
 	}
 

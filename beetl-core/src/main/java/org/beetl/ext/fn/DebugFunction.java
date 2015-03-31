@@ -49,26 +49,34 @@ public class DebugFunction implements Function
 	{
 		if (!enable)
 			return "";
-		Object o = paras[0];
+		String[] expStrs = (String[]) paras[paras.length - 2];
 		StringBuilder sb = new StringBuilder();
-		if (o != null)
+		for (int i = 0; i < paras.length - 2; i++)
 		{
-			sb.append(o.toString());
-		}
-		else
-		{
-			sb.append("null");
+			Object o = paras[i];
+			if (expStrs[i] != null)
+			{
+				//对于debug常量，不需要，参考AntlrProgramBuilder.parseFunExp
+				sb.append(expStrs[i]).append("=");
+			}
+
+			if (o != null)
+			{
+				sb.append(o.toString());
+			}
+			else
+			{
+				sb.append("null");
+			}
+			sb.append(",");
 		}
 
-		String line = paras[1].toString();
-
+		String line = paras[paras.length - 1].toString();
 		String resourceId = ctx.getResourceId();
-
 		sb.append(" [在").append(line).append("行@").append(resourceId).append("]");
 
 		System.out.println(sb);
 
 		return "";
 	}
-
 }

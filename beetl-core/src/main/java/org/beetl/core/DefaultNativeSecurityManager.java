@@ -41,6 +41,11 @@ public class DefaultNativeSecurityManager implements NativeSecurityManager
 	@Override
 	public boolean permit(String resourceId, Class c, Object target, String method)
 	{
+		if (c.isArray())
+		{
+			//允许调用，但实际上会在在其后调用中报错。不归此处管理
+			return true;
+		}
 		String name = c.getSimpleName();
 		String pkg = c.getPackage().getName();
 		if (pkg.startsWith("java.lang"))

@@ -867,9 +867,19 @@ public class AntlrProgramBuilder
 		{
 			// debug函数传递额外的行数
 			Literal l = new Literal(btToken.line, btToken);
-			Expression[] newExps = new Expression[exps.length + 1];
+			Expression[] newExps = new Expression[exps.length + 2];
 			System.arraycopy(exps, 0, newExps, 0, exps.length);
-			newExps[exps.length] = l;
+			String[] expStr = this.getExpressionString(expListCtx);
+			newExps[newExps.length - 2] = new Literal(expStr, btToken);
+			newExps[newExps.length - 1] = l;
+			for (int i = 0; i < exps.length; i++)
+			{
+				if (!(exps[i] instanceof VarRef))
+				{
+					expStr[i] = null;
+				}
+			}
+
 			exps = newExps;
 			//可以通过配置查看是否支持debug，2.1再做
 
@@ -918,6 +928,22 @@ public class AntlrProgramBuilder
 			exps[i] = this.parseExpress(ecList.get(i));
 		}
 		return exps;
+	}
+
+	protected String[] getExpressionString(ExpressionListContext expListCtx)
+	{
+		{
+
+			if (expListCtx == null)
+				return new String[0];
+			List<ExpressionContext> ecList = expListCtx.expression();
+			String[] exps = new String[ecList.size()];
+			for (int i = 0; i < ecList.size(); i++)
+			{
+				exps[i] = ecList.get(i).getText();
+			}
+			return exps;
+		}
 	}
 
 	protected Statement parseForSt(ForStContext ctx)

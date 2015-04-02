@@ -145,6 +145,7 @@ import org.beetl.core.statement.CompareExpression;
 import org.beetl.core.statement.ContentBodyExpression;
 import org.beetl.core.statement.ContinueStatement;
 import org.beetl.core.statement.DirectiveStatement;
+import org.beetl.core.statement.EndStatement;
 import org.beetl.core.statement.Expression;
 import org.beetl.core.statement.ForStatement;
 import org.beetl.core.statement.FormatExpression;
@@ -204,6 +205,8 @@ public class AntlrProgramBuilder
 
 	Expression[] EMPTY_EXPRESSION = new Expression[0];
 	GroupTemplate gt;
+	//多余分号
+	static EndStatement endStatment = new EndStatement();
 
 	public AntlrProgramBuilder(GroupTemplate gt)
 	{
@@ -396,7 +399,7 @@ public class AntlrProgramBuilder
 
 		else if (node instanceof EndContext)
 		{
-			return null;
+			return endStatment;
 		}
 
 		else

@@ -1037,7 +1037,7 @@ flag!0 取值是这样的，如果flag不存在，则为0，如果存在，则�
 
 <% var date = date(); %>
 Today is ${date,dateFormat="yyyy-MM-dd"}.
-Today is ${date,dateFormat}$
+Today is ${date,dateFormat}
 salary is ${salary,numberFormat="##.##"}
 
 ----------------------------
@@ -1108,7 +1108,7 @@ footer
 
 第2行layoutContent 是layout标签体{}渲染后的结果
 
-关于layout标签，参考高级主体布局
+关于layout标签，参考高级主题布局
 
 Beetl内置了另外一个标签是include,允许 include 另外一个模板文件
 
@@ -1121,7 +1121,7 @@ include("/inc/header.html"){}
 
 在标签中，{} 内容将依据标签的实现而执行，layout标签将执行{}中的内容，而include标签则忽略标签体内容。
 
-关于如何实现标签函数，请参考高级主体,如下是一个简单的的标签函数：
+关于如何实现标签函数，请参考高级主题,如下是一个简单的的标签函数：
 
 [source,java]
 ----------------------------
@@ -2297,6 +2297,11 @@ public class DefaultNativeSecurityManager implements NativeSecurityManager
 	@Override
 	public boolean permit(String resourceId, Class c, Object target, String method)
 	{
+		if (c.isArray())
+		{
+			//允许调用，但实际上会在在其后调用中报错。不归此处管理
+			return true;
+		}
 		String name = c.getSimpleName();
 		String pkg = c.getPackage().getName();
 		if (pkg.startsWith("java.lang"))
@@ -2317,7 +2322,7 @@ public class DefaultNativeSecurityManager implements NativeSecurityManager
 
 === 注册全局共享变量 ===
 
-GroupTemplate.setSharedVars(Map<String, Object> sharedVars)
+groupTemplate.setSharedVars(Map<String, Object> sharedVars)
 
 === 布局 ===
 

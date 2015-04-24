@@ -55,9 +55,12 @@ public class WebAppResourceLoader extends FileResourceLoader
 	public WebAppResourceLoader(String root)
 	{
 
-		this();
 		if (root != null)
 			this.root = root;
+		else
+		{
+			this.root = BeetlUtil.getWebRoot() + File.separator;
+		}
 
 	}
 

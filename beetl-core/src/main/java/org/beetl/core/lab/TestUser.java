@@ -21,6 +21,7 @@ public class TestUser
 	List friends = null;
 	boolean isOk = false;
 	int id = 0;
+	byte recycle = 1;
 
 	public static enum ORDER
 	{
@@ -158,6 +159,16 @@ public class TestUser
 	public int printUsers(String str)
 	{
 		return 0;
+	}
+
+	public byte getRecycle()
+	{
+		return recycle;
+	}
+
+	public void setRecycle(byte recycle)
+	{
+		this.recycle = recycle;
 	}
 
 	public static List<TestUser> getTestUsers()

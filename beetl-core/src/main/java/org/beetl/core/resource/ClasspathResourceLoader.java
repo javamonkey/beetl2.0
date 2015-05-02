@@ -38,7 +38,8 @@ import org.beetl.core.fun.FileFunctionWrapper;
 import org.beetl.core.misc.BeetlUtil;
 
 /**
- * ClassPath加载器
+ * ClassPath加载器,如果不指定classLoader,则使用加载beetl.jar的classloader,如果不指定root，则是默认的根路径，
+ * 如果不指定模板字符集，则采用配置文件的resource.charset 配置
  * 
  * @author joelli
  * 
@@ -54,6 +55,9 @@ public class ClasspathResourceLoader implements ResourceLoader
 	GroupTemplate gt = null;
 	ClassLoader classLoader = null;
 
+	/**
+	 * 使用加载beetl.jar的classloader，以及默认root为根目录
+	 */
 	public ClasspathResourceLoader()
 	{
 		//保留，用于通过配置构造一个ResouceLoader
@@ -62,8 +66,43 @@ public class ClasspathResourceLoader implements ResourceLoader
 
 	}
 
+	/** 使用指定的classloader
+	 * @param classLoader
+	 */
+	public ClasspathResourceLoader(ClassLoader classLoader)
+	{
+
+		this.classLoader = classLoader;
+		this.root = "";
+
+	}
+
+	/**使用指定的classloader和root
+	 * @param classLoader
+	 * @param root 模板路径，如/com/templates/
+	 */
+	public ClasspathResourceLoader(ClassLoader classLoader, String root)
+	{
+
+		this.classLoader = classLoader;
+		this.root = root;
+
+	}
+
+	/**
+	 * @param classLoader
+	 * @param root
+	 * @param charset 
+	 */
+	public ClasspathResourceLoader(ClassLoader classLoader, String root, String charset)
+	{
+
+		this(classLoader, root);
+		this.charset = charset;
+	}
+
 	/** 
-	 * @param prefix ，前缀，其后的resourceId对应的路径是prefix+"/"+resourceId
+	 * @param root ，/com/templates/如其后的resourceId对应的路径是root+"/"+resourceId
 	 */
 	public ClasspathResourceLoader(String root)
 	{

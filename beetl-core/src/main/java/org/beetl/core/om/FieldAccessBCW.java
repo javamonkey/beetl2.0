@@ -377,7 +377,7 @@ public class FieldAccessBCW implements BCW
 		else if (this.retByteCodeType.equals("B"))
 		{
 			out.writeByte(INVOKE_STATIC);
-			methodIndex = registerMethod(this.byteClass, this.valueOfFunction, this.booleanValueOfFunctionDesc);
+			methodIndex = registerMethod(this.byteClass, this.valueOfFunction, this.byteValueOfFunctionDesc);
 			out.writeShort(methodIndex);
 		}
 

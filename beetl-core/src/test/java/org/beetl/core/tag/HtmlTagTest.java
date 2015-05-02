@@ -118,4 +118,20 @@ public class HtmlTagTest extends BasicTestCase
 
 	}
 
+	@Test
+	public void testHolderInAttr() throws Exception
+	{
+
+		Template t = gt.getTemplate("/tag/html8_template.html");
+		t.binding("a", 1);
+		String str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/tag/html8_expected.html"), str);
+
+		t = gt.getTemplate("/tag/html8_template.html");
+		t.binding("a", 1);
+		str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/tag/html8_expected.html"), str);
+
+	}
+
 }

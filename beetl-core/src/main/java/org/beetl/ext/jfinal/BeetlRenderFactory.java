@@ -7,6 +7,7 @@ import org.beetl.core.GroupTemplate;
 import org.beetl.core.ResourceLoader;
 import org.beetl.core.resource.WebAppResourceLoader;
 
+import com.jfinal.kit.PathKit;
 import com.jfinal.render.IMainRenderFactory;
 import com.jfinal.render.Render;
 
@@ -18,7 +19,8 @@ public class BeetlRenderFactory implements IMainRenderFactory
 
 	public BeetlRenderFactory()
 	{
-		init(null);
+		init(PathKit.getWebRootPath());
+		//		init(null); use jfinalkit instead
 
 	}
 

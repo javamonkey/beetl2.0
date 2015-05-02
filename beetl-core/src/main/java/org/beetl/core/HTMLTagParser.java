@@ -58,6 +58,7 @@ class HTMLTagParser
 	int ts;
 	int te;
 	String lastKey = null;
+	//默认是var
 	String bindingAttr = null;
 	static char ENT_TAG = '>';
 	static char[] ENT_TAGS = new char[]

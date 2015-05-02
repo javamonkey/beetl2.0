@@ -330,20 +330,9 @@ public class Transformator
 					script.append(this.lineSeparator);
 				}
 				script.append(key).append(":");
-				if (!value.startsWith(this.placeholderStart))
-				{
-					// value是一个正常字符串,还原
-					char c = quat.get(key);
-					script.append(c).append(value).append(c);
+				String attrValue = this.parseAttr(quat.get(key), value);
+				script.append(attrValue);
 
-				}
-				else
-				{
-					value = new String(value.toCharArray(), this.placeholderStart.length(), value.length()
-							- this.placeholderStart.length() - this.placeholderEnd.length());
-					script.append("(").append(value).append(")");
-					//					script.append(value);
-				}
 				script.append(",");
 			}
 
@@ -900,6 +889,42 @@ public class Transformator
 		}
 	}
 
+	public String parseAttr(char q, String attr)
+	{
+		StringBuilder sb = new StringBuilder(attr.length() + 10);
+		int start = 0;
+		int end = 0;
+		int index = -1;
+		while ((index = attr.indexOf(placeholderStart, start)) != -1)
+		{
+			end = attr.indexOf(placeholderEnd, index);
+			if (end == -1)
+				throw new RuntimeException(attr + "标签属性错误，有站位符号，但找不到到结束符号");
+			if (index != 0)
+			{
+				sb.append(q).append(attr.substring(start, index)).append(q).append("+");
+			}
+
+			sb.append("(").append(attr.substring(index + 2, end)).append(")").append("+");
+			start = end + 1;
+		}
+		if (start == 0)
+		{
+			return sb.append(q).append(attr).append(q).toString();
+		}
+		if (start != attr.length())
+		{
+
+			sb.append(q).append(attr.substring(start, attr.length())).append(q);
+		}
+		else
+		{
+			sb.setLength(sb.length() - 1);
+		}
+		return sb.toString();
+
+	}
+
 	public static void main(String[] args)
 	{
 		char c = '\\';
@@ -909,7 +934,7 @@ public class Transformator
 		{
 
 			// String str = "   #:var u='hello';:#  \n  $u$";
-			String str = "<ns:a tt='a' var='c,b'></ns:a>";
+			String str = "<ns:a tt='a${bc}' cc='${ctxPath/a/b' var='c,b'></ns:a>";
 
 			BufferedReader reader = new BufferedReader(p.transform(str));
 			String line = null;
@@ -923,6 +948,7 @@ public class Transformator
 		}
 		catch (Exception ex)
 		{
+			System.out.println(ex.getMessage());
 			ex.printStackTrace();
 		}
 

@@ -60,7 +60,8 @@ public class PojoMethodInvoker implements MethodInvoker
 		}
 		catch (IllegalArgumentException e)
 		{
-			throw new RuntimeException(e.getMessage());
+			throw new BeetlException(BeetlException.ATTRIBUTE_INVALID, "错误参数", e);
+
 		}
 		catch (IllegalAccessException e)
 		{

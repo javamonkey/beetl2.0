@@ -30,6 +30,8 @@ package org.beetl.core.om;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.beetl.core.exception.BeetlException;
+
 public class GeneralGetMethodInvoker implements MethodInvoker
 {
 	Method method;
@@ -51,15 +53,22 @@ public class GeneralGetMethodInvoker implements MethodInvoker
 		}
 		catch (IllegalArgumentException e)
 		{
-			throw new RuntimeException(e.getMessage());
+			throw new BeetlException(BeetlException.ATTRIBUTE_INVALID, "错误参数", e);
+
 		}
 		catch (IllegalAccessException e)
 		{
-			throw new RuntimeException(e.getMessage());
+			throw new BeetlException(BeetlException.ATTRIBUTE_INVALID, "无法访问", e);
+
 		}
 		catch (InvocationTargetException e)
 		{
-			throw new RuntimeException(e.getMessage());
+			Throwable target = e.getTargetException();
+			if (target instanceof BeetlException)
+			{
+				throw (BeetlException) target;
+			}
+			throw new BeetlException(BeetlException.ATTRIBUTE_INVALID, "属性访问异常", e.getTargetException());
 		}
 	}
 

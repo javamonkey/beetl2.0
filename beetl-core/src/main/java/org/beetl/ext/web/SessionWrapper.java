@@ -46,16 +46,11 @@ public class SessionWrapper
 		this.session = session;
 	}
 
-	public SessionWrapper(HttpServletRequest request)
-	{
-		this.request = request;
-	}
-
 	public Object get(String key)
 	{
-		if (this.session == null)
+		if (session == null)
 		{
-			session = request.getSession(true);
+			throw new RuntimeException("sessoin 没有被创建");
 		}
 		return session.getAttribute((String) key);
 	}

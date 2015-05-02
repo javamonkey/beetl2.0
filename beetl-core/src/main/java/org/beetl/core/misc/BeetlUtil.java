@@ -32,6 +32,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.beetl.core.ByteWriter;
 import org.beetl.core.io.ByteWriter_Byte;
@@ -63,6 +65,45 @@ public class BeetlUtil
 			115, 116, 117, 118, 119, 120, 121, 122 };
 	//最近一次错误记录
 	static int[] checkReult = new int[2];
+
+	static List<String> chineseTokens = new ArrayList<String>();
+	static List<String> englishTokens = new ArrayList<String>();
+	static
+	{
+		chineseTokens.add("，");
+		englishTokens.add(",");
+		chineseTokens.add("；");
+		englishTokens.add(";");
+
+		chineseTokens.add("）");
+		englishTokens.add(")");
+		chineseTokens.add("（");
+		englishTokens.add("(");
+
+		chineseTokens.add("‘");
+		englishTokens.add("'");
+		chineseTokens.add("“");
+		englishTokens.add("\"");
+		chineseTokens.add("。");
+		englishTokens.add(".");
+		chineseTokens.add("｝");
+		englishTokens.add("}");
+		chineseTokens.add("｛");
+		englishTokens.add("{");
+		chineseTokens.add("＝");
+		englishTokens.add("=");
+		chineseTokens.add("！");
+		englishTokens.add("!");
+		chineseTokens.add("％");
+		englishTokens.add("%");
+		chineseTokens.add("／");
+		englishTokens.add("/");
+		chineseTokens.add("＼");
+		englishTokens.add("\\");
+		chineseTokens.add("．");
+		englishTokens.add(".");
+
+	}
 
 	/**判断一个路径是否指到外部了，比如../../test.txt就指到外部
 	 * @param child
@@ -208,9 +249,14 @@ public class BeetlUtil
 		try
 		{
 			String path = BeetlUtil.class.getClassLoader().getResource("").toURI().getPath();
+			if (path == null)
+			{
+				throw new NullPointerException("Beetl未能自动检测到WebRoot，请手工指定WebRoot路径");
+			}
 			String root = new File(path).getParentFile().getParentFile().getCanonicalPath();
 			return root;
 		}
+
 		catch (IOException e)
 		{
 			throw new RuntimeException(e);
@@ -273,5 +319,18 @@ public class BeetlUtil
 	public static int[] getLog()
 	{
 		return checkReult;
+	}
+
+	public static String reportChineseTokenError(String msg)
+	{
+
+		if (chineseTokens.contains(msg))
+		{
+			return msg + " 貌似输入了中文符号,应该是 " + englishTokens.get(chineseTokens.indexOf(msg));
+		}
+		else
+		{
+			return msg;
+		}
 	}
 }

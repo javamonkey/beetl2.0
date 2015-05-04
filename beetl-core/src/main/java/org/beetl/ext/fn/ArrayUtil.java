@@ -47,9 +47,10 @@ public class ArrayUtil
 			if (start >= end || start < 0 || end > array.length)
 				throw new RuntimeException("start,end参数设置不正确");
 			Object[] newArray = new Object[end - start];
-			for (int i = start - 1; i < end - 1; i++)
+			int index = 0;
+			for (int i = start; i < end; i++)
 			{
-				newArray[i - start + 1] = array[i];
+				newArray[index++] = array[i];
 			}
 			return newArray;
 		}
@@ -217,7 +218,7 @@ public class ArrayUtil
 		ArrayUtil util = new ArrayUtil();
 		List list = Arrays.asList(new String[]
 		{ "a", "b", "c", "d" });
-		Object[] o = (Object[]) util.range(list, 0, 2);
+		Object[] o = (Object[]) util.range(list.toArray(), 0, 2);
 		int a = 1;
 	}
 }

@@ -27,8 +27,10 @@
  */
 package org.beetl.ext.fn;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * 
@@ -62,13 +64,15 @@ public class ArrayUtil
 			int index = 0;
 			while (iterator.hasNext())
 			{
-				if (i >= start - 1 && i < end - 1)
+				if (i >= start && i < end)
 				{
 					array[index] = iterator.next();
 					index++;
 				}
 				else
 				{
+					if (i >= end)
+						break;
 					iterator.next();
 				}
 				i++;
@@ -206,5 +210,14 @@ public class ArrayUtil
 	public Object[] collection2Array(Collection cols)
 	{
 		return cols.toArray();
+	}
+
+	public static void main(String[] args)
+	{
+		ArrayUtil util = new ArrayUtil();
+		List list = Arrays.asList(new String[]
+		{ "a", "b", "c", "d" });
+		Object[] o = (Object[]) util.range(list, 0, 2);
+		int a = 1;
 	}
 }

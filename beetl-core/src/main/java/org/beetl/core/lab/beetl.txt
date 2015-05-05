@@ -1,3 +1,32 @@
-<%
-var a  = 2>1;
-%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <script type="text/javascript" src="/daily/jquery-1.10.2.min.js?v=${v}"></script>
+    <link href="/daily/admin.css?v=${v}" rel="stylesheet" type="text/css">
+    <link href="/daily/common2.css?v=${v}" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="/daily/common.js?v=${v}"></script>
+    <script type="text/javascript" src="/daily/my.js?v=${v}"></script>
+    <title>${titleContent}</title>
+    ${myScript}
+</head>
+<body>
+<div class="path">
+    ${topPath}
+    <div style="display: inline; right: 0px; position: absolute;">
+        <input type="button" class="button saveBtn" value="确&nbsp;&nbsp;定"/>
+        <input type="button" class="button backBtn" value="返&nbsp;&nbsp;回"/>
+        <input type="button" class="button refreshBtn" value="刷&nbsp;&nbsp;新"/>
+    </div>
+</div>
+${layoutContent}
+<div class="path">
+    <div style="display: inline; right: 0px; position: absolute;">
+        <input type="button" class="button saveBtn" value="确&nbsp;&nbsp;定"/>
+        <input type="button" class="button backBtn" value="返&nbsp;&nbsp;回"/>
+        <input type="button" class="button refreshBtn" value="刷&nbsp;&nbsp;新"/>
+    </div>
+</div>
+</body>
+</html>

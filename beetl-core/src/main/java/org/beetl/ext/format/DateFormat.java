@@ -76,7 +76,7 @@ public class DateFormat implements Format
 			{
 				sdf = getDateFormat(pattern);
 			}
-			return sdf.format((Date) data);
+			return sdf.format(date);
 
 		}
 		else

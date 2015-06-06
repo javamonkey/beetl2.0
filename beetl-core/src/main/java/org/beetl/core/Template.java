@@ -166,6 +166,7 @@ public class Template
 				throw e;
 			}
 			errorHandler.processExcption(e, w);
+
 		}
 		catch (IOException e)
 		{

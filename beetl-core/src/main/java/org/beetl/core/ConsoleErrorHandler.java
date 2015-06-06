@@ -29,6 +29,8 @@ package org.beetl.core;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.beetl.core.exception.BeetlException;
 import org.beetl.core.exception.ErrorInfo;
@@ -59,8 +61,9 @@ public class ConsoleErrorHandler implements ErrorHandler
 		}
 
 		int line = error.getErrorTokenLine();
-		StringBuilder sb = new StringBuilder(">>").append(error.getType()).append(":")
-				.append(error.getErrorTokenText()).append(" 位于").append(line).append("行").append(" 资源:")
+
+		StringBuilder sb = new StringBuilder(">>").append(this.getDateTime()).append(":").append(error.getType())
+				.append(":").append(error.getErrorTokenText()).append(" 位于").append(line).append("行").append(" 资源:")
 				.append(getResourceName(ex.resourceId));
 
 		if (error.getErrorCode().equals(BeetlException.TEMPLATE_LOAD_ERROR))
@@ -121,6 +124,14 @@ public class ConsoleErrorHandler implements ErrorHandler
 		}
 
 		printCause(error, writer);
+		try
+		{
+			writer.flush();
+		}
+		catch (IOException e)
+		{
+
+		}
 
 	}
 
@@ -170,6 +181,13 @@ public class ConsoleErrorHandler implements ErrorHandler
 		endLine = startLine + 6;
 		return new int[]
 		{ startLine, endLine };
+	}
+
+	protected String getDateTime()
+	{
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+		return sdf.format(date);
 	}
 
 }

@@ -30,7 +30,8 @@ public class Test
 		for (int i = 0; i < 1; i++)
 		{
 
-			Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
+			Template t = gt.getAjaxTemplate("/org/beetl/core/lab/hello.txt", "dd");
+			;
 			t.binding("user", new TestUser(""));
 
 			ByteArrayOutputStream bs = new ByteArrayOutputStream();

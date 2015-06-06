@@ -1,7 +1,5 @@
 package org.beetl.core.lab;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -50,20 +48,20 @@ public class TestUser
 	public TestUser(String name)
 	{
 		this.name = name;
-		try
-		{
-			bir = new SimpleDateFormat("yyyy-MM-dd").parse("1978-02-14");
-		}
-		catch (ParseException e)
-		{
-			throw new RuntimeException(e.getMessage());
-		}
+		//		try
+		//		{
+		//			bir = new SimpleDateFormat("yyyy-MM-dd").parse("1978-02-14");
+		//		}
+		//		catch (ParseException e)
+		//		{
+		//			throw new RuntimeException(e.getMessage());
+		//		}
 	}
 
 	public String getName()
 	{
-		throw new RuntimeException();
-		//		return name;
+		//		throw new RuntimeException();
+		return name;
 	}
 
 	public void setName(String name)

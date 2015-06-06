@@ -41,78 +41,108 @@ public class StringUtil
 {
 	public String trim(String str)
 	{
+		if (str == null)
+			throw new NullPointerException("Error:trim(null)");
 		return str.trim();
 	}
 
 	public boolean startWith(String str, String key)
 	{
+		if (str == null)
+			throw new NullPointerException("Error:startWith(null)");
 		return str.startsWith(key);
 	}
 
 	public boolean endWith(String str, String key)
 	{
+		if (str == null)
+			throw new NullPointerException("Error:endWith(null)");
 		return str.endsWith(key);
 	}
 
 	public int length(String str)
 	{
+		if (str == null)
+			throw new NullPointerException("Error:length(null)");
 		return str.length();
 	}
 
 	public String subStringTo(String str, int start, int end)
 	{
+		if (str == null)
+			throw new NullPointerException("Error:subStringTo(null)");
 		return str.substring(start, end);
 	}
 
 	public String subString(String str, int start)
 	{
+		if (str == null)
+			throw new NullPointerException("Error:subString(null)");
 		return str.substring(start);
 	}
 
 	public String[] split(String str, String key)
 	{
+		if (str == null)
+			throw new NullPointerException("Error: split(null)");
 		return str.split(key);
 	}
 
 	public boolean contain(String str, String key)
 	{
+		if (str == null)
+			throw new NullPointerException("Error: contain(null)");
 		return str.indexOf(key) != -1;
 	}
 
 	public String toUpperCase(String str)
 	{
+		if (str == null)
+			throw new NullPointerException("Error:toUpperCase(null)");
 		return str.toUpperCase();
 	}
 
 	public String toLowerCase(String str)
 	{
+		if (str == null)
+			throw new NullPointerException("Error:toLowerCase(null)");
 		return str.toLowerCase();
 	}
 
 	public String replace(String str, String oldValue, String newValue)
 	{
+		if (str == null)
+			throw new NullPointerException("Error:replace(null)");
 		return str.replace(oldValue, newValue);
 	}
 
 	public String format(String str, Object[] args)
 	{
+		if (str == null)
+			throw new NullPointerException("Error:format(null)");
 		String result = MessageFormat.format(str, args);
 		return result;
 	}
 
 	public String formatDate(Date o, String args)
 	{
+		if (o == null)
+			throw new NullPointerException("Error:formatDate(null)");
 		SimpleDateFormat sd = new SimpleDateFormat(args);
 		return sd.format(o);
 	}
 
 	public int index(String str, String search)
 	{
+		if (str == null)
+			throw new NullPointerException("Error:index(null)");
 		return str.indexOf(search);
 	}
 
 	public int lastIndex(String str, String search)
 	{
+		if (str == null)
+			throw new NullPointerException("Error:lastIndex(null)");
 		return str.lastIndexOf(search);
 	}
 

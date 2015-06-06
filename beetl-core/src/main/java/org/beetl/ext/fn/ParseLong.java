@@ -48,6 +48,8 @@ public class ParseLong implements Function
 	{
 		Object o = paras[0];
 		String str = "";
+		if (o == null)
+			throw new NullPointerException("Error:parseLong(null)");
 		long result;
 		if (o instanceof Number)
 		{

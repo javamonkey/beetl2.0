@@ -34,6 +34,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.beetl.core.Context;
+import org.beetl.core.exception.BeetlException;
 import org.beetl.core.om.ObjectUtil;
 
 /**
@@ -184,6 +185,13 @@ public class ProgramMetaData implements java.io.Serializable
 
 	public AjaxStatement getAjax(String anchor)
 	{
+
+		if (ajaxs == null)
+		{
+			BeetlException be = new BeetlException(BeetlException.AJAX_NOT_FOUND, "该模板文件没有发现任何ajax锚点");
+			be.pushToken(new GrammarToken(anchor, 0, 0));
+			throw be;
+		}
 		return ajaxs.get(anchor);
 	}
 

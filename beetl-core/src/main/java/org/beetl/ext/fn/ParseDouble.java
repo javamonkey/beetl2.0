@@ -45,6 +45,8 @@ public class ParseDouble implements Function
 	public Object call(Object[] paras, Context ctx)
 	{
 		Object o = paras[0];
+		if (o == null)
+			throw new NullPointerException("Error:parseDouble(null)");
 		String str = "";
 		double result;
 		if (o instanceof Number)

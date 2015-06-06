@@ -1,4 +1,4 @@
-﻿Beetl2.2使用说明书20150505
+Beetl2.2使用说明书20150606
 ===================
 李家智 <xiandafu@126.com>
 :toc:
@@ -11,7 +11,7 @@
 
 
 == 什么是Beetl ==
-Beetl目前版本是2.2.0,大小690K，从开发至今有4年历史。相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
+Beetl目前版本是2.2.3,大小695K。相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
 
 - 功能完备：同主流的java模板引擎相比，Beetl具有绝大多数功能。适用于*各种应用场景*，从对响应速度有很高要求的大网站到功能繁多的CMS管理系统都适合。Beetl本身还具有很多独特功能来完成模板编写和维护，这是其他模板引擎所不具有的。
 - 非常简单：类似Javascript语法和习俗，只要半小时就能通过半学半猜完全掌握用法。拒绝其他模板引擎那种非人性化的语法和习俗。同时也能支持html 标签，使得开发CMS系统比较容易
@@ -22,7 +22,7 @@ Beetl目前版本是2.2.0,大小690K，从开发至今有4年历史。相对于�
 
 .关于性能
 **********************************************************************
-通过与主流模板引擎Freemaker，Vecloity以及JSP对比，Beetl均远高于前面三个，这是因为宏观上，通过了优化的渲染引擎，IO的二进制输出，字节码属性访问增强，微观上，通过一维数组保存上下文Context,静态文本合并处理，通过重复使用字节数组来防止java频繁的创建和销毁数组，还使用模板缓存，运行时优化等方法。详情参考附录
+通过与主流模板引擎Freemarker，Vecloity以及JSP对比，Beetl6倍于Freemarker，2倍于JSP。这是因为宏观上，通过了优化的渲染引擎，IO的二进制输出，字节码属性访问增强，微观上，通过一维数组保存上下文Context,静态文本合并处理，通过重复使用字节数组来防止java频繁的创建和销毁数组，还使用模板缓存，运行时优化等方法。详情参考附录
 **********************************************************************
 
 .独特功能
@@ -69,13 +69,15 @@ Beetl主页：ibeetl.com
 
 **********************************************************************
 
-
 .资助Beetl
 **********************************************************************
-- 官网有捐助账号，支付宝的，如果有大额，请直接先联系我。
 
+- 官网有捐助账号，支付宝的，如果有大额，请直接先联系我。
 - 官网有百度联盟的广告，如果你有兴趣，点击广告，我会有5毛钱。
+
 **********************************************************************
+
+
 
 
 == 基本用法 ==
@@ -112,7 +114,7 @@ Beetl的核心是GroupTemplate，创建GroupTemplate需要俩个参数，一个�
 
 *************************************************
 1. 关于如何使用模板资源加载器，请参考下一节
-2.  如何对模板进行配置，请参考下一节
+2. 如何对模板进行配置，请参考下一节
 *************************************************
 
 
@@ -269,7 +271,7 @@ System.out.println(str);
 
 WebAppResourceLoader 是用于web应用的资源模板加载器，默认根路径是WebRoot目录。也可以通过制定root属性来设置相对于WebRoot的的模板根路径，从安全角考虑，建议放到WEB-INF目录下
 
-如下是Jfinal集成BeetlRenderFactory里初始化GroupTemplate的方法
+如下是Jfinal集成 里初始化GroupTemplate的方法
 
 [source,java]
 ----------------------------
@@ -873,7 +875,7 @@ Beetl内置函数请参考附录，以下列出了常用的函数
 
 - decode  一个简化的if else 结构，如 decode(a,1,"a=1",2,"a=2","不知道了")},如果a是1，这decode输出"a=1",如果a是2，则输出"a==2",
 如果是其他值，则输出"不知道了"
-- debug 在控制台输出debug指定的对象以及所在模板文件以及模板中的行数，如debug(1),则输出1 [在3行@/org/beetl/core/lab/hello.txt]
+- debug 在控制台输出debug指定的对象以及所在模板文件以及模板中的行数，如debug(1),则输出1 [在3行@/org/beetl/core/lab/hello.txt],也可以输出多个，如debug("hi",a),则输出hi,a=123,[在3行@/org/beetl/core/lab/hello.txt]
 
 - parseInt 将数字或者字符解析为整形  如 parseInt("123");
 
@@ -1156,7 +1158,7 @@ Beetl 也支持HTML tag形式的标签， 区分beetl的html tag 与 标准html 
 ----------------------------
 
 <#footer style=”simple”/>
-<#richeditor id=”rid” name=”rname”  maxlength=”${maxlength}”> ${html} …其他模板内容   </#richdeitor>
+<#richeditor id=”rid” path="${ctxPath}/upload" name=”rname”  maxlength=”${maxlength}”> ${html} …其他模板内容   </#richdeitor>
 <#html:input  id=’aaaa’ />
 
 ----------------------------
@@ -2682,6 +2684,8 @@ return a+1;
 
 Web集成模块向模板提供web标准的变量，做如下说明
 
+-  request 中的所有attribute.在模板中可以直接通过attribute name 来引用，如在controller层 request.setAttribute("user",user),则在模板中可以直接用${user.name} . 
+
 - session  提供了session会话，模板通过session["name"],或者session.name 引用session里的变量
 
 - request  标准的HTTPSerlvetRequest,可以在模板里引用request属性（getter），如${request.requestURL}。
@@ -2690,7 +2694,6 @@ Web集成模块向模板提供web标准的变量，做如下说明
 
 - servlet  是WebVariable的实例，包含了HTTPSession,HTTPSerlvetRequest,HTTPSerlvetResponse.三个属性，模板中可以通过request.response,session 来引用，如 ${serlvet.request.requestURL};
 
--  request 中的所有attribute.在模板中可以直接通过attribute name 来引用，如在controller层 request.setAttribute("user",user),则在模板中可以直接用${user.name}
 
 - 所有的GroupTemplate的共享变量
 
@@ -2854,8 +2857,9 @@ public class WebRender
 protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		
-		response.setContentType("text/html;charset=UTF-8");			
-		//request.setAttribute ....
+		response.setContentType("text/html;charset=UTF-8");
+		//模板直接访问users			
+		request.setAttribute("users",service.getUsers());
 		ServletGroupTemplate.instance().render("/index.html", request, response);
 
 	
@@ -2892,6 +2896,20 @@ GroupTemplate group = config.getGroupTemplate();
 
 
 ----------------------------
+
+Controller代码如下:
+[source,java]
+----------------------------
+@RequestMapping(value = "/", method = RequestMethod.GET)
+public ModelAndView index(HttpServletRequest req) {
+	ModelAndView view = new ModelAndView("/index");
+	//total 是模板的全局变量，可以直接访问
+	view.addObject("total",service.getCount());
+  return view;
+}
+
+----------------------------
+
 
 === SpringMVC集成高级 ===
 
@@ -3063,79 +3081,6 @@ public class IndexAction {
 
 这样，将访问ROOT/ok.html的模板。如果你想配置GroupTemplate，正如其他集成框架一样，只需要写一个beetl.properties 即可。
 
-如下是集成的类实现，你也可以定制自己的集成方式
-
-[source,java]
-----------------------------
-package org.beetl.ext.jodd;
-
-import java.io.IOException;
-
-import jodd.madvoc.ActionRequest;
-import jodd.madvoc.result.ActionResult;
-
-import org.beetl.core.Configuration;
-import org.beetl.core.GroupTemplate;
-import org.beetl.core.resource.WebAppResourceLoader;
-import org.beetl.ext.web.WebRender;
-
-public class BeetlActionResult implements ActionResult
-{
-
-	public static final String NAME = "beetl";
-	GroupTemplate groupTemplate = null;
-
-	public BeetlActionResult()
-	{
-
-		try
-		{
-
-			Configuration cfg = Configuration.defaultConfiguration();
-			WebAppResourceLoader resourceLoader = new WebAppResourceLoader();
-			groupTemplate = new GroupTemplate(resourceLoader, cfg);
-
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException("加载GroupTemplate失败", e);
-		}
-
-	}
-
-	@Override
-	public void render(ActionRequest actionRequest, Object resultValue) throws Exception
-	{
-		
-		WebRender render = new WebRender(groupTemplate);
-		render.render((String) resultValue, actionRequest.getHttpServletRequest(),
-				actionRequest.getHttpServletResponse());
-
-	}
-
-	@Override
-	public String getResultType()
-	{
-		return NAME;
-	}
-
-	@Override
-	public Class getResultValueType()
-	{
-
-		return String.class;
-	}
-
-	@Override
-	public void init()
-	{
-
-	}
-
-}
-
-
-----------------------------
 
 
 === JFinal集成 ===
@@ -3158,6 +3103,23 @@ public class DemoConfig extends JFinalConfig
 
 ----------------------------
 
+业务逻辑代码:
+
+[source,java]
+----------------------------
+	public void modify(){
+		int artId = getParaToInt(0, -1);
+		setAttr("title", "修改文章");
+		List<Cate> cateLists = Cate.getAllCate();
+		//模板里访问cateLists,atr,
+		setAttr("cateLists", cateLists);
+		setAttr("art", Article.dao.findById(artId));
+		render("/modify.html");
+	}
+
+----------------------------
+
+
 BeetlRenderFactory 默认使用FileResourceLoader ，其根目录位于WebRoot目录下，如果你需要修改到别的目录，可以设置配置文件，如
 
 
@@ -3169,112 +3131,10 @@ RESOURCE.root= /WEB-INF/template/
 
 
 
-如下是 BeetlRenderFactory 源码
-
-[source,java]
-----------------------------
-package org.beetl.ext.jfinal;
-
-import java.io.File;
-import java.io.IOException;
-
-import org.beetl.core.Configuration;
-import org.beetl.core.GroupTemplate;
-import org.beetl.core.resource.FileResourceLoader;
-
-import com.jfinal.render.IMainRenderFactory;
-import com.jfinal.render.Render;
-
-public class BeetlRenderFactory implements IMainRenderFactory
-{
-
-	public static String viewExtension = ".html";
-	public static GroupTemplate groupTemplate = null;
-
-	static
-	{
-		try
-		{
-
-			Configuration cfg = Configuration.defaultConfiguration();
-			WebAppResourceLoader resourceLoader = new WebAppResourceLoader();
-			groupTemplate = new GroupTemplate(resourceLoader, cfg);
-
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException("加载GroupTemplate失败", e);
-		}
-	}
-
-	public Render getRender(String view)
-	{
-		return new BeetlRender(groupTemplate, view);
-	}
-
-	public String getViewExtension()
-	{
-		return viewExtension;
-	}
-
-}
-
-----------------------------
 
 
 
-BeetlRender 继承了Jfinal Render类，内容如下：
-
-
-[source,java]
-----------------------------
-package org.beetl.ext.jfinal;
-
-import org.beetl.core.GroupTemplate;
-import org.beetl.core.exception.BeetlException;
-import org.beetl.ext.web.WebRender;
-
-import com.jfinal.render.Render;
-import com.jfinal.render.RenderException;
-
-public class BeetlRender extends Render
-{
-	GroupTemplate gt = null;
-	private transient static final String encoding = getEncoding();
-	private transient static final String contentType = "text/html; charset=" + encoding;
-
-	public BeetlRender(GroupTemplate gt, String view)
-	{
-		this.gt = gt;
-		this.view = view;
-	}
-
-	@Override
-	public void render()
-	{
-
-		try
-
-		{
-			response.setContentType(contentType);
-			WebRender webRender = new WebRender(gt);
-			webRender.render(view, request, response);
-
-		}
-		catch (BeetlException e)
-		{
-			throw new RenderException(e);
-		}
-
-	}
-
-}
-----------------------------
-
-
-
-
-=== Nuts集成 ===
+=== Nutz集成 ===
 
 Nutz集成提供了 BeetlViewMaker ，实现了 ViewMaker方法，如下代码
 
@@ -3293,85 +3153,7 @@ public class HelloBeetl {
 
 ----------------------------
 
-代码第三行使用前缀beetl，这表示使用BeetlViewMaker.如下椒BeetlViewMaker实现
 
-[source,java]
-----------------------------
-package org.beetl.ext.nutz;
-
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.beetl.core.Configuration;
-import org.beetl.core.GroupTemplate;
-import org.beetl.core.resource.WebAppResourceLoader;
-import org.beetl.ext.web.WebRender;
-import org.nutz.ioc.Ioc;
-import org.nutz.mvc.View;
-import org.nutz.mvc.ViewMaker;
-import org.nutz.mvc.view.AbstractPathView;
-
-/**
- * Beelt for Nutz
- * 
- * @author wendal,joelli
- * 
- */
-public class BeetlViewMaker implements ViewMaker
-{
-
-	public GroupTemplate groupTemplate;
-	private boolean inited;
-
-	public void init()
-	{
-		if (inited)
-			return;
-
-		Configuration cfg;
-		try
-		{
-			cfg = Configuration.defaultConfiguration();
-			WebAppResourceLoader resourceLoader = new WebAppResourceLoader();
-			groupTemplate = new GroupTemplate(resourceLoader, cfg);
-			inited = true;
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException("加载GroupTemplate失败", e);
-		}
-
-	}
-
-	public void depose()
-	{
-		if (groupTemplate != null)
-			groupTemplate.close();
-	}
-
-	public View make(Ioc ioc, String type, String value)
-	{
-		if (!inited)
-			init();
-		if ("beetl".equals(type))
-			return new AbstractPathView(value) {
-				@SuppressWarnings("unchecked")
-				public void render(HttpServletRequest req, HttpServletResponse resp, Object obj) throws Throwable
-				{
-
-					String child = evalPath(req, obj);
-					WebRender render = new WebRender(groupTemplate);
-					render.render(child, req, resp);
-
-				}
-			};
-		return null;
-	}
-}
-
-----------------------------
 
 
 === Struts2集成 ===
@@ -3394,78 +3176,7 @@ public class BeetlViewMaker implements ViewMaker
 ----------------------------
 
 该类会根据struts配置文件获取模板，如上例的hello.html,并将formbean的属性，以及request属性作为全局变量传递给模板
-Struts2BeetlActionResult 集成代码如下：
-[source,java]
-----------------------------
-public class Struts2BeetlActionResult extends StrutsResultSupport
-{
 
-	
-	ReflectionProvider reflectionProvider = null;
-	public static GroupTemplate groupTemplate;
-	static {
-		Configuration cfg;
-		try
-		{
-			cfg = Configuration.defaultConfiguration();
-			WebAppResourceLoader resourceLoader = new WebAppResourceLoader();
-			groupTemplate = new GroupTemplate(resourceLoader, cfg);
-			
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException("加载GroupTemplate失败", e);
-		}
-	}
-
-	@Inject
-	public void setReflectionProvider(ReflectionProvider prov)
-	{
-		this.reflectionProvider = prov;
-	}
-
-	protected void doExecute(String locationArg, ActionInvocation invocation) throws Exception
-	{
-
-		ActionContext ctx = invocation.getInvocationContext();
-
-		HttpServletRequest req = (HttpServletRequest) ctx.get(ServletActionContext.HTTP_REQUEST);
-		HttpServletResponse rsp = (HttpServletResponse) ctx.get(ServletActionContext.HTTP_RESPONSE);
-
-		if (!locationArg.startsWith("/"))
-		{
-			String base = ResourceUtil.getResourceBase(req);
-			locationArg = base + "/" + locationArg;
-		}
-
-		Template template = groupTemplate.getTemplate(locationArg);
-		
-		Object action = 	invocation.getAction();
-		Map<String, Object> values = reflectionProvider.getBeanMap(action);
-		
-		WebRender render = new WebRender(groupTemplate){
-			protected void modifyTemplate(Template template, String key, HttpServletRequest request,
-					HttpServletResponse response, Object... args)
-			{
-				Map model = (Map) args[0];
-
-				for (Object o : model.entrySet())
-				{
-					Entry entry = (Entry) o;
-					String name = (String) entry.getKey();
-					Object value = entry.getValue();
-					template.binding(name, value);
-				}
-			}
-		};
-		render.render(locationArg, req, rsp,values);
-	
-
-	}	
-
-	
-}
-----------------------------
 
 
 .郑重申明
@@ -3542,7 +3253,7 @@ var session= {admin:{id:1,name:'admin'}};
 当前页面<span id="current">${page!1}</span><span style="width:20px"></span> 
 <a href="#"><span  class="page">next</span></a> <a href="#" ><span  class="page">pre</span></a> 
 <%
-#ajax片段结尾
+//ajax片段结尾
 }
 %>
 ----------------------------
@@ -3567,6 +3278,16 @@ var session= {admin:{id:1,name:'admin'}};
 
 *************************************************
 
+=== 在页面输出错误提示信息 ===
+2.2.3版本以后，新增加org.beetl.ext.web.WebErrorHandler,可以在web开发的时候在页面输出提示信息，在产品模式下载后台输出提示信息（通过配置属性ESOURCE.autoCheck= true来认为是开发模式），仅仅需要配置如下:
+[source,html]
+----------------------------
+ERROR_HANDLER = org.beetl.ext.web.WebErrorHandler
+----------------------------
+
+
+
+
 == 附录 ==
 
 === 内置方法 ===
@@ -3590,7 +3311,8 @@ var session= {admin:{id:1,name:'admin'}};
 
 - decode  一个简化的if else 结构，如 decode(a,1,"a=1",2,"a=2","不知道了")},如果a是1，这decode输出"a=1",如果a是2，则输出"a==2",
 如果是其他值，则输出"不知道了"
-- debug 在控制台输出debug指定的对象以及所在模板文件以及模板中的行数，如debug(1),则输出1 [在3行@/org/beetl/core/lab/hello.txt]
+
+- debug 在控制台输出debug指定的对象以及所在模板文件以及模板中的行数，如debug(1),则输出1 [在3行@/org/beetl/core/lab/hello.txt],也可以输出多个，如debug("hi",a),则输出hi,a=123,[在3行@/org/beetl/core/lab/hello.txt]
 
 - parseInt 将数字或者字符解析为整形  如 parseInt("123");
 
@@ -3784,7 +3506,7 @@ public void clearAll(String... keys);
 [source,java]
 ----------------------------
 <%
-includeJSP("/xxxx.jsp",{"key":"value"})
+includeJSP("/xxxx.jsp",{"key":"value"}){}
 %>
 ----------------------------
 
@@ -3836,23 +3558,23 @@ image:performance2.png[]
 
 作者
 
-- 闲.大赋
+- 闲.大赋：
 
 助手
 
-- 作死模式
-
-- 一粟蜉蝣
+- 作死模式：核心代码开发
+- 一粟蜉蝣：核心代码开发和版本发布
 
 代码捐助者
 
-- 逝水fox
-- kraken
-- 西安玛雅牛
-- 级?!
-- orangetys
-- Oo不懂oO
-- 原上一颗草
+- 逝水fox ：出色完成spring集成
+- kraken: 集合方法等扩展
+- 西安玛雅牛：复合加载器
+- 级?!: beetl扩展，crossMVC
+- orangetys： beetl插件
+- Oo不懂oO: beetl插件
+- 原上一颗草:Beetl早期使用者。
+- 龙图腾飞 ，WebErrorHandler，用来开发模式在 web上显示错误而不是控制台
 
 文档校验
 
@@ -3860,23 +3582,4 @@ image:performance2.png[]
 - Daemons
 
 
-=== Beetl 捐助者 ===
-
-- 凌宇 100元
-- 程希来 50
-- 杜伟 10
-- 黄卫 10
-- 谭斌 5
-- 张伟 20
-- 杨鬼 200
-- 龙伟 5
-- 顾小李 5
-- 秦国庆 2
-- 张建 200
-- 张建 50 ：）
-- 孟凡曾 5
-- 马瑞 20
-- 一维可航 10
-
-捐助的钱将用于续购云主机和域名。
 

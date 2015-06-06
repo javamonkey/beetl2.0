@@ -62,7 +62,15 @@ public class DebugFunction implements Function
 
 			if (o != null)
 			{
-				sb.append(o.toString());
+				if (o instanceof CharSequence)
+				{
+					sb.append("\"").append(o.toString()).append("\"");
+				}
+				else
+				{
+					sb.append(o.toString());
+				}
+
 			}
 			else
 			{

@@ -877,7 +877,7 @@ Beetl内置函数请参考附录，以下列出了常用的函数
 - debug 在控制台输出debug指定的对象以及所在模板文件以及模板中的行数，如debug(1),则输出1 [在3行@/org/beetl/core/lab/hello.txt],也可以输出多个，如debug("hi",a),则输出hi,a=123,[在3行@/org/beetl/core/lab/hello.txt]
 
 - parseInt 将数字或者字符解析为整形  如 parseInt("123");
-
+- parseLong 将数字或者字符解析为长整形  如 parseInt("123");
 - parseDouble 将数字或者字符解析为浮点类型 如parseDouble("1.23")
 
 - range 接收三个参数，初始值，结束值，还有步增（可以不需要，则默认为1），返回一个Iterator，常用于循环中，如for(var i in range(1,5)) {print(i)},将依次打印1234.

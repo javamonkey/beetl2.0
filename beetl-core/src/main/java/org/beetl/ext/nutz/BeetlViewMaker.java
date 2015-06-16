@@ -61,7 +61,7 @@ public class BeetlViewMaker implements ViewMaker
 				@SuppressWarnings("unchecked")
 				public void render(HttpServletRequest req, HttpServletResponse resp, Object obj) throws Throwable
 				{
-
+					req.setAttribute("obj", obj); // 把方法的返回值放进req里面
 					String child = evalPath(req, obj);
 					WebRender render = new WebRender(groupTemplate);
 					render.render(child, req, resp);

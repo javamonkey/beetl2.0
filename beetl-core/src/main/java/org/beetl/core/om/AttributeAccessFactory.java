@@ -146,7 +146,7 @@ public class AttributeAccessFactory
 						aa = generalGetCache.get(className);
 						if (aa != null)
 							return aa;
-						aa = AttributeCodeGen.createAAClass(c, "get", "get", Object.class, String.class);
+						aa = AttributeCodeGen.createAAClass(c, "get", "get", m.getReturnType(), String.class);
 						generalGetCache.put(className, aa);
 						return aa;
 					}

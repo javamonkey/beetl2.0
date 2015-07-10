@@ -1533,7 +1533,7 @@ public class AntlrProgramBuilder
 		}
 		else
 		{
-			//array
+			//map
 			JsonMapExpression json = null;
 			List<JsonKeyValueContext> listCtx = ctx.jsonKeyValue();
 			if (listCtx.size() == 0)
@@ -1542,7 +1542,7 @@ public class AntlrProgramBuilder
 			}
 			else
 			{
-				Map<String, Expression> map = new HashMap<String, Expression>(listCtx.size());
+				Map<String, Expression> map = new LinkedHashMap<String, Expression>(listCtx.size());
 				for (JsonKeyValueContext kvCtx : listCtx)
 				{
 					String key = null;

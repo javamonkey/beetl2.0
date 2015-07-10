@@ -45,12 +45,6 @@ public class BeetlActionResult implements ActionResult
 	}
 
 	@Override
-	public String getResultType()
-	{
-		return NAME;
-	}
-
-	@Override
 	public Class getResultValueType()
 	{
 
@@ -61,6 +55,13 @@ public class BeetlActionResult implements ActionResult
 	public void init()
 	{
 
+	}
+
+	@Override
+	public String getResultName()
+	{
+		// TODO Auto-generated method stub
+		return NAME;
 	}
 
 }

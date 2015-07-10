@@ -30,4 +30,16 @@ public class JsonTest extends BasicTestCase
 		str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/exp/json/data_expected.html"), str);
 	}
+
+	@Test
+	public void testOrder() throws Exception
+	{
+		Template t = gt.getTemplate("/exp/json/order_template.html");
+		String str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/exp/json/order_expected.html"), str);
+
+		t = gt.getTemplate("/exp/json/order_template.html");
+		str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/exp/json/order_expected.html"), str);
+	}
 }

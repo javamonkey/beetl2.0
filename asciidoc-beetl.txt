@@ -43,10 +43,13 @@ Beetl有些功能是发展了10多年的模板引擎所不具备的，这些功�
 
 .新手如何开始
 **********************************************************************
-需要通读基本用法，大部分都是讲解语法，而语法跟js很接近，所以可以快速预览，但Beetl是针对模板设计，
+
+- 需要通读基本用法，大部分都是讲解语法，而语法跟js很接近，所以可以快速预览，但Beetl是针对模板设计，
 所以像安全输出，标签和html标签，全局变量，临时变量和共享变量，布局技术，以及直接调用java代码等还需要认真读一遍。
 
-如果从事web开发，还需要阅读web集成里的第一节“web提供的全局变量”，如果web里还使用ajax技术，可以阅读“整合ajax的局部渲染技术”
+- 如果从事web开发，还需要阅读web集成里的第一节“web提供的全局变量”，如果web里还使用ajax技术，可以阅读“整合ajax的局部渲染技术”。
+
+- 包含有spring,jfinal,jodd,struts 等demo可以作为参考学习用 http://ibeetl.com/community/?/article/4 
 
 
 **********************************************************************
@@ -883,6 +886,9 @@ Beetl内置函数请参考附录，以下列出了常用的函数
 - range 接收三个参数，初始值，结束值，还有步增（可以不需要，则默认为1），返回一个Iterator，常用于循环中，如for(var i in range(1,5)) {print(i)},将依次打印1234.
 
 - flush 强制io输出
+
+- json，将对象转成json字符串，如 var data = json(userList)  可以跟一个序列化规则 如,var data = json(userList,"[*].id:i"),具体参考https://git.oschina.net/xiandafu/beetl-json
+
 
 
 
@@ -2910,9 +2916,13 @@ public ModelAndView index(HttpServletRequest req) {
 ----------------------------
 
 
+https://git.oschina.net/xiandafu/beetl-spring-sample  有完整例子
+
 === SpringMVC集成高级 ===
 
 spring集成还允许注册被spring容器管理的Function，Tag等，也还允许配置多个视图解析器等功能
+
+
 
 [source,xml]
 ----------------------------
@@ -3003,6 +3013,7 @@ public class TestTag extends Tag {
 			<value>/template/**</value>
 		</list>
 	</property>
+	<property name="suffix" value=".btl"/>
 	<property name="contentType" value="text/html;charset=UTF-8"/>
 	<property name="order" value="0"/>
 	<!-- 多GroupTemplate，需要指定使用的bean -->
@@ -3029,6 +3040,7 @@ public class TestTag extends Tag {
 <bean name="JSPViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 	<!-- 注意JSP的这个视图解析器order必须在最后 -->
 	<property name="order" value="256"/>
+	<!-- beetl配置不支持前缀，这不同于jsp 和 freemaker -->
 	<property name="prefix" value="/WEB-INF/"/>
 	<property name="suffix" value=".jsp"/>
 	<property name="contentType" value="text/html;charset=UTF-8"/>
@@ -3055,9 +3067,67 @@ Beetl视图解析器属性同spring自带的视图解析器一样，支持conten
 
 
 
+
+
 === Jodd集成 ===
 
-只需要在Action里返回"beetl:....."就可以了，冒号后面是模板路径，请以/开头，如下例子：
+需要配置web.xml,将所有请求交给jodd处理，参考:http://jodd.org/doc/madvoc/setup.html
+
+[source,xml]
+----------------------------
+<filter>
+	<filter-name>madvoc</filter-name>
+	<filter-class>jodd.madvoc.MadvocServletFilter</filter-class>
+	<init-param>
+			<param-name>madvoc.webapp</param-name>
+			<param-value>test.MyWebApplication</param-value>
+	  </init-param>
+    <init-param>
+		<param-name>madvoc.configurator</param-name>
+		<param-value>test.MyAutomagicMadvocConfigurator</param-value>
+	</init-param>
+        
+</filter>
+<filter-mapping>
+	<filter-name>madvoc</filter-name>
+	<url-pattern>/*</url-pattern>      
+</filter-mapping>
+
+----------------------------
+
+
+MyWebApplication 和 MyAutomagicMadvocConfigurator 需要自己参照如下例子写一个，前者用来设置beetl作为视图渲染，后者配置Jodd不要扫描beetl struts集成里引用的struts类
+
+
+[source,java]
+----------------------------
+public class MyAutomagicMadvocConfigurator extends AutomagicMadvocConfigurator {
+	public MyAutomagicMadvocConfigurator(){
+		super();
+		//不扫描beetl 里jar文件里的action和result，否则，会扫描StrutsResultSupport不相干的class
+		this.rulesJars.exclude("**/*beetl*.jar");
+
+		
+	}
+}
+----------------------------
+
+
+[source,java]
+----------------------------
+public class MyWebApplication  extends WebApplication{
+     @Override
+     protected void init(MadvocConfig madvocConfig, ServletContext servletContext) {       
+		 //设置默认
+         madvocConfig.setDefaultActionResult(BeetlActionResult.class);       
+
+     }
+ }
+
+----------------------------
+
+
+最后，可以写Action了，浏览器输入/index.html,jodd将执行world方法，并渲染ok.html模板。如果你想配置GroupTemplate，正如其他集成框架一样，只需要写一个beetl.properties 即可。
 
 [source,java]
 ----------------------------
@@ -3066,19 +3136,17 @@ public class IndexAction {
 	
      @Out
      String value;
-
      @Action("/index.html")
      public String world() {
         
          value = "Hello World!";
-         return "beetl:/ok.html";
+         return "/ok.html";
      }
 }
 
-
 ----------------------------
 
-这样，将访问ROOT/ok.html的模板。如果你想配置GroupTemplate，正如其他集成框架一样，只需要写一个beetl.properties 即可。
+https://git.oschina.net/xiandafu/beetl-jodd-sample 有完整例子
 
 
 
@@ -3129,6 +3197,7 @@ RESOURCE.root= /WEB-INF/template/
 ----------------------------
 
 
+https://git.oschina.net/xiandafu/beetl-jfinal-sample  有完整例子，采用jfinal+beetl写的一个博客系统
 
 
 
@@ -3164,11 +3233,16 @@ public class HelloBeetl {
 .......
 <result-types>
 	<result-type name="beetl"
-		class="org.beetl.ext.struts2.Struts2BeetlActionResult" default="true" />
+		                class="org.beetl.ext.struts2.Struts2BeetlActionResult" default="true" >
+		        	<param name="contentType">text/html; charset=UTF-8</param>
+	</result-type>
 </result-types>
 
-<action name="HelloWorld" class="example.HelloWorld">
+<action name="HelloWorld" class="com.beetl.struts.HelloWorld">
     <result>/hello.html</result>
+</action>
+<action name="Ajax" class="com.beetl.struts.AjaxHtml">
+	<result>/table.html#table</result>
 </action>
 ........
 </package>
@@ -3176,7 +3250,7 @@ public class HelloBeetl {
 
 该类会根据struts配置文件获取模板，如上例的hello.html,并将formbean的属性，以及request属性作为全局变量传递给模板
 
-
+https://git.oschina.net/xiandafu/beetl-struts2-sample  有完整例子
 
 .郑重申明
 **********************************************************************
@@ -3320,6 +3394,8 @@ ERROR_HANDLER = org.beetl.ext.web.WebErrorHandler
 - range 接收三个参数，初始值，结束值，还有步增（可以不需要，则默认为1），返回一个Iterator，常用于循环中，如for(var i in range(1,5)) {print(i)},将依次打印1234.
 
 - flush 强制io输出。
+
+- json，将对象转成json字符串，如 var data = json(userList)  可以跟一个序列化规则 如,var data = json(userList,"[*].id:i"),具体参考     https://git.oschina.net/xiandafu/beetl-json
 
 ==== 字符串相关方法 ====
 
@@ -3537,7 +3613,16 @@ Beetl2.0目前只完成了解释引擎，使用解释引擎好处是可以适用
 
 - 编译引擎将模板编译成类，会产生大量的类，虚拟机很难对这些做优化。而解释引擎只有几十个固定的类，虚拟机容易优化
 
+.相关文章
+**********************************************************************
 
+-  为什么JSP会比Beetl慢 http://my.oschina.net/xiandafu/blog/475740 
+
+-  Beetl 性能揭秘 2 ：语言如何存取变量 http://my.oschina.net/xiandafu/blog/293167
+
+-  Beetl 性能揭秘 1 ：如何输出一个整型变量 http://my.oschina.net/xiandafu/blog/284823
+
+**********************************************************************
 
 
 === 性能测试对比 ===

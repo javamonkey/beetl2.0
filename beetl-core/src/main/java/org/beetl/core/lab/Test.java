@@ -1,6 +1,5 @@
 package org.beetl.core.lab;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,44 +8,48 @@ import org.beetl.core.Context;
 import org.beetl.core.Function;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Template;
-import org.beetl.core.resource.ClasspathResourceLoader;
+import org.beetl.core.resource.StringTemplateResourceLoader;
 
 public class Test
 {
 	public static void main(String[] args) throws Exception
 	{
+		GroupTemplate gt = new GroupTemplate(new StringTemplateResourceLoader(), Configuration.defaultConfiguration());
+		Template template = gt.getTemplate("<% var a=b=1; %>}");
+		template.binding("result", 1000);
+		System.out.println(template.render());
 
-		String aa = "abfddfdf";
-		System.out.println(parse(aa));
-
-		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader();
-		Configuration cfg = Configuration.defaultConfiguration();
-		cfg.setDirectByteOutput(true);
-		cfg.getResourceMap().put("RESOURCE.autoCheck", "true");
-		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
-		cfg.setStatementStart("<%");
-		cfg.setStatementEnd("%>");
-		gt.registerFunctionPackage("test", new TestUser(""));
-		for (int i = 0; i < 1; i++)
-		{
-
-			Template t = gt.getAjaxTemplate("/org/beetl/core/lab/hello.txt", "dd");
-			;
-			t.binding("user", new TestUser(""));
-
-			ByteArrayOutputStream bs = new ByteArrayOutputStream();
-			try
-			{
-				t.renderTo(bs);
-			}
-			catch (Exception ex)
-			{
-				ex.printStackTrace();
-			}
-
-			System.out.println(new String(bs.toByteArray()));
-
-		}
+		//		String aa = "abfddfdf";
+		//		System.out.println(parse(aa));
+		//
+		//		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader();
+		//		Configuration cfg = Configuration.defaultConfiguration();
+		//		cfg.setDirectByteOutput(true);
+		//		cfg.getResourceMap().put("RESOURCE.autoCheck", "true");
+		//		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
+		//		cfg.setStatementStart("<%");
+		//		cfg.setStatementEnd("%>");
+		//		gt.registerFunctionPackage("test", new TestUser(""));
+		//		for (int i = 0; i < 1; i++)
+		//		{
+		//
+		//			Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
+		//			;
+		//			t.binding("url", "/router?m=cfr.find&v=1.0&currencyCode=USD");
+		//
+		//			ByteArrayOutputStream bs = new ByteArrayOutputStream();
+		//			try
+		//			{
+		//				t.renderTo(bs);
+		//			}
+		//			catch (Exception ex)
+		//			{
+		//				ex.printStackTrace();
+		//			}
+		//
+		//			System.out.println(new String(bs.toByteArray()));
+		//
+		//		}
 
 	}
 

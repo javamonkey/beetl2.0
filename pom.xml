@@ -187,7 +187,7 @@
 		<struts2.version>2.3.16.1</struts2.version>
 		<jfinal.version>1.6</jfinal.version>
 		<nutz.version>1.b.49</nutz.version>
-		<jodd.version>3.5.1</jodd.version>
+		<jodd.version>3.6.6</jodd.version>
 		<antlr4.version>4.2</antlr4.version>
 		<testng.version>6.8.7</testng.version>
 		<junit.version>4.11</junit.version>

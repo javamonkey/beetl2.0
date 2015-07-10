@@ -65,7 +65,6 @@ public class BeetlGroupUtilConfiguration extends AbstractGroupTemplateConfig imp
 	protected GroupTemplate groupTemplate;
 	protected String root = "/";
 	protected String webPath = null;
-	protected String suffix = "";
 	/**
 	 * 配置属性
 	 */
@@ -246,16 +245,6 @@ public class BeetlGroupUtilConfiguration extends AbstractGroupTemplateConfig imp
 	public GroupTemplate getGroupTemplate()
 	{
 		return this.groupTemplate;
-	}
-
-	public String getSuffix()
-	{
-		return suffix;
-	}
-
-	public void setSuffix(String suffix)
-	{
-		this.suffix = suffix;
 	}
 
 	public void setRoot(String root)

@@ -53,6 +53,7 @@ public class Struts2BeetlActionResult extends StrutsResultSupport
 
 	ReflectionProvider reflectionProvider = null;
 	public static GroupTemplate groupTemplate;
+	private String pContentType = "text/html; charset=UTF-8";
 	static
 	{
 		Configuration cfg;
@@ -89,11 +90,9 @@ public class Struts2BeetlActionResult extends StrutsResultSupport
 			locationArg = base + "/" + locationArg;
 		}
 
-		Template template = groupTemplate.getTemplate(locationArg);
-
 		Object action = invocation.getAction();
 		Map<String, Object> values = reflectionProvider.getBeanMap(action);
-
+		rsp.setContentType(this.pContentType);
 		WebRender render = new WebRender(groupTemplate) {
 			protected void modifyTemplate(Template template, String key, HttpServletRequest request,
 					HttpServletResponse response, Object... args)
@@ -111,6 +110,16 @@ public class Struts2BeetlActionResult extends StrutsResultSupport
 		};
 		render.render(locationArg, req, rsp, values);
 
+	}
+
+	public void setContentType(String aContentType)
+	{
+		pContentType = aContentType;
+	}
+
+	public String getContentType()
+	{
+		return pContentType;
 	}
 
 }

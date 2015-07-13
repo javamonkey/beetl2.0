@@ -32,6 +32,7 @@ import java.io.IOException;
 import org.beetl.core.ByteWriter;
 import org.beetl.core.Context;
 import org.beetl.core.Function;
+import org.beetl.core.exception.BeetlException;
 
 /**
  * &lt;% println("hello") %>
@@ -63,7 +64,8 @@ public class Println implements Function
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException(e);
+			BeetlException be = new BeetlException(BeetlException.CLIENT_IO_ERROR_ERROR);
+			throw be;
 		}
 		return "";
 

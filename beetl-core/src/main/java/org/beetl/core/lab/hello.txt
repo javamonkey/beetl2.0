@@ -1,1 +1,3 @@
-${url}
+<%
+	println("hello");
+%>

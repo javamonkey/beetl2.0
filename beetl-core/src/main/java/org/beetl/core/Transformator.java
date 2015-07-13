@@ -891,34 +891,54 @@ public class Transformator
 
 	public String parseAttr(char q, String attr)
 	{
+		//attr="aa{bb}cc" => ("aa"+(bb)+"cc") todo: 太难看了，会有很多潜在问题，需要一个专门的解析器，类似字符串模版,或者正则表达式
 		StringBuilder sb = new StringBuilder(attr.length() + 10);
 		int start = 0;
 		int end = 0;
 		int index = -1;
 		while ((index = attr.indexOf(placeholderStart, start)) != -1)
 		{
-			end = attr.indexOf(placeholderEnd, index);
+			
+			int holdStart = index;
+			
+			while( (end = attr.indexOf(placeholderEnd, holdStart))!=-1){
+				if(attr.charAt(end-1)=='\\'){
+					//非占位结束符号
+					holdStart = end+1;
+					continue;
+				}else{
+					break;
+				}
+			}
+			
 			if (end == -1)
 				throw new RuntimeException(attr + "标签属性错误，有站位符号，但找不到到结束符号");
 			if (index != 0)
 			{
+				// 字符串
 				sb.append(q).append(attr.substring(start, index)).append(q).append("+");
 			}
-
-			sb.append("(").append(attr.substring(index + 2, end)).append(")").append("+");
+			// 占位符号
+			String value = attr.substring(index + this.placeholderStart.length(), end);
+			value = value.replace("\\}", "}");
+			sb.append("(").append(value).append(")").append("+");
 			start = end + 1;
 		}
+		//attr = "aaaa";
 		if (start == 0)
 		{
+			//全字符串
 			return sb.append(q).append(attr).append(q).toString();
 		}
+		
 		if (start != attr.length())
 		{
-
+			// 最后一个是字符串
 			sb.append(q).append(attr.substring(start, attr.length())).append(q);
 		}
 		else
 		{
+			//删除“＋”
 			sb.setLength(sb.length() - 1);
 		}
 		return sb.toString();
@@ -934,7 +954,7 @@ public class Transformator
 		{
 
 			// String str = "   #:var u='hello';:#  \n  $u$";
-			String str = "<ns:a tt='a${bc}' cc='${ctxPath/a/b' var='c,b'></ns:a>";
+			String str = "<ns:a tt='a${bc}' cc='bb${{tt:12,key:1232\\}}/a/b' var='c,b'></ns:a>";
 
 			BufferedReader reader = new BufferedReader(p.transform(str));
 			String line = null;

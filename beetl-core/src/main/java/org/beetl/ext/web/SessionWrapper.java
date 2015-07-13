@@ -31,7 +31,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
- * 封装了Session，模板可以通过session来访问
+ * 封装了Session，模板可以通过session来访问,如果会话不存在，返回值为null，
+ * 可以通过hasSession()来判断是否存在会话
  * @author joelli
  * @since 1.1
  *
@@ -50,7 +51,7 @@ public class SessionWrapper
 	{
 		if (session == null)
 		{
-			throw new RuntimeException("sessoin 没有被创建");
+			return null;
 		}
 		return session.getAttribute((String) key);
 	}

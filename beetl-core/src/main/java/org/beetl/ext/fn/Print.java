@@ -31,6 +31,7 @@ import java.io.IOException;
 
 import org.beetl.core.Context;
 import org.beetl.core.Function;
+import org.beetl.core.exception.BeetlException;
 
 /**
  * &lt;% print("hello") %>
@@ -52,7 +53,8 @@ public class Print implements Function
 			}
 			catch (IOException e)
 			{
-				throw new RuntimeException(e);
+				BeetlException be = new BeetlException(BeetlException.CLIENT_IO_ERROR_ERROR);
+				throw be;
 			}
 		}
 		return "";

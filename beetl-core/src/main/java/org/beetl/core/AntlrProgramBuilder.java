@@ -87,6 +87,7 @@ import org.beetl.core.parser.BeetlParser.FunctionTagStContext;
 import org.beetl.core.parser.BeetlParser.G_caseStatmentContext;
 import org.beetl.core.parser.BeetlParser.G_defaultStatmentContext;
 import org.beetl.core.parser.BeetlParser.G_switchStatmentContext;
+import org.beetl.core.parser.BeetlParser.GeneralAssignExpContext;
 import org.beetl.core.parser.BeetlParser.GeneralForControlContext;
 import org.beetl.core.parser.BeetlParser.IfStContext;
 import org.beetl.core.parser.BeetlParser.IncDecOneContext;
@@ -517,6 +518,33 @@ public class AntlrProgramBuilder
 				this.getBTToken(sctx.getStart()));
 		return switchStat;
 	}
+	
+	
+	protected VarAssignExpression  parseAssingInExp(AssignGeneralInExpContext agc){
+		GeneralAssignExpContext gas = agc.generalAssignExp();
+		ExpressionContext expCtx = gas.expression();
+		Expression exp = parseExpress(expCtx);
+		VarAssignExpression  vas = new VarAssignExpression(exp, getBTToken(agc.generalAssignExp().Identifier().getSymbol()));
+		registerVar(vas);
+		return vas;
+	}
+//	纪录一个新变量
+	protected void registerNewVar(ASTNode vas){
+		if (pbCtx.hasDefined(vas.token.text) != null)
+		{
+			GrammarToken token = pbCtx.hasDefined(vas.token.text);
+			BeetlException ex = new BeetlException(BeetlException.VAR_ALREADY_DEFINED, "已经在第" + token.line + "行定义");
+			ex.pushToken(vas.token);
+			throw ex;
+		}
+		pbCtx.addVar(vas.token.text);
+		pbCtx.setVarPosition(vas.token.text, vas);	
+	}
+	
+	//纪录一个变量
+	protected void registerVar(ASTNode vas){
+		pbCtx.setVarPosition(vas.token.text, vas);	
+	}
 
 	protected VarAssignStatement parseAssign(AssignMentContext amc)
 	{
@@ -525,6 +553,7 @@ public class AntlrProgramBuilder
 		if (amc instanceof AssignGeneralInStContext)
 		{
 			AssignGeneralInStContext agc = (AssignGeneralInStContext) amc;
+			String name = agc.generalAssignExp().Identifier().getSymbol().getText();
 			ExpressionContext expCtx = agc.generalAssignExp().expression();
 			Expression exp = parseExpress(expCtx);
 			vas = new VarAssignStatement(exp, getBTToken(agc.generalAssignExp().Identifier().getSymbol()));
@@ -1157,16 +1186,8 @@ public class AntlrProgramBuilder
 		{
 			VarAssignStatement vas = this.parseAssign(amc);
 			listNode.add(vas);
-			if (pbCtx.hasDefined(vas.token.text) != null)
-			{
-				GrammarToken token = pbCtx.hasDefined(vas.token.text);
-				BeetlException ex = new BeetlException(BeetlException.VAR_ALREADY_DEFINED, "已经在第" + token.line + "行定义");
-				ex.pushToken(vas.token);
-				throw ex;
-			}
-			pbCtx.addVar(vas.token.text);
-			pbCtx.setVarPosition(vas.token.text, vas);
-
+			this.registerNewVar(vas);
+			
 		}
 		VarAssignStatementSeq seq = new VarAssignStatementSeq(listNode.toArray(new Statement[0]), null);
 		return seq;
@@ -1284,11 +1305,12 @@ public class AntlrProgramBuilder
 		}
 		else if (ctx instanceof AssignGeneralInExpContext)
 		{
+			
+			
 			AssignGeneralInExpContext agc = (AssignGeneralInExpContext) ctx;
-			ExpressionContext expCtx = agc.generalAssignExp().expression();
-			Expression exp = parseExpress(expCtx);
-			return new VarAssignExpression(exp, getBTToken(agc.generalAssignExp().Identifier().getSymbol()));
-
+			VarAssignExpression  vas  = this.parseAssingInExp(agc);
+			return vas;
+			
 		}
 		else
 		{

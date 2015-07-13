@@ -35,7 +35,7 @@ import org.beetl.core.InferContext;
  * @author joelli
  *
  */
-public class VarAssignExpression extends Expression
+public class VarAssignExpression extends Expression implements IVarIndex
 {
 
 	protected int varIndex;
@@ -78,6 +78,16 @@ public class VarAssignExpression extends Expression
 
 		}
 
+	}
+
+	@Override
+	public void setVarIndex(int index) {
+		this.varIndex = index;
+	}
+
+	@Override
+	public int getVarIndex() {
+		return varIndex;
 	}
 
 }

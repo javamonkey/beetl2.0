@@ -65,6 +65,7 @@ class HTMLTagParser
 	{ '/', '>' };
 	char[] cr = new char[]
 	{ '\n' };
+	
 
 	public HTMLTagParser(char[] cs, int index, String bindingAttr, boolean isStart)
 	{
@@ -219,6 +220,8 @@ class HTMLTagParser
 		}
 
 	}
+	
+
 
 	protected void findBindingFlag()
 	{

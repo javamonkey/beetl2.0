@@ -27,7 +27,7 @@
  */
 package org.beetl.core.statement;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -56,11 +56,11 @@ public class JsonMapExpression extends Expression
 	{
 		if (map.size() == 0)
 		{
-			return new HashMap();
+			return new LinkedHashMap();
 		}
 		else
 		{
-			Map values = new HashMap(map.size());
+			Map values = new LinkedHashMap(map.size());
 			for (Entry<String, Expression> entry : map.entrySet())
 			{
 				values.put(entry.getKey(), entry.getValue().evaluate(ctx));

@@ -32,6 +32,7 @@ import java.util.Formatter;
 
 import org.beetl.core.Context;
 import org.beetl.core.Function;
+import org.beetl.core.exception.BeetlException;
 
 /**
  * @author miaojun
@@ -59,7 +60,8 @@ public class Printf implements Function
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException(e);
+			BeetlException be = new BeetlException(BeetlException.CLIENT_IO_ERROR_ERROR);
+			throw be;
 		}
 
 		return "";

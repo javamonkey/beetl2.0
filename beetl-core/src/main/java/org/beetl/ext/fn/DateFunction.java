@@ -66,7 +66,7 @@ public class DateFunction implements Function
 					}
 					catch (ParseException e)
 					{
-						throw new RuntimeException("Parse date Error");
+						throw new RuntimeException("Parse date Error"+e.getMessage());
 					}
 				}
 

@@ -52,6 +52,9 @@ public class ALU
 	public static final int SHORT = 7;
 	public static final int CHAR = 8;
 	public static final int HS = 9;
+	
+	public static int scale = 12 ;
+	public static int round =  BigDecimal.ROUND_HALF_DOWN;
 
 	public static int getBaseType(final Object o1, final Object o2)
 	{
@@ -514,7 +517,8 @@ public class ALU
 				case HS:
 					BigDecimal b1 = getBigDecimal(o1),
 					b2 = getBigDecimal(o2);
-					return b1.divide(b2);
+					return b1.divide(b2, scale, round);
+//					return b1.divide(b2);
 				default:
 					throw UnsupportedTypeException(o1, o2, node1, node2, "/");
 			}

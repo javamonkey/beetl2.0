@@ -517,7 +517,8 @@ public class ALU
 				case HS:
 					BigDecimal b1 = getBigDecimal(o1),
 					b2 = getBigDecimal(o2);
-					return b1.divide(b2, scale, round);
+					BigDecimal b= b1.divide(b2, scale, round);
+					return b.stripTrailingZeros();
 //					return b1.divide(b2);
 				default:
 					throw UnsupportedTypeException(o1, o2, node1, node2, "/");

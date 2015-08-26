@@ -3,11 +3,11 @@
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
-		<version>7</version>
+		<version>9</version>
 	</parent>
 	<groupId>org.beetl</groupId>
 	<artifactId>beetl-parent</artifactId>
-	<version>2.2.4-SNAPSHOT</version>
+	<version>2.2.6-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<description>Bee Template Language</description>
 	<url>https://github.com/javamonkey/beetl2.0</url>

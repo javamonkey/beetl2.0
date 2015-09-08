@@ -63,11 +63,9 @@ public class CompositeResourceLoader implements ResourceLoader
 	private boolean autoCheck = false;
 
 	/**
-	 * @Title: addResourceLoader  
-	 * @Description: 添加一个资源加载器  
+	 * 添加一个资源加载器
 	 * @param matcher 匹配器
 	 * @param resourceLoader 匹配时对应的资源加载器
-	 * @since V1.0.0
 	 */
 	public void addResourceLoader(Matcher matcher, ResourceLoader resourceLoader)
 	{

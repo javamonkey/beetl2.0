@@ -28,7 +28,7 @@
 package org.beetl.core;
 
 /** 实现此接口的Tag 函数，可以提供返回值给模板，如模板里：
- * <#tag attr="xxx" ; userList,pageView />
+ * &lt;#tag attr="xxx" ; userList,pageView /&gt;
  * 则userList 为返回数组的第一个元素
  * pageView为返回素组的第二个元素
  * 

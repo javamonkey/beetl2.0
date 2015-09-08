@@ -56,8 +56,6 @@ public class BeetlSpringView extends AbstractTemplateView
 	/**
 	 * 视图使用的Beetl GroupTemplate，由ViewResolver注入，如果不设置，取上下文中唯一的GroupTemplate对象
 	 *
-	 * @param url
-	 *            模版访问地址
 	 * @param groupTemplate
 	 *            视图使用的Beetl GroupTemplate，由ViewResolver注入，如果不设置，取上下文中唯一的GroupTemplate对象
 	 */
@@ -85,7 +83,6 @@ public class BeetlSpringView extends AbstractTemplateView
 	 *             如果未设置GroupTemplate，且Spring上下文中也没有唯一的GroupTemplate bean
 	 * @throws NoUniqueBeanDefinitionException
 	 *             如果未设置GroupTemplate，且Spring上下文中有多个GroupTemplate bean
-	 * @throws Exception
 	 */
 	@Override
 	protected void renderMergedTemplateModel(Map<String, Object> model, HttpServletRequest request,

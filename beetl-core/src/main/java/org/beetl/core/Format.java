@@ -29,12 +29,12 @@ package org.beetl.core;
 
 /**
  * 格式化函数，用于模版里占位符里的变量格式化后输出，如:
- * <p/>
+ * <p></p>
  * ${user.birthday,dateFormat='yyyy-MM-dd'}
- * <p/>
+ * <p></p>
  * dateFormat为格式化函数，通过groupTemplate的registerFormat函数注册，等号后面的
  * 字符串是需要格式化的样式，如果没有，可以不写，如：
- * <p/>
+ * <p></p>
  * ${user.birthday,dateFormat},格式化函数应该支持pattern为null的情况
  * 
  * <pre>

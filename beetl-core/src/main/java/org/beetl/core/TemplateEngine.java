@@ -40,7 +40,7 @@ import org.beetl.core.statement.Program;
 public interface TemplateEngine
 {
 	/**
-	 * @param resourceId 模板id
+	 * @param resource 模板id
 	 * @param input 模板转化成脚本后的内容
 	 * @param textMap 静态文本
 	 * @param cr 模板换行符

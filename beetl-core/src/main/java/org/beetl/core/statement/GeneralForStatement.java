@@ -32,7 +32,8 @@ import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
 
 /**
- * for(var a=0;a<10;i++){}elsefor{}
+ * 
+ * for(var a=0;a &lt;10;i++){}elsefor{}
  * @author joelli
  *
  */

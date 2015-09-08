@@ -35,7 +35,7 @@ import org.beetl.core.Function;
 import org.beetl.core.exception.BeetlException;
 
 /**
- * &lt;% println("hello") %>
+ * &lt;% println("hello") % &gt;
  * @author jeolli
  *
  */

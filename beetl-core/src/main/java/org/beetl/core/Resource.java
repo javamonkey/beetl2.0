@@ -83,8 +83,8 @@ public abstract class Resource
 	/**
 	 * 得到Resource指定行数的内容，用于调试，报错等显示原有模板信息,如果获取不了 返回NUll
 	 * 
-	 * @param startLine
-	 * @param endLine
+	 * @param start
+	 * @param end
 	 * @return
 	 */
 	public String getContent(int start, int end) throws IOException

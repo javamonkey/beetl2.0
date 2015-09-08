@@ -32,7 +32,10 @@ import org.beetl.core.Function;
 
 /**
  * 在控制台输出对象，如
- * <% debug(user) %>,该方法输出该方法的行数，以及对象的toString返回的字符串:
+ * <pre>
+ * &lt;% debug(user)%&gt;,
+ * </pre>
+ * 该方法输出该方法的行数，以及对象的toString返回的字符串:
  * <pre>
  * System.out.println(paras[0].toString());	
  * </pre>

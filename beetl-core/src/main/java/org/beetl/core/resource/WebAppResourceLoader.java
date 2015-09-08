@@ -50,7 +50,7 @@ public class WebAppResourceLoader extends FileResourceLoader
 	}
 
 	/** 
-	 * @param prefix ，前缀，其后的resourceId对应的路径是prefix+"/"+resourceId
+	 * @param root 
 	 */
 	public WebAppResourceLoader(String root)
 	{

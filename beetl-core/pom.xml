@@ -4,7 +4,7 @@
 
 	<groupId>com.ibeetl</groupId>
 	<artifactId>beetl</artifactId>
-	<version>2.2.5-SNAPSHOT</version>
+	<version>2.2.5</version>
 	<packaging>jar</packaging>
 
 	<name>com.ibeetl:beetl</name>
@@ -54,6 +54,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
+			<scope>provided</scope>
 			<version>3.3.2</version>
 		</dependency>
 		<dependency>
@@ -151,7 +152,7 @@
 				<version>1.6.3</version>
 				<extensions>true</extensions>
 				<configuration>
-					<serverId>ossrh</serverId>
+					<serverId>snapshots</serverId>
 					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
 					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
@@ -173,13 +174,14 @@
 				</executions>
 			</plugin>
 
-			<!-- plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.9.1</version>
 				<configuration>
 					<charset>utf-8</charset>
 					<encoding>utf-8</encoding>
+					<quiet>true</quiet>
 				</configuration>
 				<executions>
 					<execution>
@@ -189,7 +191,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin-->
+			</plugin>
 
 
 			<plugin>
@@ -221,11 +223,11 @@
 	</build>
 	<distributionManagement>
 		<snapshotRepository>
-			<id>ossrh</id>
+			<id>snapshots</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
 		<repository>
-			<id>ossrh</id>
+			<id>releases</id>
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>

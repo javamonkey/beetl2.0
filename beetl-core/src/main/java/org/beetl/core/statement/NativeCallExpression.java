@@ -18,9 +18,8 @@ import org.beetl.core.statement.nat.NativeMethodNode;
 import org.beetl.core.statement.nat.NativeNode;
 
 /**
- * @xxx.xx()[0].xxx
- * @author joelli
- *
+
+ *@author joelli
  */
 public class NativeCallExpression extends Expression
 {

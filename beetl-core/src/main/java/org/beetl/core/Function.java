@@ -51,7 +51,7 @@ package org.beetl.core;
  * 
  * @author jeolli
  * @since 1.1
- * @see GroupTemplate.registerFunction
+ *
  * 
  * 
  */

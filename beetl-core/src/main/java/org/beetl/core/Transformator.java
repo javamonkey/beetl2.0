@@ -45,7 +45,6 @@ import org.beetl.core.statement.GrammarToken;
  * 将模版转化为beetl script的代码，此为核心代码之一.似乎有一1.x有个小bug，换行导致输出乱了
  * 
  * @author jeolli
- * @create 2011-6-19
  */
 public class Transformator
 {

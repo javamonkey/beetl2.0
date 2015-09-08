@@ -41,9 +41,11 @@ import org.beetl.core.exception.BeetlException;
 public interface ErrorHandler
 {
 
-	/** 处理错误，错误输出到os流
-	 * @param beeException
-	 * @param os
+
+	/**
+	 * 处理错误，错误输出到os流
+	 * @param beeExceptionos
+	 * @param writer
 	 */
 	public void processExcption(BeetlException beeExceptionos, Writer writer);
 

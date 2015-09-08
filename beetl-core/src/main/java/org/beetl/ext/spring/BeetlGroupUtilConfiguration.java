@@ -46,16 +46,16 @@ import org.springframework.web.context.ServletContextAware;
 /**
  * 
  * 
- *  <pre>&lt;bean id="beetlConfig" class="org.beetl.ext.spring.BeetlGroupUtilConfiguration" init-method="init">
+ *  <pre>&lt;bean id="beetlConfig" class="org.beetl.ext.spring.BeetlGroupUtilConfiguration" init-method="init" &gt;
 			
-	&lt;/bean>
+	&lt;/bean &gt;
 	
-	&lt;bean id="viewResolver" class="org.beetl.ext.spring.BeetlSpringViewResolver">
-		&lt;property name="contentType" value="text/html;charset=UTF-8"></property>
-	&lt;/bean>
+	&lt;bean id="viewResolver" class="org.beetl.ext.spring.BeetlSpringViewResolver"&gt;
+		&lt;property name="contentType" value="text/html;charset=UTF-8"&gt;&lt;/property&gt;
+	&lt;/bean&gt;
 	</pre>
  * beetl 在spring mvc 中的配置
- * <p>
+ * <p></p>
  * 用户继承此类，并实现 initOther方法,以注册自己的函数，标签等
  * @author javamonkey , Chen Rui
  *

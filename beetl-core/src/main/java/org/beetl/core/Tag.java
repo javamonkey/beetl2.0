@@ -33,19 +33,18 @@ import org.beetl.core.statement.Statement;
  * 
  * 标签函数，用于处理一段模板快
  * 
- * <p/>;
+ * <p></p>;
  * &lt;% cache(key){ %&gt;
- * <p/>
+ * <p></p>
  * ip=10.1.1.1
- * <p/>
+ * <p></p>
  * port=9090
- * <p/>
+ * <p></p>
  * &lt;%}&gt;
  * 
- * <p/>
+ * <p></p>
  * 
  * @author joeli
- * @create 2011-5-31
  */
 public abstract class Tag
 {

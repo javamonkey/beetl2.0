@@ -28,7 +28,7 @@
 package org.beetl.core.exception;
 
 /**
- * 语法解析异常，参考{@link BeetlAntlrErrorStragegy}
+ * 语法解析异常
  * @author joelli
  *
  */

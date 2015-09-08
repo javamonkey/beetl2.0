@@ -36,7 +36,6 @@ import org.beetl.core.Function;
  * 
  * @author 张健川 dlut.zjc@gmail.com,fixed by leonlau 10181606@qq.com
 
- * @create 2014-04-17
  */
 public class Range implements Function
 {

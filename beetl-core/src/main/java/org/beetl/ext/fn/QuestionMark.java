@@ -4,9 +4,10 @@ import org.beetl.core.Context;
 import org.beetl.core.Function;
 
 /**
- * ${qmark(score>60,"及格","不及格")}
+ * <pre>
+ * ${qmark(score&lt;60,"及格","不及格")}
+ * </pre>
  * @author 一颗草
- * @create 2013-6-29
  */
 public class QuestionMark implements Function
 {

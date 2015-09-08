@@ -29,7 +29,7 @@ package org.beetl.core.resource;
 
 
 /**  
- * @Description: 检查key以给定的字符串开头的匹配器  
+ * 检查key以给定的字符串开头的匹配器  
  * @author 李飞 (lifei@wellbole.com)   
  */
 public class StartsWithMatcher implements Matcher

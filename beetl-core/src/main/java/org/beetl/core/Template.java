@@ -81,7 +81,7 @@ public class Template
 	/**
 	 * 获取模板输出的文本,输出到Writer里
 	 * 
-	 * @param w
+	 * @param writer
 	 * @throws BeetlException
 	 */
 	public void renderTo(Writer writer) throws BeetlException

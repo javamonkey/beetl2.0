@@ -38,9 +38,7 @@ import org.beetl.core.exception.ErrorInfo;
 
 /**
  * 把错误信息渲染到视图 异常处理器
- * @author 龙图腾飞
- * @email longtutengfei@gmail.com
- * @date 2015年6月5日 下午12:57:03 
+ * @author 龙图腾飞,longtutengfei@gmail.com
  */
 public class WebErrorHandler extends ConsoleErrorHandler
 {

@@ -42,9 +42,14 @@ public class BCWFactory
 		return defaultFactory;
 	}
 
-	/** 获得字节码
+	
+	/**
+	 * 获得字节码
+	 * @param c
+	 * @param name
+	 * @param methodName
+	 * @param returnType
 	 * @return
-	 * @throws Exception
 	 */
 	public BCW getAttribyteBCW(Class c, String name, String methodName, Class returnType)
 	{

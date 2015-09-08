@@ -36,7 +36,6 @@ import org.beetl.core.Function;
 /**
  * 
  * @author 张健川 dlut.zjc@gmail.com
- * @create 2014-04-16
  */
 public class ParseDouble implements Function
 {

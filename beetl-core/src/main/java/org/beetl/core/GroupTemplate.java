@@ -312,7 +312,7 @@ public class GroupTemplate
 	/**
 	 * 使用loader 和 默认的模板引擎配置来初始化GroupTempalte
 	 * 
-	 * @param loader
+	 * @param classLoader
 	 *            资源加载器
 	 * 
 	 */
@@ -745,7 +745,7 @@ public class GroupTemplate
 	}
 
 	/**
-	 * 注册一个自定义格式化函数，参考{@link org.bee.tl.ext.DateFormat}
+	 * 注册一个自定义格式化函数
 	 * 
 	 * @param name
 	 * @param format

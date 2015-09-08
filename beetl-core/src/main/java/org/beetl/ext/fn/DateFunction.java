@@ -37,7 +37,9 @@ import org.beetl.core.Function;
 /**
  * 日期函数，如<p>
  * today is ${date()},或者<p>
- * <% var time = date('2011-1-1','yyyy-MM-dd')  %>
+ * <pre>
+ * &lt;% var time = date('2011-1-1','yyyy-MM-dd')  %&gt;
+ * </pre>
  * <p>
  * time对象是java.util.Date对象  
  * @author joelli

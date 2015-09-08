@@ -34,7 +34,7 @@ import java.util.Map;
 import org.beetl.core.statement.GrammarToken;
 
 /**
- * 将{@link BeetlException)表达成ErrorInfo
+ * 将BeetlException表达成ErrorInfo
  * @author joelli
  *
  */

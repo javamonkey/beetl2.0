@@ -66,7 +66,7 @@ import org.beetl.core.Template;
  * </pre>
  * 
  * 如果向布局传入参数，则可以使用这种格式
- * <p/>
+ * <p></p>
  * layout(path,{'paraName1':value1,'paraName2',value2})
  * 
  * 如果变量layoutContent与模板有冲突，可以作为第三个参数传入到layout变量里，如：

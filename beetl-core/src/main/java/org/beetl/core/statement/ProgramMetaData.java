@@ -93,7 +93,10 @@ public class ProgramMetaData implements java.io.Serializable
 	public Set<String> dynamicObjectSet = new HashSet<String>(0);
 
 	/**
-	 * @type(User cc,List<User> list)  对应的描述
+	 * <pre>
+	 * type(User cc,List &lt;User &gt; list)  
+	 * </pre>
+	 * 对应的描述
 	 */
 	public Map<String, Type> globalType = new HashMap<String, Type>(0);
 
@@ -128,7 +131,7 @@ public class ProgramMetaData implements java.io.Serializable
 	/**
 	 * 将模板全局变量转为数组
 	 * 
-	 * @param map
+	 * @param ctx
 	 */
 	protected void putGlobaToArray(Context ctx)
 	{

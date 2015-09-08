@@ -35,7 +35,6 @@ import java.util.List;
 /**
  * 
  * @author 张健川  dlut.zjc@gmail.com
- * @create 2014年4月18日 
  */
 public class ArrayUtil
 {

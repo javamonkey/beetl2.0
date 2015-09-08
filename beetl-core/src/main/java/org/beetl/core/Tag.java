@@ -33,14 +33,14 @@ import org.beetl.core.statement.Statement;
  * 
  * 标签函数，用于处理一段模板快
  * 
- * <p/>
- * &lt;% cache(key){ %>
+ * <p/>;
+ * &lt;% cache(key){ %&gt;
  * <p/>
  * ip=10.1.1.1
  * <p/>
  * port=9090
  * <p/>
- * &lt;%}%>
+ * &lt;%}&gt;
  * 
  * <p/>
  * 

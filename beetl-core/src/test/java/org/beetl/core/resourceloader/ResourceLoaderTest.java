@@ -7,6 +7,7 @@ import org.beetl.core.BasicTestCase;
 import org.beetl.core.Template;
 import org.beetl.core.resource.ClasspathResourceLoader;
 import org.beetl.core.resource.FileResourceLoader;
+import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
 public class ResourceLoaderTest extends BasicTestCase
@@ -18,11 +19,11 @@ public class ResourceLoaderTest extends BasicTestCase
 
 		FileResourceLoader f = new FileResourceLoader();
 		boolean exist = f.exist("/build.xml");
-		this.assertTrue(exist);
+		AssertJUnit.assertTrue(exist);
 
 		ClasspathResourceLoader cp = new ClasspathResourceLoader();
 		exist = cp.exist("/template/resourceloader/cp.txt");
-		this.assertTrue(exist);
+		AssertJUnit.assertTrue(exist);
 	}
 
 	@Test
@@ -34,7 +35,7 @@ public class ResourceLoaderTest extends BasicTestCase
 		Template t = gt.getTemplate("db:1", strLoader);
 		t.binding("a", "abc");
 		String result = t.render();
-		this.assertEquals("abc", result);
+		AssertJUnit.assertEquals("abc", result);
 
 	}
 
@@ -46,7 +47,7 @@ public class ResourceLoaderTest extends BasicTestCase
 		MapResourceLoader strLoader = new MapResourceLoader(data);
 		Template t = gt.getTemplate("db:2", strLoader);
 		String result = t.render();
-		this.assertEquals("hello", result);
+		AssertJUnit.assertEquals("hello", result);
 
 	}
 
@@ -60,7 +61,7 @@ public class ResourceLoaderTest extends BasicTestCase
 		String result = t.render();
 		gt.removeTemplate("db:2");
 
-		this.assertEquals(false, gt.hasTemplate("db:2"));
+		AssertJUnit.assertEquals(false, gt.hasTemplate("db:2"));
 
 	}
 

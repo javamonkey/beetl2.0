@@ -33,7 +33,7 @@ import org.beetl.core.InferContext;
 import org.beetl.core.misc.ALU;
 
 /**
- *  a>b,a>=b,a==b,a>b,a>=b
+ *  a&gt; b,a&gt;=b,a==b,a>b,a&gt;=b
  * @author joelli
  *
  */

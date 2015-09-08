@@ -11,6 +11,7 @@ import org.beetl.core.resource.AllowAllMatcher;
 import org.beetl.core.resource.CompositeResourceLoader;
 import org.beetl.core.resource.FileResourceLoader;
 import org.beetl.core.resource.StartsWithMatcher;
+import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
 public class CompositeResourceLoaderTest extends BasicTestCase
@@ -41,7 +42,7 @@ public class CompositeResourceLoaderTest extends BasicTestCase
 		t.binding("a", "hello");
 		String result = t.render();
 		;
-		this.assertEquals("hellohello--file2:hello--db=hello", result);
+		AssertJUnit.assertEquals("hellohello--file2:hello--db=hello", result);
 
 	}
 

@@ -33,7 +33,7 @@ import org.beetl.core.Context;
 import org.beetl.core.Function;
 
 /**
- * &lt;% hasSession() %>
+ * &lt;% hasSession() % &gt;
  * @author jeolli
  *
  */

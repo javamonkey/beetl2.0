@@ -63,8 +63,7 @@ class HTMLTagParser
 	static char ENT_TAG = '>';
 	static char[] ENT_TAGS = new char[]
 	{ '/', '>' };
-	char[] cr = new char[]
-	{ '\n' };
+//	char[] cr = new char[]	{ '\n' };
 	
 
 	public HTMLTagParser(char[] cs, int index, String bindingAttr, boolean isStart)
@@ -146,6 +145,16 @@ class HTMLTagParser
 			return false;
 		}
 	}
+	
+	protected boolean matchCR(){
+		
+		if(index<cs.length){
+			if (cs[index ] =='\r'||cs[index ] =='\n')
+				return true;
+		}
+		return false ;
+	
+	}
 
 	public boolean match(char[] expected)
 	{
@@ -167,7 +176,7 @@ class HTMLTagParser
 		findAttr();
 		while (status != -1)
 		{
-			if (match(' ') || match(cr))
+			if (match(' ') || matchCR())
 			{
 				findAttr();
 			}

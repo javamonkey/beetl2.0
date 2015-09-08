@@ -23,10 +23,16 @@ public class Test
 				cfg.setStatementStart("<%");
 				cfg.setStatementEnd("%>");
 				gt.registerFunctionPackage("test", new TestUser(""));
-				for (int i = 0; i < 1; i++)
+				gt.registerTag("table", TestGeneralVarTagBinding.class);
+				for (int i = 0; i < 2; i++)
 				{
-		
+					
 					Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
+					if(i==0){
+						t.binding("user", new TestUser(""));
+					}else{
+						t.binding("user", new Object());
+					}
 					
 					ByteArrayOutputStream bs = new ByteArrayOutputStream();
 					try

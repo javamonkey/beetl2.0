@@ -30,6 +30,7 @@ package org.beetl.core.statement;
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
+import org.beetl.core.misc.BeetlUtil;
 import org.beetl.core.om.AttributeAccess;
 
 /** user.name
@@ -56,7 +57,12 @@ public class VarAttribute extends Expression
 
 	public Object evaluate(Context ctx, Object o)
 	{
-		return aa.value(o, name);
+		try{
+			return aa.value(o, name);
+		}catch(ClassCastException ex){
+			throw BeetlUtil.throwCastException(ex,ctx.gt);
+		}
+		
 	}
 
 	public void setAA(AttributeAccess aa)

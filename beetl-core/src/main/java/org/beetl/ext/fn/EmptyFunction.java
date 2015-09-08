@@ -33,6 +33,7 @@ import java.util.Map;
 
 import org.beetl.core.Context;
 import org.beetl.core.Function;
+import org.beetl.core.misc.PrimitiveArrayUtil;
 
 /**
  * 判断全局变量是否为“空”，下列情况属于为空·的情况
@@ -49,6 +50,7 @@ import org.beetl.core.Function;
  * @author joelli
  *
  */
+@Deprecated
 public class EmptyFunction implements Function
 {
 
@@ -90,9 +92,14 @@ public class EmptyFunction implements Function
 					}
 					else if (result.getClass().isArray())
 					{
-						if (((Object[]) result).length != 0)
+						Class ct = result.getClass().getComponentType();
+						if (ct.isPrimitive())
 						{
-							return false;
+							return PrimitiveArrayUtil.getSize(result)==0;
+						}
+						else
+						{
+							return ((Object[]) result).length==0;
 						}
 					}
 					else

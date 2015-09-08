@@ -83,7 +83,7 @@ public class Transformator
 	String VCR = "<$__VCR>>";
 	String lineSeparator = System.getProperty("line.separator");
 	//回车换行
-	char[] lineSeparatorCharArray = null;
+//	char[] lineSeparatorCharArray = null;
 	// 设置最多max-line行合并输出，现在不支持
 	static int MAX_LINE = 78;
 	// 转义符号
@@ -174,10 +174,7 @@ public class Transformator
 		cs = temp.toString().toCharArray();
 		// 找到回车换行符号
 		findCR();
-		if (this.endStatement == null)
-		{
-			this.endStatement = lineSeparator;
-		}
+
 		checkAppendCR();
 		parser();
 		if (this.isSupportHtmlTag && this.htmlTagStack.size() != 0)
@@ -198,32 +195,7 @@ public class Transformator
 		orginal.close();
 		return new StringReader(sb.toString());
 	}
-
-	public Reader transform(String str) throws IOException, HTMLTagParserException
-	{
-		cs = str.toCharArray();
-		// 找到回车换行符号
-		findCR();
-		if (this.endStatement == null)
-		{
-			this.endStatement = this.lineSeparator;
-		}
-		checkAppendCR();
-		parser();
-		if (this.isSupportHtmlTag && this.htmlTagStack.size() != 0)
-		{
-			String tagName = (String) htmlTagStack.peek();
-			GrammarToken token = GrammarToken.createToken(tagName, this.totalLineCount + 1);
-
-			HTMLTagParserException ex = new HTMLTagParserException("解析html tag 标签出错,未找到匹配结束标签 " + tagName);
-			ex.pushToken(token);
-			ex.line = totalLineCount + 1;
-			this.clear();
-			throw ex;
-		}
-		return new StringReader(sb.toString());
-	}
-
+	
 	private void findCR()
 	{
 
@@ -243,14 +215,32 @@ public class Transformator
 					}
 				}
 				lineSeparator = cr.toString();
-				this.lineSeparatorCharArray = lineSeparator.toCharArray();
+			
 				// this.textMap.put("__VCR", lineSeparator);
 				return;
 			}
 		}
-		//
+	}
+	public Reader transform(String str) throws IOException, HTMLTagParserException
+	{
+		cs = str.toCharArray();
+		// 找到回车换行符号
+		findCR();
+	
+		checkAppendCR();
+		parser();
+		if (this.isSupportHtmlTag && this.htmlTagStack.size() != 0)
+		{
+			String tagName = (String) htmlTagStack.peek();
+			GrammarToken token = GrammarToken.createToken(tagName, this.totalLineCount + 1);
 
-		this.lineSeparatorCharArray = lineSeparator.toCharArray();
+			HTMLTagParserException ex = new HTMLTagParserException("解析html tag 标签出错,未找到匹配结束标签 " + tagName);
+			ex.pushToken(token);
+			ex.line = totalLineCount + 1;
+			this.clear();
+			throw ex;
+		}
+		return new StringReader(sb.toString());
 	}
 
 	public void parser() throws HTMLTagParserException
@@ -299,7 +289,7 @@ public class Transformator
 		{
 			StringBuilder script = new StringBuilder();
 			HTMLTagParser html = new HTMLTagParser(cs, index, htmlTagBindingAttribute, true);
-			html.cr = this.lineSeparatorCharArray;
+		
 			html.parser();
 			if (html.hasVarBinding)
 			{
@@ -488,9 +478,9 @@ public class Transformator
 	{
 		index = index + this.startStatement.length();
 		lineStatus.setStatment();
-		while (index <= cs.length)
+		while (index < cs.length)
 		{
-			if (match(this.endStatement))
+			if (endStatement!=null&&match(this.endStatement))
 			{
 
 				// 如果前面一个是转义符
@@ -530,10 +520,8 @@ public class Transformator
 
 					totalLineCount++;
 					sb.append(this.lineSeparator);
-					if (this.lineSeparator.length() == 2)
-					{
-						index++;
-					}
+					skipCR(ch);
+				
 					if (this.lineStatus.onlyStatment())
 					{
 						// 只有控制语句，则如果文本变量都是空格，这些文本变量则认为是格式化的，非输出语句
@@ -541,6 +529,15 @@ public class Transformator
 						reforamtStatmentLine();
 						lineStatus.reset();
 					}
+					
+					//如果回车符号还是定界符结束符号
+					if (this.endStatement==null)
+					{
+						status = 1;
+						return;
+					
+					}
+				
 
 				}
 				else
@@ -658,11 +655,7 @@ public class Transformator
 				if (ch == '\r' || ch == '\n')
 				{
 					totalLineCount++;
-					if (this.lineSeparator.length() == 2)
-					{
-						index++;
-					}
-
+					this.skipCR(ch);
 					if (!hasLetter && this.lineStatus.onlyText())
 					{
 						// 多行，直到碰到占位符号才停止
@@ -764,6 +757,17 @@ public class Transformator
 		this.sb.append(textVarName);
 		str.setLength(0);
 
+	}
+	
+	private void skipCR(char c){
+		if(index < cs.length){
+			char o = cs[index];
+			if(c=='\r'&&o=='\n'){
+				index++;
+			}else if(c=='\n'&&o=='\r'){
+				index++;
+			}
+		}
 	}
 
 	private void createMutipleLineTextNode(StringBuilder str)
@@ -874,8 +878,10 @@ public class Transformator
 
 	private void checkAppendCR()
 	{
-
-		if (this.endStatement.indexOf("\n") != -1)
+		if(this.endStatement==null){
+			this.appendCR = true;
+		}
+		else if (this.endStatement.indexOf("\n") != -1)
 		{
 			this.appendCR = true;
 		}
@@ -948,13 +954,13 @@ public class Transformator
 	public static void main(String[] args)
 	{
 		char c = '\\';
-		Transformator p = new Transformator("${", "}", "<%", "%>");
+		Transformator p = new Transformator("${", "}", "@", null);
 		p.enableHtmlTagSupport("<ns:", "</ns:", "var");
 		try
 		{
 
 			// String str = "   #:var u='hello';:#  \n  $u$";
-			String str = "<ns:a tt='a${bc}' cc='bb${{tt:12,key:1232\\}}/a/b' var='c,b'></ns:a>";
+			String str = "@var a=1;\n@var b=1;";
 
 			BufferedReader reader = new BufferedReader(p.transform(str));
 			String line = null;

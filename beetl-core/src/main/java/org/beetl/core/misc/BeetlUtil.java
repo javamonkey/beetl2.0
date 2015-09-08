@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.beetl.core.ByteWriter;
+import org.beetl.core.GroupTemplate;
 import org.beetl.core.io.ByteWriter_Byte;
 import org.beetl.core.io.ByteWriter_Char;
 
@@ -331,6 +332,18 @@ public class BeetlUtil
 		else
 		{
 			return msg;
+		}
+	}
+	
+	/*优化引擎会假定传给模板的变量是同一类型（同一个class或者具有同样接口或者父类,如果不是这样，会导致ClassCastException*/
+	public static  RuntimeException throwCastException(ClassCastException ex,GroupTemplate gt){
+		String clsName = gt.getConf().getEngine();
+		if(clsName.equals("org.beetl.core.engine.DefaultTemplateEngine")){
+			return ex;
+		}else{
+			String detail = ex.getMessage();
+			detail = detail + "如果采用优化引擎，会假定传给模板的变量是同一类型,如果不是，请使用directive dynamic 变量；来避免";
+			throw new RuntimeException(detail,ex);
 		}
 	}
 }

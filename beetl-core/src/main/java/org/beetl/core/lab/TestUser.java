@@ -71,7 +71,8 @@ public class TestUser
 
 	public int getAge()
 	{
-		return age;
+		throw new ClassCastException();
+		//		return age;
 	}
 
 	public void setAge(int age)

@@ -11,6 +11,7 @@ import org.beetl.core.Event;
 import org.beetl.core.InferContext;
 import org.beetl.core.Listener;
 import org.beetl.core.exception.BeetlException;
+import org.beetl.core.misc.BeetlUtil;
 import org.beetl.core.misc.NumberUtil;
 import org.beetl.core.misc.PrimitiveArrayUtil;
 import org.beetl.core.om.AttributeAccess;
@@ -221,7 +222,12 @@ public class VarAttributeNodeListener implements Listener
 
 		public Object evaluate(Context ctx, Object o)
 		{
-			return aa.value(o, name);
+			try{
+				return aa.value(o, name);
+			}catch(ClassCastException ex){
+				throw BeetlUtil.throwCastException(ex, ctx.gt);
+			}
+			
 		}
 
 		@Override

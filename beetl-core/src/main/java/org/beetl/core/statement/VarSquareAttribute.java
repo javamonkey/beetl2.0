@@ -29,6 +29,7 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
+import org.beetl.core.misc.BeetlUtil;
 
 /**
  * a.[]
@@ -54,8 +55,14 @@ public class VarSquareAttribute extends VarAttribute
 
 	public Object evaluate(Context ctx, Object o)
 	{
-		Object value = exp.evaluate(ctx);
-		return aa.value(o, value);
+		
+		try{
+			Object value = exp.evaluate(ctx);
+			return aa.value(o, value);
+		}catch(ClassCastException ex){
+			throw BeetlUtil.throwCastException(ex, ctx.gt);
+		}
+		
 	}
 
 	public void infer(InferContext inferCtx)

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.beetl.core.resource.MapResourceLoader;
+import org.nutz.lang.util.NutMap;
 import org.nutz.mvc.View;
 
 import junit.framework.TestCase;
@@ -40,7 +41,7 @@ public class BeetlViewMakerTest extends TestCase {
 
     public void test_view_render() throws Throwable {
         // 存入模板
-        loader.put("/hello", "${obj.array.~size},${obj.array[0]}");
+        loader.put("/hello", "${obj.array.~size},${obj.array[0]},${json2(obj.user)}");
         
         // 创建视图
         View view = maker.make(null, "beetl", "/hello");
@@ -48,6 +49,7 @@ public class BeetlViewMakerTest extends TestCase {
         // 准备好返回值
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("array", new String[]{"http://wendal.net"});
+        map.put("user", new NutMap().setv("name", "wendal"));
         
         // 用于接收视图渲染的结果
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -60,7 +62,7 @@ public class BeetlViewMakerTest extends TestCase {
         view.render(req, resp, map);
         
         // 对比结果
-        assertEquals("1,http://wendal.net", new String(out.toByteArray()));
+        assertEquals("1,http://wendal.net,{\"name\":\"wendal\"}", new String(out.toByteArray()));
     }
 
     protected HttpServletResponse mockResp(final OutputStream out) throws IOException {

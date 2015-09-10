@@ -73,11 +73,16 @@ public class BeetlViewMaker implements ViewMaker {
             cfg.setDirectByteOutput(true);
         }
         if (!prop.contains(Configuration.ERROR_HANDLER)) {
+            log.debug("no custom ERROR_HANDLER found , select LogErrorHandler");
             // 没有自定义ERROR_HANDLER,用定制的
             cfg.setErrorHandlerClass(LogErrorHandler.class.getName());
         }
         groupTemplate = new GroupTemplate(cfg);
         render = new WebRender(groupTemplate);
+        if (groupTemplate.getFunction("json2") == null) {
+            log.debug("register NutJsonFunction as json2");
+            groupTemplate.registerFunction("json2", new NutJsonFunction());
+        }
         log.debug("beetl init complete");
     }
 

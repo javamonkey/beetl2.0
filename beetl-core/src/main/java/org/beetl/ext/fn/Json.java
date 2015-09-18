@@ -48,7 +48,7 @@ public class Json implements Function
 
 		catch (Exception e)
 		{
-			throw new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "BTJsonTool 序列化对象出错");
+			throw new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "BTJsonTool 序列化对象出错",e);
 
 		}
 		return json;

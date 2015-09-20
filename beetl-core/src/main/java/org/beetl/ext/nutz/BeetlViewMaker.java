@@ -1,73 +1,94 @@
 package org.beetl.ext.nutz;
 
 import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
+import java.util.Properties;
 
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.resource.WebAppResourceLoader;
 import org.beetl.ext.web.WebRender;
 import org.nutz.ioc.Ioc;
+import org.nutz.lang.Streams;
+import org.nutz.log.Log;
+import org.nutz.log.Logs;
 import org.nutz.mvc.View;
 import org.nutz.mvc.ViewMaker;
-import org.nutz.mvc.view.AbstractPathView;
 
 /**
- * Beelt for Nutz
+ * Beelt for Nutz<p/>
+ * <b>使用方法</b><p/>
+ * <code>
+ * @Views(BeetlViewMaker.class) <p/>
  * 
+ * @Ok("beetl:/hello.html")
+ * </code><p/>
+ * <b>本实现的默认配置</b><p/>
+ * <code>
+ * RESOURCE_LOADER=org.beetl.core.resource.WebAppResourceLoader </p>
+ * DIRECT_BYTE_OUTPUT=true <p/>
+ * ERROR_HANDLER=org.beetl.ext.nutz.LogErrorHandler <p/>
+ * </code><p/>
  * @author wendal,joelli
  * 
  */
-public class BeetlViewMaker implements ViewMaker
-{
+public class BeetlViewMaker implements ViewMaker {
+    
+    private static final Log log = Logs.get();
 
-	public GroupTemplate groupTemplate;
-	private boolean inited;
+    public GroupTemplate groupTemplate;
+    
+    public WebRender render;
+    
+    public BeetlViewMaker() throws IOException {
+        init();
+    }
+    
+    public void init() throws IOException {
+        log.debug("beetl init ....");
+        Configuration cfg = Configuration.defaultConfiguration();
+        Properties prop = new Properties();
+        InputStream ins = Configuration.class.getResourceAsStream("/beetl.properties");
+        if (ins != null) {
+            log.debug("found beetl.properties, loading ...");
+            try {
+                prop.load(ins);
+            }
+            finally {
+                Streams.safeClose(ins);
+            }
+        }
+        if (!prop.contains(Configuration.RESOURCE_LOADER)) {
+            // 默认选用WebAppResourceLoader,除非用户自定义了RESOURCE_LOADER
+            log.debug("no custom RESOURCE_LOADER found , select WebAppResourceLoader");
+            cfg.setResourceLoader(WebAppResourceLoader.class.getName());
+        }
+        if (!prop.contains(Configuration.DIRECT_BYTE_OUTPUT)) {
+            // 默认启用DIRECT_BYTE_OUTPUT,除非用户自定义, 一般不会.
+            log.debug("no custom DIRECT_BYTE_OUTPUT found , set to true");
+            // 当DIRECT_BYTE_OUTPUT为真时, beetl渲染会通过getOutputStream获取输出流
+            // 而BeetlView会使用LazyResponseWrapper代理getOutputStream方法
+            // 从而实现在模板输出之前,避免真正调用getOutputStream
+            // 这样@Fail视图就能正常工作了
+            cfg.setDirectByteOutput(true);
+        }
+        if (!prop.contains(Configuration.ERROR_HANDLER)) {
+            // 没有自定义ERROR_HANDLER,用定制的
+            cfg.setErrorHandlerClass(LogErrorHandler.class.getName());
+        }
+        groupTemplate = new GroupTemplate(cfg);
+        render = new WebRender(groupTemplate);
+        log.debug("beetl init complete");
+    }
 
-	public void init()
-	{
-		if (inited)
-			return;
+    public void depose() {
+        if (groupTemplate != null)
+            groupTemplate.close();
+    }
 
-		Configuration cfg;
-		try
-		{
-			cfg = Configuration.defaultConfiguration();
-			WebAppResourceLoader resourceLoader = new WebAppResourceLoader();
-			groupTemplate = new GroupTemplate(resourceLoader, cfg);
-			inited = true;
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException("加载GroupTemplate失败", e);
-		}
-
-	}
-
-	public void depose()
-	{
-		if (groupTemplate != null)
-			groupTemplate.close();
-	}
-
-	public View make(Ioc ioc, String type, String value)
-	{
-		if (!inited)
-			init();
-		if ("beetl".equals(type))
-			return new AbstractPathView(value) {
-				@SuppressWarnings("unchecked")
-				public void render(HttpServletRequest req, HttpServletResponse resp, Object obj) throws Throwable
-				{
-					req.setAttribute("obj", obj); // 把方法的返回值放进req里面
-					String child = evalPath(req, obj);
-					WebRender render = new WebRender(groupTemplate);
-					render.render(child, req, resp);
-
-				}
-			};
-		return null;
-	}
+    public View make(Ioc ioc, String type, String value) {
+        if ("beetl".equals(type))
+            return new BeetlView(render, value);
+        return null;
+    }
 }

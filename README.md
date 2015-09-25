@@ -5,3 +5,11 @@ http://ibeetl.com/
 - js like script and engines
 - 500+ unit test
 - 50+ performance test
+
+Maven 地址
+
+	<dependency>
+	    <groupId>com.ibeetl</groupId>
+	    <artifactId>beetl</artifactId>
+	    <version>2.2.5</version>
+	</dependency>

@@ -27,6 +27,8 @@
  */
 package org.beetl.core.om;
 
+import java.lang.reflect.Method;
+
 /**
  * 传入对象，获取对象对应的属性值 {@link PojoMethodInvoker}
  * @author joelli
@@ -44,4 +46,6 @@ public interface MethodInvoker
 	 * @return 改调用预期的返回类型
 	 */
 	public Class getReturnType();
+	
+	public Method getMethod();
 }

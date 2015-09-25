@@ -40,7 +40,7 @@ import org.beetl.core.exception.BeetlException;
 public class PojoMethodInvoker implements MethodInvoker
 {
 
-	Method method;
+	public Method method;
 
 	/**
 	 * @param m 目标调用方法，应该是一个无参数的get方法
@@ -83,6 +83,11 @@ public class PojoMethodInvoker implements MethodInvoker
 	public Class getReturnType()
 	{
 		return method.getReturnType();
+	}
+
+	@Override
+	public Method getMethod() {
+		return method;
 	}
 
 }

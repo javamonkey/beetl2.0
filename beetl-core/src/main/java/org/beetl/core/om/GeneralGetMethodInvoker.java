@@ -34,7 +34,7 @@ import org.beetl.core.exception.BeetlException;
 
 public class GeneralGetMethodInvoker implements MethodInvoker
 {
-	Method method;
+	 Method method;
 	String name;
 
 	public GeneralGetMethodInvoker(Method m, String name)
@@ -76,5 +76,10 @@ public class GeneralGetMethodInvoker implements MethodInvoker
 	public Class getReturnType()
 	{
 		return method.getReturnType();
+	}
+
+	@Override
+	public Method getMethod() {
+		return method;
 	}
 }

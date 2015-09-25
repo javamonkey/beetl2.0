@@ -102,64 +102,62 @@ public class AttributeAccessFactory
 		FindResult pojoResult = findCommonInterfaceOrClass(c, name);
 		if (pojoResult != null)
 		{
-			className = pojoResult.c + "_" + name;
-			aa = pojoCache.get(className);
-			if (aa != null)
-			{
-				return aa;
-			}
-			else
-			{
-				synchronized (pojoResult.c)
+			if(!pojoResult.realMethodName.equals("get")){
+				className = pojoResult.c + "_" + name;
+				aa = pojoCache.get(className);
+				if (aa != null)
 				{
-					aa = pojoCache.get(className);
-					if (aa != null)
-						return aa;
-					aa = AttributeCodeGen.createAAClass(pojoResult.c, name, pojoResult.realMethodName,
-							pojoResult.returnType);
-
-					pojoCache.put(className, aa);
 					return aa;
 				}
-
-			}
-
-		}
-		else
-		{
-			// General Get
-			className = c + "_get";
-			aa = generalGetCache.get(className);
-			if (aa != null)
-			{
-				return aa;
-			}
-			else
-			{
-
-				try
+				else
 				{
-					Method m = c.getMethod("get", new Class[]
-					{ String.class });
-					synchronized (c)
+					synchronized (pojoResult.c)
 					{
-						aa = generalGetCache.get(className);
+						aa = pojoCache.get(className);
 						if (aa != null)
 							return aa;
-						aa = AttributeCodeGen.createAAClass(c, "get", "get", m.getReturnType(), String.class);
-						generalGetCache.put(className, aa);
+						aa = AttributeCodeGen.createAAClass(pojoResult.c, name, pojoResult.realMethodName,
+								pojoResult.returnType);
+
+						pojoCache.put(className, aa);
 						return aa;
 					}
 
 				}
-				catch (Exception e)
+			}else{
+				// General Get
+				className = c + "_get";
+				aa = generalGetCache.get(className);
+				if (aa != null)
 				{
-					// 还是没有找到，抛错吧
-					BeetlException be = new BeetlException(BeetlException.ATTRIBUTE_NOT_FOUND, name);
-					throw be;
-				}
+					return aa;
+				}else
+				{
+						
+						synchronized (c)
+						{
+							aa = generalGetCache.get(className);
+							if (aa != null)
+								return aa;
+							
+							aa = AttributeCodeGen.createAAClass(c, "get", "get", pojoResult.returnType, pojoResult.parameter);
+							generalGetCache.put(className, aa);
+							return aa;
+						}
 
-			}
+					}
+				
+				}
+		
+			
+
+		}
+		else
+		{
+			
+			// 还是没有找到，抛错吧
+			BeetlException be = new BeetlException(BeetlException.ATTRIBUTE_NOT_FOUND, attrExp);
+			throw be;
 
 		}
 
@@ -167,13 +165,24 @@ public class AttributeAccessFactory
 
 	public static FindResult findCommonInterfaceOrClass(Class c, String name)
 	{
+		Method m = ObjectUtil.getInvokder(c, name).getMethod();
+		String methodName = m.getName();
+		if(methodName.equals("get")){
+			FindResult findResult  = new FindResult();
+			findResult.parameter = m.getParameterTypes()[0];
+			findResult.realMethodName="get";
+			findResult.c = c ;
+			findResult.returnType = m.getReturnType();
+			return findResult;
+		}else{
+			FindResult findResult = findResult(c, methodName);
+			return findResult;
+		}
 
-		FindResult findResult = findResult(c, ObjectUtil.getGetMethod(name), ObjectUtil.getIsMethod(name));
-		return findResult;
 
 	}
 
-	private static FindResult findResult(Class c, String getName, String isName)
+	private static FindResult findResult(Class c, String getName)
 	{
 		FindResult result = null;
 		Method[] methods = c.getMethods();
@@ -189,11 +198,7 @@ public class AttributeAccessFactory
 				findMethod = m;
 				break;
 			}
-			else if (name.equals(isName))
-			{
-				findMethod = m;
-				break;
-			}
+		
 		}
 		// 判断父接口
 		Class[] interfaces = c.getInterfaces();
@@ -208,7 +213,7 @@ public class AttributeAccessFactory
 					continue;
 				}
 
-				result = findResult(inc, getName, isName);
+				result = findResult(inc, getName);
 				if (result != null)
 				{
 					resetFindResult(findMethod, result);
@@ -221,7 +226,7 @@ public class AttributeAccessFactory
 		Class parent = c.getSuperclass();
 		if (parent != null && Modifier.isPublic(parent.getModifiers()) && !parent.getName().startsWith("java."))
 		{
-			result = findResult(parent, getName, isName);
+			result = findResult(parent, getName);
 			if (result != null)
 			{
 				resetFindResult(findMethod, result);
@@ -236,6 +241,9 @@ public class AttributeAccessFactory
 			result.realMethodName = findMethod.getName();
 			result.c = c;
 			result.returnType = findMethod.getReturnType();
+			Class[] para = findMethod.getParameterTypes();
+			result.parameter = para.length==0?null:para[1];
+			
 			return result;
 		}
 		else
@@ -260,9 +268,10 @@ public class AttributeAccessFactory
 
 	static class FindResult
 	{
-
+		
 		String realMethodName;
 		Class c;
 		Class returnType;
+		Class parameter;
 	}
 }

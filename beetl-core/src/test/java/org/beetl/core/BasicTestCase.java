@@ -5,9 +5,11 @@ import java.io.Reader;
 
 import org.beetl.core.resource.ClasspathResourceLoader;
 
+import junit.framework.TestCase;
 
 
-public class BasicTestCase {
+
+public class BasicTestCase extends TestCase {
 	// 日志对象
 
 	private static ClasspathResourceLoader rs;

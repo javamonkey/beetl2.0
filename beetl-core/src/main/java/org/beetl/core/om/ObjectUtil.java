@@ -160,27 +160,63 @@ public class ObjectUtil
 		if (method != null)
 		{
 			invoker = new PojoMethodInvoker(method);
+			
 		}
-		else
-		{
-			methodName = getIsMethod(name);
-			method = getGetMethod(c, methodName, null);
+		
+		//try is 
+		if(invoker==null){			
+			if(name.startsWith("is")){
+				methodName = name;
+				method = getGetMethod(c, methodName, null);
+				if(method!=null){
+					invoker = new PojoMethodInvoker(method);
+				}
+			}else{
+				methodName = getIsMethod(name);
+				method = getGetMethod(c, methodName, null);
+				if(method!=null){
+					invoker = new PojoMethodInvoker(method);
+				}
+			}
+	
+		}
+		
+		//bug fix:java bean 规范  cName--> getcName()
+		if(invoker==null){
+			if(name.length()>1&&(name.charAt(1)>'A'&&name.charAt(1)<'Z')){				
+				methodName = "get"+name;
+				method = getGetMethod(c, methodName, null);
+				if(method!=null){
+					invoker = new PojoMethodInvoker(method);
+				}else{
+					methodName = "is"+name;
+					method = getGetMethod(c, methodName, null);
+					if(method!=null){
+						invoker = new PojoMethodInvoker(method);
+					}
+				}
+				
+			}
+		}
+		
+		// general get,string objct allow
+		if(invoker==null){
+			method = getGetMethod(c, "get", new Class[]
+					{ Object.class });
 			if (method != null)
 			{
-				invoker = new PojoMethodInvoker(method);
-			}
-			else
-			{
+				invoker = new GeneralGetMethodInvoker(method, name);
+			}else{
 				method = getGetMethod(c, "get", new Class[]
-				{ String.class });
-				if (method != null)
-				{
+						{ String.class });
+				if(method!=null){
 					invoker = new GeneralGetMethodInvoker(method, name);
 				}
 			}
-
+			
 		}
-
+		
+		
 		if (invoker != null)
 		{
 			methodInvokerCache.put(key, invoker);

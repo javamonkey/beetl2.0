@@ -173,7 +173,7 @@ TAG.include= org.beetl.ext.tag.IncludeTag
 
 第6行指定IO输出模式，默认是FALSE,即通常的字符输出，在考虑高性能情况下，可以设置成true。详细请参考高级用法
 
-第8,9行指定了支持HTML标签，且符号为#（只能用一个符号标示），默认配置下，模板引擎识别<#tag ></#tag>这样的类似html标签，并能调用相应的标签函数或者模板文件。
+第8,9行指定了支持HTML标签，且符号为#,默认配置下，模板引擎识别<#tag ></#tag>这样的类似html标签，并能调用相应的标签函数或者模板文件。你也可以指定别的符号，如bg: 则识别<bg:
 
 第10行 指定如果标签属性有var，则认为是需要绑定变量给模板的标签函数
 
@@ -203,6 +203,8 @@ TAG.include= org.beetl.ext.tag.IncludeTag
 
 第40行注册了一个include标签函数
 
+
+*************************************************
 模板开发者可以创建一个beetl.properties的配置文件，此时，该配置文件将覆盖默认的配置文件属性，比如，你的定界符考虑是<!--: 和 --> ,则在beetl.properties加入一行即可,并将此配置文件放入Classpath根目录下即可。 Configuration.defaultConfiguration()总是先加载系统默认的，然后再加载Beetl.properties的配置属性，如果有重复，用后者代替前者的配置
 
 [source,text]
@@ -212,6 +214,8 @@ DELIMITER_STATEMENT_START=<!--:
 DELIMITER_STATEMENT_END=-->
 
 ----------------------------
+*************************************************
+
 
 === 模板资源加载器 ===
 
@@ -823,7 +827,7 @@ Beetl内置了少量实用函数，可以在Beetl任何地方调用。如下例�
 ----------------------------
 <%
 var date = date();
-var len = strutil.len("cbd");
+var len = strutil.length("cbd");
 println("len="+len);
 
 %>

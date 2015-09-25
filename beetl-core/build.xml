@@ -127,7 +127,7 @@
         <mkdir dir="${build.dist.dir}" />
         <jar jarfile="${dist.jar}" whenempty="fail" level="9">
             <fileset dir="${build.classes.dir}" includes="**" excludes="**/*.g4,**/*.xml, **/lab/**" />
-        	<zipfileset includes="**/*.class" src="build/lib/antlr4-runtime-4.2.jar">
+        	<zipfileset includes="**/*.class" src="build/lib/antlr4-runtime-4.2.2.jar">
         		<exclude name="**/tree/gui/**"/>
         		<exclude name="**/tree/pattern/**"/>
         		<exclude name="**/tree/xpath/**"/>

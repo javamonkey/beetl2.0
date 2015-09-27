@@ -41,7 +41,7 @@ public class BeetlViewMakerTest extends TestCase {
 
     public void test_view_render() throws Throwable {
         // 存入模板
-        loader.put("/hello", "${obj.array.~size},${obj.array[0]},${json2(obj.user)}");
+        loader.put("/hello", "${obj.array.~size},${obj.array[0]},${json(obj.user)}");
         
         // 创建视图
         View view = maker.make(null, "beetl", "/hello");

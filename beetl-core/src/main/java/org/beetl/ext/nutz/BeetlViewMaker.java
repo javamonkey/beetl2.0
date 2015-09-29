@@ -16,20 +16,20 @@ import org.nutz.mvc.View;
 import org.nutz.mvc.ViewMaker;
 
 /**
- * Beelt for Nutz<p/>
- * <b>使用方法</b><p/>
+ * <p>Beelt for Nutz</p>
+ * <b>使用方法</b><p></p>
  * <code>
- * @Views(BeetlViewMaker.class) <p/>
+ * @Views(BeetlViewMaker.class) <p></p>
  * 
  * @Ok("beetl:/hello.html")
  * </code><p/>
- * <b>本实现的默认配置</b><p/>
+ * <b>本实现的默认配置</b><p></p>
  * <code>
- * RESOURCE_LOADER=org.beetl.core.resource.WebAppResourceLoader </p>
- * DIRECT_BYTE_OUTPUT=true <p/>
- * ERROR_HANDLER=org.beetl.ext.nutz.LogErrorHandler <p/>
- * </code><p/>
- * @author wendal,joelli
+ * RESOURCE_LOADER=org.beetl.core.resource.WebAppResourceLoader <p></p>
+ * DIRECT_BYTE_OUTPUT=true <p></p>
+ * ERROR_HANDLER=org.beetl.ext.nutz.LogErrorHandler <p></p>
+ * </code><p></p>
+ * @author wendal
  * 
  */
 public class BeetlViewMaker implements ViewMaker {

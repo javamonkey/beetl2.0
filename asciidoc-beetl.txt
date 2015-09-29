@@ -100,6 +100,7 @@ Beetl的核心是GroupTemplate，创建GroupTemplate需要俩个参数，一个�
 - FileResourceLoader：文件模板加载器，需要一个根目录作为参数构造，，传入getTemplate方法的String是模板文件相对于Root目录的相对路径
 - ClasspathResourceLoader：文件模板加载器，模板文件位于Classpath里
 - WebAppResourceLoader：用于webapp集成，假定模板根目录就是WebRoot目录
+- MapResourceLoader : 可以动态存入模板
 
 
 代码第5行将变量name传入模板里，其值是“Beetl”。

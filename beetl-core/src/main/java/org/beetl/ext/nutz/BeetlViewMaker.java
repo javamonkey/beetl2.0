@@ -58,12 +58,12 @@ public class BeetlViewMaker implements ViewMaker {
                 Streams.safeClose(ins);
             }
         }
-        if (!prop.contains(Configuration.RESOURCE_LOADER)) {
+        if (!prop.containsKey(Configuration.RESOURCE_LOADER)) {
             // 默认选用WebAppResourceLoader,除非用户自定义了RESOURCE_LOADER
             log.debug("no custom RESOURCE_LOADER found , select WebAppResourceLoader");
             cfg.setResourceLoader(WebAppResourceLoader.class.getName());
         }
-        if (!prop.contains(Configuration.DIRECT_BYTE_OUTPUT)) {
+        if (!prop.containsKey(Configuration.DIRECT_BYTE_OUTPUT)) {
             // 默认启用DIRECT_BYTE_OUTPUT,除非用户自定义, 一般不会.
             log.debug("no custom DIRECT_BYTE_OUTPUT found , set to true");
             // 当DIRECT_BYTE_OUTPUT为真时, beetl渲染会通过getOutputStream获取输出流
@@ -72,7 +72,7 @@ public class BeetlViewMaker implements ViewMaker {
             // 这样@Fail视图就能正常工作了
             cfg.setDirectByteOutput(true);
         }
-        if (!prop.contains(Configuration.ERROR_HANDLER)) {
+        if (!prop.containsKey(Configuration.ERROR_HANDLER)) {
             // 没有自定义ERROR_HANDLER,用定制的
             cfg.setErrorHandlerClass(LogErrorHandler.class.getName());
         }

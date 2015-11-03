@@ -6,12 +6,15 @@ import java.util.Properties;
 
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
+import org.beetl.core.misc.BeetlUtil;
 import org.beetl.core.resource.WebAppResourceLoader;
 import org.beetl.ext.web.WebRender;
 import org.nutz.ioc.Ioc;
 import org.nutz.lang.Streams;
+import org.nutz.lang.Strings;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
+import org.nutz.mvc.Mvcs;
 import org.nutz.mvc.View;
 import org.nutz.mvc.ViewMaker;
 
@@ -41,6 +44,10 @@ public class BeetlViewMaker implements ViewMaker {
     public WebRender render;
     
     public BeetlViewMaker() throws IOException {
+        // 主动设置webroot, 解决maven项目下,Beetl无法找到正确的webapp路径的问题
+        String webroot = Mvcs.getServletContext().getRealPath("/");
+        if (!Strings.isBlank(webroot))
+            BeetlUtil.setWebroot(webroot);
         init();
     }
     

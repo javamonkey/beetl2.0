@@ -50,6 +50,8 @@ public class BeetlUtil
 	//一般变量名称12个足够了
 	static char[] commonArray = new char[12];
 
+	protected static String webroot;
+
 	static byte[] chars = new byte[]
 	{
 			// $,%,&,',(,),*,+,,,-, .,/, 0, 1, 2, 3, 4, 5, 6,
@@ -245,8 +247,21 @@ public class BeetlUtil
 		return w;
 	}
 
+	/**
+	 * 自定义WebRoot路径
+     */
+	public static void setWebroot(String webroot) {
+		BeetlUtil.webroot = webroot;
+	}
+
+	/**
+	 * 返回Web根路径,如果存在自定义webroot路径,则返回自定义webroot
+     */
 	public static String getWebRoot()
 	{
+		if (webroot != null) {
+			return webroot;
+		}
 		try
 		{
 			String path = BeetlUtil.class.getClassLoader().getResource("").toURI().getPath();

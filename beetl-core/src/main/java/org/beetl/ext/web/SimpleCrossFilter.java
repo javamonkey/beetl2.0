@@ -197,7 +197,7 @@ public abstract class SimpleCrossFilter implements Filter
 		webVariable.setResponse(response);
 		webVariable.setSession(request.getSession());
 
-		map.put("session", new SessionWrapper(webVariable.getSession()));
+		map.put("session", new SessionWrapper(request,webVariable.getSession()));
 
 		map.put("servlet", webVariable);
 		map.put("request", request);

@@ -47,7 +47,7 @@ import org.beetl.core.VirtualClassAttribute;
 public abstract class AbstractGroupTemplateConfig
 {
 	/* ----- ----- ----- ----- 其他方法 ----- ----- ----- ----- */
-	/**
+	/**	
 	 * 自定义函数
 	 */
 	private Map<String, Function> functions = Collections.emptyMap();

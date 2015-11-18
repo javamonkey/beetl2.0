@@ -1,4 +1,4 @@
-﻿Beetl2.2使用说明书20150909
+﻿Beetl2.2使用说明书20151109
 ===================
 李家智 <xiandafu@126.com>
 :toc:
@@ -11,7 +11,7 @@
 
 
 == 什么是Beetl ==
-Beetl目前版本是2.2.5,大小700K。相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
+Beetl目前版本是2.2.7,大小700K。相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
 
 - 功能完备：作为主流模板引擎，Beetl具有相当多的功能和其他模板引擎不具备的功能。适用于*各种应用场景*，从对响应速度有很高要求的大网站到功能繁多的CMS管理系统都适合。Beetl本身还具有很多独特功能来完成模板编写和维护，这是其他模板引擎所不具有的。
 - 非常简单：类似Javascript语法和习俗，只要半小时就能通过半学半猜完全掌握用法。拒绝其他模板引擎那种非人性化的语法和习俗。同时也能支持html 标签，使得开发CMS系统比较容易
@@ -3206,18 +3206,40 @@ Nutz集成提供了 BeetlViewMaker ，实现了 ViewMaker方法，如下代码
 
 [source,java]
 ----------------------------
-public class HelloBeetl {
-	@At("/hello")
-	@Ok("beetl:hello.html")
-	public String doHello() {
-		// do something ....
-		return "";
-	}	
-}
+	@At("/ctx")
+	@Ok("beetl:ctx.btl")
+	public Context withContext() {
+		Context ctx = Lang.context();
+		Pager pager = dao.createPager(1, 20);
+		pager.setRecordCount(dao.count(UserProfile.class));
+		List<UserProfile> list = dao.query(UserProfile.class, null, pager);
+		ctx.set("pager", pager);
+		ctx.set("list", list);
+		return ctx;
+	}
 
 
 ----------------------------
 
+[source,html]
+----------------------------
+<html>
+<head>
+<title>Beetl&Nutz</title>
+</head>
+<body>
+<p>总共 ${list.~size}<p/> 
+<%
+for(user in list){
+%>
+<p>hello,${user.nickname};<p/> 
+<%}%>
+
+<p>当前页${pager.pageNumber},总共${pager.pageCount}页<p/> 
+</body>
+</html>
+
+----------------------------
 
 
 
@@ -3678,6 +3700,7 @@ image:performance2.png[]
 - Oo不懂oO: beetl插件
 - 原上一颗草:Beetl早期使用者。
 - 龙图腾飞 ，WebErrorHandler，用来开发模式在 web上显示错误而不是控制台
+- nutz: nutz 集成和MapResourceLoader
 
 文档校验
 

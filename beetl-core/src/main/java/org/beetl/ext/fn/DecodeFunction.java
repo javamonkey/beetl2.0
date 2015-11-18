@@ -29,6 +29,7 @@ package org.beetl.ext.fn;
 
 import org.beetl.core.Context;
 import org.beetl.core.Function;
+import org.beetl.core.misc.ALU;
 
 /**
  * if else 函数的简单实现
@@ -78,16 +79,7 @@ public class DecodeFunction implements Function
 
 	private boolean same(Object a, Object b)
 	{
-		if (a == null && b == null)
-			return true;
-		else if (a != null && b != null)
-		{
-			return a.equals(b);
-		}
-		else
-		{
-			return false;
-		}
+		return ALU.equals(a, b);
 	}
 
 }

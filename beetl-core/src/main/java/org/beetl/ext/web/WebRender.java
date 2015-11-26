@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.util.Enumeration;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -99,6 +100,7 @@ public class WebRender
 			template.binding("servlet", webVariable);
 			template.binding("request", request);
 			template.binding("ctxPath", request.getContextPath());
+			template.binding("$page", new HashMap());
 
 			modifyTemplate(template, key, request, response, args);
 

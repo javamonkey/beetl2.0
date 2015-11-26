@@ -28,6 +28,7 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
+import org.beetl.core.ContextFormat;
 import org.beetl.core.Format;
 import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
@@ -81,7 +82,12 @@ public class FormatExpression extends Expression
 		}
 		try
 		{
-			return format.format(o, pattern);
+			if(format instanceof ContextFormat){
+				return ((ContextFormat)format).format(o, pattern, ctx);
+			}else{
+				return format.format(o, pattern);
+			}
+			
 		}
 		catch (Exception e)
 		{

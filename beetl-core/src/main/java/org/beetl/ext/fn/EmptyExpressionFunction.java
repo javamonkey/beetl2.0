@@ -35,7 +35,7 @@ import org.beetl.core.Function;
 import org.beetl.core.misc.PrimitiveArrayUtil;
 
 /**
- * 判断全局变量是否为“空”，下列情况属于为空·的情况
+ * 判断全局变量是否为“空”，下列情况属于为空·的情况，返回true
  * <ul>
  * 
  * <li>变量不存在</li>

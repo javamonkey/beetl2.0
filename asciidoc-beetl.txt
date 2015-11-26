@@ -3448,7 +3448,7 @@ ERROR_HANDLER = org.beetl.ext.web.WebErrorHandler
 
 - strutil.subString	${ strutil.subString (“hello”,1),输出是“ello”
 
-- strutil.subStringTo	${ strutil.subStringTo (“hello”,1,2),输出是“el”
+- strutil.subStringTo	${ strutil.subStringTo (“hello”,1,2),输出是“e”
 
 - strutil.split	${ strutil.split (“hello,joeli”,”,”),输出是数组，有俩个元素，第一个是hello，第二个是joelli”
 

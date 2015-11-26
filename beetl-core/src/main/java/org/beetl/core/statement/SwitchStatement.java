@@ -107,7 +107,17 @@ public class SwitchStatement extends Statement
 
 		if (!isMatch && defaultBlock != null)
 		{
-			defaultBlock.execute(ctx);
+			defaultBlock.execute(ctx);			
+			switch (ctx.gotoFlag)
+			{
+				case IGoto.NORMAL:
+					break;
+				case IGoto.RETURN:
+					return;
+				case IGoto.BREAK:
+					ctx.gotoFlag = IGoto.NORMAL;
+					return;
+			}
 		}
 
 	}

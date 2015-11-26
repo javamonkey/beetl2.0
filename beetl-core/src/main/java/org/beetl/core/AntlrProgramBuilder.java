@@ -860,7 +860,7 @@ public class AntlrProgramBuilder
 		String nsId = this.getID(idList);
 		GrammarToken btToken = new org.beetl.core.statement.GrammarToken(nsId, ctx.start.getLine(), 0);
 		//需要做些特殊处理的函数
-		if (nsId.equals("isEmpty"))
+		if (nsId.equals("isEmpty")||nsId.equals("isNotEmpty"))
 		{
 
 			if (exps.length != 0)

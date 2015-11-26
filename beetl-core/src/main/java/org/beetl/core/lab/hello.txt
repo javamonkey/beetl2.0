@@ -1,5 +1,4 @@
 <%
-var a = 1;
-var c = null;
+page.put("title","hello");
+include("beetl.txt"){}
 %>
-${decode(a,1,"is i",cc.name)}

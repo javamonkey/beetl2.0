@@ -148,6 +148,7 @@ import org.beetl.core.statement.ContinueStatement;
 import org.beetl.core.statement.DirectiveStatement;
 import org.beetl.core.statement.EndStatement;
 import org.beetl.core.statement.Expression;
+import org.beetl.core.statement.ExpressionRuntime;
 import org.beetl.core.statement.ForStatement;
 import org.beetl.core.statement.FormatExpression;
 import org.beetl.core.statement.FunctionExpression;
@@ -915,6 +916,19 @@ public class AntlrProgramBuilder
 			exps = newExps;
 			//可以通过配置查看是否支持debug，2.1再做
 
+		}else if(nsId.equals("decode")){
+			Expression[] newExps = new Expression[exps.length];
+			if(newExps.length>=4){
+				newExps[0] = exps[0];
+				newExps[1] = exps[1];
+				for(int i=2;i<exps.length;i++){
+					//参数改成runtime 执行
+					newExps[i] = new ExpressionRuntime(exps[i]);
+				}
+				exps = newExps;
+			}else{
+				//错误的使用了decode函数，不管了，等后面报错吧
+			}
 		}
 		FunctionExpression fe = new FunctionExpression(nsId, exps, vs, btToken);
 		return fe;

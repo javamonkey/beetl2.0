@@ -30,6 +30,8 @@ package org.beetl.ext.fn;
 import org.beetl.core.Context;
 import org.beetl.core.Function;
 import org.beetl.core.misc.ALU;
+import org.beetl.core.statement.ExpressionRuntime;
+import org.beetl.core.statement.ExpressionRuntime.ExpressionRuntimeObject;
 
 /**
  * if else 函数的简单实现
@@ -44,22 +46,26 @@ public class DecodeFunction implements Function
 
 	public Object call(Object[] paras, Context ctx)
 	{
+		
+		Object ret = null;
 		try
 		{
 			Object o = paras[0];
 			int i = 1;
 			while (true)
 			{
-				if (same(o, paras[i]))
+				if (same(o, paras[i],ctx))
 				{
-					return paras[i + 1];
+					ret = paras[i + 1];
+					break ;
 				}
 				else
 				{
 					if (paras.length - 1 == i + 2)
 					{
 						//default
-						return paras[i + 2];
+						ret =  paras[i + 2];
+						break ;
 					}
 					else
 					{
@@ -74,12 +80,27 @@ public class DecodeFunction implements Function
 
 			throw new RuntimeException("decode函数使用错误:DECODE(value, if1, then1, if2,then2, if3,then3, . . . else )");
 		}
+		return unwrap(ret,ctx);
+		
 
 	}
 
-	private boolean same(Object a, Object b)
+	private boolean same(Object a, Object b,Context ctx)
 	{
-		return ALU.equals(a, b);
+		Object real = unwrap(b,ctx);
+		return ALU.equals(a, real);
+	
+		
+	}
+	
+	private Object unwrap(Object b,Context ctx){
+		if(b instanceof ExpressionRuntime.ExpressionRuntimeObject){
+			ExpressionRuntimeObject  eo = (ExpressionRuntimeObject)b;
+			Object realValue = eo.get(ctx);
+			return realValue;
+		}else{
+			return b ;
+		}
 	}
 
 }

@@ -1,1 +1,5 @@
-${user.age}
+<%
+var a = 1;
+var c = null;
+%>
+${decode(a,1,"is i",cc.name)}

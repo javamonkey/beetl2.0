@@ -100,7 +100,9 @@ public class WebRender
 			template.binding("servlet", webVariable);
 			template.binding("request", request);
 			template.binding("ctxPath", request.getContextPath());
-			template.binding("$page", new HashMap());
+			template.binding("$page", new HashMap()); 
+			template.binding("parameter", new ParameterWrapper(request));
+			
 
 			modifyTemplate(template, key, request, response, args);
 

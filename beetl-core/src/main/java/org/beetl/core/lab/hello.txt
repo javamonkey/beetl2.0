@@ -1,4 +1,4 @@
 <%
-page.put("title","hello");
+pageCtx("title","hello");
 include("beetl.txt"){}
 %>

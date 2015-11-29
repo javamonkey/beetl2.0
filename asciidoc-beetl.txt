@@ -1,4 +1,4 @@
-﻿Beetl2.2使用说明书20151109
+﻿Beetl2.2使用说明书20151129
 ===================
 李家智 <xiandafu@126.com>
 :toc:
@@ -3417,6 +3417,8 @@ ERROR_HANDLER = org.beetl.ext.web.WebErrorHandler
 
 - isEmpty 判断变量或者表达式是否为空，变量不存在，变量为null，变量是空字符串，变量是空集合，变量是空数组，此函数都将返回true
 
+- isNotEmpty  同上，判断对象是否不为空
+
 - has 变量名为参数，判断是否存在此全局变量，如 has(userList),类似于1.x版本的exist("userList"),但不需要输入引号了
 
 - assert 如果表达式为false，则抛出异常
@@ -3437,6 +3439,9 @@ ERROR_HANDLER = org.beetl.ext.web.WebErrorHandler
 - flush 强制io输出。
 
 - json，将对象转成json字符串，如 var data = json(userList)  可以跟一个序列化规则 如,var data = json(userList,"[*].id:i"),具体参考     https://git.oschina.net/xiandafu/beetl-json
+
+- pageCtx ，仅仅在web开发中，设置一个变量，然后可以在页面渲染过程中，调用此api获取，如pageCtx("title","用户添加页面")，在其后任何地方，可以pageCtx("title") 获取该变量
+ 
 
 ==== 字符串相关方法 ====
 

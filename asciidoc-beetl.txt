@@ -1,4 +1,4 @@
-﻿Beetl2.2使用说明书20151129
+﻿Beetl2.2使用说明书20151201
 ===================
 李家智 <xiandafu@126.com>
 :toc:
@@ -11,7 +11,7 @@
 
 
 == 什么是Beetl ==
-Beetl目前版本是2.2.7,大小700K。相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
+Beetl目前版本是2.2.7,相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
 
 - 功能完备：作为主流模板引擎，Beetl具有相当多的功能和其他模板引擎不具备的功能。适用于*各种应用场景*，从对响应速度有很高要求的大网站到功能繁多的CMS管理系统都适合。Beetl本身还具有很多独特功能来完成模板编写和维护，这是其他模板引擎所不具有的。
 - 非常简单：类似Javascript语法和习俗，只要半小时就能通过半学半猜完全掌握用法。拒绝其他模板引擎那种非人性化的语法和习俗。同时也能支持html 标签，使得开发CMS系统比较容易
@@ -41,7 +41,7 @@ Beetl有些功能是发展了10多年的模板引擎所不具备的，这些功�
 10. 性能超高,具有最快的模板解释引擎，同时，又有较低的CPU消耗。5-6倍于国内使用的Freemaker。适合各类模板应用，如代码生成工具，CMS系统，普通网站，超高访问量的门户系统，和富客户端JS框架整合的后台管理应用
 **********************************************************************
 
-.新手如何开始
+.小白如何开始
 **********************************************************************
 
 - 需要通读基本用法，大部分都是讲解语法，而语法跟js很接近，所以可以快速预览，但Beetl是针对模板设计，
@@ -51,6 +51,7 @@ Beetl有些功能是发展了10多年的模板引擎所不具备的，这些功�
 
 - 包含有spring,jfinal,jodd,struts 等demo可以作为参考学习用 http://ibeetl.com/community/?/article/4 
 
+- 任何问题，都可以在ibeetl.com 群上提问。目前答复率是100%，提问需要详细说明自己的期望，出错信息，附上代码或者图片
 
 **********************************************************************
 
@@ -68,7 +69,7 @@ Beetl论坛：ibeetl.com
 
 在线体验和代码分享  http://ibeetl.com:8080/beetlonline/
 
-如果有任何疑问或者提交bug，可以直接联系我
+
 
 **********************************************************************
 
@@ -99,7 +100,7 @@ Beetl的核心是GroupTemplate，创建GroupTemplate需要俩个参数，一个�
 - StringTemplateResourceLoader：字符串模板加载器，用于加载字符串模板，如本例所示
 - FileResourceLoader：文件模板加载器，需要一个根目录作为参数构造，，传入getTemplate方法的String是模板文件相对于Root目录的相对路径
 - ClasspathResourceLoader：文件模板加载器，模板文件位于Classpath里
-- WebAppResourceLoader：用于webapp集成，假定模板根目录就是WebRoot目录
+- WebAppResourceLoader：用于webapp集成，假定模板根目录就是WebRoot目录，参考web集成章
 - MapResourceLoader : 可以动态存入模板
 
 
@@ -856,7 +857,7 @@ println("len="+len);
 
 Beetl内置函数请参考附录，以下列出了常用的函数
 
-- date 返回一个java.util.Date类型的变量，如 date() 返回一个当前时间; ${date('2011-1-1','yyyy-MM-dd')} 返回指定日期
+- date 返回一个java.util.Date类型的变量，如 date() 返回一个当前时间(对应java的java.util.Date); ${date( "2011-1-1" , "yyyy-MM-dd" )} 返回指定日期
 
 - print 打印一个对象  print(user.name);
 
@@ -866,6 +867,8 @@ Beetl内置函数请参考附录，以下列出了常用的函数
 
 - isEmpty 判断变量或者表达式是否为空，变量不存在，变量为null，变量是空字符串，变量是空集合，变量是空数组，此函数都将返回true
 
+- isNotEmpty  同上，判断对象是否不为空
+
 - has 变量名为参数，判断是否存在此全局变量，如 has(userList),类似于1.x版本的exist("userList"),但不需要输入引号了
 
 - assert 如果表达式为false，则抛出异常
@@ -874,17 +877,23 @@ Beetl内置函数请参考附录，以下列出了常用的函数
 
 - decode  一个简化的if else 结构，如 decode(a,1,"a=1",2,"a=2","不知道了")},如果a是1，这decode输出"a=1",如果a是2，则输出"a==2",
 如果是其他值，则输出"不知道了"
+
 - debug 在控制台输出debug指定的对象以及所在模板文件以及模板中的行数，如debug(1),则输出1 [在3行@/org/beetl/core/lab/hello.txt],也可以输出多个，如debug("hi",a),则输出hi,a=123,[在3行@/org/beetl/core/lab/hello.txt]
 
 - parseInt 将数字或者字符解析为整形  如 parseInt("123");
-- parseLong 将数字或者字符解析为长整形  如 parseInt("123");
+
+- parseLong 将数字或者字符解析为长整形，parseInt(123.12);
+
 - parseDouble 将数字或者字符解析为浮点类型 如parseDouble("1.23")
 
 - range 接收三个参数，初始值，结束值，还有步增（可以不需要，则默认为1），返回一个Iterator，常用于循环中，如for(var i in range(1,5)) {print(i)},将依次打印1234.
 
-- flush 强制io输出
+- flush 强制io输出。
 
-- json，将对象转成json字符串，如 var data = json(userList)  可以跟一个序列化规则 如,var data = json(userList,"[*].id:i"),具体参考https://git.oschina.net/xiandafu/beetl-json
+- json，将对象转成json字符串，如 var data = json(userList)  可以跟一个序列化规则 如,var data = json(userList,"[*].id:i"),具体参考     https://git.oschina.net/xiandafu/beetl-json
+
+- pageCtx ，仅仅在web开发中，设置一个变量，然后可以在页面渲染过程中，调用此api获取，如pageCtx("title","用户添加页面")，在其后任何地方，可以pageCtx("title") 获取该变量
+
 
 
 
@@ -1810,6 +1819,17 @@ public class DateFormat implements Format
 
 data 参数表示需要格式化的对象，pattern表示格式化模式，开发时候需要考虑pattern为null的情况
 
+也可以实现ContextFormat 类抽象方法，从而得到Context，获取外的格式化信息。
+
+[source,javascript]
+
+-------------------------
+
+	public abstract Object format(Object data,String pattern,Context ctx);
+
+-------------------------
+
+
 
 === 自定义标签 ===
 
@@ -2692,12 +2712,16 @@ Web集成模块向模板提供web标准的变量，做如下说明
 
 - request  标准的HTTPSerlvetRequest,可以在模板里引用request属性（getter），如${request.requestURL}。
 
+- parameter 用户读取用户提交的参数。如${parameter.userId} (仅仅2.2.7以上版本支持)
+
 - ctxPath  Web应用ContextPath
 
 - servlet  是WebVariable的实例，包含了HTTPSession,HTTPSerlvetRequest,HTTPSerlvetResponse.三个属性，模板中可以通过request.response,session 来引用，如 ${serlvet.request.requestURL};
 
 
 - 所有的GroupTemplate的共享变量
+
+- pageCtx是一个内置方法 ，仅仅在web开发中，用于设置一个变量，然后可以在页面渲染过程中，调用此api获取，如pageCtx("title","用户添加页面")，在其后任何地方，可以pageCtx("title") 获取该变量。(仅仅2.2.7以上版本支持)
 
 你可以在模板任何地方访问这些变量
 
@@ -3432,6 +3456,8 @@ ERROR_HANDLER = org.beetl.ext.web.WebErrorHandler
 
 - parseInt 将数字或者字符解析为整形  如 parseInt("123");
 
+- parseLong 将数字或者字符解析为长整形，parseInt(123.12);
+
 - parseDouble 将数字或者字符解析为浮点类型 如parseDouble("1.23")
 
 - range 接收三个参数，初始值，结束值，还有步增（可以不需要，则默认为1），返回一个Iterator，常用于循环中，如for(var i in range(1,5)) {print(i)},将依次打印1234.
@@ -3441,9 +3467,16 @@ ERROR_HANDLER = org.beetl.ext.web.WebErrorHandler
 - json，将对象转成json字符串，如 var data = json(userList)  可以跟一个序列化规则 如,var data = json(userList,"[*].id:i"),具体参考     https://git.oschina.net/xiandafu/beetl-json
 
 - pageCtx ，仅仅在web开发中，设置一个变量，然后可以在页面渲染过程中，调用此api获取，如pageCtx("title","用户添加页面")，在其后任何地方，可以pageCtx("title") 获取该变量
+
+
  
 
 ==== 字符串相关方法 ====
+
+
+*************************************************
+strutil方法对参数均不做空指针检测，你可自定义方法来覆盖这些内置的方法
+*************************************************
 
 - strutil.startWith	${ strutil.startWith(“hello”,”he”) 输出是true
 
@@ -3475,9 +3508,6 @@ ERROR_HANDLER = org.beetl.ext.web.WebErrorHandler
 - strutil.index  var index = strutil.index("abc","a");返回 索引0
 - strutil.lastIndex var index = strutil.lastIndex("aba","a");返回索引2
 
-*************************************************
-strutil方法对参数均不做空指针检测，你可自定义方法来覆盖这些内置的方法
-*************************************************
 ==== 数组相关方法 ====
 
 - array.range  返回数组或者Collection一部分，接受三个参数，第一个是数组或者Collection子类，第二，三个参数分别是起始位置
@@ -3490,8 +3520,25 @@ strutil方法对参数均不做空指针检测，你可自定义方法来覆盖�
 
 - array.toArray 转化成数组,如array.toArray(1,2,"a");
 
--- array.collection2Array 将java集合转化为数组 array.collection2Array([1,2,''])
+- array.collection2Array 将java集合转化为数组 array.collection2Array([1,2,''])
  
+==== 正则表达式相关方法 ====
+
+- reg.match(str,regex)  str为需要处理的字符串，regex是表达式
+
+- reg.replace(str,regex,replace)，str为需要处理的字符串，regex是表达式，替换的字符串替换字符串
+
+- reg.find(str,regex) 返回找到的符合表达式的第一个字符串，否则返回空字符串
+
+- reg.findList(str,regex) 找到所有符合表达式的字符串，否则返回空列表
+
+- reg.split(str,regex),对字符串进行切分，返回列表
+
+- reg.split(str,regex,limit) 同上，limit是最多返回个数
+
+
+
+
 === 内置格式化方法 ===
 
 - dateFormat	日期格式化函数，如 ${date,dateFormat='yyyy-Mm-dd'}，等于符号后的参数也可以没有，则使用本地默认来做格式化如
@@ -3706,6 +3753,7 @@ image:performance2.png[]
 - 原上一颗草:Beetl早期使用者。
 - 龙图腾飞 ，WebErrorHandler，用来开发模式在 web上显示错误而不是控制台
 - nutz: nutz 集成和MapResourceLoader
+- 天方地圆 :提供正则方法
 
 文档校验
 

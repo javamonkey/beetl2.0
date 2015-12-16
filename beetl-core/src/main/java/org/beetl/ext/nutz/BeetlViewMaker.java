@@ -45,9 +45,13 @@ public class BeetlViewMaker implements ViewMaker {
     
     public BeetlViewMaker() throws IOException {
         // 主动设置webroot, 解决maven项目下,Beetl无法找到正确的webapp路径的问题
-        String webroot = Mvcs.getServletContext().getRealPath("/");
-        if (!Strings.isBlank(webroot))
-            BeetlUtil.setWebroot(webroot);
+    		String webroot = null;
+    		if(Mvcs.getServletContext()!=null){
+    			webroot = Mvcs.getServletContext().getRealPath("/");
+    	        if (!Strings.isBlank(webroot))
+    	            BeetlUtil.setWebroot(webroot);
+        }
+    		 
         init();
     }
     

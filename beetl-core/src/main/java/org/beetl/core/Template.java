@@ -244,6 +244,7 @@ public class Template
 	public void binding(Map map)
 	{
 		Map<String, Object> values = map;
+		if(values==null) return ;
 		for (Entry<String,Object> entry : values.entrySet())
 		{
 			this.binding(entry.getKey(), entry.getValue());

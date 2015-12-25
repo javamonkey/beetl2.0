@@ -190,6 +190,7 @@ public class TypeBindingProbe extends Probe
 
 				Object key = entry.getKey();
 				Object value = entry.getValue();
+				if(key==null||value==null) return null;
 				if (value != null)
 				{
 					type = new Type(Map.class, key.getClass(), value.getClass());

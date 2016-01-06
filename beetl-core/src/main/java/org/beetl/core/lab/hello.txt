@@ -1,4 +1,6 @@
+
 <%
-pageCtx("title","hello");
-include("beetl.txt"){}
+layout("beetl.txt",{"title":"test"}){
 %>
+ 正文
+<%}%>

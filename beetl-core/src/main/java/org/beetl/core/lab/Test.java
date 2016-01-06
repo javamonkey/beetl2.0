@@ -35,11 +35,7 @@ public class Test
 					
 					Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
 					t.binding("$page",new HashMap());
-					if(i==0){
-						t.binding("user", new TestUser(""));
-					}else{
-						t.binding("user", new Object());
-					}
+					t.binding("user", new TestUser(""));
 					
 					ByteArrayOutputStream bs = new ByteArrayOutputStream();
 					try

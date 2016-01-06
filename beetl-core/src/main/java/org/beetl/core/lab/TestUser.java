@@ -9,7 +9,7 @@ import java.util.List;
  * @author 所有测试类采用的Pojo类
  *
  */
-public class TestUser
+public class TestUser implements IdEntity<Integer>
 {
 	String name = "default";
 	int age = 18;
@@ -120,15 +120,7 @@ public class TestUser
 		this.friends = friends;
 	}
 
-	public int getId()
-	{
-		return id;
-	}
 
-	public void setId(int id)
-	{
-		this.id = id;
-	}
 
 	public Object getMap()
 	{
@@ -191,6 +183,18 @@ public class TestUser
 
 		return all;
 
+	}
+
+	@Override
+	public void setId(Integer id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Integer getId() {
+		// TODO Auto-generated method stub
+		return this.id;
 	}
 
 }

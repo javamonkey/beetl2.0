@@ -1,4 +1,1 @@
-<%
-var tt = pageCtx("title");
-%>
-${tt}
+${title}

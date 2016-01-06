@@ -27,6 +27,9 @@
  */
 package org.beetl.core.om;
 
+import java.io.File;
+import java.io.FileOutputStream;
+
 import org.beetl.core.misc.ByteClassLoader;
 
 /** 生成一个属性访问类，此类将调用BCWFactory来获取字节码，因此，可以设置
@@ -76,6 +79,14 @@ public class AttributeCodeGen
 
 	private static AttributeAccess instance(byte[] bs, String clsName)
 	{
+//		try{
+//			FileOutputStream fos = new FileOutputStream(new File("d:/"+clsName+".class"));
+//			fos.write(bs);
+//			fos.close();
+//		}catch(Exception ex){
+//			ex.printStackTrace();
+//		}
+		
 		Class fieldAccessorClass = loader.defineClass(clsName, bs);
 		AttributeAccess ac;
 		try

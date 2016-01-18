@@ -89,7 +89,7 @@ public abstract class Resource
 	 */
 	public String getContent(int start, int end) throws IOException
 	{
-
+		// bug, 混合回车符号也许定位不到准确行数？
 		Reader br = openReader();
 
 		int line = 1;

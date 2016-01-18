@@ -27,6 +27,8 @@
  */
 package org.beetl.core.parser;
 
+import java.util.HashSet;
+
 import org.antlr.v4.runtime.DefaultErrorStrategy;
 import org.antlr.v4.runtime.FailedPredicateException;
 import org.antlr.v4.runtime.InputMismatchException;
@@ -48,6 +50,27 @@ import org.beetl.core.statement.GrammarToken;
  */
 public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 {
+	
+	static HashSet<String> keys = new HashSet<String>();
+	static {
+		keys.add("select");
+		keys.add("if");
+		keys.add("for");
+		keys.add("elsefor");
+		keys.add("while");
+		keys.add("switch");
+		keys.add("return");
+		keys.add("break");
+		keys.add("var");
+		keys.add("continue");
+		keys.add("directive");
+		keys.add("in");
+		keys.add("case");
+		keys.add("default");
+		keys.add("try");
+		keys.add("catch");
+		
+	}
 	@Override
 	public void recover(Parser recognizer, RecognitionException e)
 	{
@@ -105,10 +128,16 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 		{
 			input = "<未知输入>";
 		}
+		BeetlException exception = null;
+		if(keys.contains(e.getOffendingToken().getText())){
+			 exception = new BeetlParserException(BeetlException.PARSER_VIABLE_ERROR,
+						"不允许"+e.getOffendingToken().getText()+"关键出现在这里"+":"+escapeWSAndQuote(input), e);
+		}else{
+			exception = new BeetlParserException(BeetlException.PARSER_VIABLE_ERROR,
+					escapeWSAndQuote(input), e);
+		}
 		//		String msg = "no viable alternative at input " + escapeWSAndQuote(input);
-		BeetlException exception = new BeetlParserException(BeetlException.PARSER_VIABLE_ERROR,
-				escapeWSAndQuote(input), e);
-		//		exception.token = this.getGrammarToken(e.getOffendingToken());
+	
 		exception.pushToken(this.getGrammarToken(e.getOffendingToken()));
 
 		throw exception;

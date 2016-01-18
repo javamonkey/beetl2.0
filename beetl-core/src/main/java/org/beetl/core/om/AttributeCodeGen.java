@@ -79,6 +79,7 @@ public class AttributeCodeGen
 
 	private static AttributeAccess instance(byte[] bs, String clsName)
 	{
+//		javap -c xxxx 
 //		try{
 //			FileOutputStream fos = new FileOutputStream(new File("d:/"+clsName+".class"));
 //			fos.write(bs);

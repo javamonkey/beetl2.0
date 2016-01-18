@@ -196,5 +196,23 @@ public class TestUser implements IdEntity<Integer>
 		// TODO Auto-generated method stub
 		return this.id;
 	}
+	
+	public static Info getInfo(){
+		return new InfoImpl();
+	}
+	
+	public static interface  Info{
+		public String getMsg();
+	}
+	
+	private static class InfoImpl implements Info{
+
+		@Override
+		public String getMsg() {
+			// TODO Auto-generated method stub
+			return "aa";
+		}
+		
+	}
 
 }

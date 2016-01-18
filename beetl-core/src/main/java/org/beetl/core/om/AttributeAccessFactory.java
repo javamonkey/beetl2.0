@@ -99,6 +99,7 @@ public class AttributeAccessFactory
 		if (aa != null)
 			return aa;
 
+		//生成虚拟机代码的时候，类必须是可以被访问的，所以得找到可被访问的类
 		FindResult pojoResult = findCommonInterfaceOrClass(c, name);
 		if (pojoResult != null)
 		{
@@ -154,10 +155,10 @@ public class AttributeAccessFactory
 		}
 		else
 		{
-			
+			return objectAA;
 			// 还是没有找到，抛错吧
-			BeetlException be = new BeetlException(BeetlException.ATTRIBUTE_NOT_FOUND, attrExp);
-			throw be;
+//			BeetlException be = new BeetlException(BeetlException.ATTRIBUTE_NOT_FOUND, attrExp);
+//			throw be;
 
 		}
 
@@ -165,9 +166,11 @@ public class AttributeAccessFactory
 
 	public static FindResult findCommonInterfaceOrClass(Class c, String name)
 	{
+		
 		Method m = ObjectUtil.getInvokder(c, name).getMethod();
 		String methodName = m.getName();
 		if(methodName.equals("get")){
+			//general get
 			FindResult findResult  = new FindResult();
 			findResult.parameter = m.getParameterTypes()[0];
 			findResult.realMethodName="get";
@@ -175,8 +178,21 @@ public class AttributeAccessFactory
 			findResult.returnType = m.getReturnType();
 			return findResult;
 		}else{
-			FindResult findResult = findResult(c, methodName);
-			return findResult;
+			if(Modifier.isPublic(c.getModifiers())){
+				FindResult result = new FindResult();
+				result.realMethodName = m.getName();
+				result.c = c;
+				result.returnType = m.getReturnType();
+				Class[] para = m.getParameterTypes();
+				result.parameter = para.length==0?null:para[1];
+				return result;
+			}else{
+				// c 可能是一个私有类，但实现了public 接口，在生成字节码的时候必须考虑类的可访问性，因此去找public 父类或者接口
+				FindResult findResult = findResult(c,methodName );
+				return findResult;
+			}
+			
+			
 		}
 
 
@@ -200,6 +216,21 @@ public class AttributeAccessFactory
 			}
 		
 		}
+		
+		if (findMethod != null&&Modifier.isPublic(c.getModifiers()))
+		{
+
+			result = new FindResult();
+			result.realMethodName = findMethod.getName();
+			result.c = c;
+			result.returnType = findMethod.getReturnType();
+			Class[] para = findMethod.getParameterTypes();
+			result.parameter = para.length==0?null:para[1];
+			
+			return result;
+		}
+		
+		
 		// 判断父接口
 		Class[] interfaces = c.getInterfaces();
 		for (Class inc : interfaces)
@@ -216,7 +247,7 @@ public class AttributeAccessFactory
 				result = findResult(inc, getName);
 				if (result != null)
 				{
-					resetFindResult(findMethod, result);
+//					resetFindResult(findMethod, result);
 					return result;
 				}
 			}
@@ -229,41 +260,29 @@ public class AttributeAccessFactory
 			result = findResult(parent, getName);
 			if (result != null)
 			{
-				resetFindResult(findMethod, result);
+//				resetFindResult(findMethod, result);
 				return result;
 			}
 		}
+		
 
-		if (findMethod != null)
-		{
-
-			result = new FindResult();
-			result.realMethodName = findMethod.getName();
-			result.c = c;
-			result.returnType = findMethod.getReturnType();
-			Class[] para = findMethod.getParameterTypes();
-			result.parameter = para.length==0?null:para[1];
-			
-			return result;
-		}
-		else
-		{
-			return null;
-		}
+		return null;
 
 	}
-
+	
+	
+	
 	private static void resetFindResult(Method m, FindResult parent)
 	{
-		if (m.getReturnType() == parent.returnType)
-		{
-			return;
-		}
-		else
-		{
-			// 和父接口不一致，模型比较复杂类型推测很难，统一改成Object
-			parent.returnType = Object.class;
-		}
+//		if (m.getReturnType() == parent.returnType)
+//		{
+//			return;
+//		}
+//		else
+//		{
+//			// 和父接口不一致，模型比较复杂类型推测很难，统一改成Object
+//			parent.returnType = Object.class;
+//		}
 	}
 
 	static class FindResult

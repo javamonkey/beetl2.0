@@ -1,6 +1,1 @@
-
-<%
-layout("beetl.txt",{"title":"test"}){
-%>
- 正文
-<%}%>
+${info.msg}

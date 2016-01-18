@@ -20,6 +20,13 @@ public class Test
 {
 	public static void main(String[] args) throws Exception
 	{
+		
+//			TestUser.Info info = TestUser.getInfo();
+//			
+//			Class c = info.getClass();
+//			c.getClassLoader().
+//			int m = c.getModifiers();
+//			System.out.println(Modifier.isPublic(m));
 				ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader();
 				Configuration cfg = Configuration.defaultConfiguration();
 				cfg.setDirectByteOutput(true);
@@ -36,6 +43,7 @@ public class Test
 					Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
 					t.binding("$page",new HashMap());
 					t.binding("user", new TestUser(""));
+					t.binding("info",TestUser.getInfo());
 					
 					ByteArrayOutputStream bs = new ByteArrayOutputStream();
 					try
@@ -53,42 +61,7 @@ public class Test
 
 	}
 
-	public static String parse(String attr)
-	{
-		String q = "\"";
-		StringBuilder sb = new StringBuilder(attr.length() + 10);
-		int start = 0;
-		int end = 0;
-		int index = -1;
-		while ((index = attr.indexOf("${", start)) != -1)
-		{
-			end = attr.indexOf("}", index);
-			if (end == -1)
-				throw new RuntimeException("aa");
-			if (index != 0)
-			{
-				sb.append(q).append(attr.substring(start, index)).append(q).append("+");
-			}
-
-			sb.append("(").append(attr.substring(index + 2, end)).append(")").append("+");
-			start = end + 1;
-		}
-		if (start == 0)
-		{
-			return sb.append(q).append(attr).append(q).toString();
-		}
-		if (start != attr.length())
-		{
-
-			sb.append(q).append(attr.substring(start, attr.length())).append(q);
-		}
-		else
-		{
-			sb.setLength(sb.length() - 1);
-		}
-		return sb.toString();
-
-	}
+	
 
 	public static class TestFun implements Function
 	{

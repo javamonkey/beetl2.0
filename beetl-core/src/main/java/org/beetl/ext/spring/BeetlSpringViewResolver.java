@@ -90,6 +90,8 @@ public class BeetlSpringViewResolver extends AbstractTemplateViewResolver implem
 	{
 		setViewClass(BeetlSpringView.class);
 	}
+	
+	
 
 	/**
 	 * 初始化检查GroupTemplate<br>
@@ -144,10 +146,26 @@ public class BeetlSpringViewResolver extends AbstractTemplateViewResolver implem
 	@Override
 	protected AbstractUrlBasedView buildView(String viewName) throws Exception
 	{
+//		BeetlSpringView beetlView = (BeetlSpringView) super.buildView(viewName);
+//		// 为视图对象注入GroupTemplate
+//		beetlView.setGroupTemplate(groupTemplate);
+//		return beetlView;
+//		
+//		
 		BeetlSpringView beetlView = (BeetlSpringView) super.buildView(viewName);
-		// 为视图对象注入GroupTemplate
-		beetlView.setGroupTemplate(groupTemplate);
+		String suffix = getSuffix();
+		//如果配置有后缀，需要重新设定视图
+		if(suffix!=null&&suffix.length()!=0){
+			if (viewName.contains("#")) {
+				String[] split = viewName.split("#");
+				if (split.length > 2) {
+				throw new Exception("视图名称有误：" + viewName);
+				}
+				beetlView.setUrl(getPrefix() + split[0] + getSuffix() + "#" + split[1]);
+			}
+		}
 		return beetlView;
+		
 	}
 
 	/**

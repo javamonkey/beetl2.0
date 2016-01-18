@@ -2,7 +2,7 @@ package org.beetl.core.lab;
 
 import java.io.Serializable;
 
-public interface IdEntity<ID extends Object> extends Serializable {
+public interface IdEntity<ID extends Serializable> extends Serializable {
 
 public abstract void setId(ID id);
 

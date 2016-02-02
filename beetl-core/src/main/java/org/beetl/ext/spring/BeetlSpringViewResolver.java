@@ -146,13 +146,9 @@ public class BeetlSpringViewResolver extends AbstractTemplateViewResolver implem
 	@Override
 	protected AbstractUrlBasedView buildView(String viewName) throws Exception
 	{
-//		BeetlSpringView beetlView = (BeetlSpringView) super.buildView(viewName);
-//		// 为视图对象注入GroupTemplate
-//		beetlView.setGroupTemplate(groupTemplate);
-//		return beetlView;
-//		
-//		
+
 		BeetlSpringView beetlView = (BeetlSpringView) super.buildView(viewName);
+		beetlView.setGroupTemplate(groupTemplate);
 		String suffix = getSuffix();
 		//如果配置有后缀，需要重新设定视图
 		if(suffix!=null&&suffix.length()!=0){

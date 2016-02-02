@@ -33,6 +33,7 @@ import java.util.Map.Entry;
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
+import org.beetl.core.misc.ALU;
 
 /**
  * 类似go语言的switch
@@ -74,7 +75,7 @@ public class SwitchStatement extends Statement
 		boolean isMatch = false;
 		for (Expression exp : condtionsList)
 		{
-			if (isMatch || o.equals(exp.evaluate(ctx)))
+			if (isMatch ||ALU.equals(o, exp.evaluate(ctx)) )
 			{
 				isMatch = true;
 				BlockStatement block = map.get(exp);

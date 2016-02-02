@@ -91,6 +91,10 @@ public class FieldAccessBCW implements BCW
 	static final String doubleClass = "java/lang/Double";
 	static final String doubleValueOfFunctionDesc = "(D)Ljava/lang/Double;";
 
+	static String floatClass = "java/lang/Float";
+	static String floatValueOfFunctionDesc = "(F)Ljava/lang/Float;";
+
+	
 	static String longClass = "java/lang/Long";
 	static String longValueOfFunctionDesc = "(J)Ljava/lang/Long;";
 
@@ -360,6 +364,12 @@ public class FieldAccessBCW implements BCW
 		{
 			out.writeByte(INVOKE_STATIC);
 			methodIndex = registerMethod(this.doubleClass, this.valueOfFunction, this.doubleValueOfFunctionDesc);
+			out.writeShort(methodIndex);
+		}
+		else if (this.retByteCodeType.equals("F"))
+		{
+			out.writeByte(INVOKE_STATIC);
+			methodIndex = registerMethod(this.floatClass, this.valueOfFunction, this.floatValueOfFunctionDesc);
 			out.writeShort(methodIndex);
 		}
 		else if (this.retByteCodeType.equals("J"))

@@ -652,7 +652,7 @@ public class ALU
 				case HS:
 					BigDecimal b1 = getBigDecimal(o1),
 					b2 = getBigDecimal(o2);
-					return b1.equals(b2);
+					return b1.compareTo(b2)==0;
 			}
 		}
 		else if (o1 instanceof Enum)

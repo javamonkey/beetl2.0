@@ -4,11 +4,11 @@
 
 	<groupId>com.ibeetl</groupId>
 	<artifactId>beetl</artifactId>
-	<version>2.2.9</version>
+	<version>2.2.13</version>
 	<packaging>jar</packaging>
 
 	<name>com.ibeetl:beetl</name>
-	<description>java template engine</description>
+	<description>java template language</description>
 	<url>ibeetl.com</url>
 
 	<licenses>

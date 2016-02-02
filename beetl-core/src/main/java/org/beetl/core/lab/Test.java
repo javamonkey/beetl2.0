@@ -1,6 +1,7 @@
 package org.beetl.core.lab;
 
 import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,8 +44,9 @@ public class Test
 					Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
 					t.binding("$page",new HashMap());
 					t.binding("user", new TestUser(""));
+					t.binding("cs", new ChargingStation());
 					t.binding("info",TestUser.getInfo());
-					
+					t.binding("n", new BigDecimal("0.0000"));
 					ByteArrayOutputStream bs = new ByteArrayOutputStream();
 					try
 					{

@@ -8,6 +8,7 @@ import java.util.List;
 /**
  * @author 所有测试类采用的Pojo类
  *
+ *
  */
 public class TestUser implements IdEntity<Integer>
 {
@@ -71,8 +72,8 @@ public class TestUser implements IdEntity<Integer>
 
 	public int getAge()
 	{
-		throw new ClassCastException();
-		//		return age;
+//		throw new ClassCastException();
+				return age;
 	}
 
 	public void setAge(int age)

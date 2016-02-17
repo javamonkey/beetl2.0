@@ -259,7 +259,7 @@ public class ClasspathResourceLoader implements ResourceLoader
 	@Override
 	public boolean exist(String key)
 	{
-		return this.classLoader.getClass().getResource(root + key) != null;
+		return this.classLoader.getResource(root + key) != null;
 	}
 
 	public String getCharset()

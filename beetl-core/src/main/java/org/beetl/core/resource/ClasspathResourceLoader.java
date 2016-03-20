@@ -41,6 +41,7 @@ import org.beetl.core.misc.BeetlUtil;
  * ClassPath加载器,如果不指定classLoader,则使用加载beetl.jar的classloader,如果不指定root，则是默认的根路径，
  * 如果不指定模板字符集，则采用配置文件的resource.charset 配置
  * 
+ * 注意，采用加载方式是classloader.getClass().getResource() 而不是classloader，如果需要采用classloader，请参考源代码
  * @author joelli
  * 
  * 
@@ -259,7 +260,8 @@ public class ClasspathResourceLoader implements ResourceLoader
 	@Override
 	public boolean exist(String key)
 	{
-		return this.classLoader.getResource(root + key) != null;
+		return this.classLoader.getClass().getResource(root + key)!=null;
+//		return this.classLoader.getResource(root + key) != null; 不兼容，暂时不能修改
 	}
 
 	public String getCharset()

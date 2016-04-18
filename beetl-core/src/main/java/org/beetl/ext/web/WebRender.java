@@ -106,6 +106,12 @@ public class WebRender
 
 			modifyTemplate(template, key, request, response, args);
 
+			String strWebAppExt = gt.getConf().getWebAppExt();
+			if(strWebAppExt!=null){
+				WebRenderExt renderExt = this.getWebRenderExt(strWebAppExt);
+				renderExt.modify(template, gt, request, response);
+			}
+			
 			if (gt.getConf().isDirectByteOutput())
 			{
 				os = response.getOutputStream();
@@ -173,5 +179,16 @@ public class WebRender
 	protected void handleBeetlException(BeetlException ex)
 	{
 		throw ex;
+	}
+	
+	protected WebRenderExt getWebRenderExt(String clsName){
+		//有效率问题，没有必要每次都初始化一个类
+		try{
+			WebRenderExt render = (WebRenderExt)Class.forName(clsName).newInstance();
+			return render;
+		}catch(Exception ex){
+			throw new RuntimeException("加载WebRenderExt错误，检查配置项WEBAPP_EXT:"+ex.getMessage(),ex);
+		}
+		
 	}
 }

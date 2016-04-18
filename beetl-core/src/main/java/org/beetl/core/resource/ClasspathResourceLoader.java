@@ -51,8 +51,8 @@ public class ClasspathResourceLoader implements ResourceLoader
 	boolean autoCheck = false;
 	protected String charset = "UTF-8";
 	String functionRoot = "functions";
-	String functionSuffix = "fn";
 	GroupTemplate gt = null;
+	String functionSuffix = "fn";
 	ClassLoader classLoader = null;
 
 	/**

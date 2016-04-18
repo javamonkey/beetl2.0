@@ -27,12 +27,9 @@
  */
 package org.beetl.ext.spring;
 
-import java.nio.charset.Charset;
+import java.util.Locale;
 
 import org.beetl.core.GroupTemplate;
-import org.beetl.core.ResourceLoader;
-import org.beetl.core.resource.ClasspathResourceLoader;
-import org.beetl.core.resource.FileResourceLoader;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -90,6 +87,7 @@ public class BeetlSpringViewResolver extends AbstractTemplateViewResolver implem
 	{
 		setViewClass(BeetlSpringView.class);
 	}
+	
 	
 	
 

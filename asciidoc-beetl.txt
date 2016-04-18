@@ -1,4 +1,4 @@
-﻿Beetl2.2使用说明书20151201
+﻿Beetl2.2使用说明书20160418
 ===================
 李家智 <xiandafu@126.com>
 :toc:
@@ -11,7 +11,7 @@
 
 
 == 什么是Beetl ==
-Beetl目前版本是2.2.7,相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
+Beetl目前版本是2.3.0,相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
 
 - 功能完备：作为主流模板引擎，Beetl具有相当多的功能和其他模板引擎不具备的功能。适用于*各种应用场景*，从对响应速度有很高要求的大网站到功能繁多的CMS管理系统都适合。Beetl本身还具有很多独特功能来完成模板编写和维护，这是其他模板引擎所不具有的。
 - 非常简单：类似Javascript语法和习俗，只要半小时就能通过半学半猜完全掌握用法。拒绝其他模板引擎那种非人性化的语法和习俗。同时也能支持html 标签，使得开发CMS系统比较容易
@@ -51,19 +51,19 @@ Beetl有些功能是发展了10多年的模板引擎所不具备的，这些功�
 
 - 包含有spring,jfinal,jodd,struts 等demo可以作为参考学习用 http://ibeetl.com/community/?/article/4 
 
-- 任何问题，都可以在ibeetl.com 群上提问。目前答复率是100%，提问需要详细说明自己的期望，出错信息，附上代码或者图片
+- 任何问题，都可以在ibeetl.com 社区上提问。目前答复率是100%，提问需要详细说明自己的期望，出错信息，附上代码或者图片
 
 **********************************************************************
 
 .联系作者
 **********************************************************************
-作者：闲.大赋 （李家智）
+作者：闲.大赋 （李家智）等（参考附录查看代码贡献者)
 
-QQ群：219324263
+QQ技术交流群：219324263
 
 邮件：xiandafu@126.com
 
-Beetl论坛：ibeetl.com
+Beetl社区：ibeetl.com
 
 源码主页：https://github.com/javamonkey/beetl2.0
 
@@ -120,7 +120,7 @@ Beetl的核心是GroupTemplate，创建GroupTemplate需要俩个参数，一个�
 
 === 模板基础配置 ===
 
-Beetl提供不但功能齐全，而且还有很多独特功能，通过简单的配置文件，就可以定义众多的功能，默认情况下，Configuration类总是会先加载默认的配置文件（位于/org/beetl/core/beetl-default.properties，作为新手，**通常只需要关注3,4,5,6行定界符的配置，以及11行模板字符集的配置就可以了**，其他配置会在后面章节陆续提到）下，其内容片断如下：
+Beetl提供不但功能齐全，而且还有很多独特功能，通过简单的配置文件，就可以定义众多的功能，默认情况下，Configuration类总是会先加载默认的配置文件（位于/org/beetl/core/beetl-default.properties，作为新手，**通常只需要关注3,4,5,6行定界符的配置，以及12行模板字符集的配置就可以了**，其他配置会在后面章节陆续提到）下，其内容片断如下：
 [source,text]
 ----------------------------
 #默认配置
@@ -480,7 +480,7 @@ var content = {
 
 === 引用属性 ===
 
-属性引用是模板中的重要一部分，beetl支持属性引用如果javascript的支持方式一样，如下
+属性引用是模板中的重要一部分，beetl支持属性同javascript的支持方式一样，如下
 
 1	 Beetl支持通过”.”号来访问对象的的属性，如果javascript一样。如果User对象有个getName()方法，那么在模板中，可以通过${xxx.name}来访问
 
@@ -998,7 +998,7 @@ for(item in list!){
 
 <%
 if(has(flag)){
-	print("not exit")
+	print("flag变量存在，可以访问")
 }
 %>
 ----------------------------
@@ -1016,7 +1016,7 @@ if(has(flag)||flag==0){
 %>
 ----------------------------
 
-如果flag不存在，或者flag存在，但值是0，都将执行if语句
+如果flag存在，或者flag存在，但值是0，都将执行if语句
 
 但是，有更为简便的方法是直接用安全输出，如
 
@@ -2725,6 +2725,37 @@ Web集成模块向模板提供web标准的变量，做如下说明
 
 你可以在模板任何地方访问这些变量
 
+如果你需要扩展更多属性，你也可以配置beetl.properties配置文件的WEBAPP_EXT属性，实现WebRenderExt接口，在渲染模板之前增加自己的扩展，如:
+
+
+[source,text]
+----------------------------
+
+RESOURCE.root=/WEB-INF/views
+WEBAPP_EXT = com.park.oss.util.GlobalExt
+
+----------------------------
+
+
+[source,java]
+----------------------------
+
+public class GlobalExt implements WebRenderExt{
+
+	static long version = System.currentTimeMillis();
+	@Override
+	public void modify(Template template, GroupTemplate arg1, HttpServletRequest arg2, HttpServletResponse arg3) {
+		//js,css 的版本编号
+		template.binding("sysVersion",version);
+	}
+
+}
+
+
+----------------------------
+
+这样，每次在模板里都可以访问变量sysVersion了，不需要再controller里设置，或者通过servlet filter来设置
+
 === 集成技术开发指南 ===
 
 
@@ -2798,7 +2829,12 @@ public class WebRender
 			template.binding("ctxPath", request.getContextPath());
 
 			modifyTemplate(template, key, request, response, args);
-
+			
+			String strWebAppExt = gt.getConf().getWebAppExt();
+			if(strWebAppExt!=null){
+				WebRenderExt renderExt = this.getWebRenderExt(strWebAppExt);
+				renderExt.modify(template, gt, request, response);
+			}
 			if (gt.getConf().isDirectByteOutput())
 			{
 				os = response.getOutputStream();
@@ -2937,7 +2973,7 @@ public ModelAndView index(HttpServletRequest req) {
 ----------------------------
 
 
-https://git.oschina.net/xiandafu/beetl-spring-sample  有完整例子
+http://git.oschina.net/xiandafu/springbeetlsql  有完整例子
 
 === SpringMVC集成高级 ===
 

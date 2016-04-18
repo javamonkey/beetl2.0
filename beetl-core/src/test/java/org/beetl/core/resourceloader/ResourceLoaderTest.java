@@ -13,18 +13,18 @@ import org.testng.annotations.Test;
 public class ResourceLoaderTest extends BasicTestCase
 {
 
-	@Test
-	public void testSimple() throws Exception
-	{
-
-		FileResourceLoader f = new FileResourceLoader();
-		boolean exist = f.exist("/build.xml");
-		AssertJUnit.assertTrue(exist);
-
-		ClasspathResourceLoader cp = new ClasspathResourceLoader();
-		exist = cp.exist("/template/resourceloader/cp.txt");
-		AssertJUnit.assertTrue(exist);
-	}
+//	@Test
+//	public void testSimple() throws Exception
+//	{
+//
+//		FileResourceLoader f = new FileResourceLoader();
+//		boolean exist = f.exist("/build.xml");
+//		AssertJUnit.assertTrue(exist);
+//
+//		ClasspathResourceLoader cp = new ClasspathResourceLoader();
+//		exist = cp.exist("/template/resourceloader/cp.txt");
+//		AssertJUnit.assertTrue(exist);
+//	}
 
 	@Test
 	public void testExtraLoader() throws Exception

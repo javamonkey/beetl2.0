@@ -45,8 +45,10 @@ import org.beetl.core.exception.HTMLTagParserException;
 import org.beetl.core.exception.ScriptEvalError;
 import org.beetl.core.fun.FunctionWrapper;
 import org.beetl.core.misc.BeetlUtil;
+import org.beetl.core.misc.ByteClassLoader;
 import org.beetl.core.misc.ClassSearch;
 import org.beetl.core.misc.PrimitiveArrayUtil;
+import org.beetl.core.om.AttributeAccess;
 import org.beetl.core.om.ObjectUtil;
 import org.beetl.core.resource.ClasspathResourceLoader;
 import org.beetl.core.statement.ErrorGrammarProgram;
@@ -61,7 +63,10 @@ public class GroupTemplate
 {
 
 	/* 模板在运行过程中,class方法，accessory调用等需要的classLoader */
-	ClassLoader classLoader = null;
+	ClassLoader classLoader = GroupTemplate.class.getClassLoader();
+	
+	ByteClassLoader byteLoader = new ByteClassLoader(classLoader);
+
 	ResourceLoader resourceLoader = null;
 	Configuration conf = null;
 	TemplateEngine engine = null;
@@ -311,17 +316,31 @@ public class GroupTemplate
 	}
 
 	/**
-	 * 使用loader 和 默认的模板引擎配置来初始化GroupTempalte
+	 * GroupTempalte 动态加载默写类使用的classloader
 	 * 
 	 * @param classLoader
 	 *            资源加载器
 	 * 
 	 */
 
-	protected void setClassLoader(ClassLoader classLoader)
+	public void setClassLoader(ClassLoader classLoader)
 	{
-
+		this.classLoader = classLoader;
+		byteLoader = new ByteClassLoader(classLoader);
 	}
+	
+	
+	
+	/**
+	 * 返回用来加载动态类的classloader，此加载类的parent loader是通过
+	 * setClassLoader 添加的，默认就是加载beetl包的classloader
+	 * @return
+	 */
+	public ByteClassLoader getByteLoader() {
+		return byteLoader;
+	}
+
+	
 
 	/** 执行某个脚本，参数是paras，返回的是顶级变量
 	 * @param key

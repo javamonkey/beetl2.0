@@ -8,6 +8,7 @@ import java.util.Stack;
 
 import org.beetl.core.Context;
 import org.beetl.core.Event;
+import org.beetl.core.GroupTemplate;
 import org.beetl.core.InferContext;
 import org.beetl.core.Listener;
 import org.beetl.core.exception.BeetlException;
@@ -31,6 +32,7 @@ public class VarAttributeNodeListener implements Listener
 	public Object onEvent(Event e)
 	{
 		Stack stack = (Stack) e.getEventTaget();
+	
 		Object o = stack.peek();
 		if (o instanceof VarRef)
 		{
@@ -48,7 +50,8 @@ public class VarAttributeNodeListener implements Listener
 					// 换成速度较快的属性访问类
 					try
 					{
-						AttributeAccess aa = AttributeAccessFactory.buildFiledAccessor(type.cls, name);
+						GroupTemplate gt = (GroupTemplate)((Map)stack.get(0)).get("groupTemplate");
+						AttributeAccess aa = AttributeAccessFactory.buildFiledAccessor(type.cls, name,gt);
 						attr.aa = aa;
 					}
 					catch (BeetlException ex)
@@ -87,7 +90,8 @@ public class VarAttributeNodeListener implements Listener
 								try
 								{
 									String attributeName = (String) literal.obj;
-									AttributeAccess aa = AttributeAccessFactory.buildFiledAccessor(c, attributeName);
+									GroupTemplate gt = (GroupTemplate)((Map)stack.get(0)).get("groupTemplate");
+									AttributeAccess aa = AttributeAccessFactory.buildFiledAccessor(c, attributeName,gt);
 									ref.attributes[i] = new VarSquareAttribute2((VarSquareAttribute) attrs[i],
 											attributeName, aa);
 								}

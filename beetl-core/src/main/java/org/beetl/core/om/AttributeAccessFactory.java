@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.beetl.core.GroupTemplate;
 import org.beetl.core.exception.BeetlException;
 
 /**
@@ -60,7 +61,7 @@ public class AttributeAccessFactory
 	public static ObjectAA objectAA = new ObjectAA();
 	public static MapEntryAA mapEntryAA = new MapEntryAA();
 
-	static public AttributeAccess buildFiledAccessor(Class c, String attrExp)
+	static public AttributeAccess buildFiledAccessor(Class c, String attrExp,GroupTemplate gt)
 	{
 
 		if (c == Object.class)
@@ -118,7 +119,7 @@ public class AttributeAccessFactory
 						if (aa != null)
 							return aa;
 						aa = AttributeCodeGen.createAAClass(pojoResult.c, name, pojoResult.realMethodName,
-								pojoResult.returnType);
+								pojoResult.returnType,gt);
 
 						pojoCache.put(className, aa);
 						return aa;
@@ -141,7 +142,7 @@ public class AttributeAccessFactory
 							if (aa != null)
 								return aa;
 							
-							aa = AttributeCodeGen.createAAClass(c, "get", "get", pojoResult.returnType, pojoResult.parameter);
+							aa = AttributeCodeGen.createAAClass(c, "get", "get", pojoResult.returnType, pojoResult.parameter,gt);
 							generalGetCache.put(className, aa);
 							return aa;
 						}

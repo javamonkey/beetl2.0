@@ -1,4 +1,4 @@
-﻿Beetl2.2使用说明书20151201
+Beetl2.2使用说明书20151201
 ===================
 李家智 <xiandafu@126.com>
 :toc:
@@ -1636,7 +1636,7 @@ TAG.htmltag= org.beetl.ext.tag.HTMLTagSupportWrapper
 
 -------------------------
 
-fn前缀表示Function，fnp前缀表示FunctionPackage，FT表示format函数，FTC表示类的默认Format函数，TAG表示标签类。Beetl强烈建议通过配置文件加载扩展。以便随后IDE插件能识别这些注册函数
+FN前缀表示Function，FNP前缀表示FunctionPackage，FT表示format函数，FTC表示类的默认Format函数，TAG表示标签类。Beetl强烈建议通过配置文件加载扩展。以便随后IDE插件能识别这些注册函数
 
 
 === 自定义方法 ===

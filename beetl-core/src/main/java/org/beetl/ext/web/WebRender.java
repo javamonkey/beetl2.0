@@ -67,6 +67,7 @@ public class WebRender
 		OutputStream os = null;
 		String ajaxId = null;
 		Template template = null;
+		boolean isError = false;
 		try
 
 		{
@@ -106,6 +107,13 @@ public class WebRender
 
 			modifyTemplate(template, key, request, response, args);
 
+			String strWebAppExt = gt.getConf().getWebAppExt();
+			if(strWebAppExt!=null){
+				WebRenderExt renderExt = this.getWebRenderExt(strWebAppExt);
+				renderExt.modify(template, gt, request, response);
+			}
+			
+			
 			if (gt.getConf().isDirectByteOutput())
 			{
 				os = response.getOutputStream();
@@ -120,10 +128,14 @@ public class WebRender
 		}
 		catch (IOException e)
 		{
+			isError = true;
 			handleClientError(e);
 		}
 		catch (BeetlException e)
 		{
+			isError = true;
+//			response.setStatus(500);
+//			
 			handleBeetlException(e);
 		}
 
@@ -131,9 +143,10 @@ public class WebRender
 		{
 			try
 			{
-				if (writer != null)
+				
+				if (!isError&&writer != null)
 					writer.flush();
-				if (os != null)
+				if (!isError&&os != null)
 				{
 					os.flush();
 				}
@@ -173,5 +186,16 @@ public class WebRender
 	protected void handleBeetlException(BeetlException ex)
 	{
 		throw ex;
+	}
+	
+	protected WebRenderExt getWebRenderExt(String clsName){
+		//有效率问题，没有必要每次都初始化一个类
+		try{
+			WebRenderExt render = (WebRenderExt)Class.forName(clsName).newInstance();
+			return render;
+		}catch(Exception ex){
+			throw new RuntimeException("加载WebRenderExt错误，检查配置项WEBAPP_EXT:"+ex.getMessage(),ex);
+		}
+		
 	}
 }

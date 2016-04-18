@@ -96,6 +96,11 @@ public class Configuration
 	 * 类搜索的包名列表
 	 */
 	Set<String> pkgList = new HashSet<String>();
+	
+	/**
+	 * 渲染web 前执行的代码，需要实现WebRenderExt接口，如果为空，则不做操作
+	 */
+	String webAppExt = null;
 
 	// 关于引擎的设置
 
@@ -128,6 +133,7 @@ public class Configuration
 	public static String TEMPLATE_CHARSET = "TEMPLATE_CHARSET";
 	public static String ERROR_HANDLER = "ERROR_HANDLER";
 	public static String MVC_STRICT = "MVC_STRICT";
+	public static String WEBAPP_EXT = "WEBAPP_EXT";
 	public static String HTML_TAG_SUPPORT = "HTML_TAG_SUPPORT";
 	public static String HTML_TAG_FLAG = "HTML_TAG_FLAG";
 	public static String IMPORT_PACKAGE = "IMPORT_PACKAGE";
@@ -248,6 +254,14 @@ public class Configuration
 				this.errorHandlerClass = value;
 			}
 
+		}else if(key.equalsIgnoreCase(WEBAPP_EXT)){
+			if(value==null||value.length()==0){
+				
+				this.webAppExt = null;
+			}else{
+				this.webAppExt = value;
+			}
+			
 		}
 		else if (key.equalsIgnoreCase(MVC_STRICT))
 		{
@@ -578,6 +592,16 @@ public class Configuration
 	public void setNativeSecurity(String nativeSecurity)
 	{
 		this.nativeSecurity = nativeSecurity;
+	}
+
+	
+	
+	public String getWebAppExt() {
+		return webAppExt;
+	}
+
+	public void setWebAppExt(String webAppExt) {
+		this.webAppExt = webAppExt;
 	}
 
 	public boolean isIgnoreClientIOError()

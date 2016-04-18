@@ -27,6 +27,7 @@
  */
 package org.beetl.ext.spring;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -51,7 +52,7 @@ public class BeetlSpringView extends AbstractTemplateView
 	/**
 	 * 视图使用的Beetl GroupTemplate，由ViewResolver注入，如果不设置，取上下文中唯一的GroupTemplate对象
 	 */
-	private GroupTemplate groupTemplate = null;
+	protected GroupTemplate groupTemplate = null;
 
 	/**
 	 * 视图使用的Beetl GroupTemplate，由ViewResolver注入，如果不设置，取上下文中唯一的GroupTemplate对象
@@ -63,6 +64,14 @@ public class BeetlSpringView extends AbstractTemplateView
 	{
 		this.groupTemplate = groupTemplate;
 	}
+	
+	
+
+	public GroupTemplate getGroupTemplate() {
+		return groupTemplate;
+	}
+
+
 
 	/* ----- ----- ----- ----- 构造函数 ----- ----- ----- ----- */
 	/**
@@ -113,4 +122,11 @@ public class BeetlSpringView extends AbstractTemplateView
 		String path = getUrl();
 		render.render(path, request, response, model);
 	}
+	
+	@Override
+	public boolean checkResource(Locale locale) throws Exception {
+//	    BeetlGroupUtilConfiguration config = getApplicationContext().getBean(BeetlGroupUtilConfiguration.class);
+	    return groupTemplate.getResourceLoader().exist(getUrl());
+	}
+	
 }

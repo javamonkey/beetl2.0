@@ -83,6 +83,7 @@ public class GroupTemplate
 	NativeSecurityManager nativeSecurity = null;
 	ErrorHandler errorHandler = null;
 	Map<String, Object> sharedVars = null;
+	
 
 	/**
 	 * 使用默认的配置和默认的模板资源加载器{@link ClasspathResourceLoader}，

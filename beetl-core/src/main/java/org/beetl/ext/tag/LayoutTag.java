@@ -92,7 +92,7 @@ public class LayoutTag extends Tag
 		t.binding(ctx.globalVar);
 		t.dynamic(ctx.objectKeys);
 
-		if (args.length == 2)
+		if (args.length >= 2)
 		{
 			Map<String, Object> map = (Map<String, Object>) args[1];
 			for (Entry<String, Object> entry : map.entrySet())

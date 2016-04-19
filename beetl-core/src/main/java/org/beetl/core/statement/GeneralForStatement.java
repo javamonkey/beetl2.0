@@ -77,7 +77,7 @@ public class GeneralForStatement extends Statement implements IGoto
 		}
 		//todo 需要提高效率，减少hasLooped赋值，以及每次gotoFlag检测，然而，这个不太常用，目前不优化
 
-		boolean hasLooped = false;
+//		boolean hasLooped = false;
 		for (;;)
 		{
 			Object val = condtion.evaluate(ctx);
@@ -95,7 +95,7 @@ public class GeneralForStatement extends Statement implements IGoto
 
 			if (bool)
 			{
-				hasLooped = true;
+//				hasLooped = true;
 				forPart.execute(ctx);
 				switch (ctx.gotoFlag)
 				{
@@ -103,7 +103,7 @@ public class GeneralForStatement extends Statement implements IGoto
 						break;
 					case IGoto.CONTINUE:
 						ctx.gotoFlag = IGoto.NORMAL;
-						continue;
+						break;
 					case IGoto.RETURN:
 						return;
 					case IGoto.BREAK:

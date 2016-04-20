@@ -126,7 +126,18 @@ public class BeetlSpringView extends AbstractTemplateView
 	@Override
 	public boolean checkResource(Locale locale) throws Exception {
 //	    BeetlGroupUtilConfiguration config = getApplicationContext().getBean(BeetlGroupUtilConfiguration.class);
-	    return groupTemplate.getResourceLoader().exist(getUrl());
+	    String url = getUrl();
+	    //去掉ajax 部分。
+	    if (url.contains("#")) {
+			String[] split = url.split("#");
+			if (split.length > 2) {
+				throw new Exception("视图名称有误：" + url);
+			}
+			return groupTemplate.getResourceLoader().exist(split[0]);
+		}else{
+			return groupTemplate.getResourceLoader().exist(url);
+		}
+		
 	}
 	
 }

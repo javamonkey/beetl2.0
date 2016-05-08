@@ -56,7 +56,7 @@ public class FileFunctionWrapper implements Function
 		try
 		{
 
-			Template template = ctx.gt.getTemplate(this.resourceId);
+			Template template = ctx.gt.getHtmlFunctionOrTagTemplate(this.resourceId);
 			// 能显示异常
 			template.isRoot = false;
 			template.binding(ctx.globalVar);

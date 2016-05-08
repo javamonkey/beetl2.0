@@ -101,6 +101,12 @@ public class Configuration
 	 * 渲染web 前执行的代码，需要实现WebRenderExt接口，如果为空，则不做操作
 	 */
 	String webAppExt = null;
+	
+	//html方法和html标签是否使用特殊的定界符，如模板使用简介的@和回车,html 标签和html tag使用<%%>
+	boolean hasFunctionLimiter = false;
+	String functionLimiterStart = null;
+	String functionLimiterEnd = null;
+	
 
 	// 关于引擎的设置
 
@@ -141,6 +147,7 @@ public class Configuration
 	public static String NATIVE_SECUARTY_MANAGER = "NATIVE_SECUARTY_MANAGER";
 	public static String RESOURCE_LOADER = "RESOURCE_LOADER";
 	public static String HTML_TAG_BINDING_ATTRIBUTE = "HTML_TAG_BINDING_ATTRIBUTE";
+	public static String FUNCTION_TAG_LIMITER = "FUNCTION_TAG_LIMITER";
 
 	Properties ps = null;
 
@@ -168,6 +175,7 @@ public class Configuration
 	public Configuration(Properties ps) throws IOException
 	{
 		this();
+//		this.ps.putAll(myPs);
 		parseProperties(ps);
 
 	}
@@ -195,7 +203,7 @@ public class Configuration
 		{
 			String key = (String) entry.getKey();
 			String value = (String) entry.getValue();
-			setValue(key, value.trim());
+			setValue(key, value==null?null:value.trim());
 		}
 	}
 
@@ -302,6 +310,16 @@ public class Configuration
 		else if (key.equalsIgnoreCase(RESOURCE_LOADER))
 		{
 			this.resourceLoader = value;
+		}else if(key.equalsIgnoreCase(FUNCTION_TAG_LIMITER)){
+			if(value!=null&&value.trim().length()!=0){
+				this.hasFunctionLimiter = true;
+				String[] pair = value.split(";");
+				this.functionLimiterStart = pair[0];
+				this.functionLimiterEnd = pair[1];
+				if(functionLimiterEnd.equalsIgnoreCase("null")){
+					functionLimiterEnd = null; // 回车作为结束符
+				}
+			}
 		}
 		else
 		{
@@ -737,6 +755,30 @@ public class Configuration
 	public void setPs(Properties ps)
 	{
 		this.ps = ps;
+	}
+
+	public boolean isHasFunctionLimiter() {
+		return hasFunctionLimiter;
+	}
+
+	public void setHasFunctionLimiter(boolean hasFunctionLimiter) {
+		this.hasFunctionLimiter = hasFunctionLimiter;
+	}
+
+	public String getFunctionLimiterStart() {
+		return functionLimiterStart;
+	}
+
+	public void setFunctionLimiterStart(String functionLimiterStart) {
+		this.functionLimiterStart = functionLimiterStart;
+	}
+
+	public String getFunctionLimiterEnd() {
+		return functionLimiterEnd;
+	}
+
+	public void setFunctionLimiterEnd(String functionLimiterEnd) {
+		this.functionLimiterEnd = functionLimiterEnd;
 	}
 
 }

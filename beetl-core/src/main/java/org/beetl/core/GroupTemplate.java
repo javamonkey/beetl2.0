@@ -468,7 +468,7 @@ public class GroupTemplate
 	 */
 	public Template getTemplate(String key, ResourceLoader loader)
 	{
-		return this.getTemplateByLoader(key, loader);
+		return this.getTemplateByLoader(key, loader,true);
 	}
 
 	/** 获取模板key的标有ajaxId的模板片段。
@@ -479,7 +479,7 @@ public class GroupTemplate
 	 */
 	public Template getAjaxTemplate(String key, String ajaxId, ResourceLoader loader)
 	{
-		Template template = this.getTemplateByLoader(key, loader);
+		Template template = this.getTemplateByLoader(key, loader,true);
 		template.ajaxId = ajaxId;
 		return template;
 	}
@@ -507,6 +507,13 @@ public class GroupTemplate
 		template.isRoot = false;
 		return template;
 	}
+	
+	public Template getHtmlFunctionOrTagTemplate(String key, String parent)
+	{
+		Template template = this.getHtmlFunctionOrTagTemplate(key);
+		template.isRoot = false;
+		return template;
+	}
 
 	/** 获取指定模板。
 	 * 注意，不能根据Template为空来判断模板是否存在，请调用ResourceLoader来判断
@@ -516,9 +523,18 @@ public class GroupTemplate
 	public Template getTemplate(String key)
 	{
 
-		return getTemplateByLoader(key, this.resourceLoader);
+		return getTemplateByLoader(key, this.resourceLoader,true);
 	}
 
+	/**
+	 * 对于用html function 或者html tag，允许使用特殊定界符号，此方法会检查是否为此配置了特殊的定界符号，并引用
+	 * @param key
+	 * @return
+	 */
+	public Template getHtmlFunctionOrTagTemplate(String key){
+		return getTemplateByLoader(key, this.resourceLoader,false);
+	}
+	
 	/** 获取模板的ajax片段，
 	 * @param key ，key为模板resourceId
 	 * @param ajaxId,ajax标示
@@ -527,12 +543,12 @@ public class GroupTemplate
 	public Template getAjaxTemplate(String key, String ajaxId)
 	{
 
-		Template t = getTemplateByLoader(key, this.resourceLoader);
+		Template t = getTemplateByLoader(key, this.resourceLoader,true);
 		t.ajaxId = ajaxId;
 		return t;
 	}
 
-	private Template getTemplateByLoader(String key, ResourceLoader loader)
+	private Template getTemplateByLoader(String key, ResourceLoader loader,boolean isTextTemplate)
 	{
 		key = key.intern();
 		Program program = (Program) this.programCache.get(key);
@@ -543,7 +559,7 @@ public class GroupTemplate
 				if (program == null)
 				{
 					Resource resource = loader.getResource(key);
-					program = this.loadTemplate(resource);
+					program = this.loadTemplate(resource,isTextTemplate);
 					this.programCache.set(key, program);
 					return new Template(this, program, this.conf);
 				}
@@ -555,7 +571,7 @@ public class GroupTemplate
 			synchronized (key)
 			{
 				Resource resource = loader.getResource(key);
-				program = this.loadTemplate(resource);
+				program = this.loadTemplate(resource,isTextTemplate);
 				this.programCache.set(key, program);
 			}
 		}
@@ -587,14 +603,29 @@ public class GroupTemplate
 		programCache.remove(key);
 	}
 
-	private Program loadTemplate(Resource res)
+	private Program loadTemplate(Resource res,boolean isTextTemplate)
 	{
 
 		Transformator sf = null;
 		try
 		{
 			Reader reader = res.openReader();
-			sf = new Transformator(conf.placeholderStart, conf.placeholderEnd, conf.statementStart, conf.statementEnd);
+			if(isTextTemplate){
+				sf = new Transformator(conf.placeholderStart, conf.placeholderEnd, conf.statementStart, conf.statementEnd);
+				
+				
+			}else{
+				if(conf.isHasFunctionLimiter()){
+					sf = new Transformator(conf.placeholderStart, conf.placeholderEnd,
+							conf.functionLimiterStart, 
+									conf.functionLimiterEnd);
+				}else{
+					sf = new Transformator(conf.placeholderStart, conf.placeholderEnd, conf.statementStart, conf.statementEnd);
+					
+				}
+				
+				
+			}
 			if (this.conf.isHtmlTagSupport())
 			{
 				sf.enableHtmlTagSupport(conf.getHtmlTagStart(), conf.getHtmlTagEnd(),

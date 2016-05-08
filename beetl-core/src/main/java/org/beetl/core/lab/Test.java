@@ -51,6 +51,7 @@ public class Test
 					t.binding("cs", new ChargingStation());
 					t.binding("info",TestUser.getInfo());
 					t.binding("n", new BigDecimal("0.0000"));
+					t.binding("bo", "a");
 					ByteArrayOutputStream bs = new ByteArrayOutputStream();
 					try
 					{

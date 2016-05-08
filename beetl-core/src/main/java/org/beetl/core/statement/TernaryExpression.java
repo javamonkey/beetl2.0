@@ -56,17 +56,18 @@ public class TernaryExpression extends Expression
 
 	public Object evaluate(Context ctx)
 	{
-		boolean cond = false;
-		try
-		{
-			cond = (Boolean) condtion.evaluate(ctx);
-		}
-		catch (ClassCastException e)
-		{
-			BeetlException be = new BeetlException(BeetlException.BOOLEAN_EXPECTED_ERROR, e.getMessage());
-			be.pushToken(this.token);
+		
+		Object value = condtion.evaluate(ctx);
+		if(value==null){
+			BeetlException be = new BeetlException(BeetlException.NULL);
+			be.pushToken(condtion.token);
+			throw be;
+		}else if(!(value instanceof Boolean)){
+			BeetlException be = new BeetlException(BeetlException.BOOLEAN_EXPECTED_ERROR);
+			be.pushToken(condtion.token);
 			throw be;
 		}
+		boolean cond = (Boolean)value;
 
 		if (cond)
 		{

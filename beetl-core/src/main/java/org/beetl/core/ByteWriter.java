@@ -161,4 +161,10 @@ public abstract class ByteWriter
 		return localBuffer;
 	}
 
+	public ByteWriter getParent() {
+		return parent;
+	}
+	
+	
+
 }

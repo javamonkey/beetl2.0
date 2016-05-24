@@ -926,7 +926,7 @@ Beetl内置函数请参考附录，以下列出了常用的函数
 
 针对前俩种种情况，可以在变量引用后加上！以提醒beetl这是一个安全输出的变量。
 
-如${{user.wife.name! },即使user不存在，或者user为null，或者user.wife为null，或者user.wife.name为null beetl都不将输出
+如${user.wife.name! },即使user不存在，或者user为null，或者user.wife为null，或者user.wife.name为null beetl都不将输出
 
 可以在!后增加一个常量（字符串，数字类型等），或者另外一个变量，方法，本地调用，作为默认输出，譬如：
 

@@ -166,6 +166,11 @@ public class Template
 				throw e;
 			}
 			errorHandler.processExcption(e, w);
+			try {
+				ctx.byteWriter.flush();
+			} catch (IOException e1) {
+				//输出到客户端
+			}
 
 		}
 		catch (IOException e)
@@ -184,6 +189,11 @@ public class Template
 				}
 				Writer w = BeetlUtil.getWriterByByteWriter(ctx.byteWriter);
 				errorHandler.processExcption(be, w);
+				try {
+					ctx.byteWriter.flush();
+				} catch (IOException e1) {
+					//输出到客户端
+				}
 
 			}
 			else

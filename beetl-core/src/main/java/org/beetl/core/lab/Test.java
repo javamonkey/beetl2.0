@@ -28,19 +28,18 @@ public class Test
 				Configuration cfg = Configuration.defaultConfiguration();
 				cfg.setDirectByteOutput(true);
 				cfg.getResourceMap().put("RESOURCE.autoCheck", "true");
+				
 				GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 				cfg.setStatementStart("<%");
 				cfg.setStatementEnd("%>");
 				gt.registerFunctionPackage("test", new TestUser(""));
-				gt.registerTag("table", TestGeneralVarTagBinding.class);
-				gt.registerFormat("nf",new NewFormat());
+			
 				for (int i = 0; i < 2; i++)
 				{
 					
 					Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
 					t.binding("$page",new HashMap());
 					t.binding("user", new TestUser(""));
-					t.binding("cs", new ChargingStation());
 					t.binding("info",TestUser.getInfo());
 					t.binding("n", new BigDecimal("0.0000"));
 					t.binding("bo", "a");

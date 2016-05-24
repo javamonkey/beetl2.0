@@ -225,6 +225,12 @@ public class BeetlUtil
 
 	public static Writer getWriterByByteWriter(ByteWriter byteWriter)
 	{
+		
+		ByteWriter temp = null;
+		while((temp=byteWriter.getParent())!=null){
+			byteWriter = temp;
+		}
+		
 		Writer w = null;
 		if (byteWriter instanceof ByteWriter_Char)
 		{

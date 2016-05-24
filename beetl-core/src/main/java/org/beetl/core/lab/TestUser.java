@@ -10,7 +10,7 @@ import java.util.List;
  *
  *
  */
-public class TestUser implements IdEntity<Integer>
+public class TestUser 
 {
 	String name = "default";
 	int age = 18;
@@ -186,17 +186,7 @@ public class TestUser implements IdEntity<Integer>
 
 	}
 
-	@Override
-	public void setId(Integer id) {
-		// TODO Auto-generated method stub
-		
-	}
 
-	@Override
-	public Integer getId() {
-		// TODO Auto-generated method stub
-		return this.id;
-	}
 	
 	public static Info getInfo(){
 		return new InfoImpl();

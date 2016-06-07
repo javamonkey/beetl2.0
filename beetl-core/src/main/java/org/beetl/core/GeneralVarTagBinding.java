@@ -119,5 +119,10 @@ public abstract class GeneralVarTagBinding extends Tag implements TagVarBinding
 	{
 		return (String) this.args[0];
 	}
+	
+	public Map<String,Object> getAttributes()
+	{
+		return (Map<String,Object> )this.args[0];
+	}
 
 }

@@ -40,7 +40,8 @@ public class Test
 				GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 				cfg.setStatementStart("<%");
 				cfg.setStatementEnd("%>");
-				gt.registerFunctionPackage("test", new TestUser(""));
+			
+				gt.registerFunction("test", new TestFun());
 			
 				for (int i = 0; i < 2; i++)
 				{
@@ -73,13 +74,14 @@ public class Test
 	{
 
 		@Override
-		public List call(Object[] paras, Context ctx)
+		public String[] call(Object[] paras, Context ctx)
 		{
 			List list = new ArrayList();
 			list.add("hi");
 			list.add("joel");
 			System.out.println("list -----");
-			return list;
+			return (String[])list.toArray(new String[0]);
+			
 		}
 
 	}

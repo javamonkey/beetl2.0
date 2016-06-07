@@ -61,7 +61,7 @@ import org.beetl.core.exception.BeetlParserException;
  */
 public class ObjectUtil
 {
-	static Map<String, MethodInvoker> methodInvokerCache = new ConcurrentHashMap<String, MethodInvoker>();
+	public static Map<Class, Map<String,MethodInvoker>> methodInvokerCache = new ConcurrentHashMap<Class, Map<String,MethodInvoker>>();
 	//	static Map<Class, Method[]> cacheClassMethodMap = new ConcurrentHashMap<Class, Method[]>();
 	public static Map<Class, ObjectInfo> cachedClassInfoMap = new ConcurrentHashMap<Class, ObjectInfo>();
 	public static Object[] EMPTY_OBJECT_ARRAY = new Object[0];
@@ -107,6 +107,7 @@ public class ObjectUtil
 	 * 遵循javabean规范
 	 * @param attrName
 	 * @return
+	 * @deprecated 并不遵循java规范
 	 */
 	public static String getGetMethod(String attrName)
 	{
@@ -119,6 +120,7 @@ public class ObjectUtil
 	 * 遵循javabean规范
 	 * @param attrName
 	 * @return
+	 * @deprecated 并不遵循java规范
 	 */
 	public static String getSetMethod(String attrName)
 	{
@@ -131,6 +133,7 @@ public class ObjectUtil
 	 * 遵循javabean规范
 	 * @param attrName
 	 * @return
+	 * @deprecated 并不遵循java规范
 	 */
 	public static String getIsMethod(String attrName)
 	{
@@ -147,13 +150,18 @@ public class ObjectUtil
 	public static MethodInvoker getInvokder(Class c, String name)
 	{
 		//先检测 get，然后 is，然后是general get
-
-		String key = c.toString().concat("_").concat(name);
-		MethodInvoker invoker = methodInvokerCache.get(key);
-		if (invoker != null)
-		{
-			return invoker;
+//性能慢，但需要证,重要的是，类重加载后，根据字符串知道method，是错误的
+//		String key = c.toString().concat("_").concat(name); 
+		MethodInvoker invoker = null;
+		Map<String,MethodInvoker> map = methodInvokerCache.get(c);
+		if(map!=null){
+			invoker = map.get(name);
+			if (invoker != null)
+			{
+				return invoker;
+			}
 		}
+		
 		//try get
 		String methodName = getGetMethod(name);
 		Method method = getGetMethod(c, methodName, null);
@@ -217,10 +225,15 @@ public class ObjectUtil
 		}
 		
 		
+		
+		
 		if (invoker != null)
 		{
-			methodInvokerCache.put(key, invoker);
-
+			if(map==null){
+				map = new ConcurrentHashMap<String,MethodInvoker>();
+				methodInvokerCache.put(c, map);
+			}
+			map.put(name, invoker);
 			return invoker;
 		}
 		else

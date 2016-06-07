@@ -2,7 +2,6 @@ package org.beetl.core.lab;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,15 +22,8 @@ public class Test
 	public static void main(String[] args) throws Exception
 	{
 		
-		DecimalFormat df = new DecimalFormat("#.##");
-		String str =  df.format(BigDecimal.ONE);
-		System.out.println(str);
-//			TestUser.Info info = TestUser.getInfo();
-//			
-//			Class c = info.getClass();
-//			c.getClassLoader().
-//			int m = c.getModifiers();
-//			System.out.println(Modifier.isPublic(m));
+		
+		
 				ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader();
 				Configuration cfg = Configuration.defaultConfiguration();
 				cfg.setDirectByteOutput(true);
@@ -68,7 +60,9 @@ public class Test
 
 	}
 
-	
+	public static void testOne(){
+		
+	}
 
 	public static class TestFun implements Function
 	{

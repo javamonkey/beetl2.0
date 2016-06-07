@@ -13,7 +13,11 @@
 	<url>https://github.com/javamonkey/beetl2.0</url>
 	<modules>
 		<module>beetl-core</module>
+<<<<<<< HEAD
+		<!--  <module>beetl-performance</module> -->
+=======
 		<module>beetl-performance</module>
+>>>>>>> 9a8cafcdc0904850a7a19a4111ebe7b65da4ee72
 	</modules>
 	<dependencyManagement>
 		<dependencies>

@@ -453,12 +453,29 @@ public class AntlrProgramBuilder
 
 	protected AjaxStatement parseAjax(AjaxStContext ajaxCtx)
 	{
-		GrammarToken token = this.getBTToken(ajaxCtx.Identifier().getSymbol());
+		GrammarToken token = null;
+		String flag = "render";
+		List<TerminalNode>  nodes = ajaxCtx.Identifier();
+		if(nodes.size()==1){
+			token = this.getBTToken(nodes.get(0).getSymbol());
+		}else{
+			token = this.getBTToken(nodes.get(1).getSymbol());
+			flag =  nodes.get(01).getSymbol().getText();
+			if(!(flag.equals("render")||flag.equals("norender"))){
+				BeetlException be = new BeetlException(BeetlException.AJAX_NOT_FOUND,"flag="+flag);
+				be.pushToken(token);
+			}
+				
+			
+		}
+		
+		
+		
 		BlockContext blockCtx = ajaxCtx.block();
 
 		BlockStatement block = (BlockStatement) this.parseBlock(blockCtx.statement(), blockCtx);
 
-		AjaxStatement ajaxStat = new AjaxStatement(block, token);
+		AjaxStatement ajaxStat = new AjaxStatement(block, token,flag.equals("render"));
 
 		if (this.data.ajaxs == null)
 		{

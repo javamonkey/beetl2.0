@@ -83,6 +83,11 @@ public class BeetlException extends RuntimeException
 	 * AJAX已经定义过了
 	 */
 	public static final String AJAX_NOT_FOUND = "AJAX_NOT_FOUND";
+	
+	/**
+	 * AJAX 属性定义错误
+	 */
+	public static final String AJAX_PROPERTY_ERROR = "AJAX_PROPERTY_ERROR";
 
 	/**
 	 * 变量只读，通过template.set()的变量，即用于渲染模板的变量都是只读的，不能在模板中被改写

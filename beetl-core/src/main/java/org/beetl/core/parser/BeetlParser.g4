@@ -37,7 +37,7 @@ statement
     |   assignMent END  #assignSt
     |   functionTagCall #functionTagSt 
     |   statementExpression END   #statmentExpSt 
-    |   Ajax Identifier COLON block   #ajaxSt 
+    |   Ajax Identifier Identifier? COLON block   #ajaxSt 
     |   END   #end
       
     ;

@@ -38,11 +38,13 @@ public class AjaxStatement extends Statement
 {
 
 	BlockStatement block;
+	boolean defaultRender = false;
 
-	public AjaxStatement(BlockStatement block, GrammarToken token)
+	public AjaxStatement(BlockStatement block, GrammarToken token,boolean defaultRender)
 	{
 		super(token);
 		this.block = block;
+		this.defaultRender = defaultRender;
 
 	}
 

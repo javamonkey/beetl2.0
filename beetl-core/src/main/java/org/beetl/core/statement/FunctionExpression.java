@@ -191,7 +191,7 @@ public class FunctionExpression extends Expression
 		}
 
 		Type lastType = new Type(c);
-		if (vas != null)
+		if (vas == null)
 		{
 			this.type = lastType;
 			return;

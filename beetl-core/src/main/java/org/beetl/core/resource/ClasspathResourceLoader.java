@@ -149,7 +149,7 @@ public class ClasspathResourceLoader implements ResourceLoader
 	public void close()
 	{
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override

@@ -37,20 +37,28 @@ import org.beetl.core.InferContext;
 public class AjaxStatement extends Statement
 {
 
-	BlockStatement block;
-	boolean defaultRender = false;
+	public BlockStatement block;
+	//ajax 片段是否默认被渲染出来
+	boolean defaultRender = true;
+	String ajaxId = null;
+	
 
 	public AjaxStatement(BlockStatement block, GrammarToken token,boolean defaultRender)
 	{
 		super(token);
 		this.block = block;
 		this.defaultRender = defaultRender;
+		this.ajaxId = token.text;
 
 	}
 
 	@Override
 	public void execute(Context ctx)
 	{
+		if(ctx.template.ajaxId==null&&(!defaultRender)){
+			//渲染整个模板情况下，设置成不渲染
+			return;
+		}
 		block.execute(ctx);
 
 	}

@@ -62,7 +62,7 @@ public class ErrorGrammarProgram extends Program
 
 			public AjaxStatement getAjax(String anchor)
 			{
-				return new AjaxStatement(null, null) {
+				return new AjaxStatement(null, null,true) {
 					public void execute(Context ctx)
 					{
 						ErrorGrammarProgram.this.execute(ctx);

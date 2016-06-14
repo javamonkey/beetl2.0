@@ -58,7 +58,7 @@ public class ErrorInfo
 		errorLocalMap.put(BeetlException.VAR_NOT_DEFINED, concat("变量未定义", BeetlException.VAR_NOT_DEFINED));
 		errorLocalMap.put(BeetlException.FUNCTION_NOT_FOUND, concat("该方法未注册", BeetlException.FUNCTION_NOT_FOUND));
 		errorLocalMap.put(BeetlException.FUNCTION_INVALID, concat("方法未实现Function接口", BeetlException.FUNCTION_INVALID));
-		errorLocalMap.put(BeetlException.TAG_NOT_FOUND, concat("改标签未注册", BeetlException.TAG_NOT_FOUND));
+		errorLocalMap.put(BeetlException.TAG_NOT_FOUND, concat("该标签未注册", BeetlException.TAG_NOT_FOUND));
 		errorLocalMap.put(BeetlException.VIRTUAL_NOT_FOUND, concat("未找到虚拟属性", BeetlException.VIRTUAL_NOT_FOUND));
 		errorLocalMap.put(BeetlException.TAG_INSTANCE_ERROR, concat("创建Tag错", BeetlException.TAG_INSTANCE_ERROR));
 		errorLocalMap.put(BeetlException.NATIVE_CALL_INVALID,
@@ -110,6 +110,7 @@ public class ErrorInfo
 		errorLocalMap.put(BeetlException.AJAX_ALREADY_DEFINED,
 				concat("Ajax 锚点已经定义", BeetlException.AJAX_ALREADY_DEFINED));
 		errorLocalMap.put(BeetlException.AJAX_NOT_FOUND, concat("Ajax 锚点未定义", BeetlException.AJAX_NOT_FOUND));
+		errorLocalMap.put(BeetlException.AJAX_PROPERTY_ERROR, concat("Ajax 属性设置错误", BeetlException.AJAX_PROPERTY_ERROR));
 
 	}
 

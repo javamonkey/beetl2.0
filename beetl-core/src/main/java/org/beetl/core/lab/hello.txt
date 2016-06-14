@@ -1,7 +1,7 @@
+hi
 <%
-for(item in ["a","b"]){
-	var a = test()[itemLP.index-1];
-	
+#ajax render1 user:{
+	print("joel");
 	
 }
 %>

@@ -460,10 +460,11 @@ public class AntlrProgramBuilder
 			token = this.getBTToken(nodes.get(0).getSymbol());
 		}else{
 			token = this.getBTToken(nodes.get(1).getSymbol());
-			flag =  nodes.get(01).getSymbol().getText();
+			flag =  nodes.get(0).getSymbol().getText();
 			if(!(flag.equals("render")||flag.equals("norender"))){
-				BeetlException be = new BeetlException(BeetlException.AJAX_NOT_FOUND,"flag="+flag);
+				BeetlException be = new BeetlException(BeetlException.AJAX_PROPERTY_ERROR,"expect render or norender ,but "+flag);
 				be.pushToken(token);
+				throw be;
 			}
 				
 			

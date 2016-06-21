@@ -11,6 +11,7 @@ import org.beetl.core.Context;
 import org.beetl.core.Function;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Template;
+
 import org.beetl.core.resource.ClasspathResourceLoader;
 /**
  * http://sports.qq.com/a/20151126/029300.htm
@@ -34,6 +35,10 @@ public class Test
 				cfg.setStatementEnd("%>");
 			
 				gt.registerFunction("test", new TestFun());
+				
+				Page page = new Page();
+				page.data.add(new TestUser("joeli"));
+				
 			
 				for (int i = 0; i < 2; i++)
 				{
@@ -44,6 +49,7 @@ public class Test
 					t.binding("info",TestUser.getInfo());
 					t.binding("n", new BigDecimal("0.0000"));
 					t.binding("bo", "a");
+					t.binding("page", page);
 					ByteArrayOutputStream bs = new ByteArrayOutputStream();
 					try
 					{
@@ -59,6 +65,8 @@ public class Test
 				}
 
 	}
+	
+	
 
 	public static void testOne(){
 		
@@ -79,4 +87,6 @@ public class Test
 		}
 
 	}
+	
+	
 }

@@ -849,7 +849,9 @@ public class AntlrProgramBuilder
 			{
 				data.dynamicObjectSet = ds.getIdList();
 			}
-			return null;
+			ds = new DirectiveStatement(directive, Collections.EMPTY_SET, this.getBTToken(token));
+			
+			return ds;
 
 		}
 		else if (directive.equalsIgnoreCase("safe_output_open".intern()))

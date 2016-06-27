@@ -51,7 +51,7 @@ public class ClasspathResource extends Resource
 
 	File file = null;
 	long lastModified = 0;
-
+	
 	public ClasspathResource(String key, String path, ResourceLoader resourceLoader)
 	{
 		super(key, resourceLoader);
@@ -61,9 +61,14 @@ public class ClasspathResource extends Resource
 	@Override
 	public Reader openReader()
 	{
-
-		URL url = resourceLoader.getClass().getResource(path);
-
+		ClasspathResourceLoader loader = ((ClasspathResourceLoader)resourceLoader);
+		ClassLoader cs = loader.getClassLoader();
+		URL url = cs.getResource(path);
+		if(url==null){
+			//兼容以前的写法
+			url = resourceLoader.getClass().getResource(path);
+		}
+		
 		if (url == null)
 		{
 			BeetlException be = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR);

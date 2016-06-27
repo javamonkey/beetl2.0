@@ -220,7 +220,8 @@ public class ClasspathResourceLoader implements ResourceLoader
 		//初始化functions
 		URL url = classLoader.getResource("");
 		this.gt = gt;
-		if (url.getProtocol().equals("file"))
+		
+		if (url!=null&&url.getProtocol().equals("file"))
 		{
 
 			File fnRoot = new File(url.getFile() + File.separator + root + File.separator + this.functionRoot);
@@ -260,8 +261,14 @@ public class ClasspathResourceLoader implements ResourceLoader
 	@Override
 	public boolean exist(String key)
 	{
-		return this.classLoader.getClass().getResource(root + key)!=null;
-//		return this.classLoader.getResource(root + key) != null; 不兼容，暂时不能修改
+		URL url = this.classLoader.getResource(root + key);
+		if(url==null){
+			//兼容以前的
+			url = this.classLoader.getClass().getResource(root + key);
+		}
+		return url!=null;
+		
+
 	}
 
 	public String getCharset()
@@ -281,6 +288,14 @@ public class ClasspathResourceLoader implements ResourceLoader
 			return id;
 		else
 			return BeetlUtil.getRelPath(resource.getId(), id);
+	}
+
+	public ClassLoader getClassLoader() {
+		return classLoader;
+	}
+
+	public void setClassLoader(ClassLoader classLoader) {
+		this.classLoader = classLoader;
 	}
 
 }

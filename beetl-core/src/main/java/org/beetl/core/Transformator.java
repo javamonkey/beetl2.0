@@ -927,7 +927,7 @@ public class Transformator
 			String value = attr.substring(index + this.placeholderStart.length(), end);
 			value = value.replace("\\}", "}");
 			sb.append("(").append(value).append(")").append("+");
-			start = end + 1;
+			start = end + placeholderEnd.length();
 		}
 		//attr = "aaaa";
 		if (start == 0)
@@ -953,13 +953,13 @@ public class Transformator
 	public static void main(String[] args)
 	{
 		char c = '\\';
-		Transformator p = new Transformator("${", "}", "@", null);
-		p.enableHtmlTagSupport("<ns:", "</ns:", "var");
+		Transformator p = new Transformator("{{", "}}", "@", null);
+		p.enableHtmlTagSupport("<#", "/#>", "var");
 		try
 		{
 
 			// String str = "   #:var u='hello';:#  \n  $u$";
-			String str = "@var a=1;\n@var b=1;";
+			String str = "<#a id='{{a}}'/>";
 
 			BufferedReader reader = new BufferedReader(p.transform(str));
 			String line = null;

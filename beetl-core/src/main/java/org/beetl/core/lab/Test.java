@@ -1,6 +1,7 @@
 package org.beetl.core.lab;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,8 +12,8 @@ import org.beetl.core.Context;
 import org.beetl.core.Function;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Template;
-
 import org.beetl.core.resource.ClasspathResourceLoader;
+import org.beetl.core.statement.PlaceholderST;
 /**
  * http://sports.qq.com/a/20151126/029300.htm
  * @author xiandafu
@@ -33,9 +34,21 @@ public class Test
 				GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 				cfg.setStatementStart("<%");
 				cfg.setStatementEnd("%>");
+				
+				cfg.setPlaceholderStart("{{");
+				cfg.setPlaceholderEnd("}}");
 			
 				gt.registerFunction("test", new TestFun());
-				
+				gt.registerTag("col", ColumnTag.class);
+				PlaceholderST.output = new PlaceholderST.Output(){
+
+					@Override
+					public void write(Context ctx, Object value) throws IOException {
+						ctx.byteWriter.writeString("ok"+value.toString());
+						
+					}
+					
+				};
 				Page page = new Page();
 				page.data.add(new TestUser("joeli"));
 				

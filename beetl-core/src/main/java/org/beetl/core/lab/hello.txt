@@ -1,5 +1,7 @@
 <%
 var a = 1;
+var c = "20";
+var d = a/c;
 %>
 <#col id="{{a}}" var="c">
 {{c}}

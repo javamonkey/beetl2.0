@@ -35,9 +35,9 @@ public class Test
 				cfg.setStatementStart("<%");
 				cfg.setStatementEnd("%>");
 				
-				cfg.setPlaceholderStart("{{");
-				cfg.setPlaceholderEnd("}}");
-			
+//				cfg.setPlaceholderStart("{{");
+//				cfg.setPlaceholderEnd("}}");
+//			
 				gt.registerFunction("test", new TestFun());
 				gt.registerTag("col", ColumnTag.class);
 				PlaceholderST.output = new PlaceholderST.Output(){
@@ -53,7 +53,7 @@ public class Test
 				page.data.add(new TestUser("joeli"));
 				
 			
-				for (int i = 0; i < 2; i++)
+				for (int i = 0; i < 1; i++)
 				{
 					
 					Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");

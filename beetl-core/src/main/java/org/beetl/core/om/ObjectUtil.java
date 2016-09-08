@@ -191,7 +191,7 @@ public class ObjectUtil
 		
 		//bug fix:java bean 规范  cName--> getcName()
 		if(invoker==null){
-			if(name.length()>1&&(name.charAt(1)>'A'&&name.charAt(1)<'Z')){				
+			if(name.length()>1&&(name.charAt(1)>='A'&&name.charAt(1)<='Z')){				
 				methodName = "get"+name;
 				method = getGetMethod(c, methodName, null);
 				if(method!=null){

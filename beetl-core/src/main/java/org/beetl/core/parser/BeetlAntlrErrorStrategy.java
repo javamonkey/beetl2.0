@@ -27,7 +27,9 @@
  */
 package org.beetl.core.parser;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import org.antlr.v4.runtime.DefaultErrorStrategy;
 import org.antlr.v4.runtime.FailedPredicateException;
@@ -52,6 +54,12 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 {
 	
 	static HashSet<String> keys = new HashSet<String>();
+	static Map<String,String> expects = new HashMap<String,String>();
+	static{
+		expects.put("LEFT_PAR", "(");
+		expects.put("RIGHT_PAR", ")");
+		
+	}
 	static {
 		keys.add("select");
 		keys.add("if");
@@ -213,7 +221,11 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 
 		Token t = recognizer.getCurrentToken();
 		IntervalSet expecting = getExpectedTokens(recognizer);
-		String msg = "缺少输入 " + expecting.toString(recognizer.getTokenNames()) + " 在 " + getTokenErrorDisplay(t);
+		String expect = expecting.toString(recognizer.getTokenNames());
+		if(expects.containsKey(expect)){
+			expect = expects.get(expect);
+		}
+		String msg = "缺少输入 " + expect + " 在 " + getTokenErrorDisplay(t);
 
 		BeetlException exception = new BeetlParserException(BeetlException.PARSER_MISS_ERROR, msg);
 		exception.pushToken(this.getGrammarToken(t));

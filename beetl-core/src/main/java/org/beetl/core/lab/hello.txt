@@ -1,6 +1,8 @@
 <%
 var a = 1;
+if(a==1{
+print(a);
+}
+
+
 %>
-<#col id="{{a}}" var="c">
-{{c}}
-</#col>

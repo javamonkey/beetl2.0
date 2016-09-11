@@ -21,6 +21,7 @@ public class TestUser
 	boolean isOk = false;
 	int id = 0;
 	byte recycle = 1;
+	
 
 	public static enum ORDER
 	{
@@ -205,5 +206,7 @@ public class TestUser
 		}
 		
 	}
+
+	
 
 }

@@ -271,17 +271,17 @@ System.out.println(str);
 
 [source,java]
 ----------------------------
-ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader();		
-Configuration cfg = Configuration.defaultConfiguration();
+ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("org/beetl/sample/s01/”);		
+Configuration cfg = Configuration.defaultConfiguration(“);
 GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
-Template t = gt.getTemplate("/org/beetl/sample/s01/hello.txt");	
+Template t = gt.getTemplate("/hello.txt");	
 String str = t.render();
 System.out.println(str);
 
 
 ----------------------------
 
-第1行代码指定了模板根目录，即搜索模板的时候从根目录开始，如果new ClasspathResourceLoader("/template"),则表示搜索/template下的模板。此处用空构造函数，表示搜索路径是根路径，且字符集默认字符集UTF-8.
+第1行代码指定了模板根目录，即搜索模板的时候从根目录开始，如果new ClasspathResourceLoader("template/"),则表示搜索template下的模板。此处用空构造函数，表示搜索路径是根路径，且字符集默认字符集UTF-8.
 
 第4行通过模板的相对路径org/beetl/sample/s01/hello.txt来加载模板
 
@@ -3170,6 +3170,20 @@ Beetl视图解析器属性同spring自带的视图解析器一样，支持conten
 - 以"forward:"为前缀时：表示转发，不产生BeetlView渲染模版。而是直接通过Servlet的机制转发请求（关于转发和重定向的区别，请自行查看Servlet API) forward:前缀后面的内容为转发地址，一般都是以/开头相对于当前Web应用的根目录
 
 
+其他集成需要注意的事项:
+
+- spring集成，请不要使用spring的 前缀配置,改用beetl的RESOURCE.ROOT 配置，否则include，layout会找不到模板
+- spring boot，因为是从classpath里加载模板文件，所以请使用ClasspathResourceLoader来初始化GroupTemplate，而不要使用FileResourceLoader
+
+- spring boot集成需要注意的是要添加spring-devtools.properties文件,并配置如下选项
+
+[source,test]
+----------------------------
+restart.include.beetl=/beetl-xxx.jar
+restart.include.beetlsql=/beetlsql-xxx..jar
+----------------------------
+
+spring-devtools.properties 为spring boot的配置文件,位于META-INF目录下
 
 
 

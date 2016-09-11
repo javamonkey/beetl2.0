@@ -26,7 +26,7 @@ public class Test
 		
 		
 		
-				ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader();
+				ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("org/beetl/core/lab/");
 				Configuration cfg = Configuration.defaultConfiguration();
 				cfg.setDirectByteOutput(true);
 				cfg.getResourceMap().put("RESOURCE.autoCheck", "true");
@@ -56,7 +56,7 @@ public class Test
 				for (int i = 0; i < 1; i++)
 				{
 					
-					Template t = gt.getTemplate("/org/beetl/core/lab/hello.txt");
+					Template t = gt.getTemplate("/hello.txt");
 					t.binding("$page",new HashMap());
 					t.binding("user", new TestUser(""));
 					t.binding("info",TestUser.getInfo());

@@ -43,6 +43,11 @@ public class StringTemplateResource extends Resource
 	}
 
 	@Override
+	public boolean isValid() {
+		return true;
+	}
+
+	@Override
 	public Reader openReader()
 	{
 

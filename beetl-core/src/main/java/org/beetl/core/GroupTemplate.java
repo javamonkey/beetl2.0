@@ -559,6 +559,10 @@ public class GroupTemplate
 				if (program == null)
 				{
 					Resource resource = loader.getResource(key);
+					if (!resource.isValid())
+					{
+						return null;
+					}
 					program = this.loadTemplate(resource,isTextTemplate);
 					this.programCache.set(key, program);
 					return new Template(this, program, this.conf);

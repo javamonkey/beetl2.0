@@ -198,6 +198,11 @@ public class CompositeResourceLoader implements ResourceLoader
 		}
 
 		@Override
+		public boolean isValid() {
+			return false;
+		}
+
+		@Override
 		public Reader openReader()
 		{
 			BeetlException be = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR, "复合资源加载器未匹配路径:" + this.id);

@@ -1,4 +1,4 @@
-Beetl2.4使用说明书20160702
+Beetl2.5使用说明书20160911
 ===================
 李家智 <xiandafu@126.com>
 :toc:
@@ -11,7 +11,7 @@ Beetl2.4使用说明书20160702
 
 
 == 什么是Beetl ==
-Beetl目前版本是2.5.0,相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
+Beetl目前版本是2.5.3,相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
 
 - 功能完备：作为主流模板引擎，Beetl具有相当多的功能和其他模板引擎不具备的功能。适用于*各种应用场景*，从对响应速度有很高要求的大网站到功能繁多的CMS管理系统都适合。Beetl本身还具有很多独特功能来完成模板编写和维护，这是其他模板引擎所不具有的。
 - 非常简单：类似Javascript语法和习俗，只要半小时就能通过半学半猜完全掌握用法。拒绝其他模板引擎那种非人性化的语法和习俗。同时也能支持html 标签，使得开发CMS系统比较容易
@@ -79,6 +79,23 @@ Beetl社区：ibeetl.com
 
 
 == 基本用法 ==
+
+=== 安装  ===
+
+如果使用maven，使用如下坐标
+
+[source,xml]
+----------------------------
+<dependency>
+    <groupId>com.ibeetl</groupId>
+    <artifactId>beetl</artifactId>
+    <version>2.5.3</version>
+</dependency>
+
+----------------------------
+
+如果非maven工程，直接下载 http://git.oschina.net/xiandafu/beetl2.0/attach_files 
+
 
 
 === 从GroupTemplate开始 ===
@@ -3177,13 +3194,18 @@ Beetl视图解析器属性同spring自带的视图解析器一样，支持conten
 
 - spring boot集成需要注意的是要添加spring-devtools.properties文件,并配置如下选项
 
-[source,test]
+[source,text]
 ----------------------------
 restart.include.beetl=/beetl-xxx.jar
 restart.include.beetlsql=/beetlsql-xxx..jar
 ----------------------------
 
 spring-devtools.properties 为spring boot的配置文件,位于META-INF目录下
+
+=== Spring Boot集成 ===
+
+
+参考如下代码集成Spring Boot
 
 
 

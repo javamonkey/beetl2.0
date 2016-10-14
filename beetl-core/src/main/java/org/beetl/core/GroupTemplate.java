@@ -167,7 +167,7 @@ public class GroupTemplate
 		this.initTag();
 		this.initVirtual();
 
-		classSearch = new ClassSearch(conf.getPkgList());
+		classSearch = new ClassSearch(conf.getPkgList(),this);
 		nativeSecurity = (NativeSecurityManager) ObjectUtil.instance(conf.getNativeSecurity());
 		if (conf.errorHandlerClass == null)
 		{

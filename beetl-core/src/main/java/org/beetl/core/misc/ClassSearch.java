@@ -31,6 +31,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.beetl.core.GroupTemplate;
+
 /** 在classloader下仅仅根据类名加载类，会尝试用系统内置的以及配置好的包名作为类的包名
  * @author jeolli
  *
@@ -39,13 +41,15 @@ public class ClassSearch
 {
 	Set<String> pkgList;
 	Map<String, Class> map = new ConcurrentHashMap<String, Class>();
+	GroupTemplate gt;
 
 	/**默认的搜索列表
 	 * @param pkgList
 	 */
-	public ClassSearch(Set<String> pkgList)
+	public ClassSearch(Set<String> pkgList,GroupTemplate gt)
 	{
 		this.pkgList = pkgList;
+		this.gt = gt ;
 
 	}
 
@@ -61,7 +65,7 @@ public class ClassSearch
 		{
 			try
 			{
-				return Class.forName(name);
+				return Class.forName(name,true,gt.getClassLoader());
 			}
 			catch (ClassNotFoundException e)
 			{
@@ -79,7 +83,7 @@ public class ClassSearch
 					try
 					{
 						String clsName = pkg.concat(name);
-						cls = Class.forName(clsName);
+						cls = Class.forName(clsName,true,gt.getClassLoader());
 						map.put(name, cls);
 						return cls;
 
@@ -99,4 +103,6 @@ public class ClassSearch
 		}
 
 	}
+	
+	
 }

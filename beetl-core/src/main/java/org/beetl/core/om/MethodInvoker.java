@@ -48,4 +48,6 @@ public interface MethodInvoker
 	public Class getReturnType();
 	
 	public Method getMethod();
+	
+	public void set(Object ins,Object value);
 }

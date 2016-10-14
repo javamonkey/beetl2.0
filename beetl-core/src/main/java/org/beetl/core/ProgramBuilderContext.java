@@ -101,6 +101,11 @@ public class ProgramBuilderContext
 		this.current.getVars().put(varName, varDesc);
 	}
 
+	/**
+	 * 变量属性，展示没用上，本来想用在ide属性提示
+	 * @param varName
+	 * @param attrName
+	 */
 	public void setVarAttr(String varName, String attrName)
 	{
 		VarDescrption varDesc = findVar(varName);

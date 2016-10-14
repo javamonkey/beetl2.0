@@ -80,7 +80,58 @@ public class PrimitiveArrayUtil
 		}
 		else
 		{
-			throw new RuntimeException("不支持数组");
+			throw new RuntimeException("不支持数组 "+o);
+		}
+	}
+	
+	public static void setObject(Object o, int index,Object value)
+	{
+		Class type = o.getClass();
+		if (type == int[].class)
+		{
+			((int[]) o)[index] = ((Number)value).intValue();
+		}
+		else if (type == long[].class)
+		{
+			((long[]) o)[index]=((Number)value).longValue();
+		}
+		else if (type == short[].class)
+		{
+			((short[]) o)[index]=((Number)value).shortValue();
+		}
+		else if (type == double[].class)
+		{
+			((double[]) o)[index]=((Number)value).doubleValue();
+		}
+		else if (type == float[].class)
+		{
+			((float[]) o)[index] = ((Number)value).floatValue();
+		}
+		else if (type == char[].class)
+		{
+			if(value instanceof Number){
+				((char[]) o)[index]= (char)((Number)value).shortValue();
+			}else{
+				((char[]) o)[index]=(Character)value;
+			}
+			
+		}
+		else if (type == byte[].class)
+		{
+			if(value instanceof Number){
+				((byte[]) o)[index] = (byte)((Number)value).shortValue();
+			}else{
+				((byte[]) o)[index] =(Byte)value;
+			}
+			
+		}
+		else if (type == boolean[].class)
+		{
+			 ((boolean[]) o)[index]=((Boolean)value);
+		}
+		else
+		{
+			throw new RuntimeException("不支持数组 "+o);
 		}
 	}
 }

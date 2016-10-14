@@ -44,7 +44,7 @@ public class Test
 
 					@Override
 					public void write(Context ctx, Object value) throws IOException {
-						ctx.byteWriter.writeString("ok"+value.toString());
+						ctx.byteWriter.writeString(value.toString());
 						
 					}
 					

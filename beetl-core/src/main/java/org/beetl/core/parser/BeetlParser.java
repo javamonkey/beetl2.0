@@ -2461,7 +2461,9 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class GeneralAssignExpContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
+		public VarRefContext varRef() {
+			return getRuleContext(VarRefContext.class,0);
+		}
 		public TerminalNode ASSIN() { return getToken(BeetlParser.ASSIN, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
@@ -2478,7 +2480,7 @@ public class BeetlParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(455); match(Identifier);
+			setState(455); varRef();
 			setState(456); match(ASSIN);
 			setState(457); expression(0);
 			}
@@ -3658,7 +3660,7 @@ public class BeetlParser extends Parser {
 		"\3\2\2\2\u01c4\u01aa\3\2\2\2\u01c4\u01ad\3\2\2\2\u01c4\u01b0\3\2\2\2\u01c4"+
 		"\u01b3\3\2\2\2\u01c4\u01b6\3\2\2\2\u01c4\u01b9\3\2\2\2\u01c5\u01c8\3\2"+
 		"\2\2\u01c6\u01c4\3\2\2\2\u01c6\u01c7\3\2\2\2\u01c7A\3\2\2\2\u01c8\u01c6"+
-		"\3\2\2\2\u01c9\u01ca\7>\2\2\u01ca\u01cb\7$\2\2\u01cb\u01cc\5@!\2\u01cc"+
+		"\3\2\2\2\u01c9\u01ca\5D#\2\u01ca\u01cb\7$\2\2\u01cb\u01cc\5@!\2\u01cc"+
 		"C\3\2\2\2\u01cd\u01d1\7>\2\2\u01ce\u01d0\5F$\2\u01cf\u01ce\3\2\2\2\u01d0"+
 		"\u01d3\3\2\2\2\u01d1\u01cf\3\2\2\2\u01d1\u01d2\3\2\2\2\u01d2\u01d5\3\2"+
 		"\2\2\u01d3\u01d1\3\2\2\2\u01d4\u01d6\5H%\2\u01d5\u01d4\3\2\2\2\u01d5\u01d6"+

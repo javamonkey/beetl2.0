@@ -121,7 +121,7 @@ expressionList
 statementExpression
     :   expression
     ;
-textStatment:   //表达式输出
+textStatment:   //表达式输�?
          LEFT_TOKEN NOT LEFT_PAR textVar RIGHT_PAR RIGHT_TOKEN 
       |    LEFT_TOKEN textVar RIGHT_TOKEN;
 textVar	
@@ -159,7 +159,7 @@ constantExpression
     |   generalAssignExp  #assignGeneralInExp 
     ;
     
-generalAssignExp: Identifier ASSIN expression ;
+generalAssignExp: varRef ASSIN expression ;
 varRef:Identifier ( varAttribute)*  (safe_output)?
 ;
 varAttribute :PERIOD Identifier   #varAttributeGeneral

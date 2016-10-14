@@ -69,7 +69,7 @@ public class ObjectAA extends AttributeAccess
 			}
 			catch (ClassCastException ex)
 			{
-				throw new ClassCastException("类型为java.util.List,无此属性:" + name);
+				throw new ClassCastException("目标类型为java.util.List,无此属性:" + name);
 			}
 
 		}
@@ -89,7 +89,7 @@ public class ObjectAA extends AttributeAccess
 			}
 			catch (ClassCastException ex)
 			{
-				throw new ClassCastException("类型为数组,无此属性:" + name);
+				throw new ClassCastException("目标类型为数组,无此属性:" + name);
 			}
 
 		}
@@ -112,5 +112,63 @@ public class ObjectAA extends AttributeAccess
 
 		}
 	}
+	
+	public void setValue(Object o,Object key,Object value){
+		if (o instanceof Map)
+		{
+			 ((Map) o).put(key,value);
+		}
+		else if (o instanceof List)
+		{
+			try
+			{
+				 ((List) o).set(((Number) key).intValue(),value);
+			}
+			catch (ClassCastException ex)
+			{
+				throw new ClassCastException("目标位为java.util.List,无法设置属性:" + key);
+			}
+
+		}
+		else if (o.getClass().isArray())
+		{
+			try
+			{
+				if (o.getClass().getComponentType().isPrimitive())
+				{
+					 PrimitiveArrayUtil.setObject(o, (((Number) key).intValue()),value);
+				}
+				else
+				{
+					 ((Object[]) o)[(((Number) key).intValue())] = value;
+				}
+
+			}
+			catch (ClassCastException ex)
+			{
+				throw new ClassCastException("类型为数组,无此属性:" + key);
+			}
+
+		}
+
+		else
+		{
+
+			Class c = o.getClass();
+			MethodInvoker invoker = ObjectUtil.getInvokder(c, (String) key);
+			if (invoker != null)
+			{
+
+				invoker.set(o, key);
+			}
+			else
+			{
+				BeetlException ex = new BeetlException(BeetlException.ATTRIBUTE_NOT_FOUND, (String) key);
+				throw ex;
+			}
+
+		}
+	}
+	
 
 }

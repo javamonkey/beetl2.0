@@ -151,6 +151,76 @@ public class VarRef extends Expression implements IVarIndex
 		}
 
 	}
+	
+	
+	/** 计算所有表达式，知道最后一值，用于a.b[xx].c = 1  赋值，只计算到a.b[xx]
+	 * @param ctx
+	 * @return
+	 */
+	public Object evaluateUntilLast(Context ctx){
+		if (attributes.length == 0)
+		{
+			//不可能发生，除非beetl写错了，先放在着
+			throw new RuntimeException();
+		}
+		Object value = ctx.vars[varIndex];
+		if (value == Context.NOT_EXIST_OBJECT)
+		{
+			BeetlException ex = new BeetlException(BeetlException.VAR_NOT_DEFINED);
+			ex.pushToken(this.firstToken);
+			throw ex;
+		}
+
+		if (value == null)
+		{
+			BeetlException ex = new BeetlException(BeetlException.NULL);
+			ex.pushToken(this.firstToken);
+			throw ex;
+		}
+
+	
+		for (int i = 0; i < attributes.length-1; i++)
+		{
+
+			VarAttribute attr = attributes[i];
+			if (value == null)
+			{
+				
+					BeetlException be = new BeetlException(BeetlException.NULL, "空指针");
+					if (i == 0)
+					{
+						be.pushToken(this.firstToken);
+					}
+					else
+					{
+						be.pushToken(attributes[i - 1].token);
+					}
+
+					throw be;
+
+			}
+
+			try
+			{
+				value = attr.evaluate(ctx, value);
+			}
+			catch (BeetlException ex)
+			{
+				ex.pushToken(attr.token);
+				throw ex;
+
+			}
+			catch (RuntimeException ex)
+			{
+				BeetlException be = new BeetlException(BeetlException.ATTRIBUTE_INVALID, "属性访问出错", ex);
+				be.pushToken(attr.token);
+				throw be;
+			}
+
+		}
+
+		return value ;
+	}
 
 	@Override
 	public void setVarIndex(int index)

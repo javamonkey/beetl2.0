@@ -82,4 +82,10 @@ public class GeneralGetMethodInvoker implements MethodInvoker
 	public Method getMethod() {
 		return method;
 	}
+
+	@Override
+	public void set(Object ins, Object value) {
+		throw new RuntimeException("Genneral get 不支持");
+		
+	}
 }

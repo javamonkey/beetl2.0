@@ -926,4 +926,10 @@ public class GroupTemplate
 		this.errorHandler = errorHandler;
 	}
 
+	public ClassSearch getClassSearch() {
+		return classSearch;
+	}
+	
+	
+
 }

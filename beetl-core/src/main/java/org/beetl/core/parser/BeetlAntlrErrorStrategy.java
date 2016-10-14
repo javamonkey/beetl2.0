@@ -225,7 +225,13 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 		if(expects.containsKey(expect)){
 			expect = expects.get(expect);
 		}
-		String msg = "缺少输入 " + expect + " 在 " + getTokenErrorDisplay(t);
+		if(expect.equals("'>>'")){
+			expect = "'模板的占位结束符号'";
+		}
+		
+		String tokenStr = getTokenErrorDisplay(t);
+		
+		String msg = "缺少输入 " + expect + " 在 " + tokenStr;
 
 		BeetlException exception = new BeetlParserException(BeetlException.PARSER_MISS_ERROR, msg);
 		exception.pushToken(this.getGrammarToken(t));

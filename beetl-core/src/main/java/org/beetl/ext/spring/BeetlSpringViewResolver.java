@@ -44,6 +44,7 @@ import org.springframework.web.servlet.view.AbstractUrlBasedView;
  */
 public class BeetlSpringViewResolver extends AbstractTemplateViewResolver implements InitializingBean, BeanNameAware
 {
+	
 	/* ----- ----- ----- ----- 其他方法 ----- ----- ----- ----- */
 	/**
 	 * 这个GroupTemplate的BeanName
@@ -191,6 +192,11 @@ public class BeetlSpringViewResolver extends AbstractTemplateViewResolver implem
 	public void setConfig(BeetlGroupUtilConfiguration config) {
 		this.config = config;
 		this.groupTemplate = config.getGroupTemplate();
+	}
+	
+	public void setPrefix(String prefix) {
+		
+		super.setPrefix(prefix);
 	}
 	
 	

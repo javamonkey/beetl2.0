@@ -4,7 +4,11 @@ import org.beetl.core.Context;
 import org.beetl.core.Function;
 import org.beetl.core.misc.ClassSearch;
 
-public class NewObjectFunction implements Function {
+/** 新建对象tpye.new("User") or type.new(User)
+ * @author xiandafu
+ *
+ */
+public class TypeNewObjectFunction implements Function {
 
 	@Override
 	public Object call(Object[] paras, Context ctx) {

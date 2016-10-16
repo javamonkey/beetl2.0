@@ -52,4 +52,8 @@ public class MapResourceLoader extends HashMap<String, String> implements Resour
     public void setAutoCheck(boolean autoCheck) {
         this.autoCheck = autoCheck;
     }
+	@Override
+	public String getInfo() {
+		return "MapResourceLoader ";
+	}
 }

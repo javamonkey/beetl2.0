@@ -37,6 +37,7 @@ import java.util.List;
 
 import org.beetl.core.ByteWriter;
 import org.beetl.core.GroupTemplate;
+import org.beetl.core.fun.FileFunctionWrapper;
 import org.beetl.core.io.ByteWriter_Byte;
 import org.beetl.core.io.ByteWriter_Char;
 
@@ -367,4 +368,27 @@ public class BeetlUtil
 			throw new RuntimeException(detail,ex);
 		}
 	}
+	
+	public static void autoFileFunctionRegister(GroupTemplate gt,File funtionRoot, String ns, String path,String functionSuffix){
+		File[] files = funtionRoot.listFiles();
+		for (File f : files)
+		{
+			if (f.isDirectory())
+			{
+				autoFileFunctionRegister(gt,f, f.getName().concat("."), path.concat(f.getName()).concat("/"),functionSuffix);
+			}
+			else if (f.getName().endsWith(functionSuffix))
+			{
+				String resourceId = path + f.getName();
+				String fileName = f.getName();
+				fileName = fileName.substring(0, (fileName.length() - functionSuffix.length() - 1));
+				String functionName = ns.concat(fileName);
+				FileFunctionWrapper fun = new FileFunctionWrapper(resourceId);
+				gt.registerFunction(functionName, fun);
+			}
+		}
+	}
+	
+	
+	
 }

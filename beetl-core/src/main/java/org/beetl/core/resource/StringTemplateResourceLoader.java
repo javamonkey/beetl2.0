@@ -86,4 +86,10 @@ public class StringTemplateResourceLoader implements ResourceLoader
 		return id;
 	}
 
+	@Override
+	public String getInfo() {
+		// TODO Auto-generated method stub
+		return "StringTemplateResourceLoader ";
+	}
+
 }

@@ -124,6 +124,10 @@ public class ObjectAA extends AttributeAccess
 			{
 				 ((List) o).set(((Number) key).intValue(),value);
 			}
+			catch(IndexOutOfBoundsException ex){
+				BeetlException be = new BeetlException(BeetlException.ATTRIBUTE_INVALID, ex);
+				throw be;
+			}
 			catch (ClassCastException ex)
 			{
 				throw new ClassCastException("目标位为java.util.List,无法设置属性:" + key);
@@ -159,7 +163,7 @@ public class ObjectAA extends AttributeAccess
 			if (invoker != null)
 			{
 
-				invoker.set(o, key);
+				invoker.set(o, value);
 			}
 			else
 			{

@@ -158,6 +158,13 @@ public class StartsWithMatcher implements Matcher
 		}
 		return true;
 	}
+	
+	
+
+	@Override
+	public String toString() {
+		return "StartsWithMatcher "+prefix;
+	}
 
 	public static void main(String[] args)
 	{

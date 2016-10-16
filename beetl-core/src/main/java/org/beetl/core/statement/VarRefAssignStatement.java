@@ -56,7 +56,7 @@ public class VarRefAssignStatement extends VarAssignStatement
 
 	public void execute(Context ctx)
 	{
-		Object tareget =  exp.evaluate(ctx);
+		Object value =  exp.evaluate(ctx);
 		Object obj = varRef.evaluateUntilLast(ctx);
 		Object key = null;
 		if(lastVarAttribute instanceof VarSquareAttribute){
@@ -67,7 +67,7 @@ public class VarRefAssignStatement extends VarAssignStatement
 			key = lastVarAttribute.name;
 		}
 		try{
-			ObjectAA.defaultObjectAA().setValue(obj, key, key);
+			ObjectAA.defaultObjectAA().setValue(obj, key, value);
 		}catch(ClassCastException ex){
 			BeetlException bx = new BeetlException(BeetlException.ATTRIBUTE_INVALID,ex);
 			bx.pushToken(lastVarAttribute.token);

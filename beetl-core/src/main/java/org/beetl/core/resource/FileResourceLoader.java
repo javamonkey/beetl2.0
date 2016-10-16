@@ -151,34 +151,15 @@ public class FileResourceLoader implements ResourceLoader
 		this.gt = gt;
 		if (root.exists())
 		{
-			readFuntionFile(root, "", "/".concat(functionRoot).concat("/"));
+			String ns = "";
+			String path = "/".concat(this.functionRoot).concat("/");
+			BeetlUtil.autoFileFunctionRegister(gt, root, ns, path, this.functionSuffix);
+			
 		}
 
 	}
 
-	protected void readFuntionFile(File funtionRoot, String ns, String path)
-	{
-		String expected = ".".concat(this.functionSuffix);
-		File[] files = funtionRoot.listFiles();
-		for (File f : files)
-		{
-			if (f.isDirectory())
-			{
-				//读取子目录
-				readFuntionFile(f, f.getName().concat("."), path.concat(f.getName()).concat("/"));
-			}
-			else if (f.getName().endsWith(functionSuffix))
-			{
-				String resourceId = path + f.getName();
-				String fileName = f.getName();
-				fileName = fileName.substring(0, (fileName.length() - functionSuffix.length() - 1));
-				String functionName = ns.concat(fileName);
-				FileFunctionWrapper fun = new FileFunctionWrapper(resourceId);
-				gt.registerFunction(functionName, fun);
-			}
-		}
-	}
-
+	
 	@Override
 	public boolean exist(String key)
 	{
@@ -193,6 +174,12 @@ public class FileResourceLoader implements ResourceLoader
 			return id;
 		else
 			return BeetlUtil.getRelPath(resource.getId(), id);
+	}
+
+	@Override
+	public String getInfo() {
+		// TODO Auto-generated method stub
+		return "FileResourceLoader,Root="+this.root;
 	}
 
 }

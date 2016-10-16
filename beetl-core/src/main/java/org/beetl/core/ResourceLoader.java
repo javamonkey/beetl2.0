@@ -70,5 +70,11 @@ public interface ResourceLoader
 	 * @return
 	 */
 	public String getResourceId(Resource resource, String key);
+	
+	/**
+	 * 得到资源加载器说明，用于获取不到资源的时候输出提示信息
+	 * @return
+	 */
+	public String getInfo();
 
 }

@@ -38,4 +38,8 @@ public class AllowAllMatcher implements Matcher
 	{
 		return key;
 	}
+	
+	public String toString(){
+		return "All Matcher";
+	}
 }

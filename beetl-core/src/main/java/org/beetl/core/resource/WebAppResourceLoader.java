@@ -85,5 +85,11 @@ public class WebAppResourceLoader extends FileResourceLoader
 		// TODO Auto-generated method stub
 
 	}
+	
+	@Override
+	public String getInfo() {
+		// TODO Auto-generated method stub
+		return "WebAppResourceLoader,Root="+this.root;
+	}
 
 }

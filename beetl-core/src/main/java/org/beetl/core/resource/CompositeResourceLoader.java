@@ -229,4 +229,9 @@ public class CompositeResourceLoader implements ResourceLoader
 			return id;
 		}
 	}
+
+	@Override
+	public String getInfo() {
+		return "CompositeResourceLoader "+this.matcherResourceLoaderMap;
+	}
 }

@@ -29,30 +29,40 @@ package org.beetl.core;
 
 /**
  * 默认的本地调用安全管理器，黑名单方式，不允许调用java.lang.Runtime和Process
+ * 
  * @author joelli
  *
  */
-public class DefaultNativeSecurityManager implements NativeSecurityManager
-{
+public class DefaultNativeSecurityManager implements NativeSecurityManager {
 
-	/* (non-Javadoc)
-	 * @see org.beetl.core.NativeSecurityManager#permit(java.lang.String, java.lang.Class, java.lang.Object, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.beetl.core.NativeSecurityManager#permit(java.lang.String,
+	 * java.lang.Class, java.lang.Object, java.lang.String)
 	 */
 	@Override
-	public boolean permit(String resourceId, Class c, Object target, String method)
-	{
-		if (c.isArray())
-		{
-			//允许调用，但实际上会在在其后调用中报错。不归此处管理
+	public boolean permit(String resourceId, Class c, Object target, String method) {
+		if (c.isArray()) {
+			// 允许调用，但实际上会在在其后调用中报错。不归此处管理
 			return true;
 		}
-		String name = c.getSimpleName();
-		String pkg = c.getPackage().getName();
-		if (pkg.startsWith("java.lang"))
-		{
-			if (name.equals("Runtime") || name.equals("Process") || name.equals("ProcessBuilder")
-					|| name.equals("System"))
-			{
+		String name = c.getName();
+		String className = null;
+		String pkgName = null;
+		int i = name.lastIndexOf('.');
+		if (i != -1) {
+			pkgName = name.substring(0, i);
+			className = name.substring(i + 1);
+
+		} else {
+			// 无包名，允许调用
+			return true;
+		}
+
+		if (pkgName.startsWith("java.lang")) {
+			if (className.equals("Runtime") || className.equals("Process") || className.equals("ProcessBuilder")
+					|| className.equals("System")) {
 				return false;
 			}
 		}

@@ -593,7 +593,7 @@ public class AntlrProgramBuilder
 			}else{
 				// var a.b=1 since 2.7.0
 				
-				VarRef ref = this.parseVarRefExpression(varRefCtx);
+				VarRef ref = this.parseVarRefInLeftExpression(varRefCtx);
 				
 				vas = new VarRefAssignStatement(exp, ref);
 			}
@@ -1736,8 +1736,75 @@ public class AntlrProgramBuilder
 		return new CompareExpression(a, b, mode, this.getBTToken(tn.getSymbol()));
 
 	}
+	
+	protected Expression parseVarRefExpression(VarRefContext varRef)
+	{
 
-	protected VarRef parseVarRefExpression(VarRefContext varRef)
+		Expression safeExp = null;
+		Safe_outputContext soctx = varRef.safe_output();
+		boolean hasSafe = false;
+		if (soctx != null)
+		{
+			List list = soctx.children;
+			if (list.size() == 1)
+			{
+				//just  xxx!
+				safeExp = null;
+			}
+			else
+			{
+				//just xxx!exp
+				Safe_allow_expContext allowExp = (Safe_allow_expContext) list.get(1);
+				if (allowExp.literal() != null)
+				{
+					safeExp = this.parseLiteralExpress(allowExp.literal());
+				}
+				else if (allowExp.nativeCall() != null)
+				{
+					safeExp = this.parseNativeCallExpression(allowExp.nativeCall());
+				}
+				else if (allowExp.functionCall() != null)
+				{
+					safeExp = this.parseFunExp(allowExp.functionCall());
+				}
+				else if (allowExp.expression() != null)
+				{
+					safeExp = this.parseExpress(allowExp.expression());
+				}
+				else if (allowExp.varRef() != null)
+				{
+					safeExp = this.parseVarRefExpression(allowExp.varRef());
+				}
+
+			}
+			hasSafe = true;
+
+		}
+
+		if (this.pbCtx.isSafeOutput)
+		{
+			hasSafe = true;
+		}
+
+		List<VarAttributeContext> list = varRef.varAttribute();
+		VarAttribute[] vas = this.parseVarAttribute(list);
+		if (vas.length > 0)
+		{
+			VarAttribute first = vas[0];
+			if (!(first instanceof VarSquareAttribute || first instanceof VarVirtualAttribute))
+			{
+				pbCtx.setVarAttr(varRef.Identifier().getText(), first.token.text);
+			}
+
+		}
+
+		VarRef var = new VarRef(vas, hasSafe, safeExp, this.getBTToken(varRef.getText(), varRef.Identifier()
+				.getSymbol().getLine()), this.getBTToken(varRef.Identifier().getSymbol()));
+		pbCtx.setVarPosition(varRef.Identifier().getText(), var);
+		return var;
+	}
+
+	protected VarRef parseVarRefInLeftExpression(VarRefContext varRef)
 	{
 
 		Expression safeExp = null;

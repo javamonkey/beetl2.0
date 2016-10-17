@@ -18,12 +18,12 @@ public class LayoutTagTest extends BasicTestCase
 		this.bind(t, "user", user);
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/tag/layout_expected.html"), str);
-		//
-		//		t = gt.getTemplate("/tag/layout_template.html");
-		//		this.bind(t, "user", user);
-		//		str = t.render();
-		//		AssertJUnit.assertEquals(this.getFileContent("/tag/layout_expected.html"), str);
-		//
+		
+				t = gt.getTemplate("/tag/layout_template.html");
+				this.bind(t, "user", user);
+				str = t.render();
+				AssertJUnit.assertEquals(this.getFileContent("/tag/layout_expected.html"), str);
+		
 	}
 
 	@Test

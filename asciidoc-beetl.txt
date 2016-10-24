@@ -1,4 +1,4 @@
-Beetl2.5使用说明书20160911
+Beetl2.5使用说明书20161024
 ===================
 李家智 <xiandafu@126.com>
 :toc:
@@ -11,7 +11,7 @@ Beetl2.5使用说明书20160911
 
 
 == 什么是Beetl ==
-Beetl目前版本是2.5.3,相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
+Beetl目前版本是2.7.0,相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
 
 - 功能完备：作为主流模板引擎，Beetl具有相当多的功能和其他模板引擎不具备的功能。适用于*各种应用场景*，从对响应速度有很高要求的大网站到功能繁多的CMS管理系统都适合。Beetl本身还具有很多独特功能来完成模板编写和维护，这是其他模板引擎所不具有的。
 - 非常简单：类似Javascript语法和习俗，只要半小时就能通过半学半猜完全掌握用法。拒绝其他模板引擎那种非人性化的语法和习俗。同时也能支持html 标签，使得开发CMS系统比较容易
@@ -1056,7 +1056,7 @@ if(has(flag)||flag==0){
 %>
 ----------------------------
 
-如果flag存在，或者flag存在，但值是0，都将执行if语句
+如果flag不存在，或者flag存在，但值是0，都将执行if语句
 
 但是，有更为简便的方法是直接用安全输出，如
 
@@ -1244,9 +1244,12 @@ Beetl 也支持HTML tag形式的标签， 区分beetl的html tag 与 标准html 
 
 - 在属性里引用beetl变量，不支持格式化，如<#input value=”${user.date,‘yyyy-MM-dd’ }” />,如果需要格式化，需要在input.tag文件里自行格式化
 
+- 在标签属性里传json变量需要谨慎，因为json包含了"}",容易与占位符混合导致解析出错，因此得使用"\"符号，如<#input value=”${ {'age':25\}   }” />
+
 - html tag 属性名将作为 其对应模板的变量名。
 
 - 默认机制下，全局变量都将传给html tag对应的模板文件，这个跟include一样。当然，这机制也可以改变，对于标签来说，通常是作为一个组件存在，也不一定需要完全传送所有全局变量，而只传送（request,session,这样变量），因此需要重新继承org.beetl.ext.tag.HTMLTagSupportWrapper.并重载callHtmlTag方法。并注册为htmltag标签。具体请参考https://github.com/javamonkey/beetl2.0/blob/master/beetl-core/src/test/java/org/beetl/core/tag/HtmlTagTest.java
+
 
 
 如果采用模板来写html标签功能不够强大，beetl支持写标签函数（参考上一节）来实现html标签，标签函数args[0]表示标签名，这通常没有什么用处，args[1] 则是标签的属性，参数是个map，key是html tag的属性，value是其属性值，如下用java完成的html 标签用于输出属性值
@@ -1357,6 +1360,8 @@ var属性的值可以是个以逗号分开的变量名列表，如var="total,cus
 
 === 直接调用java方法和属性 ===
 
+可以通过符号@来表明后面表达式调用是java风格，可以调用对象的方法，属性
+
 [source,javascript]
 ----------------------------
 
@@ -1366,6 +1371,8 @@ ${@com.xxxx.constants.Order.getMaxNum()}
 ${@com.xxxx.User$Gender.MAN}
 <%
 var max = @com.xxxx.constants.Order.MAX_NUM;
+var c =1;
+var d = @user.getAge(c);
 %>
 
 ----------------------------
@@ -1383,6 +1390,8 @@ var max = @com.xxxx.constants.Order.MAX_NUM;
 - 可以省略包名，只用类名。beetl将搜索包路径找到合适的类（需要设置配置“IMPORT_PACKAGE=包名.;包名.”，包名后需要跟一个“.”, 或者调用Configuration.addPkg)方法具体请参考附件配置文件说明
 
 - 内部类（包括枚举）访问同java一样，如User类有个内部枚举类Gender，访问是User$Gender
+
+- 表达式是java风格，但参数仍然是beetl表达式，比如 @user.sayHello(user.name).这里user.sayHello是java调用，user.name 仍然是beetl表达式
 
 *************************************************
 
@@ -2459,7 +2468,7 @@ layoutContent 是默认变量，也可以改成其他名字，具体请参考lay
    web页面html部分
 
  <%};
-  include("/inc/layout.html",{jsSecition:jsPart,htmlSection:htmlPart}){}
+  include("/inc/layout.html",{jsSection:jsPart,htmlSection:htmlPart}){}
  %>
 
 -------------------------
@@ -3190,9 +3199,55 @@ Beetl视图解析器属性同spring自带的视图解析器一样，支持conten
 其他集成需要注意的事项:
 
 - spring集成，请不要使用spring的 前缀配置,改用beetl的RESOURCE.ROOT 配置，否则include，layout会找不到模板
-- spring boot，因为是从classpath里加载模板文件，所以请使用ClasspathResourceLoader来初始化GroupTemplate，而不要使用FileResourceLoader
 
-- spring boot集成需要注意的是要添加spring-devtools.properties文件,并配置如下选项
+
+
+
+
+
+=== Spring Boot集成 ===
+
+
+Spring Boot 通过java config来配置 beetl需要的BeetlGroupUtilConfiguration，和 BeetlSpringViewResolver，参考代码如下
+
+
+[source,java]
+----------------------------
+@Configuration
+public class BeetlConf {
+	
+	
+	@Value("${beetl.templatesPath}") String templatesPath;//模板跟目录
+
+	@Bean(initMethod = "init", name = "beetlConfig")
+    public BeetlGroupUtilConfiguration getBeetlGroupUtilConfiguration() {
+        BeetlGroupUtilConfiguration beetlGroupUtilConfiguration = new BeetlGroupUtilConfiguration();
+        try {
+            ClasspathResourceLoader cploder = new ClasspathResourceLoader(BeetlConf.class.getClassLoader(),templatesPath);
+            beetlGroupUtilConfiguration.setResourceLoader(cploder);
+            return beetlGroupUtilConfiguration;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Bean(name = "beetlViewResolver")
+    public BeetlSpringViewResolver getBeetlSpringViewResolver(@Qualifier("beetlConfig") BeetlGroupUtilConfiguration beetlGroupUtilConfiguration) {
+        BeetlSpringViewResolver beetlSpringViewResolver = new BeetlSpringViewResolver();
+        beetlSpringViewResolver.setContentType("text/html;charset=UTF-8");
+        beetlSpringViewResolver.setOrder(0);
+        beetlSpringViewResolver.setConfig(beetlGroupUtilConfiguration);
+        return beetlSpringViewResolver;
+    }
+    
+ }
+
+----------------------------
+
+
+
+spring boot集成需要注意的是要添加spring-devtools.properties文件,并配置如下选项
 
 [source,text]
 ----------------------------
@@ -3201,13 +3256,6 @@ restart.include.beetlsql=/beetlsql-xxx..jar
 ----------------------------
 
 spring-devtools.properties 为spring boot的配置文件,位于META-INF目录下
-
-=== Spring Boot集成 ===
-
-
-参考如下代码集成Spring Boot
-
-
 
 === Jodd集成 ===
 
@@ -3384,6 +3432,22 @@ for(user in list){
 
 ----------------------------
 
+
+
+需要注意的是，如果使用了nutz的obj（http://www.nutzam.com/core/mvc/view.html），则需要在模板顶部申明obj是动态对象，如
+
+[source,html]
+----------------------------
+
+<%
+directive dynamic obj
+%>
+
+${obj.user.title}
+${obj.user.name}
+
+
+----------------------------
 
 
 === Struts2集成 ===

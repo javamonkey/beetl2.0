@@ -34,6 +34,7 @@ import java.util.List;
 
 import org.beetl.core.Context;
 import org.beetl.core.exception.BeetlException;
+import org.beetl.core.misc.BeetlUtil;
 import org.beetl.core.om.ObjectMethodMatchConf;
 import org.beetl.core.om.ObjectUtil;
 
@@ -88,12 +89,12 @@ public class MutipleFunctionWrapper extends FunctionWrapper
 	@Override
 	public Object call(Object[] paras, Context ctx)
 	{
-
+		Class[] parameterType = null;
 		try
 		{
 
 			//比较慢的情况，要考虑到底哪个方法适合调用
-			Class[] parameterType = null;
+			
 			Class[] parameterContextType = null;
 			Class[] parameterNoContextType = null;
 
@@ -182,7 +183,7 @@ public class MutipleFunctionWrapper extends FunctionWrapper
 			}
 
 		}
-		BeetlException ex = new BeetlException(BeetlException.NATIVE_CALL_INVALID, "找不到方法 " + this.functionName);
+		BeetlException ex = new BeetlException(BeetlException.NATIVE_CALL_INVALID, "找不到方法 " + this.functionName+BeetlUtil.getParameterDescription(parameterType));
 		throw ex;
 
 	}

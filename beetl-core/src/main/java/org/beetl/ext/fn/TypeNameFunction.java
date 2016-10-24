@@ -6,11 +6,11 @@ import org.beetl.core.misc.ClassSearch;
 
 /** 
  * 返回对象simple name，原始类型都会转成对应的封装类的类型
- * type.getType(1)
+ * type.name(1)
  * @author xiandafu
  *
  */
-public class TypeGetFunction implements Function {
+public class TypeNameFunction implements Function {
 
 	@Override
 	public Object call(Object[] paras, Context ctx) {

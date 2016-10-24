@@ -8,7 +8,7 @@ import org.beetl.core.misc.ClassSearch;
  * @author xiandafu
  *
  */
-public class TypeNewObjectFunction implements Function {
+public class TypeNewFunction implements Function {
 
 	@Override
 	public Object call(Object[] paras, Context ctx) {
@@ -18,7 +18,7 @@ public class TypeNewObjectFunction implements Function {
 			try{
 				return cls.newInstance();
 			}catch(Exception ex){
-				throw new RuntimeException("创建类实例失败:"+cls+",error:"+ex.getMessage());
+				throw new RuntimeException("创建类实例失败:"+cls+",error:"+ex.getMessage(),ex);
 			}
 			
 		}else{

@@ -53,6 +53,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.beetl.core.exception.BeetlException;
 import org.beetl.core.exception.BeetlParserException;
+import org.beetl.core.misc.BeetlUtil;
 
 /**
  * java对象一些操作util类，并缓存一些中间结果以提高性能
@@ -502,7 +503,7 @@ public class ObjectUtil
 		ObjectMethodMatchConf mf = findMethod(target, methodName, parameterType);
 		if (mf == null)
 		{
-			throw new BeetlParserException(BeetlParserException.NATIVE_CALL_INVALID, "根据参数未找到匹配的方法");
+			throw new BeetlParserException(BeetlParserException.NATIVE_CALL_INVALID, "根据参数未找到匹配的方法"+methodName+BeetlUtil.getParameterDescription(parameterType));
 		}
 		Object result = invoke(o, mf, paras);
 		return result;

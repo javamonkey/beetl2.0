@@ -390,5 +390,19 @@ public class BeetlUtil
 	}
 	
 	
+	public static String getParameterDescription(Class[] types){
+		if(types==null||types.length==0){
+			return "()";
+		}
+		
+		StringBuilder sb = new StringBuilder("(");
+		for(Class clzz:types){
+			sb.append(clzz.getSimpleName()).append(",");
+		}
+		sb.setCharAt(sb.length()-1, ')');
+		return sb.toString();
+	}
+	
+	
 	
 }

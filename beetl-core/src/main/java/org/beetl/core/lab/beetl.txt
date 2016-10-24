@@ -1,3 +1,0 @@
-<#col id="hi" name="${ {a:1\} }" var="ok">
-${ok}
-</#col>

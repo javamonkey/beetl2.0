@@ -29,7 +29,8 @@ public class Test
 				ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("org/beetl/core/lab/");
 				Configuration cfg = Configuration.defaultConfiguration();
 				cfg.setDirectByteOutput(true);
-				cfg.getResourceMap().put("RESOURCE.autoCheck", "true");
+				cfg.getResourceMap().put("tagRoot", "/");
+				cfg.getPkgList().add("org.beetl.core.lab.");
 				
 				GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 				cfg.setStatementStart("<%");
@@ -39,19 +40,16 @@ public class Test
 //				cfg.setPlaceholderEnd("}}");
 //			
 				gt.registerFunction("test", new TestFun());
-				gt.registerTag("col", ColumnTag.class);
 				PlaceholderST.output = new PlaceholderST.Output(){
 
 					@Override
 					public void write(Context ctx, Object value) throws IOException {
-						ctx.byteWriter.writeString(value.toString());
+						ctx.byteWriter.writeString(value==null?"null":value.toString());
 						
 					}
 					
 				};
-				Page page = new Page();
-				page.data.add(new TestUser("joeli"));
-				
+			
 			
 				for (int i = 0; i < 1; i++)
 				{
@@ -59,10 +57,7 @@ public class Test
 					Template t = gt.getTemplate("/hello.txt");
 					t.binding("$page",new HashMap());
 					t.binding("user", new TestUser(""));
-					t.binding("info",TestUser.getInfo());
-					t.binding("n", new BigDecimal("0.0000"));
-					t.binding("bo", "a");
-					t.binding("page", page);
+
 					ByteArrayOutputStream bs = new ByteArrayOutputStream();
 					try
 					{

@@ -27,8 +27,8 @@
  */
 package org.beetl.ext.spring;
 
-import java.util.Locale;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.beetl.core.GroupTemplate;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
@@ -44,11 +44,12 @@ import org.springframework.web.servlet.view.AbstractUrlBasedView;
  */
 public class BeetlSpringViewResolver extends AbstractTemplateViewResolver implements InitializingBean, BeanNameAware
 {
-	
+	protected final Log logger = LogFactory.getLog(getClass());
 	/* ----- ----- ----- ----- 其他方法 ----- ----- ----- ----- */
 	/**
 	 * 这个GroupTemplate的BeanName
 	 */
+	
 	private String beanName = null;
 	
 	private BeetlGroupUtilConfiguration config;
@@ -195,7 +196,7 @@ public class BeetlSpringViewResolver extends AbstractTemplateViewResolver implem
 	}
 	
 	public void setPrefix(String prefix) {
-		
+		logger.warn("Beetl不建议使用使用spring前缀，会导致include,layout找不到对应的模板，请使用beetl的配置RESOURCE.ROOT来配置模板根目录");
 		super.setPrefix(prefix);
 	}
 	

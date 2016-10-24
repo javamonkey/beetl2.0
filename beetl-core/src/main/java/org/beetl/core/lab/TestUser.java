@@ -46,7 +46,7 @@ public class TestUser
 	{
 		return 0;
 	}
-
+	
 	public TestUser(String name)
 	{
 		this.name = name;

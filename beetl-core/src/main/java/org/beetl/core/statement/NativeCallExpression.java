@@ -8,6 +8,7 @@ import org.beetl.core.Context;
 import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
 import org.beetl.core.exception.BeetlParserException;
+import org.beetl.core.misc.BeetlUtil;
 import org.beetl.core.om.ObjectMethodMatchConf;
 import org.beetl.core.om.ObjectUtil;
 import org.beetl.core.statement.nat.ClassNode;
@@ -167,7 +168,7 @@ public class NativeCallExpression extends Expression
 				ObjectMethodMatchConf mf = ObjectUtil.findMethod(targetCls, method, parameterType);
 				if (mf == null)
 				{
-					BeetlException ex = new BeetlException(BeetlParserException.NATIVE_CALL_INVALID, "根据参数未找到匹配的方法");
+					BeetlException ex = new BeetlException(BeetlParserException.NATIVE_CALL_INVALID, "根据参数未找到匹配的方法"+method+BeetlUtil.getParameterDescription(parameterType));
 					ex.pushToken(GrammarToken.createToken(lastNode.getName(), token.line));
 					throw ex;
 				}

@@ -196,7 +196,7 @@ public class BeetlSpringViewResolver extends AbstractTemplateViewResolver implem
 	}
 	
 	public void setPrefix(String prefix) {
-		logger.warn("不建议使用使用spring前缀，会导致include,layout找不到对应的模板，请使用beetl的配置RESOURCE.ROOT来配置模板根目录");
+		logger.warn("Beetl不建议使用使用spring前缀，会导致include,layout找不到对应的模板，请使用beetl的配置RESOURCE.ROOT来配置模板根目录");
 		super.setPrefix(prefix);
 	}
 	

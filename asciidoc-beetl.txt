@@ -1,6 +1,5 @@
-Beetl2.5使用说明书20161024
-===================
-李家智 <xiandafu@126.com>
+= Beetl2.5使用说明书20161024
+
 :toc:
 :icons:
 :numbered:
@@ -8,9 +7,9 @@ Beetl2.5使用说明书20161024
 
 
 
+== 什么是Beetl
 
 
-== 什么是Beetl ==
 Beetl目前版本是2.7.0,相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
 
 - 功能完备：作为主流模板引擎，Beetl具有相当多的功能和其他模板引擎不具备的功能。适用于*各种应用场景*，从对响应速度有很高要求的大网站到功能繁多的CMS管理系统都适合。Beetl本身还具有很多独特功能来完成模板编写和维护，这是其他模板引擎所不具有的。
@@ -33,6 +32,8 @@ Beetl有些功能是发展了10多年的模板引擎所不具备的，这些功�
 2. 可单独测试的模板。无需真正的控制层和模型层，Beetl的模板就可以单独开发和*测试*
 3. 同时支持较为松散的MVC和严格的MVC，如果在模板语言里嵌入计算表达式，复杂条件表达式，以及函数调用有干涉业务逻辑嫌疑，你可以禁止使用这些语法。
 4. 强大的安全输出，通过安全输出符号！，能在模板变量，变量属性引用，for循环，占位符输出，try-catch中等各个地方提供安全输出，保证渲染正常
+
+
 5. 模板变量：运行将模板的某一部分输出像js那样赋值给一个变量，稍后再处理。利用模板变量能完成非常复杂的页面布局（简单的布局可使用include,layout标签函数)
 6. 类型推测，能在运行的时候推测模板变量类型，从而优化性能，也可以通过注解的方法显示的说明模板变量属性（这是非必须的，但有助于IDE自动提示功能）
 7. 可插拔的设计，错误信息提示，模板引擎缓存机制，模板资源管理，本地调用的安全管理器,严格MVC限制，模板引擎本身都有默认的实现，但又完全可以自定义以适合特定需求
@@ -78,9 +79,9 @@ Beetl社区：ibeetl.com
 
 
 
-== 基本用法 ==
+== 基本用法
 
-=== 安装  ===
+=== 安装
 
 如果使用maven，使用如下坐标
 
@@ -98,7 +99,7 @@ Beetl社区：ibeetl.com
 
 
 
-=== 从GroupTemplate开始 ===
+=== 从GroupTemplate开始
 
 [source,java]
 ----------------------------
@@ -135,7 +136,7 @@ Beetl的核心是GroupTemplate，创建GroupTemplate需要俩个参数，一个�
 
 
 
-=== 模板基础配置 ===
+=== 模板基础配置
 
 Beetl提供不但功能齐全，而且还有很多独特功能，通过简单的配置文件，就可以定义众多的功能，默认情况下，Configuration类总是会先加载默认的配置文件（位于/org/beetl/core/beetl-default.properties，作为新手，**通常只需要关注3,4,5,6行定界符的配置，以及12行模板字符集的配置就可以了**，其他配置会在后面章节陆续提到）下，其内容片断如下：
 [source,text]
@@ -156,7 +157,7 @@ ERROR_HANDLER = org.beetl.core.ConsoleErrorHandler
 NATIVE_SECUARTY_MANAGER= org.beetl.core.DefaultNativeSecurityManager
 MVC_STRICT = FALSE
 
-\#资源配置，resource后的属性只限于特定ResourceLoader 
+#资源配置，resource后的属性只限于特定ResourceLoader 
 RESOURCE_LOADER=org.beetl.core.resource.ClasspathResourceLoader
 #classpath 根路径
 RESOURCE.root= /
@@ -251,15 +252,15 @@ FUNCTION_TAG_LIMITER=<%;%>
 
 
 
-=== 模板资源加载器 ===
+=== 模板资源加载器
 
 资源加载器是根据String值获取Resource实例的工场类，同时资源加载器还要负责响应模板引擎询问模板是否变化的调用。对于新手来说，无需考虑模板资源加载器如何实现，只需要根据自己场景选择系统提供的三类模板资源加载器即可
 
-==== 字符串模板加载器 ====
+==== 字符串模板加载器
 
 在创建GroupTemplate过程中，如果传入的是StringTemplateResourceLoader，则允许通过调用gt.getTemplate(String template)来获取模板实例对象，如2.1所示
 
-==== 文件资源模板加载器 ====
+==== 文件资源模板加载器
 
 更通常情况下，模板资源是以文件形式管理的，集中放在某一个文件目录下（如webapp的模板根目录就可能是WEB-INF/template里），因此，可以使用FileResourceLoader来加载模板实例，如下代码：
 
@@ -1584,47 +1585,9 @@ BeetlKit　不要用于线上系统。仅仅作为体验Beetl功能而提供的�
 **********************************************************************
 
 
-=== 变量不存在 ===
 
-对于编程语言来说，变量不存在则在编译期就会报错，对于那种解释语言，变量也是要么存在，要么不存在，不可能一段代码里有俩种情况，但对于模板语言来说，一段模板里的变量可能有这俩种状态，如新增和修改共用一个模板文件就会出现这种情况。如果变量有可能不存在，则用安全输出符号"!"，如下代码：
 
-[source,html]
-----------------------------
-
-<span>${user.name!}</span>
-
-----------------------------
-
-对于逻辑表达式，也可以使用安全输出符号，如:
-[source,java]
-----------------------------
-
-<%
-if(null==user.name!) //安全输出符号后如果未有表达式，则返回null
-if(''==user.name!'') //如果user.name不存在或者为null，则返回空字符串。或者user.name本身是空字符串
-%>
-
----------------------------
-
-系统提供了一些函数，也可以用于判断变量是否存在
-
-[source,jsp]
-----------------------------
-
-<%
-if(has(user))   //接受一个变量名,如果存在user变量,返回true
-if(isEmpty(user.name)
-/*
-如果user不存在，或者为null，或者user.name是空为null，
-或者user.name是空字符串，都返回true
-*/
-%>
-
----------------------------
-
-isEmtpy 可以接受表达式，可以判断集合，数组，字符串为空情况，详细参考该函数说明
-
-=== 琐碎功能 ===
+=== 琐碎功能 
 
 - 对齐:我发现别的模板语言要是做到对齐，非常困难,使用Beetl你完全不用担心，比如velocty，stringtemlate，freemarker例子都出现了不对齐的情况，影响了美观，Beetl完全无需担心输出对齐
 
@@ -1632,11 +1595,14 @@ isEmtpy 可以接受表达式，可以判断集合，数组，字符串为空情
 $money$\$, 或者Hello,it's $money+"\$"$ 。如果要输出\符号本生，则需要用俩个\\,这点与javascript，java 语义一致. 
 
 
-== 高级用法 ==
 
 
 
-=== 配置GroupTemplate ===
+== 高级功能
+
+
+
+=== 配置GroupTemplate
 
 Beetl建议通过配置文件配置配置GroupTemplate，主要考虑到未来可能IDE插件会支持Beetl模板，模板的属性，和函数等如果能通过配置文件获取，将有助于IDE插件识别。 配置GroupTemplate有俩种方法
 
@@ -1689,9 +1655,9 @@ TAG.htmltag= org.beetl.ext.tag.HTMLTagSupportWrapper
 FN前缀表示Function，FNP前缀表示FunctionPackage，FT表示format函数，FTC表示类的默认Format函数，TAG表示标签类。Beetl强烈建议通过配置文件加载扩展。以便随后IDE插件能识别这些注册函数
 
 
-=== 自定义方法 ===
+=== 自定义方法
 
-==== 实现Function ====
+==== 实现Function
 
 [source,java]
 -------------------------
@@ -3758,7 +3724,103 @@ strutil方法对参数均不做空指针检测，你可自定义方法来覆盖�
 - reg.split(str,regex,limit) 同上，limit是最多返回个数
 
 
+==== Spring 表达式  ====
 
+spel(spelString, rootObject) SpEL方法传入一个Spring SpEL表达式以获取表达式结果，方法建议以函数的方式定义在BeetlGroupUtilConfiguration的functions中
+
+
+[source,xml]
+----------------------------
+<bean name="beetlGroupUtilConfiguration" class="org.beetl.ext.spring.BeetlGroupUtilConfiguration" init-method="init">
+	<property name="functions">
+		<map>
+			<!-- 定义SpEL方法 -->
+			<entry key="spel"><bean class="org.beetl.ext.spring.SpELFunction"/></entry>
+		</map>
+	</property>
+</bean>
+----------------------------
+
+spelString: SpEL表达式字符串，必传(否则返回null)
+rootObject: 作为spel的根对象（对应#root），可以是一个Map或Bean对象，默认取空Map。由于Beetl运行上下文无法直接获取模版局部变量的变量名，建议局部变量采用自定义Map的方式传入
+
+- 列表筛选（以自定义Map为根对象传入局部变量）
+[source,javascript]
+----------------------------
+<% var intArray = [12, 1, 2, 3]; %>
+${spel('#root.intArray.?[#this>10]', {intArray: intArray\})}
+----------------------------
+
+- 以Bean对象为根对象
+[source,javascript]
+----------------------------
+<% var now = date(); %>
+${spel('#root.year + 1900', now)}
+----------------------------
+
+- 直接new对象
+[source,javascript]
+----------------------------
+${spel('(new java.util.Date()).year + 1900')}
+----------------------------
+- 直接引用Spring Bean
+[source,javascript]
+----------------------------
+${spel('@testBean')}
+----------------------------
+
+4. 默认变量
+\#root 表示SpEL的根对象, 由spel函数第二参数传入，默认是一个空map
+\#context 表示Beetl执行上下文
+\#global 表示Beetl的共享变量Map，由于Beetl上下文无法获取临时变量名，临时变量建议使用根对象的方式传入
+\#ctxPath 表示Servlet Context Path（由Beetl WebRender提供）
+\#servlet 可以从中获取到Servlet request，response，session原生实例（由Beetl WebRender提供）
+\#parameter 表示请求参数Map（由Beetl WebRender提供）
+\#request 表示请求对象（由Beetl WebRender提供）
+\#session 表示会话域属性Map（由Beetl WebRender提供）
+
+
+==== Spring security   ====
+
+下列三个函数只需以函数的方式定义在BeetlGroupUtilConfiguration的functions中即可，与spel函数一样的，函数名声明在functions中，可以更改
+-  auth()
+对应类: org.beetl.ext.spring.AuthenticationFunction
+方法无参数
+返回值: 返回当前安全上下文中的用户认证凭证Authentication实例
+> 如果当前环境不存在Spring Security安全上下文，将返回null值
+
+-  urlIf(\<url\>, \<method\>)
+对应类: org.beetl.ext.spring.AccessUrlIfFunction
+参数:
+  url: 字符串表示的测试URL Path，不需要指定Context Path，缺省会直接返回true
+  method: 字符串表示的访问方式, 默认为GET, 建议全大写
+返回值: 测试当前登录用户是否能访问指定的URL Path, 返回true or false
+示例: ```urlIf('/system/admin_update.do', 'POST'))```
+> 如果当前环境不存在Spring Security安全上下文，将返回true
+> 如果当前环境不存在用户认证凭证，作为匿名登录进行测试
+
+- expIf(\<exp\>)
+对应类: org.beetl.ext.spring.AccessExpressionIfFunction
+参数:
+  exp: Spring Security安全表达式，缺省会直接返回true
+返回值: 测试当前登录用户是否满足指定的安全表达式，返回true or false
+示例: ```expIf('isAuthenticated()')```
+> 如果当前环境不存在Spring Security安全上下文，将返回true
+> 如果当前环境不存在用户认证凭证，作为匿名登录进行测试
+
+注意: 使用此方法，必须开启Spring Security的expression功能(use-expressions="true")：
+[source,xml]
+----------------------------
+<sec:http auto-config="true" use-expressions="true"></sec:http>
+----------------------------
+Spring Security Expression相关语法，请阅读：
+http://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/#el-access
+
+
+
+==== shiro ====
+
+参考文档 https://my.oschina.net/xiandafu/blog/143109
 
 === 内置格式化方法 ===
 

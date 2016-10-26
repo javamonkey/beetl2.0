@@ -96,10 +96,10 @@ public class WebRender
 			WebVariable webVariable = new WebVariable();
 			webVariable.setRequest(request);
 			webVariable.setResponse(response);
-			template.binding("session", new SessionWrapper(request,request.getSession(false)));
+			template.binding(WebVariable.SESSION, new SessionWrapper(request,request.getSession(false)));
 
-			template.binding("servlet", webVariable);
-			template.binding("request", request);
+			template.binding(WebVariable.SERVLET, webVariable);
+			template.binding(WebVariable.REQUEST, request);
 			template.binding("ctxPath", request.getContextPath());
 			template.binding("$page", new HashMap()); 
 			template.binding("parameter", new ParameterWrapper(request));
@@ -191,7 +191,7 @@ public class WebRender
 	protected WebRenderExt getWebRenderExt(String clsName){
 		//有效率问题，没有必要每次都初始化一个类
 		try{
-			WebRenderExt render = (WebRenderExt)Class.forName(clsName).newInstance();
+			WebRenderExt render = (WebRenderExt)gt.getClassLoader().loadClass(clsName).newInstance();
 			return render;
 		}catch(Exception ex){
 			throw new RuntimeException("加载WebRenderExt错误，检查配置项WEBAPP_EXT:"+ex.getMessage(),ex);

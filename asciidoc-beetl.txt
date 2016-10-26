@@ -1,4 +1,4 @@
-Beetl2.5使用说明书20161024
+Beetl2.7使用说明书20161024
 ===================
 李家智 <xiandafu@126.com>
 :toc:
@@ -89,7 +89,7 @@ Beetl社区：ibeetl.com
 <dependency>
     <groupId>com.ibeetl</groupId>
     <artifactId>beetl</artifactId>
-    <version>2.5.3</version>
+    <version>2.7.0</version>
 </dependency>
 
 ----------------------------

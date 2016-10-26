@@ -40,7 +40,9 @@ public class WebVariable
 	HttpServletRequest request;
 	HttpServletResponse response;
 	HttpSession session;
-
+	public  final static String SERVLET ="servlet";
+	public  final static String REQUEST ="request";
+	public  final static String SESSION ="session";
 	public WebVariable()
 	{
 

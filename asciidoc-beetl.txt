@@ -13,7 +13,7 @@ Beetl2.7使用说明书20161024
 
 Beetl目前版本是2.7.0,相对于其他java模板引擎，具有功能齐全，语法直观,性能超高，以及编写的模板容易维护等特点。使得开发和维护模板有很好的体验。是新一代的模板引擎。总得来说，它的特性如下：
 
- 功能完备：作为主流模板引擎，Beetl具有相当多的功能和其他模板引擎不具备的功能。适用于*各种应用场景*，从对响应速度有很高要求的大网站到功能繁多的CMS管理系统都适合。Beetl本身还具有很多独特功能来完成模板编写和维护，这是其他模板引擎所不具有的。
+- 功能完备：作为主流模板引擎，Beetl具有相当多的功能和其他模板引擎不具备的功能。适用于*各种应用场景*，从对响应速度有很高要求的大网站到功能繁多的CMS管理系统都适合。Beetl本身还具有很多独特功能来完成模板编写和维护，这是其他模板引擎所不具有的。
 - 非常简单：类似Javascript语法和习俗，只要半小时就能通过半学半猜完全掌握用法。拒绝其他模板引擎那种非人性化的语法和习俗。同时也能支持html 标签，使得开发CMS系统比较容易
 - 超高的性能：Beetl 远超过主流java模板引擎性能(引擎性能5-6倍与freemaker，2倍于JSP。参考附录），而且消耗较低的CPU
 - 易于整合：Beetl能很容易的与各种web框架整合，如Spring MVC，JFinal,Struts,Nutz，Jodd，Servlet等。
@@ -115,14 +115,14 @@ System.out.println(str);
 
 ----------------------------
 
-Beetl的核心是GroupTemplate，创建GroupTemplate需要俩个参数，一个是模板资源加载器，一个是配置类，模板资源加载器Beetl内置了4种，分别是
+Beetl的核心是GroupTemplate，创建GroupTemplate需要俩个参数，一个是模板资源加载器，一个是配置类，模板资源加载器Beetl内置了6种，分别是
 
 - StringTemplateResourceLoader：字符串模板加载器，用于加载字符串模板，如本例所示
 - FileResourceLoader：文件模板加载器，需要一个根目录作为参数构造，，传入getTemplate方法的String是模板文件相对于Root目录的相对路径
 - ClasspathResourceLoader：文件模板加载器，模板文件位于Classpath里
 - WebAppResourceLoader：用于webapp集成，假定模板根目录就是WebRoot目录，参考web集成章
 - MapResourceLoader : 可以动态存入模板
-
+- CompositeResourceLoader 混合使用多种加载方式
 
 代码第5行将变量name传入模板里，其值是“Beetl”。
 代码第6行是渲染模板，得到输出，template提供了多种获得渲染输出的方法，如下
@@ -3801,7 +3801,7 @@ ${spel('(new java.util.Date()).year + 1900')}
 ${spel('@testBean')}
 ----------------------------
 
-4. 默认变量
+- 默认变量
 - #root 表示SpEL的根对象, 由spel函数第二参数传入，默认是一个空map
 - #context 表示Beetl执行上下文
 - #global 表示Beetl的共享变量Map，由于Beetl上下文无法获取临时变量名，临时变量建议使用根对象的方式传入
@@ -3851,11 +3851,12 @@ sputil.javaScript(String input)
 ==== Spring security   ====
 
 下列三个函数只需以函数的方式定义在BeetlGroupUtilConfiguration的functions中即可，与spel函数一样的，函数名声明在functions中，可以更改
+
 -  auth()
 对应类: org.beetl.ext.spring.AuthenticationFunction
 方法无参数
 返回值: 返回当前安全上下文中的用户认证凭证Authentication实例
-> 如果当前环境不存在Spring Security安全上下文，将返回null值
+如果当前环境不存在Spring Security安全上下文，将返回null值
 
 -  urlIf(\<url\>, \<method\>)
 对应类: org.beetl.ext.spring.AccessUrlIfFunction
@@ -3863,18 +3864,31 @@ sputil.javaScript(String input)
   url: 字符串表示的测试URL Path，不需要指定Context Path，缺省会直接返回true
   method: 字符串表示的访问方式, 默认为GET, 建议全大写
 返回值: 测试当前登录用户是否能访问指定的URL Path, 返回true or false
-示例: ```urlIf('/system/admin_update.do', 'POST'))```
-> 如果当前环境不存在Spring Security安全上下文，将返回true
-> 如果当前环境不存在用户认证凭证，作为匿名登录进行测试
+
+示例: 
+[source,javascript]
+----------------------------
+urlIf('/system/admin_update.do', 'POST'))
+----------------------------
+
+
+如果当前环境不存在Spring Security安全上下文，将返回true
+如果当前环境不存在用户认证凭证，作为匿名登录进行测试
 
 - expIf(\<exp\>)
 对应类: org.beetl.ext.spring.AccessExpressionIfFunction
 参数:
   exp: Spring Security安全表达式，缺省会直接返回true
 返回值: 测试当前登录用户是否满足指定的安全表达式，返回true or false
-示例: ```expIf('isAuthenticated()')```
-> 如果当前环境不存在Spring Security安全上下文，将返回true
-> 如果当前环境不存在用户认证凭证，作为匿名登录进行测试
+示例: 
+
+[source,javascript]
+----------------------------
+expIf('isAuthenticated()')
+----------------------------
+
+如果当前环境不存在Spring Security安全上下文，将返回true
+如果当前环境不存在用户认证凭证，作为匿名登录进行测试
 
 注意: 使用此方法，必须开启Spring Security的expression功能(use-expressions="true")：
 [source,xml]

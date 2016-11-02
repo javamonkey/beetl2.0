@@ -126,7 +126,7 @@ public class PojoMethodInvoker implements MethodInvoker
 			setMethod = c.getMethod(setName, type);
 		}catch(Exception ex ){
 			//for developement
-			ex.printStackTrace();
+//			ex.printStackTrace();
 			setMethod = null;
 		}
 		

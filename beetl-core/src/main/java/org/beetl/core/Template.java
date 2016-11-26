@@ -136,8 +136,10 @@ public class Template
 			{
 				program.execute(ctx);
 			}
-
-			byteWriter.flush();
+			
+			if (isRoot){
+				byteWriter.flush();
+			}
 		}
 		catch (BeetlException e)
 		{

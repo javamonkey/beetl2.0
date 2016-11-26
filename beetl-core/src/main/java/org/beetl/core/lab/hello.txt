@@ -1,3 +1,5 @@
 <%
-strutil.startWith(1,0);
+user.age=12;
 %>
+
+${user.age}

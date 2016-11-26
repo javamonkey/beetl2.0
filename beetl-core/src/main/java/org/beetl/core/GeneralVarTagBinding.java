@@ -27,6 +27,7 @@
  */
 package org.beetl.core;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -81,6 +82,10 @@ public abstract class GeneralVarTagBinding extends Tag implements TagVarBinding
 	 */
 	public void binds(Object... array)
 	{
+		if(name2Index==null){
+			throw new RuntimeException("html标签没有定义绑定变量,但标签实现中试图绑定"+Arrays.asList(array));
+		}
+		
 		Iterator<Integer> it = name2Index.values().iterator();
 		for (int i = 0; i < array.length; i++)
 		{

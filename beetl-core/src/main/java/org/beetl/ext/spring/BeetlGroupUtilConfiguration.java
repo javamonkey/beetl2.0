@@ -158,7 +158,10 @@ public class BeetlGroupUtilConfiguration extends AbstractGroupTemplateConfig imp
 
 		//如果没有指定ResourceLoader，将使用WebResourceLoader,然后此为根目录
 		webPath = sc.getRealPath("/");
-		root = webPath + root;
+		if(webPath!=null){
+			root = webPath + root;
+		}
+		
 
 	}
 

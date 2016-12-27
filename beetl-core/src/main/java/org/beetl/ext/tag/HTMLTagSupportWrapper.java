@@ -78,7 +78,7 @@ public class HTMLTagSupportWrapper extends Tag
 
 	protected String getHtmlTagResourceId(String child)
 	{
-		String path = child.replace(':', File.separatorChar);
+		String path = child.replace(':', '/');
 		StringBuilder sb = new StringBuilder("/");
 		sb.append(this.tagRoot).append("/").append(path).append(".").append(this.tagSuffix);
 		return sb.toString();

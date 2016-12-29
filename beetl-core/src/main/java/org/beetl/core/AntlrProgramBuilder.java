@@ -539,7 +539,11 @@ public class AntlrProgramBuilder
 		return switchStat;
 	}
 	
-	
+	/**
+	 *  赋值变量
+	 * @param agc
+	 * @return
+	 */
 	protected VarAssignExpression  parseAssingInExp(AssignGeneralInExpContext agc){
 
 		VarAssignExpression  vas = null;
@@ -549,9 +553,16 @@ public class AntlrProgramBuilder
 		if(varRefCtx.children.size()==1){
 			//var a=1;
 			Token token =  varRefCtx.Identifier().getSymbol();
-			vas = new VarAssignExpression(exp, getBTToken(token));
-			registerVar(vas);
-			return vas ;
+			if(pbCtx.hasDefined(token.getText())!=null){
+				vas = new VarAssignExpression(exp, getBTToken(token));
+				registerVar(vas);
+				return vas ;
+			}else{
+				BeetlException ex = new BeetlException(BeetlException.VAR_NOT_DEFINED);
+				ex.pushToken(this.getBTToken(token));
+				throw ex;
+			}
+			
 		}else{
 			 throw new UnsupportedOperationException("不支持，稍后在想");
 		}
@@ -576,6 +587,11 @@ public class AntlrProgramBuilder
 		pbCtx.setVarPosition(vas.token.text, vas);	
 	}
 
+	/**
+	 * 定义变量
+	 * @param amc
+	 * @return
+	 */
 	protected VarAssignStatement parseAssign(AssignMentContext amc)
 	{
 
@@ -1165,7 +1181,7 @@ public class AntlrProgramBuilder
 
 			}
 			GeneralForStatement forStat = new GeneralForStatement(varInitSeq, initExp, condtion, updateExp, forPart,
-					elseForPart, varInitSeq.token);
+					elseForPart, varInitSeq!=null?varInitSeq.token:initExp[0].token);
 			pbCtx.exitBlock();
 			return forStat;
 

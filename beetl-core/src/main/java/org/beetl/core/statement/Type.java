@@ -130,10 +130,10 @@ public class Type implements java.io.Serializable
 			}
 
 		}
-		else if (cls == IteratorStatus.class)
-		{
-			return types[0];
-		}
+//		else if (cls == IteratorStatus.class)
+//		{
+//			return types[0];
+//		}
 		else if (cls == Object.class)
 		{
 			return new Type(Object.class);

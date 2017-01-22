@@ -53,7 +53,7 @@ public class BeetlRender extends Render
 		try
 
 		{
-			response.setContentType(contentType);
+			
 			WebRender webRender = new WebRender(gt);
 			webRender.render(view, request, response);
 

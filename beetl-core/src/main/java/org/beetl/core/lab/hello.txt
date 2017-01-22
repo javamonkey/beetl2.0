@@ -1,11 +1,7 @@
 <%
-
-for(var i=0;i<10;i++){
-
-var a = i+1;
-print(a);
+for(user in users){
+	include("/include.txt",{lp:userLP,user:user}){}
+	//var a = userLP.last;
+	//print(a);
 }
-print(i);
 %>
-
-

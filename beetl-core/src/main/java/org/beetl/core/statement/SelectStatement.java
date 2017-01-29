@@ -39,10 +39,10 @@ import org.beetl.core.misc.ALU;
 public class SelectStatement extends Statement
 {
 
-	Expression value;
-	Expression[] conditions;
-	BlockStatement[] blocks;
-	BlockStatement defaultBlock;
+	public Expression value;
+	public Expression[] conditions;
+	public BlockStatement[] blocks;
+	public BlockStatement defaultBlock;
 
 	public SelectStatement(Expression value, Expression[] conditions, BlockStatement[] blocks,
 			BlockStatement defaultBlock, GrammarToken token)

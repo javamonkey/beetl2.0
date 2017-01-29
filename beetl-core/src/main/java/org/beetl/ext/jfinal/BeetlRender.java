@@ -49,11 +49,9 @@ public class BeetlRender extends Render
 	@Override
 	public void render()
 	{
-
 		try
-
 		{
-			
+			response.setContentType(contentType);
 			WebRender webRender = new WebRender(gt);
 			webRender.render(view, request, response);
 

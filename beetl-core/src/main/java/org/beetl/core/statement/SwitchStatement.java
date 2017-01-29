@@ -42,13 +42,13 @@ import org.beetl.core.misc.ALU;
  */
 public class SwitchStatement extends Statement
 {
-	Expression value;
+	public Expression value;
 	LinkedHashMap<Expression, BlockStatement> map;
 	//为了类型推测方便，实际上只要map就可以了
-	Expression[] condtionsList;
-	BlockStatement[] blocks;
+	public Expression[] condtionsList;
+	public BlockStatement[] blocks;
 	//------------
-	BlockStatement defaultBlock;
+	public BlockStatement defaultBlock;
 
 	public SwitchStatement(Expression value, LinkedHashMap<Expression, BlockStatement> map,
 			BlockStatement defaultBlock, GrammarToken token)

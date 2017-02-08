@@ -44,22 +44,6 @@
 			<version>0.94</version>
 		</dependency>
 		
-		<dependency>
-			<groupId>com.jfinal</groupId>
-			<artifactId>jfinal</artifactId>
-			<scope>provided</scope>
-			<version>2.0</version>
-		</dependency>
-		
-		<dependency>
-		    <groupId>com.jfinal</groupId>
-		    <artifactId>jfinal2.0</artifactId>
-		    <version>1.0</version>
-		    <scope>system</scope>
-		    <systemPath>${project.basedir}/lib/jfinal-2.0.jar
-		    </systemPath>
-		</dependency>
-		
 		
 		<dependency>
 		    <groupId>com.jfinal</groupId>

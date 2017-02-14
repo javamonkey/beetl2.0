@@ -16,7 +16,7 @@ public final class PlaceholderST extends Statement
 
 	public Expression expression;
 	public Type type = null;
-	FormatExpression format;
+	public FormatExpression format;
 	//用户定义输出
 	public static Output output = null;
 

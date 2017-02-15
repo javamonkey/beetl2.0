@@ -16,7 +16,7 @@ public final class PlaceholderST extends Statement
 
 	public Expression expression;
 	public Type type = null;
-	public FormatExpression format;
+	protected FormatExpression format;
 	//用户定义输出
 	public static Output output = null;
 
@@ -105,4 +105,10 @@ public final class PlaceholderST extends Statement
 	public static interface Output{
 		public void write(Context ctx,Object value) throws IOException;
 	}
+
+	public FormatExpression getFormat() {
+		return format;
+	}
+	
+	
 }

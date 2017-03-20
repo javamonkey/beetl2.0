@@ -101,9 +101,9 @@ public class PojoMethodInvoker implements MethodInvoker
 		try {
 			setMethod.invoke(ins, value);
 		} catch (IllegalAccessException e) {
-			throw new BeetlException(BeetlException.ATTRIBUTE_INVALID, "错误参数", e);
-		} catch (IllegalArgumentException e) {
 			throw new BeetlException(BeetlException.ATTRIBUTE_INVALID, "无法访问", e);
+		} catch (IllegalArgumentException e) {
+			throw new BeetlException(BeetlException.ATTRIBUTE_INVALID, "错误参数", e);
 		} catch (InvocationTargetException e) {
 			Throwable target = e.getTargetException();
 			if (target instanceof BeetlException)

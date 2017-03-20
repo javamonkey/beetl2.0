@@ -48,7 +48,7 @@ public class Test {
 
 		};
 		List list = new ArrayList();
-		list.add(new TestUser("lijz"));
+		list.add(null);
 		list.add(new TestUser("abc"));
 
 		for (int i = 0; i < 1; i++) {

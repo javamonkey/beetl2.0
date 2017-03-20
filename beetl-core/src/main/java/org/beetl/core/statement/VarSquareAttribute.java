@@ -73,13 +73,16 @@ public class VarSquareAttribute extends VarAttribute
 		Type[] tps = type.types;
 		if (tps != null)
 		{
+			
 			if (tps.length == 1)
 			{
+				//list ,tps[0] is the element of type
 				this.type = tps[0];
 				return;
 			}
 			else if (tps.length == 2)
 			{
+				//map  tps[1] is the type of value
 				this.type = tps[1];
 				return;
 			}

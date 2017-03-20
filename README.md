@@ -11,5 +11,5 @@ Maven 地址
 	<dependency>
 	    <groupId>com.ibeetl</groupId>
 	    <artifactId>beetl</artifactId>
-	    <version>2.2.5</version>
+	    <version>xxx</version>
 	</dependency>

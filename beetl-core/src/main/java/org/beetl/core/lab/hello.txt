@@ -1,7 +1,4 @@
 <%
-for(user in users){
-	include("/include.txt",{lp:userLP,user:user}){}
-	//var a = userLP.last;
-	//print(a);
-}
+var c = users[0];
+print(c.id);
 %>

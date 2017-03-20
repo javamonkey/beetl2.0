@@ -38,6 +38,7 @@ public class OrExpression extends Expression
 	{
 		exp1.infer(inferCtx);
 		exp2.infer(inferCtx);
+		this.type = Type.BooleanType;
 
 	}
 

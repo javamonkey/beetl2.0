@@ -32,6 +32,11 @@ public class Test {
 		cfg.getPkgList().add("org.beetl.core.lab.");
 
 		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
+		String url = "/aa/yy/1";
+		String tt = getRealPath(gt.getResourceLoader(),url);
+		System.out.println("tt="+tt);
+		if(1==1)return ;
+		
 		cfg.setStatementStart("<%");
 		cfg.setStatementEnd("%>");
 
@@ -78,20 +83,34 @@ public class Test {
 
 	}
 	
-//	public String getRealPath(ResourceLoader loader,String path){
-//		String[] paths = path.split("/");
-//		Map<String,String> paras = new HashMap<String,String>();
-//		String temp = "";
-//		for(String p:paths){
-//			if(p.equals("/")){
-//				continue ;
-//			}
-//			temp = temp +"/"+p;
-//			boolean exist = loader.exist(temp);
-//			
-//		}
-//		
-//	}
+	public static String getRealPath(ResourceLoader loader,String path){
+		String[] paths = path.split("/");
+		Map<String,String> paras = new HashMap<String,String>();
+		String realPath = "";
+		for(String p:paths){
+			if(p.length()==0||p.equals("/")){
+				continue ;
+			}
+			
+			String temp = realPath +"/"+p;
+			boolean exist = loader.exist(temp);
+			if(!exist){
+				temp = realPath+"/$$";
+				exist = loader.exist(temp);
+				if(!exist){
+					return null;
+				}else{
+					realPath=temp;
+				}
+			}else{
+				realPath=temp;
+				continue ;
+			}
+			
+		}
+		return realPath;
+		
+	}
 
 	public static class TestFun implements Function {
 

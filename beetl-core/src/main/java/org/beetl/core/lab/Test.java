@@ -5,11 +5,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.beetl.core.Configuration;
 import org.beetl.core.Context;
 import org.beetl.core.Function;
 import org.beetl.core.GroupTemplate;
+import org.beetl.core.ResourceLoader;
 import org.beetl.core.Template;
 import org.beetl.core.resource.ClasspathResourceLoader;
 import org.beetl.core.statement.PlaceholderST;
@@ -50,12 +52,14 @@ public class Test {
 		List list = new ArrayList();
 		list.add(null);
 		list.add(new TestUser("abc"));
+		HashMap map = new HashMap();
+		map.put("key", 123);
 
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 2; i++) {
 
 			Template t = gt.getTemplate("/hello.txt");
-			t.binding("$page", new HashMap());
-			t.binding("users", list);
+			
+			t.binding("a",0.5);
 
 			ByteArrayOutputStream bs = new ByteArrayOutputStream();
 			try {
@@ -73,6 +77,21 @@ public class Test {
 	public static void testOne() {
 
 	}
+	
+//	public String getRealPath(ResourceLoader loader,String path){
+//		String[] paths = path.split("/");
+//		Map<String,String> paras = new HashMap<String,String>();
+//		String temp = "";
+//		for(String p:paths){
+//			if(p.equals("/")){
+//				continue ;
+//			}
+//			temp = temp +"/"+p;
+//			boolean exist = loader.exist(temp);
+//			
+//		}
+//		
+//	}
 
 	public static class TestFun implements Function {
 

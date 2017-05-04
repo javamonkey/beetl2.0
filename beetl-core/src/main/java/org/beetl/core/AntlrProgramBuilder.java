@@ -382,7 +382,11 @@ public class AntlrProgramBuilder
 		else if (node instanceof AssignStContext)
 		{
 			VarAssignStatement vas = this.parseAssign(((AssignStContext) node).assignMent());
-			pbCtx.setVarPosition(vas.token.text, vas);
+			if(!(vas instanceof VarRefAssignStatement)){
+				// 如果是临时变量定义
+				pbCtx.setVarPosition(vas.token.text, vas);
+			}
+			
 			return vas;
 		}
 		else if (node instanceof SiwchStContext)
@@ -1258,7 +1262,11 @@ public class AntlrProgramBuilder
 		{
 			VarAssignStatement vas = this.parseAssign(amc);
 			listNode.add(vas);
-			this.registerNewVar(vas);
+			if(!(vas instanceof VarRefAssignStatement)){
+				// 如果是临时变量定义
+				this.registerNewVar(vas);
+			}
+			
 			
 		}
 		VarAssignStatementSeq seq = new VarAssignStatementSeq(listNode.toArray(new Statement[0]), null);

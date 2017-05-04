@@ -94,8 +94,9 @@ public class VarRefAssignStatement extends VarAssignStatement
 
 	public void infer(InferContext inferCtx)
 	{
-		//赋值不需要做类型推测
+		varRef.infer(inferCtx);
 		exp.infer(inferCtx);
+		
 	}
 
 }

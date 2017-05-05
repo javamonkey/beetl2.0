@@ -1,16 +1,23 @@
 package org.beetl.ext.simulate;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.beetl.core.Context;
+import org.beetl.core.Function;
 import org.beetl.core.GroupTemplate;
+import org.beetl.core.ResourceLoader;
+import org.beetl.core.misc.ClassSearch;
 import org.beetl.ext.web.ParameterWrapper;
 import org.beetl.ext.web.SessionWrapper;
 import org.beetl.ext.web.WebVariable;
@@ -24,24 +31,15 @@ public class BaseSimulate {
 		this.gt = gt;		
 		this.base = base;
 		this.jsonUtil = jsonUtil;
-		gt.registerFunctionPackage("jsonUtil", jsonUtil);
-	}
-	
-	
-	protected String  getValueFile(String path, HttpServletRequest hq, HttpServletResponse response)
-	{
-		String defaultFile =  base+"/" + path + ".var";
-		if(gt.getResourceLoader().exist(defaultFile)){
-			return defaultFile;
-		}else{
-			String methodFile =  base+"/" + path +"."+hq.getMethod().toLowerCase()+".var";
-			if(gt.getResourceLoader().exist(methodFile)){
-				return methodFile;
-			}
+		if(jsonUtil!=null){
+			gt.registerFunctionPackage("jsonUtil", jsonUtil);
+			gt.registerFunction("jsonBody", new ReuqestBodyFunction(jsonUtil) );
 		}
 		
-		return null;
 	}
+	
+	
+
 
 	/** 得出公用的脚本文件，默认是在在webroot目录下的/values/common.var
 	 * @param hq
@@ -56,17 +54,6 @@ public class BaseSimulate {
 		}else{
 			return null;
 		}
-	}
-
-	/** 返回渲染的模板，默认就是path。
-	 * @param path
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	protected String getRenderPath(String path, HttpServletRequest request, HttpServletResponse response)
-	{
-		return path;
 	}
 
 	protected void output(String result, HttpServletResponse response)
@@ -100,6 +87,8 @@ public class BaseSimulate {
 			hq.setAttribute(key, value);
 		}
 	}
+	
+	
 
 	protected Map getScriptParas(HttpServletRequest request, HttpServletResponse response)
 	{
@@ -124,6 +113,138 @@ public class BaseSimulate {
 		map.put("request", request);
 		map.put("ctxPath", request.getContextPath());
 		return map;
+	}
+	
+	/**
+	 * 得到对应的脚本值
+	 * @param request
+	 * @return
+	 */
+	public String getValuePath(HttpServletRequest request){
+		return request.getServletPath();
+	}
+	
+	/**
+	 * 无法根据请求的url找到对应的path变量，因此暂时先不支持path变量，使用$$来代替
+	 * @param path
+	 * @return
+	 */
+	protected RestPath getRealPath(String path,String method){
+		return getRealPath(gt.getResourceLoader(),path,method);
+	}
+	
+	private  RestPath getRealPath(ResourceLoader loader,String path,String method){
+		path = this.base+"/"+path;
+		RestPath restPath = new RestPath();
+		List<String> pathVars = new ArrayList<String>();
+		String[] paths = path.split("/");
+		String realPath = "";
+		
+		for(int i=0;i<paths.length;i++){
+			String p = paths[i];
+			if(p.length()==0||p.equals("/")){
+				continue ;
+			}
+			if(i!=(paths.length-1)){
+				String temp = realPath +"/"+p;
+				boolean exist = loader.exist(temp);
+				if(!exist){
+					temp = realPath+"/$$";
+					exist = loader.exist(temp);
+					if(!exist){
+						return null;
+					}else{
+						pathVars.add(p);
+						realPath=temp;
+					}
+				}else{
+					realPath=temp;
+					continue ;
+				}
+			}else{
+				String temp = realPath +"/"+p+"."+method+".var";
+				boolean exist = loader.exist(temp);
+				if(exist){
+					realPath = temp;
+				}else{
+					 temp = realPath +"/"+p+".var";
+					 exist = loader.exist(temp);
+					 if(exist){
+						 realPath = temp;
+					 }else{
+						 //检查通配符情况
+						 temp = realPath +"/$$."+method+".var";
+						 if(loader.exist(temp)){
+							 realPath = temp;
+							 pathVars.add(p);
+						 }else{
+							 temp = realPath +"/$$"+".var";
+							 if(loader.exist(temp)){
+								 realPath = temp;
+								 pathVars.add(p);
+							 }else{
+								 //未找到
+								 return null;
+							 }
+						 }
+					 }
+				}
+			}
+		
+		}
+		restPath.path = realPath;
+		restPath.values = pathVars;
+		return restPath;
+		
+	}
+	
+	//一个简单疯转rest路径对应的的模拟路径以及参数，
+	// /user/1/dept/2 对应于路径 user/$id$/dept/$dept$.value 路径，且values里有1，2
+	public static class RestPath{
+		public String path;
+		public List<String> values = new ArrayList<String>();
+		
+	}
+	
+	public static class ReuqestBodyFunction implements Function{
+		
+		JsonUtil jsonUtil;
+		public ReuqestBodyFunction(JsonUtil jsonUtil){
+			this.jsonUtil = jsonUtil;
+		}
+		
+		@Override
+		public Object call(Object[] paras, Context ctx) {
+			HttpServletRequest req = (HttpServletRequest)ctx.getGlobal(WebVariable.REQUEST);
+			GroupTemplate gt = ctx.gt;
+			String name = (String)paras[0];
+			ClassSearch search = gt.getClassSearch();
+			Class cls = search.getClassByName(name);
+			String body;
+			try {
+				body = getRequestBody(req.getReader());
+			} catch (IOException e) {
+				//不需要处理这种问题
+				throw new RuntimeException(e);
+			}
+			if(jsonUtil==null){
+				throw new SimulateException("没有设置jsonUtil，无法将json转为对象");
+			}
+			Object obj = jsonUtil.toObject(body, cls);
+			return obj;
+		}
+		
+		private String getRequestBody(BufferedReader reader) throws IOException {
+			String line = null;  
+			StringBuilder sb = new StringBuilder();
+	        while((line = reader.readLine()) != null){  
+		        	sb.append(line);
+		        	sb.append("\n");
+	       
+	        }  
+	        return sb.toString();
+		}
+		
 	}
 
 }

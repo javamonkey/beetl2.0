@@ -27,6 +27,8 @@
  */
 package org.beetl.core;
 
+import org.beetl.core.exception.BeetlException;
+
 import java.io.IOException;
 import java.io.Reader;
 
@@ -44,6 +46,37 @@ public abstract class Resource
 	{
 		this.id = id;
 		this.resourceLoader = loader;
+	}
+
+	/**
+	 * 报告该资源是否有效
+	 * @return
+	 */
+	public boolean isValid() {
+		Reader reader = null;
+		try
+		{
+			reader = openReader();
+			return true;
+		}
+		catch (BeetlException be)
+		{
+			return false;
+		}
+		finally
+		{
+			if (null != reader)
+			{
+				try
+				{
+					reader.close();
+				}
+				catch (IOException e)
+				{
+					// ignore close IOException
+				}
+			}
+		}
 	}
 
 	/**

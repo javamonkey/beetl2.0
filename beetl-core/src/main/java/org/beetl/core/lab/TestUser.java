@@ -21,6 +21,7 @@ public class TestUser
 	boolean isOk = false;
 	int id = 0;
 	byte recycle = 1;
+	String price="12";
 	
 
 	public static enum ORDER
@@ -205,6 +206,14 @@ public class TestUser
 			return "aa";
 		}
 		
+	}
+
+	public String getPrice() {
+		return price;
+	}
+
+	public void setPrice(String price) {
+		this.price = price;
 	}
 
 	

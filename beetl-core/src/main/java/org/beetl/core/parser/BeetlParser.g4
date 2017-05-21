@@ -37,7 +37,7 @@ statement
     |   assignMent END  #assignSt
     |   functionTagCall #functionTagSt 
     |   statementExpression END   #statmentExpSt 
-    |   Ajax Identifier Identifier? COLON block   #ajaxSt 
+    |   (Ajax|Fragment) Identifier Identifier? COLON block   #ajaxSt 
     |   END   #end
       
     ;
@@ -121,7 +121,7 @@ expressionList
 statementExpression
     :   expression
     ;
-textStatment:   //表达式输�?
+textStatment:   //表达式输
          LEFT_TOKEN NOT LEFT_PAR textVar RIGHT_PAR RIGHT_TOKEN 
       |    LEFT_TOKEN textVar RIGHT_TOKEN;
 textVar	

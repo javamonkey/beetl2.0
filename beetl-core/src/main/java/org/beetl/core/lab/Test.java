@@ -32,10 +32,7 @@ public class Test {
 		cfg.getPkgList().add("org.beetl.core.lab.");
 
 		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
-		String url = "/aa/yy/1";
-		String tt = getRealPath(gt.getResourceLoader(),url);
-		System.out.println("tt="+tt);
-		if(1==1)return ;
+		
 		
 		cfg.setStatementStart("<%");
 		cfg.setStatementEnd("%>");
@@ -60,12 +57,14 @@ public class Test {
 		HashMap map = new HashMap();
 		map.put("key", 123);
 
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 1; i++) {
 
 			Template t = gt.getTemplate("/hello.txt");
+//			Template t = gt.getAjaxTemplate("/hello.txt","part1");
 			
-			t.binding("a",0.5);
-
+			t.binding("a",5);
+			t.binding("user", new TestUser("a"));
+			
 			ByteArrayOutputStream bs = new ByteArrayOutputStream();
 			try {
 				t.renderTo(bs);

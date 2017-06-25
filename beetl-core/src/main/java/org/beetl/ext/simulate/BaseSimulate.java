@@ -134,17 +134,17 @@ public class BaseSimulate {
 	}
 	
 	private  RestPath getRealPath(ResourceLoader loader,String path,String method){
+		method = method.toLowerCase();
 		path = this.base+"/"+path;
 		RestPath restPath = new RestPath();
 		List<String> pathVars = new ArrayList<String>();
 		String[] paths = path.split("/");
+		paths = getPath(paths);
 		String realPath = "";
 		
 		for(int i=0;i<paths.length;i++){
 			String p = paths[i];
-			if(p.length()==0||p.equals("/")){
-				continue ;
-			}
+			
 			if(i!=(paths.length-1)){
 				String temp = realPath +"/"+p;
 				boolean exist = loader.exist(temp);
@@ -198,6 +198,17 @@ public class BaseSimulate {
 		
 	}
 	
+	private String[] getPath(String[] ori){
+		List<String> list = new ArrayList<String>(ori.length);
+		for(String str:ori){
+			if(str.length()==0||str.equals("/")||str.equals("\\")){
+				continue;
+			}
+			list.add(str);
+		}
+		return list.toArray(new String[0]);
+	}
+	
 	//一个简单疯转rest路径对应的的模拟路径以及参数，
 	// /user/1/dept/2 对应于路径 user/$id$/dept/$dept$.value 路径，且values里有1，2
 	public static class RestPath{
@@ -230,7 +241,12 @@ public class BaseSimulate {
 			if(jsonUtil==null){
 				throw new SimulateException("没有设置jsonUtil，无法将json转为对象");
 			}
-			Object obj = jsonUtil.toObject(body, cls);
+			Object obj;
+			try {
+				obj = jsonUtil.toObject(body, cls);
+			} catch (Exception e) {
+				throw new RuntimeException("反序列化json出错");
+			}
 			return obj;
 		}
 		

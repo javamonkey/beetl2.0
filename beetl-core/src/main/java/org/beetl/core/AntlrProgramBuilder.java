@@ -203,11 +203,11 @@ import org.beetl.core.statement.nat.NativeNode;
 public class AntlrProgramBuilder
 {
 
-	ProgramMetaData data = new ProgramMetaData();
-	ProgramBuilderContext pbCtx = new ProgramBuilderContext();
+	protected ProgramMetaData data = new ProgramMetaData();
+	protected ProgramBuilderContext pbCtx = new ProgramBuilderContext();
 
-	Expression[] EMPTY_EXPRESSION = new Expression[0];
-	GroupTemplate gt;
+	protected Expression[] EMPTY_EXPRESSION = new Expression[0];
+	protected GroupTemplate gt;
 	//多余分号
 	static EndStatement endStatment = new EndStatement();
 

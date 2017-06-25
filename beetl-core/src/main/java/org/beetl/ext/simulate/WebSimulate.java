@@ -86,7 +86,12 @@ public class WebSimulate  extends BaseSimulate{
 				if(jsonUtil==null){
 					throw new SimulateException("模拟属于采用了json，但没有设置JsonUtil");
 				}
-				String str = jsonUtil.toJson(jsonData);
+				String str = null;
+				try {
+					str = jsonUtil.toJson(jsonData);
+				} catch (Exception e) {
+					throw new SimulateException("序列化JSON出错", e);
+				}
 				this.output(str, rsp);
 				
 			}
@@ -106,8 +111,13 @@ public class WebSimulate  extends BaseSimulate{
 				Object value = commonData.get(key);
 				setValue(key, value, req);
 			}
-
-			String renderPath = getRenderPath( req);
+			String renderPath = null;
+			if(commonData.containsKey("view")){
+				renderPath = (String) commonData.get("view");
+			}else{
+				renderPath = getRenderPath( req);
+			}
+			
 			if(ajaxFlag!=null){
 				renderPath = renderPath+"#"+ajaxFlag;
 			}

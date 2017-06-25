@@ -28,11 +28,15 @@
 package org.beetl.core.statement;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import org.beetl.core.Context;
 import org.beetl.core.Function;
+import org.beetl.core.GroupTemplate;
 import org.beetl.core.InferContext;
+import org.beetl.core.Resource;
 import org.beetl.core.exception.BeetlException;
+import org.beetl.core.fun.FileFunctionWrapper;
 import org.beetl.core.fun.MutipleFunctionWrapper;
 import org.beetl.core.fun.SingleFunctionWrapper;
 
@@ -60,9 +64,16 @@ public class FunctionExpression extends Expression
 		Function fn = ctx.gt.getFunction(name);
 		if (fn == null)
 		{
-			BeetlException ex = new BeetlException(BeetlException.FUNCTION_NOT_FOUND);
-			ex.pushToken(token);
-			throw ex;
+			//检查html实现
+			Resource resource = getResource(ctx.gt,name);
+			if(resource!=null){
+				fn = new FileFunctionWrapper(resource.getId());
+			}else{
+				BeetlException ex = new BeetlException(BeetlException.FUNCTION_NOT_FOUND);
+				ex.pushToken(token);
+				throw ex;
+			}
+			
 		}
 
 		Object[] paras = new Object[exps.length];
@@ -132,9 +143,15 @@ public class FunctionExpression extends Expression
 		Function fn = inferCtx.gt.getFunction(name);
 		if (fn == null)
 		{
-			BeetlException ex = new BeetlException(BeetlException.FUNCTION_NOT_FOUND);
-			ex.pushToken(token);
-			throw ex;
+			Resource resource = getResource(inferCtx.gt,name);
+			if(resource==null){
+				BeetlException ex = new BeetlException(BeetlException.FUNCTION_NOT_FOUND);
+				ex.pushToken(token);
+				throw ex;
+			}else{
+				fn = new FileFunctionWrapper(resource.getId());
+			}
+			
 		}
 		for (Expression exp : exps)
 		{
@@ -214,4 +231,14 @@ public class FunctionExpression extends Expression
 
 	}
 
+	private Resource getResource(GroupTemplate gt,String name){
+		Map<String, String> resourceMap = gt.getConf().getResourceMap();
+		String functionSuffix = resourceMap.get("functionSuffix");
+		String functionRoot = resourceMap.get("functionRoot");
+		String path = name.replace(".", "/");
+		Resource resource = gt.getResourceLoader().getResource(functionRoot+"/"+path+"."+functionSuffix);
+		return resource;
+		
+	}
+	
 }

@@ -6,6 +6,6 @@ package org.beetl.ext.simulate;
  *
  */
 public interface JsonUtil {
-	public String toJson(Object o);
-	public Object toObject(String str,Class c);
+	public String toJson(Object o) throws Exception;
+	public Object toObject(String str,Class c) throws Exception;
 }

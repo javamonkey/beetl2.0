@@ -2,6 +2,7 @@ package org.beetl.core.lab;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.beetl.core.Function;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.ResourceLoader;
 import org.beetl.core.Template;
+import org.beetl.core.exception.BeetlException;
 import org.beetl.core.resource.ClasspathResourceLoader;
 import org.beetl.core.statement.PlaceholderST;
 
@@ -42,15 +44,6 @@ public class Test {
 		//
 		gt.registerFunction("test", new TestFun());
 		gt.registerTag("test", TestTag.class);
-		PlaceholderST.output = new PlaceholderST.Output() {
-
-			@Override
-			public void write(Context ctx, Object value) throws IOException {
-				ctx.byteWriter.writeString(value == null ? "null" : value.toString());
-
-			}
-
-		};
 		List list = new ArrayList();
 		list.add(null);
 		list.add(new TestUser("abc"));
@@ -60,19 +53,19 @@ public class Test {
 		for (int i = 0; i < 1; i++) {
 
 			Template t = gt.getTemplate("/hello.txt");
+			BeetlException exception = t.validate();
+			if(exception!=null){
+				StringWriter sw = new StringWriter();
+				gt.getErrorHandler().processExcption(exception,sw);
+				System.out.println("hello "+sw.toString());
+				return ;
+			}
 //			Template t = gt.getAjaxTemplate("/hello.txt","part1");
 			
 			t.binding("a",5);
 			t.binding("user", new TestUser("a"));
+			System.out.println(t.render());
 			
-			ByteArrayOutputStream bs = new ByteArrayOutputStream();
-			try {
-				t.renderTo(bs);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-
-			System.out.println(new String(bs.toByteArray()));
 
 		}
 

@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -274,26 +273,18 @@ public class Template
 		return this.ctx;
 	}
 
-	//	public void fastRender(Map map, ByteWriter byteWriter)
-	//	{
-	//		if (ctx.isInit)
-	//		{
-	//			ctx.globalVar = map;
-	//			// 重用
-	//			for (int i = ctx.tempVarStartIndex; i < ctx.vars.length; i++)
-	//			{
-	//				ctx.vars[i] = null;
-	//			}
-	//			ctx.byteWriter = byteWriter;
-	//			program.metaData.replaceGlobal(ctx);
-	//			program.execute(ctx);
-	//		}
-	//		else
-	//		{
-	//			ctx.globalVar = map;
-	//			renderTo(byteWriter);
-	//		}
-	//
-	//	}
+	/**
+	 * 语法校验，如果返回BeetlException，则表示语法有错，返回null，语法无错误
+	 * @return
+	 */
+	public BeetlException validate(){
+		if(!(program instanceof ErrorGrammarProgram)){
+			return null;
+		}
+		ErrorGrammarProgram error = (ErrorGrammarProgram)program;
+		BeetlException exception = error.getException();
+		return exception;
+	}
+	
 
 }

@@ -405,6 +405,26 @@ public class GroupTemplate
 		}
 
 	}
+	
+	public BeetlException validateTemplate(String key, ResourceLoader loader){
+		Template t = getTemplate( key,  loader);
+		return t.validate();
+	}
+	
+	public BeetlException validateTemplate(String key){
+		Template t = getTemplate(key,this.resourceLoader);
+		return t.validate();
+	}
+	
+	public BeetlException validateScript(String key, ResourceLoader loader){
+		Template t = loadScriptTemplate(key, loader);
+		return t.validate();
+	}
+	
+	public BeetlException validateScript(String key){
+		Template t = loadScriptTemplate(key,this.resourceLoader);
+		return t.validate();
+	}
 
 	private Map getSrirptTopScopeVars(Template t)
 	{

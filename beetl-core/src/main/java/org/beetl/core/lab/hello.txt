@@ -1,5 +1,6 @@
 <%
-if 1==2){
-print(1);
+var a = "abc";
+for(item in a){
+   print(item);
 }
 %>

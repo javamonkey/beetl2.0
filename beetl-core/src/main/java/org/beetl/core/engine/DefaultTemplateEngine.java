@@ -56,7 +56,7 @@ public class DefaultTemplateEngine implements TemplateEngine
 		ProgContext tree = parser.prog();
 
 		// begin parsing at init rule
-		AntlrProgramBuilder pb = new AntlrProgramBuilder(gt);
+		AntlrProgramBuilder pb = getAntlrBuilder(gt);
 		ProgramMetaData data = pb.build(tree);
 		Program program = new Program();
 		program.metaData = data;
@@ -93,5 +93,10 @@ public class DefaultTemplateEngine implements TemplateEngine
 		}
 
 		return program;
+	}
+	
+	protected AntlrProgramBuilder getAntlrBuilder(GroupTemplate gt){
+		AntlrProgramBuilder pb = new AntlrProgramBuilder(gt);
+		return pb;
 	}
 }

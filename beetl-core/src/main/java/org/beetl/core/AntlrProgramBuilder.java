@@ -1139,6 +1139,7 @@ public class AntlrProgramBuilder
 		else
 		{
 			GeneralForControlContext forCtx = forTypeCtx.generalForControl();
+			
 			Expression[] initExp = null;
 			VarAssignStatementSeq varInitSeq = null;
 			Expression condtion = null;
@@ -1184,8 +1185,9 @@ public class AntlrProgramBuilder
 				elseForPart = this.parseStatment(elseContext);
 
 			}
+			String str = forTypeCtx.getText();
 			GeneralForStatement forStat = new GeneralForStatement(varInitSeq, initExp, condtion, updateExp, forPart,
-					elseForPart, varInitSeq!=null?varInitSeq.token:initExp[0].token);
+					elseForPart,this.getBTToken(str, forTypeCtx.start.getLine()));
 			pbCtx.exitBlock();
 			return forStat;
 
@@ -1268,7 +1270,9 @@ public class AntlrProgramBuilder
 			}
 			
 			
+			
 		}
+		
 		VarAssignStatementSeq seq = new VarAssignStatementSeq(listNode.toArray(new Statement[0]), null);
 		return seq;
 	}

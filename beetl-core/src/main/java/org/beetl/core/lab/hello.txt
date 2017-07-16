@@ -1,6 +1,2 @@
-<%
-var a = "abc";
-for(item in a){
-   print(item);
-}
-%>
+
+${trim(date(),"yyyy")}

@@ -61,10 +61,12 @@ public class Test {
 				return ;
 			}
 //			Template t = gt.getAjaxTemplate("/hello.txt","part1");
-			
-			t.binding("a",5);
+			float a = 166.1f;
+			System.out.print(a);
+			t.binding("a",a);
 			t.binding("user", new TestUser("a"));
 			System.out.println(t.render());
+			
 			
 
 		}

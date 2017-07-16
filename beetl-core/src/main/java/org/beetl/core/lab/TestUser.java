@@ -33,13 +33,12 @@ public class TestUser
 
 	public static ORDER tt = ORDER.OK;
 
-	public boolean isOk()
-	{
+
+	public boolean isOk() {
 		return isOk;
 	}
 
-	public void setOk(boolean isOk)
-	{
+	public void setOk(boolean isOk) {
 		this.isOk = isOk;
 	}
 

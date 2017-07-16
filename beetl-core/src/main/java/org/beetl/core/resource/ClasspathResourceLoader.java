@@ -195,26 +195,11 @@ public class ClasspathResourceLoader implements ResourceLoader
 
 		}
 
-//		this.functionSuffix = resourceMap.get("functionSuffix");
-//
-//		this.autoCheck = Boolean.parseBoolean(resourceMap.get("autoCheck"));
-//		this.functionRoot = resourceMap.get("functionRoot");
-//		//初始化functions
-//		URL url = classLoader.getResource("");
-//		this.gt = gt;
-//		
-//		if (url!=null&&url.getProtocol().equals("file"))
-//		{
-//
-//			File fnRoot = new File(url.getFile() + File.separator + root + File.separator + this.functionRoot);
-//			if (fnRoot.exists())
-//			{
-//				String ns = "";
-//				String path = "/".concat(this.functionRoot).concat("/");
-//				BeetlUtil.autoFileFunctionRegister(gt, fnRoot, ns, path, this.functionSuffix);
-//			}
-//
-//		}
+		this.functionSuffix = resourceMap.get("functionSuffix");
+
+		this.autoCheck = Boolean.parseBoolean(resourceMap.get("autoCheck"));
+		this.functionRoot = resourceMap.get("functionRoot");
+
 
 	}
 

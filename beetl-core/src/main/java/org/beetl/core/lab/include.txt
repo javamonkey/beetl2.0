@@ -1,3 +1,0 @@
-${jsSection}
-
-${htmlSection12}

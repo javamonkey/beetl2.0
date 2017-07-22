@@ -225,7 +225,6 @@ public class BeetlGroupUtilConfiguration extends AbstractGroupTemplateConfig imp
 		}
 		else
 		{
-
 			WebAppResourceLoader defaultLoader = new WebAppResourceLoader(root);
 			groupTemplate = new GroupTemplate(defaultLoader, configuration);
 		}

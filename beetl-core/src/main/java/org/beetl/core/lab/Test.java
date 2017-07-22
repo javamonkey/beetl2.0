@@ -53,18 +53,12 @@ public class Test {
 		for (int i = 0; i < 1; i++) {
 
 			Template t = gt.getTemplate("/hello.txt");
-			BeetlException exception = t.validate();
-			if(exception!=null){
-				StringWriter sw = new StringWriter();
-				gt.getErrorHandler().processExcption(exception,sw);
-				System.out.println("hello "+sw.toString());
-				return ;
-			}
+			
 //			Template t = gt.getAjaxTemplate("/hello.txt","part1");
-			float a = 166.1f;
-			System.out.print(a);
-			t.binding("a",a);
-			t.binding("user", new TestUser("a"));
+
+//			TestUser test = new TestUser("a");
+//			test.setLover(new TestUser("b"));
+//			t.binding("user", test);
 			System.out.println(t.render());
 			
 			

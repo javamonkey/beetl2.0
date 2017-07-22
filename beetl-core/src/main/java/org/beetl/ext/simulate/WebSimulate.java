@@ -1,25 +1,15 @@
 package org.beetl.ext.simulate;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import org.beetl.core.Context;
-import org.beetl.core.Function;
 import org.beetl.core.GroupTemplate;
-import org.beetl.core.ResourceLoader;
 import org.beetl.core.exception.ScriptEvalError;
-import org.beetl.core.misc.ClassSearch;
 import org.beetl.ext.web.WebRender;
-import org.beetl.ext.web.WebVariable;
 /**
  * 在渲染模板前，调用beetl脚本模拟数据，提供模板需要渲染的数据。能模拟
  * 后台需要的模板数据
@@ -48,7 +38,10 @@ public class WebSimulate  extends BaseSimulate{
 		String path = this.getValuePath(req);
 		RestPath restPath = this.getRealPath(path,req.getMethod().toLowerCase());
 		if(restPath==null){
-			throw new SimulateException("找不到脚本路径 "+path);
+			//在没有逻辑处理的时候，直接渲染模板，
+			
+			this.handleNullPath(req, rsp);
+			return ;
 		}
 		String valueFile =restPath.path;	
 		WebRender render = new WebRender(gt);
@@ -84,7 +77,7 @@ public class WebSimulate  extends BaseSimulate{
 				
 			}else{
 				if(jsonUtil==null){
-					throw new SimulateException("模拟属于采用了json，但没有设置JsonUtil");
+					throw new SimulateException("模拟属性采用了json，但没有设置JsonUtil");
 				}
 				String str = null;
 				try {
@@ -140,7 +133,31 @@ public class WebSimulate  extends BaseSimulate{
 		return request.getServletPath();
 	}
 	
-	
+	protected void handleNullPath(HttpServletRequest req,HttpServletResponse rsp){
+		String commonFile = getCommonValueFile(req, rsp);
+		Map commonData = new HashMap();
+		if (gt.getResourceLoader().exist(commonFile))
+		{
+			try {
+				commonData = gt.runScript(commonFile, new HashMap());
+			} catch (ScriptEvalError e) {
+				throw new SimulateException("伪模型脚本有错！", e);
+			}
+
+		}
+		
+		Iterator it = commonData.keySet().iterator();
+		while (it.hasNext())
+		{
+			String key = (String) it.next();
+			Object value = commonData.get(key);
+			setValue(key, value, req);
+		}
+		String path = this.getRenderPath(req);
+		WebRender render = new WebRender(gt);
+		render.render(path, req, rsp, null);
+		return ;
+	}
 
 	
 }

@@ -54,8 +54,8 @@ public class Test {
 		for (int i = 0; i < 1; i++) {
 
 			Template t = gt.getTemplate("/hello.txt");
-			t.binding("$page", new HashMap());
-			t.binding("users", list);
+			t.binding("name", 1);
+			t.binding("id", 2);
 
 			ByteArrayOutputStream bs = new ByteArrayOutputStream();
 			try {

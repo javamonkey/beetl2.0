@@ -1,4 +1,1 @@
-<%
-var c = users[0];
-print(c.id);
-%>
+update user set name=${name} where id=${id}

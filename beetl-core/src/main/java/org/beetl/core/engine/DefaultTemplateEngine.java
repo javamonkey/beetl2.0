@@ -24,8 +24,8 @@ import org.beetl.core.statement.ProgramMetaData;
 public class DefaultTemplateEngine implements TemplateEngine
 {
 
-	BeetlAntlrErrorStrategy antlrErrorStrategy = new BeetlAntlrErrorStrategy();
-	SyntaxErrorListener syntaxError = new SyntaxErrorListener();
+	protected BeetlAntlrErrorStrategy antlrErrorStrategy = new BeetlAntlrErrorStrategy();
+	protected SyntaxErrorListener syntaxError = new SyntaxErrorListener();
 
 	@Override
 	public Program createProgram(Resource resource, Reader reader, Map<Integer, String> textMap, String cr,

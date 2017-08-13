@@ -959,7 +959,7 @@ public class Transformator
 		{
 
 			// String str = "   #:var u='hello';:#  \n  $u$";
-			String str = "<#a id='{{a}}'/>";
+			String str = "<#a-id a-id-='{{a}}'/>";
 
 			BufferedReader reader = new BufferedReader(p.transform(str));
 			String line = null;

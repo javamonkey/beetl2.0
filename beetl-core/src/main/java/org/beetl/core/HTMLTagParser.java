@@ -113,7 +113,7 @@ class HTMLTagParser
 			throw new RuntimeException("非法标签名");
 		}
 		StringBuilder tagSb = new StringBuilder();
-		tagSb.append(this.subString());
+		tagSb.append(this.convertAttr(this.subString()));
 		this.t_consume();
 		while (match(':'))
 		{
@@ -202,6 +202,7 @@ class HTMLTagParser
 		}
 
 		lastKey = this.subString();
+		lastKey = convertAttr(lastKey);
 		this.t_consume();
 		this.stripSpace();
 		if (match('='))
@@ -228,6 +229,36 @@ class HTMLTagParser
 			throw new RuntimeException("没有找到属性");
 		}
 
+	}
+	
+	/**
+	 * 将带有-符号的属性去掉，换成下一个字母为大写
+	 * @param attr
+	 */
+	private String convertAttr(String attr){
+		char[] cs = attr.toCharArray();
+		StringBuilder sb = new StringBuilder(cs.length);
+		boolean upper = false;
+		for(int i=0;i<cs.length;i++){
+			if(upper){
+				if(cs[i]=='-'){
+					continue;
+				}
+				sb.append(Character.toUpperCase(cs[i]));
+				upper=false;
+				
+				
+			}else{
+				if(cs[i]=='-'){
+					upper=true;
+				}else{
+					sb.append(cs[i]);
+				}
+			}
+			
+			
+		}
+		return sb.toString();
 	}
 	
 
@@ -349,6 +380,7 @@ class HTMLTagParser
 		{
 			throw new RuntimeException("解析错");
 		}
+		
 		char c = cs[ts];
 
 		if (this.isID(c))
@@ -530,7 +562,7 @@ class HTMLTagParser
 	 */
 	private boolean isID(char c)
 	{
-		if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_')
+		if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_'|c == '-')
 		{
 			return true;
 		}

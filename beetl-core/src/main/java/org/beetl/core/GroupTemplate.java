@@ -48,7 +48,7 @@ import org.beetl.core.misc.BeetlUtil;
 import org.beetl.core.misc.ByteClassLoader;
 import org.beetl.core.misc.ClassSearch;
 import org.beetl.core.misc.PrimitiveArrayUtil;
-import org.beetl.core.om.AttributeAccess;
+import org.beetl.core.om.AttributeAccessFactory;
 import org.beetl.core.om.ObjectUtil;
 import org.beetl.core.resource.ClasspathResourceLoader;
 import org.beetl.core.statement.ErrorGrammarProgram;
@@ -66,7 +66,7 @@ public class GroupTemplate
 	ClassLoader classLoader = GroupTemplate.class.getClassLoader();
 	
 	ByteClassLoader byteLoader = new ByteClassLoader(classLoader);
-
+	AttributeAccessFactory attributeAccessFactory = new AttributeAccessFactory();
 	ResourceLoader resourceLoader = null;
 	Configuration conf = null;
 	TemplateEngine engine = null;
@@ -166,7 +166,7 @@ public class GroupTemplate
 		this.initFormatter();
 		this.initTag();
 		this.initVirtual();
-
+		
 		classSearch = new ClassSearch(conf.getPkgList(),this);
 		nativeSecurity = (NativeSecurityManager) ObjectUtil.instance(conf.getNativeSecurity());
 		if (conf.errorHandlerClass == null)
@@ -178,6 +178,7 @@ public class GroupTemplate
 			errorHandler = (ErrorHandler) ObjectUtil.instance(conf.errorHandlerClass);
 
 		}
+
 	}
 
 	protected void initFunction()
@@ -404,6 +405,26 @@ public class GroupTemplate
 			throw new ScriptEvalError(ex);
 		}
 
+	}
+	
+	public BeetlException validateTemplate(String key, ResourceLoader loader){
+		Template t = getTemplate( key,  loader);
+		return t.validate();
+	}
+	
+	public BeetlException validateTemplate(String key){
+		Template t = getTemplate(key,this.resourceLoader);
+		return t.validate();
+	}
+	
+	public BeetlException validateScript(String key, ResourceLoader loader){
+		Template t = loadScriptTemplate(key, loader);
+		return t.validate();
+	}
+	
+	public BeetlException validateScript(String key){
+		Template t = loadScriptTemplate(key,this.resourceLoader);
+		return t.validate();
 	}
 
 	private Map getSrirptTopScopeVars(Template t)
@@ -641,14 +662,14 @@ public class GroupTemplate
 		{
 			ErrorGrammarProgram ep = new ErrorGrammarProgram(res, this, sf.lineSeparator);
 			ep.setException(e);
-			e.pushResource(res.id);
+			e.pushResource(res);
 			return ep;
 		}
 		catch (IOException e)
 		{
 			ErrorGrammarProgram ep = new ErrorGrammarProgram(res, this, sf.lineSeparator);
 			BeetlException ex = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR);
-			ex.pushResource(res.id);
+			ex.pushResource(res);
 
 			ep.setException(ex);
 
@@ -657,7 +678,7 @@ public class GroupTemplate
 		catch (BeetlException ex)
 		{
 			ErrorGrammarProgram ep = new ErrorGrammarProgram(res, this, sf != null ? sf.lineSeparator : null);
-			ex.pushResource(res.id);
+			ex.pushResource(res);
 			ep.setException(ex);
 			return ep;
 		}
@@ -679,7 +700,7 @@ public class GroupTemplate
 		catch (BeetlException ex)
 		{
 			ErrorGrammarProgram ep = new ErrorGrammarProgram(res, this, System.getProperty("line.separator"));
-			ex.pushResource(res.id);
+			ex.pushResource(res);
 			ep.setException(ex);
 			return ep;
 		}
@@ -928,6 +949,10 @@ public class GroupTemplate
 
 	public ClassSearch getClassSearch() {
 		return classSearch;
+	}
+
+	public AttributeAccessFactory getAttributeAccessFactory() {
+		return attributeAccessFactory;
 	}
 	
 	

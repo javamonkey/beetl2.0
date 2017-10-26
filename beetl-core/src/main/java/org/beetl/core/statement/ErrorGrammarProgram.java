@@ -62,7 +62,8 @@ public class ErrorGrammarProgram extends Program
 
 			public AjaxStatement getAjax(String anchor)
 			{
-				return new AjaxStatement(null, null,true) {
+				//创建一个临时的ajax片段语句
+				return new AjaxStatement(null, GrammarToken.createToken(anchor, 0),true) {
 					public void execute(Context ctx)
 					{
 						ErrorGrammarProgram.this.execute(ctx);

@@ -27,6 +27,7 @@
  */
 package org.beetl.core;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
@@ -90,72 +91,24 @@ public abstract class Resource
 	public String getContent(int start, int end) throws IOException
 	{
 		// bug, 混合回车符号也许定位不到准确行数？
+		String lineSeparator = System.getProperty("line.separator");
 		Reader br = openReader();
-
-		int line = 1;
-		int ch;
-		boolean hasStart = false;
-
-		StringBuilder sb = new StringBuilder(1024);
-
-		while ((ch = br.read()) != -1)
-		{
-			if (line == start)
-			{
-				hasStart = true;
-			}
-
-			if (hasStart)
-			{
-				sb.append((char) ch);
-			}
-
-			if (ch == '\r' || ch == '\n')
-			{
-				line++;
-				char temp = (char) ch;
-				ch = br.read();
-				if (ch != -1)
-				{
-					if (temp == '\r' && ch == '\n')
-					{
-
-						if (hasStart)
-							sb.append((char) ch);
-					}
-					else if (temp == '\n' && ch == '\r')
-					{
-
-						if (hasStart)
-							sb.append((char) ch);
-					}
-					else
-					{
-						if (line != end)
-						{
-							if (hasStart)
-								sb.append((char) ch);
-						}
-					}
-
-					//检测是否到指定行数了
-
-					if (line == end)
-					{
-						break;
-					}
-
-				}
-				else
-				{
-					//文档末尾
+		BufferedReader reader = new BufferedReader(br);
+		String line = null;
+		StringBuilder sb = new StringBuilder();
+		int index = 0;
+		while((line=reader.readLine())!=null){
+			index++;
+			if(index>=start&&index<=end){
+				sb.append(line).append(lineSeparator);
+				if(index==end){
 					break;
 				}
 			}
-
 		}
-
 		return sb.toString();
+
+	
 
 	}
 }

@@ -44,7 +44,7 @@ public class ArthExpression extends Expression
 	public static final short MUL = 2;
 	public static final short DIV = 3;
 	public static final short MOD = 4;
-	short arthMode = PLUS;
+	public short arthMode = PLUS;
 
 	public Expression a;
 	public Expression b;

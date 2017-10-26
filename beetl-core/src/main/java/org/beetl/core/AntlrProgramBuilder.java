@@ -87,7 +87,6 @@ import org.beetl.core.parser.BeetlParser.FunctionTagStContext;
 import org.beetl.core.parser.BeetlParser.G_caseStatmentContext;
 import org.beetl.core.parser.BeetlParser.G_defaultStatmentContext;
 import org.beetl.core.parser.BeetlParser.G_switchStatmentContext;
-import org.beetl.core.parser.BeetlParser.GeneralAssignExpContext;
 import org.beetl.core.parser.BeetlParser.GeneralForControlContext;
 import org.beetl.core.parser.BeetlParser.IfStContext;
 import org.beetl.core.parser.BeetlParser.IncDecOneContext;
@@ -185,6 +184,7 @@ import org.beetl.core.statement.VarAssignStatementSeq;
 import org.beetl.core.statement.VarAttribute;
 import org.beetl.core.statement.VarDefineNode;
 import org.beetl.core.statement.VarRef;
+import org.beetl.core.statement.VarRefAssignExpress;
 import org.beetl.core.statement.VarRefAssignStatement;
 import org.beetl.core.statement.VarSquareAttribute;
 import org.beetl.core.statement.VarVirtualAttribute;
@@ -203,11 +203,11 @@ import org.beetl.core.statement.nat.NativeNode;
 public class AntlrProgramBuilder
 {
 
-	ProgramMetaData data = new ProgramMetaData();
-	ProgramBuilderContext pbCtx = new ProgramBuilderContext();
+	protected ProgramMetaData data = new ProgramMetaData();
+	protected ProgramBuilderContext pbCtx = new ProgramBuilderContext();
 
-	Expression[] EMPTY_EXPRESSION = new Expression[0];
-	GroupTemplate gt;
+	protected Expression[] EMPTY_EXPRESSION = new Expression[0];
+	protected GroupTemplate gt;
 	//多余分号
 	static EndStatement endStatment = new EndStatement();
 
@@ -382,7 +382,11 @@ public class AntlrProgramBuilder
 		else if (node instanceof AssignStContext)
 		{
 			VarAssignStatement vas = this.parseAssign(((AssignStContext) node).assignMent());
-			pbCtx.setVarPosition(vas.token.text, vas);
+			if(!(vas instanceof VarRefAssignStatement)){
+				// 如果是临时变量定义
+				pbCtx.setVarPosition(vas.token.text, vas);
+			}
+			
 			return vas;
 		}
 		else if (node instanceof SiwchStContext)
@@ -544,30 +548,31 @@ public class AntlrProgramBuilder
 	 * @param agc
 	 * @return
 	 */
-	protected VarAssignExpression  parseAssingInExp(AssignGeneralInExpContext agc){
+	protected VarRefAssignExpress parseAssingInExp(AssignGeneralInExpContext agc) {
 
-		VarAssignExpression  vas = null;
+		VarRefAssignExpress vas = null;
 		ExpressionContext expCtx = agc.generalAssignExp().expression();
 		Expression exp = parseExpress(expCtx);
-		VarRefContext varRefCtx = agc.generalAssignExp().varRef();
-		if(varRefCtx.children.size()==1){
-			//var a=1;
-			Token token =  varRefCtx.Identifier().getSymbol();
-			if(pbCtx.hasDefined(token.getText())!=null){
-				vas = new VarAssignExpression(exp, getBTToken(token));
+		VarRefContext varRefCtx = agc.generalAssignExp().varRef();		
+		VarRef ref = this.parseVarRefInLeftExpression(varRefCtx);
+		vas = new VarRefAssignExpress(exp,ref);
+		
+		if (ref.attributes.length==0) {
+			// 变量定义:
+			Token token = varRefCtx.Identifier().getSymbol();
+			if (pbCtx.hasDefined(token.getText()) != null) {
 				registerVar(vas);
-				return vas ;
-			}else{
+				return vas;
+			} else {
 				BeetlException ex = new BeetlException(BeetlException.VAR_NOT_DEFINED);
 				ex.pushToken(this.getBTToken(token));
 				throw ex;
 			}
-			
-		}else{
-			 throw new UnsupportedOperationException("不支持，稍后在想");
-		}
+
+		} 
+		return vas;
 		
-	
+
 	}
 //	纪录一个新变量
 	protected void registerNewVar(ASTNode vas){
@@ -639,7 +644,7 @@ public class AntlrProgramBuilder
 		}
 		else
 		{
-			throw new RuntimeException("不支持");
+			throw new RuntimeException("不支持 在 "+amc.start.getLine());
 		}
 
 		return vas;
@@ -1135,6 +1140,7 @@ public class AntlrProgramBuilder
 		else
 		{
 			GeneralForControlContext forCtx = forTypeCtx.generalForControl();
+			
 			Expression[] initExp = null;
 			VarAssignStatementSeq varInitSeq = null;
 			Expression condtion = null;
@@ -1180,8 +1186,9 @@ public class AntlrProgramBuilder
 				elseForPart = this.parseStatment(elseContext);
 
 			}
+			String str = forTypeCtx.getText();
 			GeneralForStatement forStat = new GeneralForStatement(varInitSeq, initExp, condtion, updateExp, forPart,
-					elseForPart, varInitSeq!=null?varInitSeq.token:initExp[0].token);
+					elseForPart,this.getBTToken(str, forTypeCtx.start.getLine()));
 			pbCtx.exitBlock();
 			return forStat;
 
@@ -1258,9 +1265,15 @@ public class AntlrProgramBuilder
 		{
 			VarAssignStatement vas = this.parseAssign(amc);
 			listNode.add(vas);
-			this.registerNewVar(vas);
+			if(!(vas instanceof VarRefAssignStatement)){
+				// 如果是临时变量定义
+				this.registerNewVar(vas);
+			}
+			
+			
 			
 		}
+		
 		VarAssignStatementSeq seq = new VarAssignStatementSeq(listNode.toArray(new Statement[0]), null);
 		return seq;
 	}
@@ -1380,7 +1393,7 @@ public class AntlrProgramBuilder
 			
 			
 			AssignGeneralInExpContext agc = (AssignGeneralInExpContext) ctx;
-			VarAssignExpression  vas  = this.parseAssingInExp(agc);
+			VarRefAssignExpress  vas  = this.parseAssingInExp(agc);
 			return vas;
 			
 		}

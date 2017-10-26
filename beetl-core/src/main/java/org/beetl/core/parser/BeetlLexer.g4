@@ -24,6 +24,7 @@ Default:'default';
 Try:'try';
 Catch:'catch';  
 Ajax:'#ajax';
+Fragment:'#fragment';
 LEFT_BRACE:'{';
 RIGHT_BRACE:'}';
 LEFT_PAR:'(';

@@ -38,7 +38,7 @@ import org.beetl.core.InferContext;
 public class ReturnStatement extends Statement
 {
 
-	Expression exp = null;
+	public Expression exp = null;
 
 	public ReturnStatement(Expression exp, GrammarToken token)
 	{

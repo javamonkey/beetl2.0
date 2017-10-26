@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.beetl.core.Resource;
 import org.beetl.core.statement.GrammarToken;
 
 /**
@@ -46,7 +47,7 @@ public class ErrorInfo
 	String msg;
 	Throwable cause;
 	String errorCode = null;
-	List<String> resourceCallStack = null;
+	List<Resource> resourceCallStack = null;
 	List<GrammarToken> tokenCallStack = null;
 	public static Map<String, String> errorLocalMap = new HashMap<String, String>();
 	static
@@ -249,12 +250,12 @@ public class ErrorInfo
 		return resourceCallStack.size() > 1;
 	}
 
-	public List<String> getResourceCallStack()
+	public List<Resource> getResourceCallStack()
 	{
 		return resourceCallStack;
 	}
 
-	public void setResourceCallStack(List<String> resourceCallStack)
+	public void setResourceCallStack(List<Resource> resourceCallStack)
 	{
 		this.resourceCallStack = resourceCallStack;
 	}

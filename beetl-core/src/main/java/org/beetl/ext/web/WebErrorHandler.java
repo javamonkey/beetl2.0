@@ -65,7 +65,7 @@ public class WebErrorHandler extends ConsoleErrorHandler
 		if (error.getErrorCode().equals(BeetlException.CLIENT_IO_ERROR_ERROR))
 		{
 			//不输出详细提示信息
-			title = new StringBuilder(">>").append("客户端IO异常:").append(e.resourceId);
+			title = new StringBuilder(">>").append("客户端IO异常:").append(e.resource.getId());
 			if (e.getCause() != null)
 			{
 				msg.append(e.getCause());
@@ -77,7 +77,7 @@ public class WebErrorHandler extends ConsoleErrorHandler
 		int line = error.getErrorTokenLine();
 
 		title = new StringBuilder(">>").append(error.getType()).append(":").append(error.getErrorTokenText())
-				.append(" 位于").append(line).append("行").append(" 资源:").append(e.resourceId);
+				.append(" 位于").append(line).append("行").append(" 资源:").append(e.resource.getId());
 
 		if (error.getErrorCode().equals(BeetlException.TEMPLATE_LOAD_ERROR))
 		{
@@ -95,7 +95,7 @@ public class WebErrorHandler extends ConsoleErrorHandler
 		ResourceLoader resLoader = e.gt.getResourceLoader();
 		//潜在问题，此时可能得到是一个新的模板，不过可能性很小，忽略！
 		String content = null;
-		Resource res = resLoader.getResource(e.resourceId);
+		Resource res = resLoader.getResource(e.resource.getId());
 		//显示前后三行的内容
 		int[] range = this.getRange(line);
 		try

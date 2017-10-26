@@ -43,7 +43,7 @@ public class FileResource extends Resource
 		{
 			FileResourceLoader loader = (FileResourceLoader) this.resourceLoader;
 			BeetlException be = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR, " 模板根目录为 " + loader.getRoot());
-			be.resourceId = this.id;
+			be.pushResource(this);
 			throw be;
 
 		}

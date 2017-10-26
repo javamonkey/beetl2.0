@@ -55,5 +55,19 @@ public class AssignTest extends BasicTestCase
 		str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/exp/assign/assign_expected.html"), str);
 	}
+	
+	@Test
+	public void testLeftAsign() throws Exception
+	{
+		Template t = gt.getTemplate("/exp/assign/left_template.html");
+		t.binding("d", 100);
+		String str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/exp/assign/left_expected.html"), str);
+
+		t = gt.getTemplate("/exp/assign/left_template.html");
+		t.binding("d", 100);
+		str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/exp/assign/left_expected.html"), str);
+	}
 
 }

@@ -95,7 +95,7 @@ public final class ForStatement extends Statement implements IGoto
 			it = IteratorStatus.getIteratorStatusByType(collection, itType);
 			if (it == null)
 			{
-				BeetlParserException ex = new BeetlParserException(BeetlParserException.COLLECTION_EXPECTED_ERROR);
+				BeetlParserException ex = new BeetlParserException(BeetlParserException.COLLECTION_EXPECTED_ERROR,"实际类型是:"+collection.getClass());
 				ex.pushToken(exp.token);
 				throw ex;
 			}

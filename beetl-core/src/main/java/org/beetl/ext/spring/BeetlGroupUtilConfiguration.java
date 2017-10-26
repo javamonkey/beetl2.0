@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
@@ -204,12 +205,13 @@ public class BeetlGroupUtilConfiguration extends AbstractGroupTemplateConfig imp
 
 			if (configProperties != null)
 			{
-				for (Enumeration<?> keys = configProperties.propertyNames(); keys.hasMoreElements();)
-				{
-					String key = (String) keys.nextElement();
-					String value = configProperties.getProperty(key);
+				
+				for(Entry<Object,Object> entry:configProperties.entrySet()){
+					String key = (String) entry.getKey();
+					String value = (String) entry.getValue();
 					properties.setProperty(key, value);
 				}
+				
 			}
 
 			// 使用配置项配置properties
@@ -223,7 +225,6 @@ public class BeetlGroupUtilConfiguration extends AbstractGroupTemplateConfig imp
 		}
 		else
 		{
-
 			WebAppResourceLoader defaultLoader = new WebAppResourceLoader(root);
 			groupTemplate = new GroupTemplate(defaultLoader, configuration);
 		}

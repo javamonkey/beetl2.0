@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.beetl.core.GroupTemplate;
+import org.beetl.core.Resource;
 import org.beetl.core.statement.GrammarToken;
 
 /**
@@ -51,10 +52,10 @@ public class BeetlException extends RuntimeException
 	/**
 	 * 资源id
 	 */
-	public String resourceId = null;
+	public Resource resource = null;
 
-	public List<String> errorResourceStack = new ArrayList<String>(2);
-	public List<GrammarToken> errorTokenStack = new ArrayList<GrammarToken>(2);
+	public List<Resource> errorResourceStack = new ArrayList<Resource>(3);
+	public List<GrammarToken> errorTokenStack = new ArrayList<GrammarToken>(3);
 
 	/**
 	 * GroupTemplate
@@ -250,13 +251,13 @@ public class BeetlException extends RuntimeException
 		//		return "Error:" + detailCode + "at " + token.line + super.getMessage() != null ? super.getMessage() : "";
 	}
 
-	public void pushResource(String resourceId)
+	public void pushResource(Resource resource)
 	{
-		if (this.resourceId == null)
+		if (this.resource == null)
 		{
-			this.resourceId = resourceId;
+			this.resource = resource;
 		}
-		this.errorResourceStack.add(resourceId);
+		this.errorResourceStack.add(resource);
 
 	}
 

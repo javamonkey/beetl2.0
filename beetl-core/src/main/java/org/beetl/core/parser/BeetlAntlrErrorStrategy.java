@@ -153,11 +153,12 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 
 	protected void reportInputMismatch(@NotNull Parser recognizer, @NotNull InputMismatchException e)
 	{
-		String msg = "缺少输入 " + getTokenErrorDisplay(e.getOffendingToken()) + " 期望 "
+		Token t1 = recognizer.getInputStream().LT(-1);
+		String msg = "缺少输入在 " + getTokenErrorDisplay(t1) + " 后面， 期望 "
 				+ e.getExpectedTokens().toString(recognizer.getTokenNames());
 		BeetlException exception = new BeetlParserException(BeetlException.PARSER_MISS_ERROR, msg, e);
 		//		exception.token = this.getGrammarToken(e.getOffendingToken());
-		exception.pushToken(this.getGrammarToken(e.getOffendingToken()));
+		exception.pushToken(this.getGrammarToken(t1));
 
 		throw exception;
 
@@ -200,14 +201,11 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 		{
 			return getMissingSymbol(recognizer);
 		}
-
-		// even that didn't work; must throw the exception
-
-		BeetlException exception = new BeetlParserException(BeetlException.PARSER_MISS_ERROR);
-		exception.pushToken(this.getGrammarToken(recognizer.getCurrentToken()));
-		throw exception;
-		//		
-		//		throw new InputMismatchException(recognizer);
+		
+//		BeetlException exception = new BeetlParserException(BeetlException.PARSER_MISS_ERROR);
+//		exception.pushToken(this.getGrammarToken(recognizer.getCurrentToken()));
+//		throw exception;
+		throw new InputMismatchException(recognizer);
 	}
 
 	protected void reportMissingToken(@NotNull Parser recognizer)
@@ -219,7 +217,8 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 
 		beginErrorCondition(recognizer);
 
-		Token t = recognizer.getCurrentToken();
+//		Token t = recognizer.getCurrentToken();
+		Token t = recognizer.getTokenStream().LT(-1);
 		IntervalSet expecting = getExpectedTokens(recognizer);
 		String expect = expecting.toString(recognizer.getTokenNames());
 		if(expects.containsKey(expect)){
@@ -231,11 +230,10 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 		
 		String tokenStr = getTokenErrorDisplay(t);
 		
-		String msg = "缺少输入 " + expect + " 在 " + tokenStr;
+		String msg = "缺少输入 " + expect + " 在 " + tokenStr+" 后面";
 
 		BeetlException exception = new BeetlParserException(BeetlException.PARSER_MISS_ERROR, msg);
 		exception.pushToken(this.getGrammarToken(t));
-		//		exception.token = this.getGrammarToken(t);
 		throw exception;
 	}
 

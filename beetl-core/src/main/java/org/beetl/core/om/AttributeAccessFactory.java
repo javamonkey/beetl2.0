@@ -52,16 +52,16 @@ public class AttributeAccessFactory
 {
 
 	// 已经为属性生成的访问代理类
-	static Map<String, AttributeAccess> pojoCache = new ConcurrentHashMap<String, AttributeAccess>();
-	static Map<String, AttributeAccess> generalGetCache = new ConcurrentHashMap<String, AttributeAccess>();
+	Map<PojoAttrKey, AttributeAccess> pojoCache = new ConcurrentHashMap<PojoAttrKey, AttributeAccess>();
+	Map<PojoAttrKey, AttributeAccess> generalGetCache = new ConcurrentHashMap<PojoAttrKey, AttributeAccess>();
 
-	public static MapAA mapAA = new MapAA();
-	public static ListAA listAA = new ListAA();
-	public static ArrayAA arrayAA = new ArrayAA();
-	public static ObjectAA objectAA = new ObjectAA();
-	public static MapEntryAA mapEntryAA = new MapEntryAA();
+	 MapAA mapAA = new MapAA();
+	  ListAA listAA = new ListAA();
+	  ArrayAA arrayAA = new ArrayAA();
+	  ObjectAA objectAA = new ObjectAA();
+	  MapEntryAA mapEntryAA = new MapEntryAA();
 
-	static public AttributeAccess buildFiledAccessor(Class c, String attrExp,GroupTemplate gt)
+	public AttributeAccess buildFiledAccessor(Class c, String attrExp,GroupTemplate gt)
 	{
 
 		if (c == Object.class)
@@ -95,8 +95,8 @@ public class AttributeAccessFactory
 		}
 
 		String name = (String) attrExp;
-		String className = c + "_" + name;
-		AttributeAccess aa = pojoCache.get(className);
+		PojoAttrKey pojoAttr = new PojoAttrKey(c,name);
+		AttributeAccess aa = pojoCache.get(pojoAttr);
 		if (aa != null)
 			return aa;
 
@@ -105,8 +105,8 @@ public class AttributeAccessFactory
 		if (pojoResult != null)
 		{
 			if(!pojoResult.realMethodName.equals("get")){
-				className = pojoResult.c + "_" + name;
-				aa = pojoCache.get(className);
+				pojoAttr = new PojoAttrKey(c,name);
+				aa = pojoCache.get(pojoAttr);
 				if (aa != null)
 				{
 					return aa;
@@ -115,21 +115,21 @@ public class AttributeAccessFactory
 				{
 					synchronized (pojoResult.c)
 					{
-						aa = pojoCache.get(className);
+						aa = pojoCache.get(pojoAttr);
 						if (aa != null)
 							return aa;
 						aa = AttributeCodeGen.createAAClass(pojoResult.c, name, pojoResult.realMethodName,
 								pojoResult.returnType,gt);
 
-						pojoCache.put(className, aa);
+						pojoCache.put(pojoAttr, aa);
 						return aa;
 					}
 
 				}
 			}else{
 				// General Get
-				className = c + "_get";
-				aa = generalGetCache.get(className);
+				pojoAttr =new PojoAttrKey(c,"get");
+				aa = generalGetCache.get(pojoAttr);
 				if (aa != null)
 				{
 					return aa;
@@ -138,12 +138,12 @@ public class AttributeAccessFactory
 						
 						synchronized (c)
 						{
-							aa = generalGetCache.get(className);
+							aa = generalGetCache.get(pojoAttr);
 							if (aa != null)
 								return aa;
 							
 							aa = AttributeCodeGen.createAAClass(c, "get", "get", pojoResult.returnType, pojoResult.parameter,gt);
-							generalGetCache.put(className, aa);
+							generalGetCache.put(pojoAttr, aa);
 							return aa;
 						}
 
@@ -273,18 +273,6 @@ public class AttributeAccessFactory
 	
 	
 	
-	private static void resetFindResult(Method m, FindResult parent)
-	{
-//		if (m.getReturnType() == parent.returnType)
-//		{
-//			return;
-//		}
-//		else
-//		{
-//			// 和父接口不一致，模型比较复杂类型推测很难，统一改成Object
-//			parent.returnType = Object.class;
-//		}
-	}
 
 	static class FindResult
 	{
@@ -293,5 +281,94 @@ public class AttributeAccessFactory
 		Class c;
 		Class returnType;
 		Class parameter;
+	}
+
+	public Map<PojoAttrKey, AttributeAccess> getPojoCache() {
+		return pojoCache;
+	}
+
+	public void setPojoCache(Map<PojoAttrKey, AttributeAccess> pojoCache) {
+		this.pojoCache = pojoCache;
+	}
+
+	public Map<PojoAttrKey, AttributeAccess> getGeneralGetCache() {
+		return generalGetCache;
+	}
+
+	public void setGeneralGetCache(Map<PojoAttrKey, AttributeAccess> generalGetCache) {
+		this.generalGetCache = generalGetCache;
+	}
+
+	public MapAA getMapAA() {
+		return mapAA;
+	}
+
+	public void setMapAA(MapAA mapAA) {
+		this.mapAA = mapAA;
+	}
+
+	public ListAA getListAA() {
+		return listAA;
+	}
+
+	public void setListAA(ListAA listAA) {
+		this.listAA = listAA;
+	}
+
+	public ArrayAA getArrayAA() {
+		return arrayAA;
+	}
+
+	public void setArrayAA(ArrayAA arrayAA) {
+		this.arrayAA = arrayAA;
+	}
+
+	public ObjectAA getObjectAA() {
+		return objectAA;
+	}
+
+	public void setObjectAA(ObjectAA objectAA) {
+		this.objectAA = objectAA;
+	}
+
+	public MapEntryAA getMapEntryAA() {
+		return mapEntryAA;
+	}
+
+	public void setMapEntryAA(MapEntryAA mapEntryAA) {
+		this.mapEntryAA = mapEntryAA;
+	}
+	
+	class PojoAttrKey{
+		Class c;String attr;
+		
+		public PojoAttrKey(Class c,String attr){
+			this.c = c;
+			this.attr = attr;
+		}
+
+		@Override
+		public int hashCode() {
+			return c.hashCode()*31+attr.hashCode();
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+		
+			PojoAttrKey other = (PojoAttrKey) obj;
+			if (c.equals(other.c)&&attr.equals(other.attr)){
+				return true;
+			}else{
+				return false;
+			}
+			
+		}
+
+		
+		
 	}
 }

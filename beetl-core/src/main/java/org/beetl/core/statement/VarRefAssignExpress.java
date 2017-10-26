@@ -34,38 +34,46 @@ import org.beetl.core.om.ObjectAA;
 import org.beetl.core.parser.BeetlParser.VarAttributeVirtualContext;
 
 /**
- * var xxx.cc = exp;
+ * call(xxx.cc = exp);
  * @author joelli
  *
  */
-public class VarRefAssignStatement extends VarAssignStatement
+public class VarRefAssignExpress extends  Expression implements IVarIndex
 {
 
-	protected int varIndex;
 	public Expression exp;
 	public VarRef varRef;
 	protected VarAttribute lastVarAttribute = null;
-
-	public VarRefAssignStatement(Expression exp, VarRef varRef)
+	protected int varIndex = -1;
+	public VarRefAssignExpress(Expression exp, VarRef varRef)
 	{
-		super(exp,exp.token);
+		super(varRef.token);
 		this.exp = exp;
 		this.varRef = varRef;
-		lastVarAttribute = varRef.attributes[varRef.attributes.length-1];
+		if(varRef.attributes.length==0){
+			lastVarAttribute = null;
+		}else{
+			lastVarAttribute = varRef.attributes[varRef.attributes.length-1];
+
+		}
 	}
 
-	public void execute(Context ctx)
-	{
+	public Object evaluate(Context ctx){
 		Object value =  exp.evaluate(ctx);
+		if(lastVarAttribute==null){
+			
+			ctx.vars[varIndex] = value;
+			return value;
+		}
 		Object obj = varRef.evaluateUntilLast(ctx);
 		Object key = null;
+		
 		if(lastVarAttribute instanceof VarSquareAttribute){
 			key  = (((VarSquareAttribute)lastVarAttribute).exp).evaluate(ctx);
-			
-			
 		}else {
 			key = lastVarAttribute.name;
 		}
+		
 		try{
 			ObjectAA.defaultObjectAA().setValue(obj, key, value);
 		}catch(ClassCastException ex){
@@ -77,26 +85,29 @@ public class VarRefAssignStatement extends VarAssignStatement
 			throw be;
 		}
 		
+		return value;
 		
-
-	}
-	
-
-	public int getVarIndex()
-	{
-		return varIndex;
 	}
 
-	public void setVarIndex(int varIndex)
-	{
-		this.varIndex = varIndex;
-	}
+
 
 	public void infer(InferContext inferCtx)
 	{
 		varRef.infer(inferCtx);
 		exp.infer(inferCtx);
 		
+	}
+
+	@Override
+	public void setVarIndex(int index) {
+		varIndex = index;
+		
+	}
+
+	@Override
+	public int getVarIndex() {
+		// TODO Auto-generated method stub
+		return varIndex;
 	}
 
 }

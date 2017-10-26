@@ -41,6 +41,7 @@ public class VarAttributeNodeListener implements Listener
 			VarAttribute[] attrs = ref.attributes;
 			for (int i = 0; i < attrs.length; i++)
 			{
+				GroupTemplate gt = (GroupTemplate)((Map)stack.get(0)).get("groupTemplate");
 				VarAttribute attr = attrs[i];
 				if (attr.getClass() == VarAttribute.class)
 				{
@@ -50,8 +51,8 @@ public class VarAttributeNodeListener implements Listener
 					// 换成速度较快的属性访问类
 					try
 					{
-						GroupTemplate gt = (GroupTemplate)((Map)stack.get(0)).get("groupTemplate");
-						AttributeAccess aa = AttributeAccessFactory.buildFiledAccessor(type.cls, name,gt);
+						
+						AttributeAccess aa = gt.getAttributeAccessFactory().buildFiledAccessor(type.cls, name,gt);
 						attr.aa = aa;
 					}
 					catch (BeetlException ex)
@@ -67,16 +68,16 @@ public class VarAttributeNodeListener implements Listener
 					Class c = type.cls;
 					if (Map.class.isAssignableFrom(c))
 					{
-						attr.setAA(AttributeAccessFactory.mapAA);
+						attr.setAA(gt.getAttributeAccessFactory().getMapAA());
 					}
 					else if (List.class.isAssignableFrom(c) || Set.class.isAssignableFrom(c))
 					{
-						attr.setAA(AttributeAccessFactory.listAA);
+						attr.setAA(gt.getAttributeAccessFactory().getListAA());
 					}
 
 					else if (c.isArray())
 					{
-						attr.setAA(AttributeAccessFactory.arrayAA);
+						attr.setAA(gt.getAttributeAccessFactory().getArrayAA());
 					}
 					else
 					{
@@ -90,8 +91,7 @@ public class VarAttributeNodeListener implements Listener
 								try
 								{
 									String attributeName = (String) literal.obj;
-									GroupTemplate gt = (GroupTemplate)((Map)stack.get(0)).get("groupTemplate");
-									AttributeAccess aa = AttributeAccessFactory.buildFiledAccessor(c, attributeName,gt);
+									AttributeAccess aa = gt.getAttributeAccessFactory().buildFiledAccessor(c, attributeName,gt);
 									ref.attributes[i] = new VarSquareAttribute2((VarSquareAttribute) attrs[i],
 											attributeName, aa);
 								}

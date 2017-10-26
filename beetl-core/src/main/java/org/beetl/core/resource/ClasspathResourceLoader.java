@@ -56,6 +56,7 @@ public class ClasspathResourceLoader implements ResourceLoader
 	String functionSuffix = "fn";
 	ClassLoader classLoader = null;
 
+
 	/**
 	 * 使用加载beetl.jar的classloader，以及默认root为根目录
 	 */
@@ -64,6 +65,7 @@ public class ClasspathResourceLoader implements ResourceLoader
 		//保留，用于通过配置构造一个ResouceLoader
 		classLoader = this.getClass().getClassLoader();
 		this.root = "";
+		
 
 	}
 
@@ -75,6 +77,7 @@ public class ClasspathResourceLoader implements ResourceLoader
 
 		this.classLoader = classLoader;
 		this.root = "";
+		
 
 	}
 
@@ -86,7 +89,7 @@ public class ClasspathResourceLoader implements ResourceLoader
 	{
 
 		this.classLoader = classLoader;
-		this.root = root;
+		this.root = this.checkRoot(root);
 
 	}
 
@@ -109,14 +112,8 @@ public class ClasspathResourceLoader implements ResourceLoader
 	{
 
 		this();
-		if (root.equals("/"))
-		{
-			this.root = "";
-		}
-		else
-		{
-			this.root = root;
-		}
+		this.root = this.checkRoot(root);
+		
 
 	}
 
@@ -136,7 +133,7 @@ public class ClasspathResourceLoader implements ResourceLoader
 	public Resource getResource(String key)
 	{
 
-		Resource resource = new ClasspathResource(key, root + key, this);
+		Resource resource = new ClasspathResource(key, this.getChildPath(root, key), this);
 		return resource;
 	}
 
@@ -184,27 +181,12 @@ public class ClasspathResourceLoader implements ResourceLoader
 	public void init(GroupTemplate gt)
 	{
 		Map<String, String> resourceMap = gt.getConf().getResourceMap();
+		//如果配置文件也配置了root
 		if (resourceMap.get("root") != null)
 		{
 			String temp = resourceMap.get("root");
-			if (temp.equals("/") || temp.length() == 0)
-			{
-
-			}
-			else
-			{
-
-				if (this.root.endsWith("/"))
-				{
-					this.root = this.root + resourceMap.get("root");
-				}
-				else
-				{
-					this.root = this.root + "/" + resourceMap.get("root");
-				}
-
-			}
-
+			temp = checkRoot(temp);
+			this.root = this.getChildPath(root, temp);
 		}
 
 		if (this.charset == null)
@@ -217,22 +199,7 @@ public class ClasspathResourceLoader implements ResourceLoader
 
 		this.autoCheck = Boolean.parseBoolean(resourceMap.get("autoCheck"));
 		this.functionRoot = resourceMap.get("functionRoot");
-		//初始化functions
-		URL url = classLoader.getResource("");
-		this.gt = gt;
-		
-		if (url!=null&&url.getProtocol().equals("file"))
-		{
 
-			File fnRoot = new File(url.getFile() + File.separator + root + File.separator + this.functionRoot);
-			if (fnRoot.exists())
-			{
-				String ns = "";
-				String path = "/".concat(this.functionRoot).concat("/");
-				BeetlUtil.autoFileFunctionRegister(gt, fnRoot, ns, path, this.functionSuffix);
-			}
-
-		}
 
 	}
 
@@ -281,5 +248,34 @@ public class ClasspathResourceLoader implements ResourceLoader
 	public String getInfo() {
 		return  "ClassLoader:"+this.classLoader+" Path:"+root;
 	}
-
+	
+	/**
+	 * 检查classpath路径
+	 * @param path
+	 * @return
+	 */
+	protected String checkRoot(String path){
+		if(path==null||path.length()==0||path.equals("/")){
+			return "";
+			
+		}else if(path.endsWith("/")){
+			return path.substring(0,path.length()-1);
+		}else if(path.startsWith("/")){
+			return path.substring(1,path.length());
+		}else{
+			return  path;
+		}
+	}
+	
+	protected String getChildPath(String path,String child){
+		if(child.length()==0){
+			return path;
+		}else if(child.startsWith("/")){
+			return path+child;			
+		}else{
+			return path+"/"+child;
+		}
+	}
+	
+	
 }

@@ -43,7 +43,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.beetl.core.GroupTemplate;
-import org.beetl.core.exception.ScriptEvalError;
+import org.beetl.ext.simulate.WebSimulate;
 
 /** 用于直接访问模板页面，此fitler会根据只要要访问的模板页面，运行同样同路径下的var文件，获取模板需要的全局变量，然后渲染模板
  * @author joelli
@@ -52,9 +52,10 @@ import org.beetl.core.exception.ScriptEvalError;
  */
 public abstract class SimpleCrossFilter implements Filter
 {
-
+	WebSimulate simulate = null;
 	public SimpleCrossFilter()
 	{
+		simulate = new WebSimulate(getGroupTemplate());
 	}
 
 	public void destroy()
@@ -69,46 +70,8 @@ public abstract class SimpleCrossFilter implements Filter
 		HttpServletResponse rsp = (HttpServletResponse) response;
 		if (canProcceed(req, response))
 		{
-			String path = req.getServletPath();
-			String valueFile = getValueFile(path, req, rsp);
-			GroupTemplate gt = getGroupTemplate();
-
-			WebRender render = new WebRender(gt);
-			Map paras = this.getScriptParas(req, rsp);
-
-			String commonFile = getCommonValueFile(req, rsp);
-			Map commonData = new HashMap(), data = new HashMap();
-			try
-			{
-				if (gt.getResourceLoader().exist(commonFile))
-				{
-					commonData = gt.runScript(commonFile, paras);
-
-				}
-
-				if (gt.getResourceLoader().exist(valueFile))
-				{
-					data = gt.runScript(valueFile, paras);
-				}
-
-			}
-			catch (ScriptEvalError e)
-			{
-				throw new RuntimeException("伪模型脚本有错！", e);
-			}
-
-			commonData.putAll(data);
-			Iterator it = commonData.keySet().iterator();
-			while (it.hasNext())
-			{
-				String key = (String) it.next();
-				Object value = commonData.get(key);
-				setValue(key, value, req);
-			}
-
-			String renderPath = getRenderPath(path, req, rsp);
-
-			render.render(renderPath, req, rsp);
+			
+			simulate.execute(req,rsp);
 		}
 		else
 		{
@@ -118,92 +81,6 @@ public abstract class SimpleCrossFilter implements Filter
 
 	}
 
-	/** 设置全局变量
-	 * @param key
-	 * @param value
-	 * @param hq
-	 */
-	protected void setValue(String key, Object value, HttpServletRequest hq)
-	{
-		if (key.equals("session"))
-		{
-			HttpSession session = hq.getSession();
-			Map map = (Map) value;
-			Iterator it = map.keySet().iterator();
-			while (it.hasNext())
-			{
-				String sessionKey = (String) it.next();
-				Object sessionValue = map.get(sessionKey);
-				session.setAttribute(sessionKey, sessionValue);
-			}
-
-		}
-		else
-		{
-			hq.setAttribute(key, value);
-		}
-	}
-
-	/** 根据请求的模板页面得出脚本文件，比如，请求是/userList.html,则默认是在webroot目录下的/values/userList.html.var
-	 * @param path
-	 * @param hq
-	 * @param response
-	 * @return
-	 */
-	protected String getValueFile(String path, HttpServletRequest hq, HttpServletResponse response)
-	{
-		return "/values/" + path + ".var";
-	}
-
-	/** 得出公用的脚本文件，默认是在在webroot目录下的/values/common.var
-	 * @param hq
-	 * @param response
-	 * @return
-	 */
-	protected String getCommonValueFile(HttpServletRequest hq, HttpServletResponse response)
-	{
-		return "/values/common.var";
-	}
-
-	/** 返回渲染的模板，默认就是path。
-	 * @param path
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	protected String getRenderPath(String path, HttpServletRequest request, HttpServletResponse response)
-	{
-		return path;
-	}
-
-	protected void output(String result, ServletResponse response) throws IOException
-	{
-		response.getWriter().print(result);
-	}
-
-	protected Map getScriptParas(HttpServletRequest request, HttpServletResponse response)
-	{
-		Map map = new HashMap();
-		Enumeration<String> attrs = request.getAttributeNames();
-
-		while (attrs.hasMoreElements())
-		{
-			String attrName = attrs.nextElement();
-			map.put(attrName, request.getAttribute(attrName));
-
-		}
-		WebVariable webVariable = new WebVariable();
-		webVariable.setRequest(request);
-		webVariable.setResponse(response);
-		webVariable.setSession(request.getSession());
-
-		map.put("session", new SessionWrapper(request,webVariable.getSession()));
-
-		map.put("servlet", webVariable);
-		map.put("request", request);
-		map.put("ctxPath", request.getContextPath());
-		return map;
-	}
 
 	/** 返回一个GroupTemlate
 	 * @return

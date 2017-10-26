@@ -27,55 +27,42 @@
  */
 package org.beetl.ext.fn;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 import org.beetl.core.Context;
 import org.beetl.core.Function;
+import org.beetl.ext.web.WebVariable;
 
 /**
- * 截取数字，剩下指定位数,如果输入0，则取整，因为这个仅仅用于输出，所以建议用format函数定制
- * 如
- * ${trunc(12.333,1)},输出是12.3
- * 
- * 推荐使用trunc2
- *
+ * <pre>
+ * var allArray = cookie()；
+ * var cookie= cookie("userName");
+ * </pre>
+ * @author jeolli
  *
  */
-
-public class TruncFunction implements Function
+public class CookieFunction implements Function
 {
 
-	public Number call(Object[] paras, Context ctx)
+	public Object call(Object[] paras, Context ctx)
 	{
-		Number n = (Number) paras[0];
-		int pos = 0;
-		if (paras.length != 1)
-		{
-			pos = ((Number) paras[1]).intValue();
-		}
-
-		if (pos == 0)
-			return n.longValue();
-		else
-		{
-
-			if (n instanceof BigDecimal)
-			{
-				BigDecimal c = ((BigDecimal) n).setScale(pos, RoundingMode.UP);
-				return c;
-			}
-			else
-			{
-				//todo:还原成输入类型
-				BigDecimal c = new BigDecimal(n.doubleValue());
-				return ((BigDecimal) c).setScale(pos, RoundingMode.UP).doubleValue();
-
-			}
-
-		}
+		
+		 HttpServletRequest request = (HttpServletRequest)ctx.getGlobal(WebVariable.REQUEST);
+		 Cookie[] cookies = request.getCookies();
+		 if(paras.length==0){
+			 return cookies;
+		 }else{
+			 String name = (String)paras[0];
+			 for(Cookie cookie:cookies){
+				 if(cookie.getName().equals(name)){
+					 return cookie;
+				 }
+			 }
+			 return null;
+			 
+		 }
 
 	}
-
 
 }

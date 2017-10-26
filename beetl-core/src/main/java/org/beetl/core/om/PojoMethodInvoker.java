@@ -96,7 +96,7 @@ public class PojoMethodInvoker implements MethodInvoker
 	public void set(Object ins, Object value) {
 		checkSetterMethod();
 		if(setMethod==null){
-			throw new BeetlException(BeetlException.ATTRIBUTE_INVALID, "属性访问异常");
+			throw new BeetlException(BeetlException.ATTRIBUTE_INVALID, "属性set方法不存在");
 		}
 		try {
 			setMethod.invoke(ins, value);

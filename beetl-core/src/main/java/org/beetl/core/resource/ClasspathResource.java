@@ -72,7 +72,7 @@ public class ClasspathResource extends Resource
 		if (url == null)
 		{
 			BeetlException be = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR);
-			be.resourceId = this.id;
+			be.pushResource(this);
 			throw be;
 		}
 		InputStream is;
@@ -83,14 +83,14 @@ public class ClasspathResource extends Resource
 		catch (IOException e1)
 		{
 			BeetlException be = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR);
-			be.resourceId = this.id;
+			be.pushResource(this);
 			throw be;
 		}
 
 		if (is == null)
 		{
 			BeetlException be = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR);
-			be.resourceId = this.id;
+			be.pushResource(this);
 			throw be;
 		}
 

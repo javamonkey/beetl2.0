@@ -1,1 +1,6 @@
-update user set name=${name} where id=${id}
+<%
+var baseService="BaseService<Hello>";
+
+%>
+@Service
+public class Service extends ${baseService} {

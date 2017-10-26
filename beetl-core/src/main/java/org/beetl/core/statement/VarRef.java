@@ -252,7 +252,6 @@ public class VarRef extends Expression implements IVarIndex
 
 		}
 		this.type = lastType;
-		//要review代码，这段在2.0.1的代码现在2.0.11才发现漏写，气人！
 		if (safe != null)
 		{
 			safe.infer(inferCtx);

@@ -29,6 +29,8 @@ package org.beetl.ext.fn;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.beetl.core.Context;
 import org.beetl.core.Function;
@@ -36,46 +38,72 @@ import org.beetl.core.Function;
 /**
  * 截取数字，剩下指定位数,如果输入0，则取整，因为这个仅仅用于输出，所以建议用format函数定制
  * 如
- * ${trunc(12.333,1)},输出是12.3
+ * ${trunc2(12.333,1)},输出是12.3
  * 
- * 推荐使用trunc2
+ * 推荐使用
  *
  *
  */
 
-public class TruncFunction implements Function
+public class TruncFunction2 implements Function
 {
 
-	public Number call(Object[] paras, Context ctx)
+	public Object call(Object[] paras, Context ctx)
 	{
-		Number n = (Number) paras[0];
-		int pos = 0;
-		if (paras.length != 1)
-		{
-			pos = ((Number) paras[1]).intValue();
+		Object obj = paras[0];
+		
+		if(obj==null){
+			return null;
 		}
-
-		if (pos == 0)
-			return n.longValue();
-		else
-		{
-
-			if (n instanceof BigDecimal)
-			{
-				BigDecimal c = ((BigDecimal) n).setScale(pos, RoundingMode.UP);
-				return c;
-			}
-			else
-			{
-				//todo:还原成输入类型
-				BigDecimal c = new BigDecimal(n.doubleValue());
-				return ((BigDecimal) c).setScale(pos, RoundingMode.UP).doubleValue();
-
-			}
-
+		if(obj instanceof Date){
+			return truncateDate((Date)obj,(String)(paras.length==1?null:paras[1]));
+		}else if(obj instanceof Number){
+			return truncateNumber((Number)obj,(Number)(paras.length==1?null:paras[1]));
+		}else{
+			throw new UnsupportedOperationException("truncate :"+obj.getClass().getName());
 		}
-
+		
+		
+	}
+	protected String truncateNumber(Number data,Number pos){
+		
+		String str = data.toString();
+		
+		int index = str.indexOf(".");
+		if(index==-1){
+			return str;
+		}
+		
+		if(pos==null){
+			 return str.substring(0,index);
+		}else{
+			int p = pos.intValue();
+			if(p==0){
+				throw new IllegalArgumentException("参数不能为0");
+			}
+			//小数位
+			int dig = str.length()-index-1;
+			if(dig>=p){
+				return str.substring(0,index+p+1);
+			}else{
+				return str;
+			}
+			
+		}
+		
+	}
+	protected String truncateDate(Date d,String format){
+		if(format==null){
+			format = "yyyy-MM-dd";
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat(format);
+		return sdf.format(d);
 	}
 
+	public static void main(String[] args){
+		TruncFunction2 f = new TruncFunction2();
+		System.out.println(f.truncateNumber(116.136d, 2));
+		System.out.println(f.truncateDate(new Date(), "MM"));
+	}
 
 }

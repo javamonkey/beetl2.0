@@ -52,7 +52,7 @@ public class ConsoleErrorHandler implements ErrorHandler
 		{
 			//不输出详细提示信息
 			if(!ex.gt.conf.isIgnoreClientIOError){
-				println(writer, "客户端IO异常:" + getResourceName(ex.resourceId) + ":" + error.getMsg());
+				println(writer, "客户端IO异常:" + getResourceName(ex.resource.id) + ":" + error.getMsg());
 				if (ex.getCause() != null)
 				{
 					this.printThrowable(writer, ex.getCause());
@@ -67,7 +67,7 @@ public class ConsoleErrorHandler implements ErrorHandler
 
 		StringBuilder sb = new StringBuilder(">>").append(this.getDateTime()).append(":").append(error.getType())
 				.append(":").append(error.getErrorTokenText()).append(" 位于").append(line).append("行").append(" 资源:")
-				.append(getResourceName(ex.resourceId));
+				.append(getResourceName(ex.resource.id));
 
 		if (error.getErrorCode().equals(BeetlException.TEMPLATE_LOAD_ERROR))
 		{
@@ -90,7 +90,8 @@ public class ConsoleErrorHandler implements ErrorHandler
 		String content = null;
 		try
 		{
-			Resource res = resLoader.getResource(ex.resourceId);
+			
+			Resource res = ex.resource;
 			//显示前后三行的内容
 			int[] range = this.getRange(line);
 			content = res.getContent(range[0], range[1]);

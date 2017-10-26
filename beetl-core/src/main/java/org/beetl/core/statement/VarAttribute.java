@@ -58,8 +58,10 @@ public class VarAttribute extends Expression
 	public Object evaluate(Context ctx, Object o)
 	{
 		try{
+
 			return aa.value(o, name);
 		}catch(ClassCastException ex){
+//			System.out.println(o.getClass().getClassLoader()+" ==== "+aa.getClass().getClassLoader());
 			throw BeetlUtil.throwCastException(ex,ctx.gt);
 		}
 		

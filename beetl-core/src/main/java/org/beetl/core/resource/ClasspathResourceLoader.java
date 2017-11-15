@@ -207,10 +207,11 @@ public class ClasspathResourceLoader implements ResourceLoader
 	@Override
 	public boolean exist(String key)
 	{
-		URL url = this.classLoader.getResource(root + key);
+		String path = this.getChildPath(root, key);
+		URL url = this.classLoader.getResource(path);
 		if(url==null){
 			//兼容以前的
-			url = this.classLoader.getClass().getResource(root + key);
+			url = this.classLoader.getClass().getResource(path);
 		}
 		return url!=null;
 		

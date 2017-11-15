@@ -1,6 +1,1 @@
-<%
-var baseService="BaseService<Hello>";
-
-%>
-@Service
-public class Service extends ${baseService} {
+<#button1 />

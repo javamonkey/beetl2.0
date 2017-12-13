@@ -50,7 +50,7 @@ public class WebSimulate  extends BaseSimulate{
 		Map commonData = new HashMap(), data = new HashMap();
 		try
 		{
-			if (gt.getResourceLoader().exist(commonFile))
+			if (commonFile!=null&&gt.getResourceLoader().exist(commonFile))
 			{
 				commonData = gt.runScript(commonFile, paras);
 
@@ -136,14 +136,13 @@ public class WebSimulate  extends BaseSimulate{
 	protected void handleNullPath(HttpServletRequest req,HttpServletResponse rsp){
 		String commonFile = getCommonValueFile(req, rsp);
 		Map commonData = new HashMap();
-		if (gt.getResourceLoader().exist(commonFile))
+		if (commonFile!=null&&gt.getResourceLoader().exist(commonFile))
 		{
 			try {
 				commonData = gt.runScript(commonFile, new HashMap());
 			} catch (ScriptEvalError e) {
 				throw new SimulateException("伪模型脚本有错！", e);
 			}
-
 		}
 		
 		Iterator it = commonData.keySet().iterator();

@@ -63,6 +63,7 @@ public class BeetlSpringViewResolver extends AbstractTemplateViewResolver implem
 	public void setBeanName(String beanName)
 	{
 		this.beanName = beanName;
+		
 	}
 
 	/**

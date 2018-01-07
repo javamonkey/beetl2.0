@@ -1,8 +1,6 @@
 package org.beetl.core.lab;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,9 +12,7 @@ import org.beetl.core.Function;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.ResourceLoader;
 import org.beetl.core.Template;
-import org.beetl.core.exception.BeetlException;
 import org.beetl.core.resource.ClasspathResourceLoader;
-import org.beetl.core.statement.PlaceholderST;
 
 /**
  * http://sports.qq.com/a/20151126/029300.htm
@@ -34,7 +30,6 @@ public class Test {
 		cfg.getPkgList().add("org.beetl.core.lab.");
 
 		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
-		
 		
 //		cfg.setStatementStart("@");
 //		cfg.setStatementEnd(null);
@@ -54,7 +49,7 @@ public class Test {
 
 			Template t = gt.getTemplate("/hello.txt");
 
-			t.binding("name", 1);
+			t.binding("user", new TestUser("jo"));
 			t.binding("id", 2);
 
 			ByteArrayOutputStream bs = new ByteArrayOutputStream();

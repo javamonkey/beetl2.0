@@ -175,7 +175,7 @@ safe_allow_exp:literal
               | LEFT_PAR expression RIGHT_PAR;
     
 
-functionCall: functionNs LEFT_PAR expressionList? RIGHT_PAR (varAttribute)* ; 
+functionCall: functionNs LEFT_PAR expressionList? RIGHT_PAR (varAttribute)* (safe_output)?; 
 functionTagCall:functionNs  LEFT_PAR expressionList? RIGHT_PAR  block ;
 
 functionNs:Identifier (PERIOD Identifier)*;

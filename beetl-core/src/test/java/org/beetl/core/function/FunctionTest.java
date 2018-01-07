@@ -80,5 +80,18 @@ public class FunctionTest extends BasicTestCase
 		AssertJUnit.assertEquals(this.getFileContent("/function/tojson_expected.html"), str);
 
 	}
+	
+	public void testSafeOutput() throws Exception
+	{
+		gt.registerFunction("nullFunction", new NullFunction());
+		Template t = gt.getTemplate("/function/null_template.html");
+		String str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/function/null_expected.html"), str);
+
+		t = gt.getTemplate("/function/null_template.html");
+		str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/function/null_expected.html"), str);
+
+	}
 
 }

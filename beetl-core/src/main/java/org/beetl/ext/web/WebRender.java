@@ -39,6 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Template;
 import org.beetl.core.exception.BeetlException;
+import org.beetl.ext.fn.CookieFunction;
 
 /**
  *  通常web渲染的类，将request变量赋值给模板，同时赋值的还有session,request,ctxPath
@@ -103,6 +104,7 @@ public class WebRender
 			template.binding("ctxPath", request.getContextPath());
 			template.binding("$page", new HashMap()); 
 			template.binding("parameter", new ParameterWrapper(request));
+			template.binding("cookie", new CookieFunction());
 			
 
 			modifyTemplate(template, key, request, response, args);

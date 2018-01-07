@@ -178,7 +178,6 @@ import org.beetl.core.statement.TagVarBindingStatement;
 import org.beetl.core.statement.TernaryExpression;
 import org.beetl.core.statement.TryCatchStatement;
 import org.beetl.core.statement.Type;
-import org.beetl.core.statement.VarAssignExpression;
 import org.beetl.core.statement.VarAssignStatement;
 import org.beetl.core.statement.VarAssignStatementSeq;
 import org.beetl.core.statement.VarAttribute;
@@ -210,6 +209,12 @@ public class AntlrProgramBuilder
 	protected GroupTemplate gt;
 	//多余分号
 	static EndStatement endStatment = new EndStatement();
+	public static Set<String>  safeParameters = new HashSet<String>();
+	static {
+		// 可以对参数增强安全输出，比如isEmpty(a)，实际调用是改写成isEmpty(a!)
+		safeParameters.add("isEmpty");
+		safeParameters.add("isNotEmpty");
+	}
 
 	public AntlrProgramBuilder(GroupTemplate gt)
 	{
@@ -918,12 +923,28 @@ public class AntlrProgramBuilder
 		ExpressionListContext expListCtx = ctx.expressionList();
 		Expression[] exps = this.getExprssionList(expListCtx);
 		List<VarAttributeContext> vaListCtx = ctx.varAttribute();
+		Safe_outputContext soctx = ctx.safe_output();
+		Expression safeExp = null;
+		boolean hasSafe = false;
+		if (soctx != null)
+		{
+			safeExp = this.parseSafeOutput(soctx);
+			hasSafe = true;
+
+		}
+		if (this.pbCtx.isSafeOutput)
+		{
+			hasSafe = true;
+		}
+		
 		VarAttribute[] vs = this.parseVarAttribute(vaListCtx);
-		List<TerminalNode> idList = ctx.functionNs().Identifier();
+		
+		 List<TerminalNode> idList = ctx.functionNs().Identifier();
+		
 		String nsId = this.getID(idList);
 		GrammarToken btToken = new org.beetl.core.statement.GrammarToken(nsId, ctx.start.getLine(), 0);
 		//需要做些特殊处理的函数
-		if (nsId.equals("isEmpty")||nsId.equals("isNotEmpty"))
+		if ( safeParameters.contains(nsId))
 		{
 
 			if (exps.length != 0)
@@ -993,7 +1014,7 @@ public class AntlrProgramBuilder
 				//错误的使用了decode函数，不管了，等后面报错吧
 			}
 		}
-		FunctionExpression fe = new FunctionExpression(nsId, exps, vs, btToken);
+		FunctionExpression fe = new FunctionExpression(nsId, exps, vs, hasSafe,safeExp,btToken);
 		return fe;
 
 	}
@@ -1774,38 +1795,7 @@ public class AntlrProgramBuilder
 		boolean hasSafe = false;
 		if (soctx != null)
 		{
-			List list = soctx.children;
-			if (list.size() == 1)
-			{
-				//just  xxx!
-				safeExp = null;
-			}
-			else
-			{
-				//just xxx!exp
-				Safe_allow_expContext allowExp = (Safe_allow_expContext) list.get(1);
-				if (allowExp.literal() != null)
-				{
-					safeExp = this.parseLiteralExpress(allowExp.literal());
-				}
-				else if (allowExp.nativeCall() != null)
-				{
-					safeExp = this.parseNativeCallExpression(allowExp.nativeCall());
-				}
-				else if (allowExp.functionCall() != null)
-				{
-					safeExp = this.parseFunExp(allowExp.functionCall());
-				}
-				else if (allowExp.expression() != null)
-				{
-					safeExp = this.parseExpress(allowExp.expression());
-				}
-				else if (allowExp.varRef() != null)
-				{
-					safeExp = this.parseVarRefExpression(allowExp.varRef());
-				}
-
-			}
+			safeExp = this.parseSafeOutput(soctx);
 			hasSafe = true;
 
 		}
@@ -1831,6 +1821,30 @@ public class AntlrProgramBuilder
 				.getSymbol().getLine()), this.getBTToken(varRef.Identifier().getSymbol()));
 		pbCtx.setVarPosition(varRef.Identifier().getText(), var);
 		return var;
+	}
+	
+	protected Expression parseSafeOutput(Safe_outputContext soctx) {
+		Expression safeExp = null;
+		List list = soctx.children;
+		if (list.size() == 1) {
+			safeExp = null;
+		} else {
+			// just xxx!exp
+			Safe_allow_expContext allowExp = (Safe_allow_expContext) list.get(1);
+			if (allowExp.literal() != null) {
+				safeExp = this.parseLiteralExpress(allowExp.literal());
+			} else if (allowExp.nativeCall() != null) {
+				safeExp = this.parseNativeCallExpression(allowExp.nativeCall());
+			} else if (allowExp.functionCall() != null) {
+				safeExp = this.parseFunExp(allowExp.functionCall());
+			} else if (allowExp.expression() != null) {
+				safeExp = this.parseExpress(allowExp.expression());
+			} else if (allowExp.varRef() != null) {
+				safeExp = this.parseVarRefExpression(allowExp.varRef());
+			}
+
+		}
+		return safeExp;
 	}
 
 	protected VarRef parseVarRefInLeftExpression(VarRefContext varRef)

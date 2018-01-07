@@ -953,13 +953,13 @@ public class Transformator
 	public static void main(String[] args)
 	{
 		char c = '\\';
-		Transformator p = new Transformator("{{", "}}", "@", null);
+		Transformator p = new Transformator("${", "}", "<%", "%>") ;
 		p.enableHtmlTagSupport("<#", "/#>", "var");
 		try
 		{
 
 			// String str = "   #:var u='hello';:#  \n  $u$";
-			String str = "<#a-id a-id-='{{a}}'/>";
+			String str = "abc\n<%//cccc%>";
 
 			BufferedReader reader = new BufferedReader(p.transform(str));
 			String line = null;

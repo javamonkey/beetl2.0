@@ -50,13 +50,17 @@ public class FunctionExpression extends Expression
 	String name;
 	public Expression[] exps;
 	public VarAttribute[] vas;
+	public Expression safeExp;
+	boolean hasSafe = false;
 
-	public FunctionExpression(String name, Expression[] exps, VarAttribute[] vas, GrammarToken token)
+	public FunctionExpression(String name, Expression[] exps, VarAttribute[] vas, boolean hasSafe,Expression safeExp,GrammarToken token)
 	{
 		super(token);
 		this.name = name;
 		this.exps = exps;
 		this.vas = vas;
+		this.safeExp = safeExp;
+		this.hasSafe = hasSafe;
 	}
 
 	public Object evaluate(Context ctx)
@@ -66,9 +70,10 @@ public class FunctionExpression extends Expression
 		{
 			//检查html实现
 			Resource resource = getResource(ctx.gt,name);
-			if(resource!=null){
+			if(resource.getResourceLoader().exist(resource.getId())) {
 				fn = new FileFunctionWrapper(resource.getId());
-			}else{
+				
+			}else {
 				BeetlException ex = new BeetlException(BeetlException.FUNCTION_NOT_FOUND);
 				ex.pushToken(token);
 				throw ex;
@@ -97,10 +102,12 @@ public class FunctionExpression extends Expression
 			be.pushToken(this.token);
 			throw be;
 		}
+		
+		Object ret = null;
 
 		if (vas == null)
 		{
-			return value;
+			ret =  value;
 		}
 		else
 		{
@@ -127,13 +134,30 @@ public class FunctionExpression extends Expression
 
 				if (value == null)
 				{
-					BeetlException be = new BeetlException(BeetlException.ERROR, "空指针 ");
-					be.pushToken(attr.token);
-					throw be;
+					if (hasSafe)
+					{
+						return safeExp == null ? null : safeExp.evaluate(ctx);
+					}
+					else
+					{
+						BeetlException be = new BeetlException(BeetlException.ERROR, "空指针 ");
+						be.pushToken(attr.token);
+						throw be;
+					}
+					
 				}
 
 			}
-			return value;
+			ret =  value;
+		}
+		
+		if (ret == null && hasSafe)
+		{
+			return safeExp == null ? null : safeExp.evaluate(ctx);
+		}
+		else
+		{
+			return ret;
 		}
 
 	}
@@ -227,6 +251,16 @@ public class FunctionExpression extends Expression
 
 			}
 			this.type = lastType;
+		}
+		
+		
+		if (safeExp != null)
+		{
+			safeExp.infer(inferCtx);
+			if (!safeExp.type.equals(this.type))
+			{
+				this.type = Type.ObjectType;
+			}
 		}
 
 	}

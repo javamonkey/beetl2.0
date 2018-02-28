@@ -272,7 +272,7 @@ public class AntlrProgramBuilder
 			VarAssignStatementSeq varSeq = parseVarSt((VarStContext) node);
 			if (gt.conf.isStrict)
 			{
-				throw new MVCStrictException(varSeq.token);
+				throw new MVCStrictException(varSeq.sts[0].token);
 			}
 			return varSeq;
 

@@ -955,6 +955,9 @@ public class GroupTemplate
 		return attributeAccessFactory;
 	}
 	
+	public void enableStrict() {
+		this.conf.setStrict(true);
+	}
 	
 
 }

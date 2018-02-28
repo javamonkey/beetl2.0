@@ -44,6 +44,7 @@ public class Test {
 		list.add(new TestUser("abc"));
 		HashMap map = new HashMap();
 		map.put("key", 123);
+		gt.enableStrict();
 
 		for (int i = 0; i < 1; i++) {
 

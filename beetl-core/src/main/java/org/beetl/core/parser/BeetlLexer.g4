@@ -172,7 +172,7 @@ WS  :   [ \r\t\u000C\n]+ -> channel(HIDDEN)
     ;
 
 LINE_COMMENT
-    : '//' ~[\r\nEOF]* ('\r'?'\n'|EOF) -> channel(HIDDEN)
+    : '//' ~[\r\n]* ('\r'?'\n'|EOF) -> channel(HIDDEN)
     ;
 
 

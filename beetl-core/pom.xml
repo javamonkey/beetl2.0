@@ -5,9 +5,7 @@
 	<groupId>com.ibeetl</groupId>
 	<artifactId>beetl</artifactId>
 	<version>2.7.28</version>
-
 	<packaging>jar</packaging>
-
 	<name>com.ibeetl:beetl</name>
 	<description>java template language</description>
 	<url>ibeetl.com</url>

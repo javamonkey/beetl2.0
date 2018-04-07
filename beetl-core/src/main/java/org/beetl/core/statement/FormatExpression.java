@@ -118,7 +118,6 @@ public class FormatExpression extends Expression
 	public void setPattern(String pattern) {
 		this.pattern = pattern;
 	}
-	
-	
+
 
 }

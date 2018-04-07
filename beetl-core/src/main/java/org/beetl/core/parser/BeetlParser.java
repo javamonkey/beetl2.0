@@ -15,19 +15,19 @@ public class BeetlParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		ADD=28, COMMENT_OPEN=64, Var=11, Break=9, FOR_IN=52, Elsefor=3, Fragment=18, 
-		Identifier=61, LEFT_ANGULAR=73, OctalLiteral=58, INCREASE=25, Try=15, 
-		LEFT_BRACE=19, RIGHT_PAR=22, QUESTOIN=43, LESS_EQUAL=38, LEFT_TOKEN=53, 
-		NULL=45, LEFT_PAR1=70, RIGHT_ANGULAR=74, For=2, TRUE=46, NOT=40, COMMENT_TAG=65, 
-		MIN=29, AT=44, LINE_COMMENT=63, Switch=6, StringLiteral=60, AND=41, PERIOD=51, 
-		RIGHT_TOKEN=54, LEFT_TEXT_TOKEN=55, LESS=39, END=48, If=1, Directive=12, 
-		ALL_COMMENT_CHAR=67, Catch=16, PERIOD1=69, RIGHT_PAR1=71, DECREASE=26, 
-		LEFT_SQBR=23, Continue=10, COMMA1=72, Case=13, WS1=75, LARGE=37, DecimalLiteral=57, 
-		WS=62, Ajax=17, TYPE_END=76, COMMA=49, RIGHT_BRACE=20, Return=8, MOD=32, 
-		OR=42, EQUAL=33, RIGHT_SQBR=24, COLON=50, While=5, Default=14, LEFT_PAR=21, 
-		DIV=31, MUlTIP=30, COMMENT_END=66, FloatingPointLiteral=59, LARGE_EQUAL=36, 
-		Else=4, Select=7, NOT_EQUAL=34, HexLiteral=56, FALSE=47, ASSIN=35, Identifier1=68, 
-		VIRTUAL=27;
+		Elsefor=3, Switch=6, COMMENT_TAG=65, Try=15, LEFT_TEXT_TOKEN=55, Ajax=17, 
+		LARGE_EQUAL=36, OctalLiteral=58, MOD=32, LEFT_ANGULAR=73, INCREASE=25, 
+		While=5, NOT=40, ALL_COMMENT_CHAR=67, Case=13, AND=41, RIGHT_TOKEN=54, 
+		RIGHT_SQBR=24, DECREASE=26, Identifier=61, Default=14, AT=44, TYPE_END=76, 
+		LEFT_TOKEN=53, NOT_EQUAL=34, COMMA=49, EQUAL=33, LESS=39, LEFT_PAR1=70, 
+		LEFT_PAR=21, Select=7, PERIOD1=69, MUlTIP=30, Return=8, VIRTUAL=27, If=1, 
+		LEFT_SQBR=23, Fragment=18, ADD=28, RIGHT_BRACE=20, HexLiteral=56, QUESTOIN=43, 
+		Continue=10, LINE_COMMENT=63, Catch=16, PERIOD=51, Identifier1=68, NULL=45, 
+		ASSIN=35, COMMENT_OPEN=64, RIGHT_PAR1=71, MIN=29, Directive=12, COMMA1=72, 
+		DecimalLiteral=57, For=2, TRUE=46, StringLiteral=60, COLON=50, WS=62, 
+		COMMENT_END=66, Break=9, FOR_IN=52, LEFT_BRACE=19, WS1=75, FloatingPointLiteral=59, 
+		RIGHT_PAR=22, OR=42, LARGE=37, LESS_EQUAL=38, DIV=31, END=48, RIGHT_ANGULAR=74, 
+		Else=4, FALSE=47, Var=11;
 	public static final String[] tokenNames = {
 		"<INVALID>", "'if'", "'for'", "'elsefor'", "'else'", "'while'", "'switch'", 
 		"'select'", "'return'", "'break'", "'continue'", "'var'", "Directive", 
@@ -92,12 +92,12 @@ public class BeetlParser extends Parser {
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 	public static class ProgContext extends ParserRuleContext {
+		public List<StatementContext> statement() {
+			return getRuleContexts(StatementContext.class);
+		}
 		public TerminalNode EOF() { return getToken(BeetlParser.EOF, 0); }
 		public StatementContext statement(int i) {
 			return getRuleContext(StatementContext.class,i);
-		}
-		public List<StatementContext> statement() {
-			return getRuleContexts(StatementContext.class);
 		}
 		public ProgContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -140,14 +140,14 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class BlockContext extends ParserRuleContext {
-		public TerminalNode LEFT_BRACE() { return getToken(BeetlParser.LEFT_BRACE, 0); }
-		public StatementContext statement(int i) {
-			return getRuleContext(StatementContext.class,i);
-		}
 		public List<StatementContext> statement() {
 			return getRuleContexts(StatementContext.class);
 		}
 		public TerminalNode RIGHT_BRACE() { return getToken(BeetlParser.RIGHT_BRACE, 0); }
+		public TerminalNode LEFT_BRACE() { return getToken(BeetlParser.LEFT_BRACE, 0); }
+		public StatementContext statement(int i) {
+			return getRuleContext(StatementContext.class,i);
+		}
 		public BlockContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -200,125 +200,21 @@ public class BeetlParser extends Parser {
 			super.copyFrom(ctx);
 		}
 	}
-	public static class StaticOutputStContext extends StatementContext {
-		public ConstantsTextStatmentContext constantsTextStatment() {
-			return getRuleContext(ConstantsTextStatmentContext.class,0);
-		}
-		public StaticOutputStContext(StatementContext ctx) { copyFrom(ctx); }
-	}
-	public static class ReturnStContext extends StatementContext {
-		public TerminalNode END() { return getToken(BeetlParser.END, 0); }
-		public TerminalNode Return() { return getToken(BeetlParser.Return, 0); }
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
-		}
-		public ReturnStContext(StatementContext ctx) { copyFrom(ctx); }
-	}
-	public static class TryStContext extends StatementContext {
-		public TerminalNode Catch() { return getToken(BeetlParser.Catch, 0); }
-		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
-		public BlockContext block(int i) {
-			return getRuleContext(BlockContext.class,i);
-		}
-		public TerminalNode Try() { return getToken(BeetlParser.Try, 0); }
-		public List<BlockContext> block() {
-			return getRuleContexts(BlockContext.class);
-		}
-		public TerminalNode LEFT_PAR() { return getToken(BeetlParser.LEFT_PAR, 0); }
-		public TerminalNode RIGHT_PAR() { return getToken(BeetlParser.RIGHT_PAR, 0); }
-		public TryStContext(StatementContext ctx) { copyFrom(ctx); }
-	}
-	public static class VarStContext extends StatementContext {
-		public VarDeclareListContext varDeclareList() {
-			return getRuleContext(VarDeclareListContext.class,0);
-		}
-		public TerminalNode END() { return getToken(BeetlParser.END, 0); }
-		public TerminalNode Var() { return getToken(BeetlParser.Var, 0); }
-		public VarStContext(StatementContext ctx) { copyFrom(ctx); }
-	}
-	public static class AssignStContext extends StatementContext {
-		public AssignMentContext assignMent() {
-			return getRuleContext(AssignMentContext.class,0);
-		}
-		public TerminalNode END() { return getToken(BeetlParser.END, 0); }
-		public AssignStContext(StatementContext ctx) { copyFrom(ctx); }
-	}
-	public static class WhileStContext extends StatementContext {
-		public TerminalNode While() { return getToken(BeetlParser.While, 0); }
-		public StatementContext statement() {
-			return getRuleContext(StatementContext.class,0);
-		}
-		public ParExpressionContext parExpression() {
-			return getRuleContext(ParExpressionContext.class,0);
-		}
-		public WhileStContext(StatementContext ctx) { copyFrom(ctx); }
-	}
-	public static class FunctionTagStContext extends StatementContext {
-		public FunctionTagCallContext functionTagCall() {
-			return getRuleContext(FunctionTagCallContext.class,0);
-		}
-		public FunctionTagStContext(StatementContext ctx) { copyFrom(ctx); }
-	}
-	public static class BreakStContext extends StatementContext {
-		public TerminalNode END() { return getToken(BeetlParser.END, 0); }
-		public TerminalNode Break() { return getToken(BeetlParser.Break, 0); }
-		public BreakStContext(StatementContext ctx) { copyFrom(ctx); }
-	}
-	public static class AjaxStContext extends StatementContext {
-		public List<TerminalNode> Identifier() { return getTokens(BeetlParser.Identifier); }
-		public TerminalNode Identifier(int i) {
-			return getToken(BeetlParser.Identifier, i);
-		}
-		public TerminalNode COLON() { return getToken(BeetlParser.COLON, 0); }
-		public TerminalNode Fragment() { return getToken(BeetlParser.Fragment, 0); }
-		public BlockContext block() {
-			return getRuleContext(BlockContext.class,0);
-		}
-		public TerminalNode Ajax() { return getToken(BeetlParser.Ajax, 0); }
-		public AjaxStContext(StatementContext ctx) { copyFrom(ctx); }
-	}
-	public static class StatmentExpStContext extends StatementContext {
-		public StatementExpressionContext statementExpression() {
-			return getRuleContext(StatementExpressionContext.class,0);
-		}
-		public TerminalNode END() { return getToken(BeetlParser.END, 0); }
-		public StatmentExpStContext(StatementContext ctx) { copyFrom(ctx); }
-	}
-	public static class IfStContext extends StatementContext {
-		public TerminalNode Else() { return getToken(BeetlParser.Else, 0); }
-		public StatementContext statement(int i) {
-			return getRuleContext(StatementContext.class,i);
-		}
+	public static class ForStContext extends StatementContext {
 		public List<StatementContext> statement() {
 			return getRuleContexts(StatementContext.class);
 		}
-		public TerminalNode If() { return getToken(BeetlParser.If, 0); }
-		public ParExpressionContext parExpression() {
-			return getRuleContext(ParExpressionContext.class,0);
+		public TerminalNode For() { return getToken(BeetlParser.For, 0); }
+		public TerminalNode RIGHT_PAR() { return getToken(BeetlParser.RIGHT_PAR, 0); }
+		public TerminalNode LEFT_PAR() { return getToken(BeetlParser.LEFT_PAR, 0); }
+		public ForControlContext forControl() {
+			return getRuleContext(ForControlContext.class,0);
 		}
-		public IfStContext(StatementContext ctx) { copyFrom(ctx); }
-	}
-	public static class DirectiveStContext extends StatementContext {
-		public TerminalNode Directive() { return getToken(BeetlParser.Directive, 0); }
-		public DirectiveExpContext directiveExp() {
-			return getRuleContext(DirectiveExpContext.class,0);
+		public TerminalNode Elsefor() { return getToken(BeetlParser.Elsefor, 0); }
+		public StatementContext statement(int i) {
+			return getRuleContext(StatementContext.class,i);
 		}
-		public DirectiveStContext(StatementContext ctx) { copyFrom(ctx); }
-	}
-	public static class ContinueStContext extends StatementContext {
-		public TerminalNode Continue() { return getToken(BeetlParser.Continue, 0); }
-		public TerminalNode END() { return getToken(BeetlParser.END, 0); }
-		public ContinueStContext(StatementContext ctx) { copyFrom(ctx); }
-	}
-	public static class SiwchStContext extends StatementContext {
-		public TerminalNode Switch() { return getToken(BeetlParser.Switch, 0); }
-		public SwitchBlockContext switchBlock() {
-			return getRuleContext(SwitchBlockContext.class,0);
-		}
-		public ParExpressionContext parExpression() {
-			return getRuleContext(ParExpressionContext.class,0);
-		}
-		public SiwchStContext(StatementContext ctx) { copyFrom(ctx); }
+		public ForStContext(StatementContext ctx) { copyFrom(ctx); }
 	}
 	public static class CommentTagStContext extends StatementContext {
 		public TerminalNode COMMENT_TAG() { return getToken(BeetlParser.COMMENT_TAG, 0); }
@@ -333,38 +229,142 @@ public class BeetlParser extends Parser {
 		}
 		public BlockStContext(StatementContext ctx) { copyFrom(ctx); }
 	}
-	public static class SelectStContext extends StatementContext {
-		public TerminalNode Select() { return getToken(BeetlParser.Select, 0); }
-		public G_switchStatmentContext g_switchStatment() {
-			return getRuleContext(G_switchStatmentContext.class,0);
+	public static class AjaxStContext extends StatementContext {
+		public TerminalNode Identifier(int i) {
+			return getToken(BeetlParser.Identifier, i);
 		}
-		public SelectStContext(StatementContext ctx) { copyFrom(ctx); }
+		public List<TerminalNode> Identifier() { return getTokens(BeetlParser.Identifier); }
+		public TerminalNode Ajax() { return getToken(BeetlParser.Ajax, 0); }
+		public BlockContext block() {
+			return getRuleContext(BlockContext.class,0);
+		}
+		public TerminalNode COLON() { return getToken(BeetlParser.COLON, 0); }
+		public TerminalNode Fragment() { return getToken(BeetlParser.Fragment, 0); }
+		public AjaxStContext(StatementContext ctx) { copyFrom(ctx); }
 	}
-	public static class EndContext extends StatementContext {
+	public static class StatmentExpStContext extends StatementContext {
+		public StatementExpressionContext statementExpression() {
+			return getRuleContext(StatementExpressionContext.class,0);
+		}
 		public TerminalNode END() { return getToken(BeetlParser.END, 0); }
-		public EndContext(StatementContext ctx) { copyFrom(ctx); }
+		public StatmentExpStContext(StatementContext ctx) { copyFrom(ctx); }
 	}
-	public static class ForStContext extends StatementContext {
-		public ForControlContext forControl() {
-			return getRuleContext(ForControlContext.class,0);
+	public static class ReturnStContext extends StatementContext {
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode For() { return getToken(BeetlParser.For, 0); }
-		public StatementContext statement(int i) {
-			return getRuleContext(StatementContext.class,i);
+		public TerminalNode Return() { return getToken(BeetlParser.Return, 0); }
+		public TerminalNode END() { return getToken(BeetlParser.END, 0); }
+		public ReturnStContext(StatementContext ctx) { copyFrom(ctx); }
+	}
+	public static class BreakStContext extends StatementContext {
+		public TerminalNode Break() { return getToken(BeetlParser.Break, 0); }
+		public TerminalNode END() { return getToken(BeetlParser.END, 0); }
+		public BreakStContext(StatementContext ctx) { copyFrom(ctx); }
+	}
+	public static class FunctionTagStContext extends StatementContext {
+		public FunctionTagCallContext functionTagCall() {
+			return getRuleContext(FunctionTagCallContext.class,0);
 		}
-		public List<StatementContext> statement() {
-			return getRuleContexts(StatementContext.class);
+		public FunctionTagStContext(StatementContext ctx) { copyFrom(ctx); }
+	}
+	public static class DirectiveStContext extends StatementContext {
+		public DirectiveExpContext directiveExp() {
+			return getRuleContext(DirectiveExpContext.class,0);
 		}
-		public TerminalNode Elsefor() { return getToken(BeetlParser.Elsefor, 0); }
-		public TerminalNode LEFT_PAR() { return getToken(BeetlParser.LEFT_PAR, 0); }
-		public TerminalNode RIGHT_PAR() { return getToken(BeetlParser.RIGHT_PAR, 0); }
-		public ForStContext(StatementContext ctx) { copyFrom(ctx); }
+		public TerminalNode Directive() { return getToken(BeetlParser.Directive, 0); }
+		public DirectiveStContext(StatementContext ctx) { copyFrom(ctx); }
 	}
 	public static class TextOutputStContext extends StatementContext {
 		public TextStatmentContext textStatment() {
 			return getRuleContext(TextStatmentContext.class,0);
 		}
 		public TextOutputStContext(StatementContext ctx) { copyFrom(ctx); }
+	}
+	public static class VarStContext extends StatementContext {
+		public TerminalNode Var() { return getToken(BeetlParser.Var, 0); }
+		public TerminalNode END() { return getToken(BeetlParser.END, 0); }
+		public VarDeclareListContext varDeclareList() {
+			return getRuleContext(VarDeclareListContext.class,0);
+		}
+		public VarStContext(StatementContext ctx) { copyFrom(ctx); }
+	}
+	public static class StaticOutputStContext extends StatementContext {
+		public ConstantsTextStatmentContext constantsTextStatment() {
+			return getRuleContext(ConstantsTextStatmentContext.class,0);
+		}
+		public StaticOutputStContext(StatementContext ctx) { copyFrom(ctx); }
+	}
+	public static class ContinueStContext extends StatementContext {
+		public TerminalNode Continue() { return getToken(BeetlParser.Continue, 0); }
+		public TerminalNode END() { return getToken(BeetlParser.END, 0); }
+		public ContinueStContext(StatementContext ctx) { copyFrom(ctx); }
+	}
+	public static class IfStContext extends StatementContext {
+		public List<StatementContext> statement() {
+			return getRuleContexts(StatementContext.class);
+		}
+		public ParExpressionContext parExpression() {
+			return getRuleContext(ParExpressionContext.class,0);
+		}
+		public TerminalNode Else() { return getToken(BeetlParser.Else, 0); }
+		public TerminalNode If() { return getToken(BeetlParser.If, 0); }
+		public StatementContext statement(int i) {
+			return getRuleContext(StatementContext.class,i);
+		}
+		public IfStContext(StatementContext ctx) { copyFrom(ctx); }
+	}
+	public static class TryStContext extends StatementContext {
+		public TerminalNode Catch() { return getToken(BeetlParser.Catch, 0); }
+		public TerminalNode RIGHT_PAR() { return getToken(BeetlParser.RIGHT_PAR, 0); }
+		public TerminalNode LEFT_PAR() { return getToken(BeetlParser.LEFT_PAR, 0); }
+		public TerminalNode Try() { return getToken(BeetlParser.Try, 0); }
+		public BlockContext block(int i) {
+			return getRuleContext(BlockContext.class,i);
+		}
+		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
+		public List<BlockContext> block() {
+			return getRuleContexts(BlockContext.class);
+		}
+		public TryStContext(StatementContext ctx) { copyFrom(ctx); }
+	}
+	public static class WhileStContext extends StatementContext {
+		public StatementContext statement() {
+			return getRuleContext(StatementContext.class,0);
+		}
+		public TerminalNode While() { return getToken(BeetlParser.While, 0); }
+		public ParExpressionContext parExpression() {
+			return getRuleContext(ParExpressionContext.class,0);
+		}
+		public WhileStContext(StatementContext ctx) { copyFrom(ctx); }
+	}
+	public static class AssignStContext extends StatementContext {
+		public AssignMentContext assignMent() {
+			return getRuleContext(AssignMentContext.class,0);
+		}
+		public TerminalNode END() { return getToken(BeetlParser.END, 0); }
+		public AssignStContext(StatementContext ctx) { copyFrom(ctx); }
+	}
+	public static class SiwchStContext extends StatementContext {
+		public ParExpressionContext parExpression() {
+			return getRuleContext(ParExpressionContext.class,0);
+		}
+		public SwitchBlockContext switchBlock() {
+			return getRuleContext(SwitchBlockContext.class,0);
+		}
+		public TerminalNode Switch() { return getToken(BeetlParser.Switch, 0); }
+		public SiwchStContext(StatementContext ctx) { copyFrom(ctx); }
+	}
+	public static class EndContext extends StatementContext {
+		public TerminalNode END() { return getToken(BeetlParser.END, 0); }
+		public EndContext(StatementContext ctx) { copyFrom(ctx); }
+	}
+	public static class SelectStContext extends StatementContext {
+		public G_switchStatmentContext g_switchStatment() {
+			return getRuleContext(G_switchStatmentContext.class,0);
+		}
+		public TerminalNode Select() { return getToken(BeetlParser.Select, 0); }
+		public SelectStContext(StatementContext ctx) { copyFrom(ctx); }
 	}
 
 	public final StatementContext statement() throws RecognitionException {
@@ -630,17 +630,17 @@ public class BeetlParser extends Parser {
 
 	public static class CommentTypeTagContext extends ParserRuleContext {
 		public TerminalNode LEFT_PAR1() { return getToken(BeetlParser.LEFT_PAR1, 0); }
-		public List<CommentTypeItemTagContext> commentTypeItemTag() {
-			return getRuleContexts(CommentTypeItemTagContext.class);
-		}
 		public List<TerminalNode> COMMA1() { return getTokens(BeetlParser.COMMA1); }
-		public TerminalNode COMMA1(int i) {
-			return getToken(BeetlParser.COMMA1, i);
-		}
 		public CommentTypeItemTagContext commentTypeItemTag(int i) {
 			return getRuleContext(CommentTypeItemTagContext.class,i);
 		}
+		public List<CommentTypeItemTagContext> commentTypeItemTag() {
+			return getRuleContexts(CommentTypeItemTagContext.class);
+		}
 		public TerminalNode RIGHT_PAR1() { return getToken(BeetlParser.RIGHT_PAR1, 0); }
+		public TerminalNode COMMA1(int i) {
+			return getToken(BeetlParser.COMMA1, i);
+		}
 		public CommentTypeTagContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -717,10 +717,6 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class ClassOrInterfaceTypeContext extends ParserRuleContext {
-		public TypeArgumentsContext typeArguments() {
-			return getRuleContext(TypeArgumentsContext.class,0);
-		}
-		public List<TerminalNode> Identifier1() { return getTokens(BeetlParser.Identifier1); }
 		public TerminalNode PERIOD1(int i) {
 			return getToken(BeetlParser.PERIOD1, i);
 		}
@@ -728,6 +724,10 @@ public class BeetlParser extends Parser {
 			return getToken(BeetlParser.Identifier1, i);
 		}
 		public List<TerminalNode> PERIOD1() { return getTokens(BeetlParser.PERIOD1); }
+		public TypeArgumentsContext typeArguments() {
+			return getRuleContext(TypeArgumentsContext.class,0);
+		}
+		public List<TerminalNode> Identifier1() { return getTokens(BeetlParser.Identifier1); }
 		public ClassOrInterfaceTypeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -778,18 +778,18 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class TypeArgumentsContext extends ParserRuleContext {
-		public TerminalNode RIGHT_ANGULAR() { return getToken(BeetlParser.RIGHT_ANGULAR, 0); }
+		public List<TerminalNode> COMMA1() { return getTokens(BeetlParser.COMMA1); }
 		public List<TypeArgumentContext> typeArgument() {
 			return getRuleContexts(TypeArgumentContext.class);
 		}
+		public TerminalNode RIGHT_ANGULAR() { return getToken(BeetlParser.RIGHT_ANGULAR, 0); }
 		public TypeArgumentContext typeArgument(int i) {
 			return getRuleContext(TypeArgumentContext.class,i);
 		}
-		public List<TerminalNode> COMMA1() { return getTokens(BeetlParser.COMMA1); }
-		public TerminalNode LEFT_ANGULAR() { return getToken(BeetlParser.LEFT_ANGULAR, 0); }
 		public TerminalNode COMMA1(int i) {
 			return getToken(BeetlParser.COMMA1, i);
 		}
+		public TerminalNode LEFT_ANGULAR() { return getToken(BeetlParser.LEFT_ANGULAR, 0); }
 		public TypeArgumentsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -864,10 +864,10 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class DirectiveExpContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
 		public DirectiveExpIDListContext directiveExpIDList() {
 			return getRuleContext(DirectiveExpIDListContext.class,0);
 		}
+		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
 		public TerminalNode StringLiteral() { return getToken(BeetlParser.StringLiteral, 0); }
 		public TerminalNode END() { return getToken(BeetlParser.END, 0); }
 		public DirectiveExpContext(ParserRuleContext parent, int invokingState) {
@@ -915,11 +915,11 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class DirectiveExpIDListContext extends ParserRuleContext {
-		public List<TerminalNode> Identifier() { return getTokens(BeetlParser.Identifier); }
+		public List<TerminalNode> COMMA() { return getTokens(BeetlParser.COMMA); }
 		public TerminalNode Identifier(int i) {
 			return getToken(BeetlParser.Identifier, i);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(BeetlParser.COMMA); }
+		public List<TerminalNode> Identifier() { return getTokens(BeetlParser.Identifier); }
 		public TerminalNode COMMA(int i) {
 			return getToken(BeetlParser.COMMA, i);
 		}
@@ -966,22 +966,22 @@ public class BeetlParser extends Parser {
 
 	public static class G_switchStatmentContext extends ParserRuleContext {
 		public ExpressionContext base;
-		public List<G_caseStatmentContext> g_caseStatment() {
-			return getRuleContexts(G_caseStatmentContext.class);
-		}
+		public TerminalNode RIGHT_PAR() { return getToken(BeetlParser.RIGHT_PAR, 0); }
+		public TerminalNode LEFT_PAR() { return getToken(BeetlParser.LEFT_PAR, 0); }
+		public TerminalNode RIGHT_BRACE() { return getToken(BeetlParser.RIGHT_BRACE, 0); }
 		public G_caseStatmentContext g_caseStatment(int i) {
 			return getRuleContext(G_caseStatmentContext.class,i);
 		}
-		public TerminalNode LEFT_BRACE() { return getToken(BeetlParser.LEFT_BRACE, 0); }
+		public List<G_caseStatmentContext> g_caseStatment() {
+			return getRuleContexts(G_caseStatmentContext.class);
+		}
 		public G_defaultStatmentContext g_defaultStatment() {
 			return getRuleContext(G_defaultStatmentContext.class,0);
 		}
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode RIGHT_BRACE() { return getToken(BeetlParser.RIGHT_BRACE, 0); }
-		public TerminalNode LEFT_PAR() { return getToken(BeetlParser.LEFT_PAR, 0); }
-		public TerminalNode RIGHT_PAR() { return getToken(BeetlParser.RIGHT_PAR, 0); }
+		public TerminalNode LEFT_BRACE() { return getToken(BeetlParser.LEFT_BRACE, 0); }
 		public G_switchStatmentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1042,21 +1042,21 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class G_caseStatmentContext extends ParserRuleContext {
-		public List<TerminalNode> COMMA() { return getTokens(BeetlParser.COMMA); }
-		public TerminalNode COLON() { return getToken(BeetlParser.COLON, 0); }
+		public List<StatementContext> statement() {
+			return getRuleContexts(StatementContext.class);
+		}
 		public ExpressionContext expression(int i) {
 			return getRuleContext(ExpressionContext.class,i);
+		}
+		public TerminalNode Case() { return getToken(BeetlParser.Case, 0); }
+		public List<TerminalNode> COMMA() { return getTokens(BeetlParser.COMMA); }
+		public List<ExpressionContext> expression() {
+			return getRuleContexts(ExpressionContext.class);
 		}
 		public StatementContext statement(int i) {
 			return getRuleContext(StatementContext.class,i);
 		}
-		public List<StatementContext> statement() {
-			return getRuleContexts(StatementContext.class);
-		}
-		public TerminalNode Case() { return getToken(BeetlParser.Case, 0); }
-		public List<ExpressionContext> expression() {
-			return getRuleContexts(ExpressionContext.class);
-		}
+		public TerminalNode COLON() { return getToken(BeetlParser.COLON, 0); }
 		public TerminalNode COMMA(int i) {
 			return getToken(BeetlParser.COMMA, i);
 		}
@@ -1117,14 +1117,14 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class G_defaultStatmentContext extends ParserRuleContext {
-		public TerminalNode Default() { return getToken(BeetlParser.Default, 0); }
-		public TerminalNode COLON() { return getToken(BeetlParser.COLON, 0); }
-		public StatementContext statement(int i) {
-			return getRuleContext(StatementContext.class,i);
-		}
 		public List<StatementContext> statement() {
 			return getRuleContexts(StatementContext.class);
 		}
+		public TerminalNode Default() { return getToken(BeetlParser.Default, 0); }
+		public StatementContext statement(int i) {
+			return getRuleContext(StatementContext.class,i);
+		}
+		public TerminalNode COLON() { return getToken(BeetlParser.COLON, 0); }
 		public G_defaultStatmentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1167,13 +1167,13 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class VarDeclareListContext extends ParserRuleContext {
+		public List<TerminalNode> COMMA() { return getTokens(BeetlParser.COMMA); }
 		public AssignMentContext assignMent(int i) {
 			return getRuleContext(AssignMentContext.class,i);
 		}
 		public List<AssignMentContext> assignMent() {
 			return getRuleContexts(AssignMentContext.class);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(BeetlParser.COMMA); }
 		public TerminalNode COMMA(int i) {
 			return getToken(BeetlParser.COMMA, i);
 		}
@@ -1229,19 +1229,19 @@ public class BeetlParser extends Parser {
 			super.copyFrom(ctx);
 		}
 	}
+	public static class AssignTemplateVarContext extends AssignMentContext {
+		public TerminalNode ASSIN() { return getToken(BeetlParser.ASSIN, 0); }
+		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
+		public BlockContext block() {
+			return getRuleContext(BlockContext.class,0);
+		}
+		public AssignTemplateVarContext(AssignMentContext ctx) { copyFrom(ctx); }
+	}
 	public static class AssignGeneralInStContext extends AssignMentContext {
 		public GeneralAssignExpContext generalAssignExp() {
 			return getRuleContext(GeneralAssignExpContext.class,0);
 		}
 		public AssignGeneralInStContext(AssignMentContext ctx) { copyFrom(ctx); }
-	}
-	public static class AssignTemplateVarContext extends AssignMentContext {
-		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
-		public TerminalNode ASSIN() { return getToken(BeetlParser.ASSIN, 0); }
-		public BlockContext block() {
-			return getRuleContext(BlockContext.class,0);
-		}
-		public AssignTemplateVarContext(AssignMentContext ctx) { copyFrom(ctx); }
 	}
 	public static class AssignIdContext extends AssignMentContext {
 		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
@@ -1296,11 +1296,11 @@ public class BeetlParser extends Parser {
 		public SwitchBlockStatementGroupContext switchBlockStatementGroup(int i) {
 			return getRuleContext(SwitchBlockStatementGroupContext.class,i);
 		}
+		public TerminalNode RIGHT_BRACE() { return getToken(BeetlParser.RIGHT_BRACE, 0); }
 		public TerminalNode LEFT_BRACE() { return getToken(BeetlParser.LEFT_BRACE, 0); }
 		public List<SwitchBlockStatementGroupContext> switchBlockStatementGroup() {
 			return getRuleContexts(SwitchBlockStatementGroupContext.class);
 		}
-		public TerminalNode RIGHT_BRACE() { return getToken(BeetlParser.RIGHT_BRACE, 0); }
 		public SwitchBlockContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1343,17 +1343,17 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class SwitchBlockStatementGroupContext extends ParserRuleContext {
-		public StatementContext statement(int i) {
-			return getRuleContext(StatementContext.class,i);
-		}
 		public List<StatementContext> statement() {
 			return getRuleContexts(StatementContext.class);
+		}
+		public SwitchLabelContext switchLabel(int i) {
+			return getRuleContext(SwitchLabelContext.class,i);
 		}
 		public List<SwitchLabelContext> switchLabel() {
 			return getRuleContexts(SwitchLabelContext.class);
 		}
-		public SwitchLabelContext switchLabel(int i) {
-			return getRuleContext(SwitchLabelContext.class,i);
+		public StatementContext statement(int i) {
+			return getRuleContext(StatementContext.class,i);
 		}
 		public SwitchBlockStatementGroupContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1415,12 +1415,12 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class SwitchLabelContext extends ParserRuleContext {
-		public TerminalNode COLON() { return getToken(BeetlParser.COLON, 0); }
 		public TerminalNode Default() { return getToken(BeetlParser.Default, 0); }
 		public TerminalNode Case() { return getToken(BeetlParser.Case, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
+		public TerminalNode COLON() { return getToken(BeetlParser.COLON, 0); }
 		public SwitchLabelContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1509,12 +1509,12 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class ForInControlContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
 		public TerminalNode FOR_IN() { return getToken(BeetlParser.FOR_IN, 0); }
+		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
+		public TerminalNode Var() { return getToken(BeetlParser.Var, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode Var() { return getToken(BeetlParser.Var, 0); }
 		public ForInControlContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1553,14 +1553,14 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class GeneralForControlContext extends ParserRuleContext {
-		public ForUpdateContext forUpdate() {
-			return getRuleContext(ForUpdateContext.class,0);
-		}
 		public ForInitContext forInit() {
 			return getRuleContext(ForInitContext.class,0);
 		}
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
+		}
+		public ForUpdateContext forUpdate() {
+			return getRuleContext(ForUpdateContext.class,0);
 		}
 		public GeneralForControlContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1615,13 +1615,13 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class ForInitContext extends ParserRuleContext {
-		public VarDeclareListContext varDeclareList() {
-			return getRuleContext(VarDeclareListContext.class,0);
-		}
 		public ExpressionListContext expressionList() {
 			return getRuleContext(ExpressionListContext.class,0);
 		}
 		public TerminalNode Var() { return getToken(BeetlParser.Var, 0); }
+		public VarDeclareListContext varDeclareList() {
+			return getRuleContext(VarDeclareListContext.class,0);
+		}
 		public ForInitContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1708,11 +1708,11 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class ParExpressionContext extends ParserRuleContext {
+		public TerminalNode RIGHT_PAR() { return getToken(BeetlParser.RIGHT_PAR, 0); }
+		public TerminalNode LEFT_PAR() { return getToken(BeetlParser.LEFT_PAR, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode LEFT_PAR() { return getToken(BeetlParser.LEFT_PAR, 0); }
-		public TerminalNode RIGHT_PAR() { return getToken(BeetlParser.RIGHT_PAR, 0); }
 		public ParExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1742,10 +1742,10 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class ExpressionListContext extends ParserRuleContext {
-		public List<TerminalNode> COMMA() { return getTokens(BeetlParser.COMMA); }
 		public ExpressionContext expression(int i) {
 			return getRuleContext(ExpressionContext.class,i);
 		}
+		public List<TerminalNode> COMMA() { return getTokens(BeetlParser.COMMA); }
 		public List<ExpressionContext> expression() {
 			return getRuleContexts(ExpressionContext.class);
 		}
@@ -1824,14 +1824,14 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class TextStatmentContext extends ParserRuleContext {
-		public TerminalNode NOT() { return getToken(BeetlParser.NOT, 0); }
+		public TerminalNode RIGHT_PAR() { return getToken(BeetlParser.RIGHT_PAR, 0); }
+		public TerminalNode LEFT_PAR() { return getToken(BeetlParser.LEFT_PAR, 0); }
 		public TextVarContext textVar() {
 			return getRuleContext(TextVarContext.class,0);
 		}
 		public TerminalNode RIGHT_TOKEN() { return getToken(BeetlParser.RIGHT_TOKEN, 0); }
+		public TerminalNode NOT() { return getToken(BeetlParser.NOT, 0); }
 		public TerminalNode LEFT_TOKEN() { return getToken(BeetlParser.LEFT_TOKEN, 0); }
-		public TerminalNode LEFT_PAR() { return getToken(BeetlParser.LEFT_PAR, 0); }
-		public TerminalNode RIGHT_PAR() { return getToken(BeetlParser.RIGHT_PAR, 0); }
 		public TextStatmentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1880,11 +1880,11 @@ public class BeetlParser extends Parser {
 	public static class TextVarContext extends ParserRuleContext {
 		public ExpressionContext b;
 		public TerminalNode COMMA() { return getToken(BeetlParser.COMMA, 0); }
-		public TextformatContext textformat() {
-			return getRuleContext(TextformatContext.class,0);
-		}
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
+		}
+		public TextformatContext textformat() {
+			return getRuleContext(TextformatContext.class,0);
 		}
 		public TextVarContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1979,9 +1979,9 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class ConstantsTextStatmentContext extends ParserRuleContext {
+		public TerminalNode RIGHT_TOKEN() { return getToken(BeetlParser.RIGHT_TOKEN, 0); }
 		public TerminalNode DecimalLiteral() { return getToken(BeetlParser.DecimalLiteral, 0); }
 		public TerminalNode LEFT_TEXT_TOKEN() { return getToken(BeetlParser.LEFT_TEXT_TOKEN, 0); }
-		public TerminalNode RIGHT_TOKEN() { return getToken(BeetlParser.RIGHT_TOKEN, 0); }
 		public ConstantsTextStatmentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2051,29 +2051,73 @@ public class BeetlParser extends Parser {
 			super.copyFrom(ctx);
 		}
 	}
+	public static class NegExpContext extends ExpressionContext {
+		public TerminalNode MIN() { return getToken(BeetlParser.MIN, 0); }
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public TerminalNode ADD() { return getToken(BeetlParser.ADD, 0); }
+		public NegExpContext(ExpressionContext ctx) { copyFrom(ctx); }
+	}
+	public static class LiteralExpContext extends ExpressionContext {
+		public LiteralContext literal() {
+			return getRuleContext(LiteralContext.class,0);
+		}
+		public LiteralExpContext(ExpressionContext ctx) { copyFrom(ctx); }
+	}
+	public static class ParExpContext extends ExpressionContext {
+		public TerminalNode RIGHT_PAR() { return getToken(BeetlParser.RIGHT_PAR, 0); }
+		public TerminalNode LEFT_PAR() { return getToken(BeetlParser.LEFT_PAR, 0); }
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public ParExpContext(ExpressionContext ctx) { copyFrom(ctx); }
+	}
+	public static class NotExpContext extends ExpressionContext {
+		public TerminalNode NOT() { return getToken(BeetlParser.NOT, 0); }
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public NotExpContext(ExpressionContext ctx) { copyFrom(ctx); }
+	}
 	public static class IncDecOneContext extends ExpressionContext {
-		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
-		public TerminalNode INCREASE() { return getToken(BeetlParser.INCREASE, 0); }
 		public TerminalNode DECREASE() { return getToken(BeetlParser.DECREASE, 0); }
+		public TerminalNode INCREASE() { return getToken(BeetlParser.INCREASE, 0); }
+		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
 		public IncDecOneContext(ExpressionContext ctx) { copyFrom(ctx); }
 	}
 	public static class AddminExpContext extends ExpressionContext {
-		public TerminalNode MIN() { return getToken(BeetlParser.MIN, 0); }
-		public TerminalNode ADD() { return getToken(BeetlParser.ADD, 0); }
 		public ExpressionContext expression(int i) {
 			return getRuleContext(ExpressionContext.class,i);
 		}
+		public TerminalNode MIN() { return getToken(BeetlParser.MIN, 0); }
 		public List<ExpressionContext> expression() {
 			return getRuleContexts(ExpressionContext.class);
 		}
+		public TerminalNode ADD() { return getToken(BeetlParser.ADD, 0); }
 		public AddminExpContext(ExpressionContext ctx) { copyFrom(ctx); }
 	}
-	public static class NativeCallExpContext extends ExpressionContext {
-		public TerminalNode AT() { return getToken(BeetlParser.AT, 0); }
-		public NativeCallContext nativeCall() {
-			return getRuleContext(NativeCallContext.class,0);
+	public static class OrExpContext extends ExpressionContext {
+		public ExpressionContext expression(int i) {
+			return getRuleContext(ExpressionContext.class,i);
 		}
-		public NativeCallExpContext(ExpressionContext ctx) { copyFrom(ctx); }
+		public TerminalNode OR() { return getToken(BeetlParser.OR, 0); }
+		public List<ExpressionContext> expression() {
+			return getRuleContexts(ExpressionContext.class);
+		}
+		public OrExpContext(ExpressionContext ctx) { copyFrom(ctx); }
+	}
+	public static class OneIncDecContext extends ExpressionContext {
+		public TerminalNode DECREASE() { return getToken(BeetlParser.DECREASE, 0); }
+		public TerminalNode INCREASE() { return getToken(BeetlParser.INCREASE, 0); }
+		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
+		public OneIncDecContext(ExpressionContext ctx) { copyFrom(ctx); }
+	}
+	public static class VarRefExpContext extends ExpressionContext {
+		public VarRefContext varRef() {
+			return getRuleContext(VarRefContext.class,0);
+		}
+		public VarRefExpContext(ExpressionContext ctx) { copyFrom(ctx); }
 	}
 	public static class AndExpContext extends ExpressionContext {
 		public ExpressionContext expression(int i) {
@@ -2097,55 +2141,23 @@ public class BeetlParser extends Parser {
 		}
 		public AssignGeneralInExpContext(ExpressionContext ctx) { copyFrom(ctx); }
 	}
-	public static class OrExpContext extends ExpressionContext {
+	public static class TernaryExpContext extends ExpressionContext {
 		public ExpressionContext expression(int i) {
 			return getRuleContext(ExpressionContext.class,i);
 		}
-		public TerminalNode OR() { return getToken(BeetlParser.OR, 0); }
+		public TerminalNode QUESTOIN() { return getToken(BeetlParser.QUESTOIN, 0); }
 		public List<ExpressionContext> expression() {
 			return getRuleContexts(ExpressionContext.class);
 		}
-		public OrExpContext(ExpressionContext ctx) { copyFrom(ctx); }
+		public TerminalNode COLON() { return getToken(BeetlParser.COLON, 0); }
+		public TernaryExpContext(ExpressionContext ctx) { copyFrom(ctx); }
 	}
-	public static class NotExpContext extends ExpressionContext {
-		public TerminalNode NOT() { return getToken(BeetlParser.NOT, 0); }
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
+	public static class NativeCallExpContext extends ExpressionContext {
+		public NativeCallContext nativeCall() {
+			return getRuleContext(NativeCallContext.class,0);
 		}
-		public NotExpContext(ExpressionContext ctx) { copyFrom(ctx); }
-	}
-	public static class MuldivmodExpContext extends ExpressionContext {
-		public TerminalNode MUlTIP() { return getToken(BeetlParser.MUlTIP, 0); }
-		public ExpressionContext expression(int i) {
-			return getRuleContext(ExpressionContext.class,i);
-		}
-		public TerminalNode MOD() { return getToken(BeetlParser.MOD, 0); }
-		public List<ExpressionContext> expression() {
-			return getRuleContexts(ExpressionContext.class);
-		}
-		public TerminalNode DIV() { return getToken(BeetlParser.DIV, 0); }
-		public MuldivmodExpContext(ExpressionContext ctx) { copyFrom(ctx); }
-	}
-	public static class CompareExpContext extends ExpressionContext {
-		public TerminalNode LESS() { return getToken(BeetlParser.LESS, 0); }
-		public TerminalNode EQUAL() { return getToken(BeetlParser.EQUAL, 0); }
-		public TerminalNode LESS_EQUAL() { return getToken(BeetlParser.LESS_EQUAL, 0); }
-		public TerminalNode LARGE() { return getToken(BeetlParser.LARGE, 0); }
-		public TerminalNode NOT_EQUAL() { return getToken(BeetlParser.NOT_EQUAL, 0); }
-		public ExpressionContext expression(int i) {
-			return getRuleContext(ExpressionContext.class,i);
-		}
-		public List<ExpressionContext> expression() {
-			return getRuleContexts(ExpressionContext.class);
-		}
-		public TerminalNode LARGE_EQUAL() { return getToken(BeetlParser.LARGE_EQUAL, 0); }
-		public CompareExpContext(ExpressionContext ctx) { copyFrom(ctx); }
-	}
-	public static class LiteralExpContext extends ExpressionContext {
-		public LiteralContext literal() {
-			return getRuleContext(LiteralContext.class,0);
-		}
-		public LiteralExpContext(ExpressionContext ctx) { copyFrom(ctx); }
+		public TerminalNode AT() { return getToken(BeetlParser.AT, 0); }
+		public NativeCallExpContext(ExpressionContext ctx) { copyFrom(ctx); }
 	}
 	public static class JsonExpContext extends ExpressionContext {
 		public JsonContext json() {
@@ -2153,44 +2165,32 @@ public class BeetlParser extends Parser {
 		}
 		public JsonExpContext(ExpressionContext ctx) { copyFrom(ctx); }
 	}
-	public static class ParExpContext extends ExpressionContext {
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
-		}
-		public TerminalNode LEFT_PAR() { return getToken(BeetlParser.LEFT_PAR, 0); }
-		public TerminalNode RIGHT_PAR() { return getToken(BeetlParser.RIGHT_PAR, 0); }
-		public ParExpContext(ExpressionContext ctx) { copyFrom(ctx); }
-	}
-	public static class NegExpContext extends ExpressionContext {
-		public TerminalNode MIN() { return getToken(BeetlParser.MIN, 0); }
-		public TerminalNode ADD() { return getToken(BeetlParser.ADD, 0); }
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
-		}
-		public NegExpContext(ExpressionContext ctx) { copyFrom(ctx); }
-	}
-	public static class OneIncDecContext extends ExpressionContext {
-		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
-		public TerminalNode INCREASE() { return getToken(BeetlParser.INCREASE, 0); }
-		public TerminalNode DECREASE() { return getToken(BeetlParser.DECREASE, 0); }
-		public OneIncDecContext(ExpressionContext ctx) { copyFrom(ctx); }
-	}
-	public static class TernaryExpContext extends ExpressionContext {
-		public TerminalNode COLON() { return getToken(BeetlParser.COLON, 0); }
+	public static class MuldivmodExpContext extends ExpressionContext {
 		public ExpressionContext expression(int i) {
 			return getRuleContext(ExpressionContext.class,i);
 		}
+		public TerminalNode MUlTIP() { return getToken(BeetlParser.MUlTIP, 0); }
+		public TerminalNode DIV() { return getToken(BeetlParser.DIV, 0); }
 		public List<ExpressionContext> expression() {
 			return getRuleContexts(ExpressionContext.class);
 		}
-		public TerminalNode QUESTOIN() { return getToken(BeetlParser.QUESTOIN, 0); }
-		public TernaryExpContext(ExpressionContext ctx) { copyFrom(ctx); }
+		public TerminalNode MOD() { return getToken(BeetlParser.MOD, 0); }
+		public MuldivmodExpContext(ExpressionContext ctx) { copyFrom(ctx); }
 	}
-	public static class VarRefExpContext extends ExpressionContext {
-		public VarRefContext varRef() {
-			return getRuleContext(VarRefContext.class,0);
+	public static class CompareExpContext extends ExpressionContext {
+		public ExpressionContext expression(int i) {
+			return getRuleContext(ExpressionContext.class,i);
 		}
-		public VarRefExpContext(ExpressionContext ctx) { copyFrom(ctx); }
+		public TerminalNode LARGE() { return getToken(BeetlParser.LARGE, 0); }
+		public TerminalNode LESS() { return getToken(BeetlParser.LESS, 0); }
+		public TerminalNode LARGE_EQUAL() { return getToken(BeetlParser.LARGE_EQUAL, 0); }
+		public TerminalNode LESS_EQUAL() { return getToken(BeetlParser.LESS_EQUAL, 0); }
+		public List<ExpressionContext> expression() {
+			return getRuleContexts(ExpressionContext.class);
+		}
+		public TerminalNode EQUAL() { return getToken(BeetlParser.EQUAL, 0); }
+		public TerminalNode NOT_EQUAL() { return getToken(BeetlParser.NOT_EQUAL, 0); }
+		public CompareExpContext(ExpressionContext ctx) { copyFrom(ctx); }
 	}
 
 	public final ExpressionContext expression() throws RecognitionException {
@@ -2468,10 +2468,10 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class GeneralAssignExpContext extends ParserRuleContext {
+		public TerminalNode ASSIN() { return getToken(BeetlParser.ASSIN, 0); }
 		public VarRefContext varRef() {
 			return getRuleContext(VarRefContext.class,0);
 		}
-		public TerminalNode ASSIN() { return getToken(BeetlParser.ASSIN, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
@@ -2505,14 +2505,14 @@ public class BeetlParser extends Parser {
 
 	public static class VarRefContext extends ParserRuleContext {
 		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
+		public Safe_outputContext safe_output() {
+			return getRuleContext(Safe_outputContext.class,0);
+		}
 		public List<VarAttributeContext> varAttribute() {
 			return getRuleContexts(VarAttributeContext.class);
 		}
 		public VarAttributeContext varAttribute(int i) {
 			return getRuleContext(VarAttributeContext.class,i);
-		}
-		public Safe_outputContext safe_output() {
-			return getRuleContext(Safe_outputContext.class,0);
 		}
 		public VarRefContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2575,11 +2575,6 @@ public class BeetlParser extends Parser {
 			super.copyFrom(ctx);
 		}
 	}
-	public static class VarAttributeVirtualContext extends VarAttributeContext {
-		public TerminalNode VIRTUAL() { return getToken(BeetlParser.VIRTUAL, 0); }
-		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
-		public VarAttributeVirtualContext(VarAttributeContext ctx) { copyFrom(ctx); }
-	}
 	public static class VarAttributeGeneralContext extends VarAttributeContext {
 		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
 		public TerminalNode PERIOD() { return getToken(BeetlParser.PERIOD, 0); }
@@ -2592,6 +2587,11 @@ public class BeetlParser extends Parser {
 			return getRuleContext(ExpressionContext.class,0);
 		}
 		public VarAttributeArrayOrMapContext(VarAttributeContext ctx) { copyFrom(ctx); }
+	}
+	public static class VarAttributeVirtualContext extends VarAttributeContext {
+		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
+		public TerminalNode VIRTUAL() { return getToken(BeetlParser.VIRTUAL, 0); }
+		public VarAttributeVirtualContext(VarAttributeContext ctx) { copyFrom(ctx); }
 	}
 
 	public final VarAttributeContext varAttribute() throws RecognitionException {
@@ -2641,10 +2641,10 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class Safe_outputContext extends ParserRuleContext {
-		public TerminalNode NOT() { return getToken(BeetlParser.NOT, 0); }
 		public Safe_allow_expContext safe_allow_exp() {
 			return getRuleContext(Safe_allow_expContext.class,0);
 		}
+		public TerminalNode NOT() { return getToken(BeetlParser.NOT, 0); }
 		public Safe_outputContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2680,27 +2680,27 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class Safe_allow_expContext extends ParserRuleContext {
-		public TerminalNode AT() { return getToken(BeetlParser.AT, 0); }
-		public VarRefContext varRef() {
-			return getRuleContext(VarRefContext.class,0);
-		}
+		public TerminalNode RIGHT_PAR() { return getToken(BeetlParser.RIGHT_PAR, 0); }
 		public NativeCallContext nativeCall() {
 			return getRuleContext(NativeCallContext.class,0);
+		}
+		public TerminalNode LEFT_PAR() { return getToken(BeetlParser.LEFT_PAR, 0); }
+		public VarRefContext varRef() {
+			return getRuleContext(VarRefContext.class,0);
 		}
 		public FunctionCallContext functionCall() {
 			return getRuleContext(FunctionCallContext.class,0);
 		}
-		public JsonContext json() {
-			return getRuleContext(JsonContext.class,0);
-		}
-		public LiteralContext literal() {
-			return getRuleContext(LiteralContext.class,0);
-		}
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode LEFT_PAR() { return getToken(BeetlParser.LEFT_PAR, 0); }
-		public TerminalNode RIGHT_PAR() { return getToken(BeetlParser.RIGHT_PAR, 0); }
+		public JsonContext json() {
+			return getRuleContext(JsonContext.class,0);
+		}
+		public TerminalNode AT() { return getToken(BeetlParser.AT, 0); }
+		public LiteralContext literal() {
+			return getRuleContext(LiteralContext.class,0);
+		}
 		public Safe_allow_expContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2771,23 +2771,23 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class FunctionCallContext extends ParserRuleContext {
+		public TerminalNode RIGHT_PAR() { return getToken(BeetlParser.RIGHT_PAR, 0); }
+		public TerminalNode LEFT_PAR() { return getToken(BeetlParser.LEFT_PAR, 0); }
 		public ExpressionListContext expressionList() {
 			return getRuleContext(ExpressionListContext.class,0);
-		}
-		public List<VarAttributeContext> varAttribute() {
-			return getRuleContexts(VarAttributeContext.class);
-		}
-		public FunctionNsContext functionNs() {
-			return getRuleContext(FunctionNsContext.class,0);
-		}
-		public VarAttributeContext varAttribute(int i) {
-			return getRuleContext(VarAttributeContext.class,i);
 		}
 		public Safe_outputContext safe_output() {
 			return getRuleContext(Safe_outputContext.class,0);
 		}
-		public TerminalNode LEFT_PAR() { return getToken(BeetlParser.LEFT_PAR, 0); }
-		public TerminalNode RIGHT_PAR() { return getToken(BeetlParser.RIGHT_PAR, 0); }
+		public FunctionNsContext functionNs() {
+			return getRuleContext(FunctionNsContext.class,0);
+		}
+		public List<VarAttributeContext> varAttribute() {
+			return getRuleContexts(VarAttributeContext.class);
+		}
+		public VarAttributeContext varAttribute(int i) {
+			return getRuleContext(VarAttributeContext.class,i);
+		}
 		public FunctionCallContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2850,6 +2850,8 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class FunctionTagCallContext extends ParserRuleContext {
+		public TerminalNode RIGHT_PAR() { return getToken(BeetlParser.RIGHT_PAR, 0); }
+		public TerminalNode LEFT_PAR() { return getToken(BeetlParser.LEFT_PAR, 0); }
 		public ExpressionListContext expressionList() {
 			return getRuleContext(ExpressionListContext.class,0);
 		}
@@ -2859,8 +2861,6 @@ public class BeetlParser extends Parser {
 		public BlockContext block() {
 			return getRuleContext(BlockContext.class,0);
 		}
-		public TerminalNode LEFT_PAR() { return getToken(BeetlParser.LEFT_PAR, 0); }
-		public TerminalNode RIGHT_PAR() { return getToken(BeetlParser.RIGHT_PAR, 0); }
 		public FunctionTagCallContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2900,14 +2900,14 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class FunctionNsContext extends ParserRuleContext {
-		public List<TerminalNode> Identifier() { return getTokens(BeetlParser.Identifier); }
 		public TerminalNode Identifier(int i) {
 			return getToken(BeetlParser.Identifier, i);
 		}
-		public List<TerminalNode> PERIOD() { return getTokens(BeetlParser.PERIOD); }
+		public List<TerminalNode> Identifier() { return getTokens(BeetlParser.Identifier); }
 		public TerminalNode PERIOD(int i) {
 			return getToken(BeetlParser.PERIOD, i);
 		}
+		public List<TerminalNode> PERIOD() { return getTokens(BeetlParser.PERIOD); }
 		public FunctionNsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2950,28 +2950,28 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class NativeCallContext extends ParserRuleContext {
-		public List<NativeMethodContext> nativeMethod() {
-			return getRuleContexts(NativeMethodContext.class);
-		}
-		public List<NativeArrayContext> nativeArray() {
-			return getRuleContexts(NativeArrayContext.class);
-		}
-		public NativeMethodContext nativeMethod(int i) {
-			return getRuleContext(NativeMethodContext.class,i);
-		}
-		public List<NativeVarRefChainContext> nativeVarRefChain() {
-			return getRuleContexts(NativeVarRefChainContext.class);
+		public NativeArrayContext nativeArray(int i) {
+			return getRuleContext(NativeArrayContext.class,i);
 		}
 		public NativeVarRefChainContext nativeVarRefChain(int i) {
 			return getRuleContext(NativeVarRefChainContext.class,i);
 		}
-		public List<TerminalNode> PERIOD() { return getTokens(BeetlParser.PERIOD); }
-		public NativeArrayContext nativeArray(int i) {
-			return getRuleContext(NativeArrayContext.class,i);
+		public List<NativeMethodContext> nativeMethod() {
+			return getRuleContexts(NativeMethodContext.class);
+		}
+		public List<NativeVarRefChainContext> nativeVarRefChain() {
+			return getRuleContexts(NativeVarRefChainContext.class);
+		}
+		public NativeMethodContext nativeMethod(int i) {
+			return getRuleContext(NativeMethodContext.class,i);
 		}
 		public TerminalNode PERIOD(int i) {
 			return getToken(BeetlParser.PERIOD, i);
 		}
+		public List<NativeArrayContext> nativeArray() {
+			return getRuleContexts(NativeArrayContext.class);
+		}
+		public List<TerminalNode> PERIOD() { return getTokens(BeetlParser.PERIOD); }
 		public NativeCallContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -3033,15 +3033,15 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class NativeMethodContext extends ParserRuleContext {
-		public List<TerminalNode> COMMA() { return getTokens(BeetlParser.COMMA); }
 		public ExpressionContext expression(int i) {
 			return getRuleContext(ExpressionContext.class,i);
 		}
+		public TerminalNode RIGHT_PAR() { return getToken(BeetlParser.RIGHT_PAR, 0); }
+		public TerminalNode LEFT_PAR() { return getToken(BeetlParser.LEFT_PAR, 0); }
+		public List<TerminalNode> COMMA() { return getTokens(BeetlParser.COMMA); }
 		public List<ExpressionContext> expression() {
 			return getRuleContexts(ExpressionContext.class);
 		}
-		public TerminalNode LEFT_PAR() { return getToken(BeetlParser.LEFT_PAR, 0); }
-		public TerminalNode RIGHT_PAR() { return getToken(BeetlParser.RIGHT_PAR, 0); }
 		public TerminalNode COMMA(int i) {
 			return getToken(BeetlParser.COMMA, i);
 		}
@@ -3130,14 +3130,14 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class NativeVarRefChainContext extends ParserRuleContext {
-		public List<TerminalNode> Identifier() { return getTokens(BeetlParser.Identifier); }
 		public TerminalNode Identifier(int i) {
 			return getToken(BeetlParser.Identifier, i);
 		}
-		public List<TerminalNode> PERIOD() { return getTokens(BeetlParser.PERIOD); }
+		public List<TerminalNode> Identifier() { return getTokens(BeetlParser.Identifier); }
 		public TerminalNode PERIOD(int i) {
 			return getToken(BeetlParser.PERIOD, i);
 		}
+		public List<TerminalNode> PERIOD() { return getTokens(BeetlParser.PERIOD); }
 		public NativeVarRefChainContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -3182,26 +3182,26 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class JsonContext extends ParserRuleContext {
+		public ExpressionContext expression(int i) {
+			return getRuleContext(ExpressionContext.class,i);
+		}
+		public TerminalNode RIGHT_BRACE() { return getToken(BeetlParser.RIGHT_BRACE, 0); }
 		public TerminalNode RIGHT_SQBR() { return getToken(BeetlParser.RIGHT_SQBR, 0); }
-		public List<TerminalNode> COMMA() { return getTokens(BeetlParser.COMMA); }
 		public List<JsonKeyValueContext> jsonKeyValue() {
 			return getRuleContexts(JsonKeyValueContext.class);
 		}
 		public TerminalNode LEFT_SQBR() { return getToken(BeetlParser.LEFT_SQBR, 0); }
-		public ExpressionContext expression(int i) {
-			return getRuleContext(ExpressionContext.class,i);
-		}
-		public TerminalNode LEFT_BRACE() { return getToken(BeetlParser.LEFT_BRACE, 0); }
-		public List<ExpressionContext> expression() {
-			return getRuleContexts(ExpressionContext.class);
-		}
+		public List<TerminalNode> COMMA() { return getTokens(BeetlParser.COMMA); }
 		public JsonKeyValueContext jsonKeyValue(int i) {
 			return getRuleContext(JsonKeyValueContext.class,i);
 		}
+		public List<ExpressionContext> expression() {
+			return getRuleContexts(ExpressionContext.class);
+		}
+		public TerminalNode LEFT_BRACE() { return getToken(BeetlParser.LEFT_BRACE, 0); }
 		public TerminalNode COMMA(int i) {
 			return getToken(BeetlParser.COMMA, i);
 		}
-		public TerminalNode RIGHT_BRACE() { return getToken(BeetlParser.RIGHT_BRACE, 0); }
 		public JsonContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -3290,11 +3290,11 @@ public class BeetlParser extends Parser {
 
 	public static class JsonKeyValueContext extends ParserRuleContext {
 		public TerminalNode Identifier() { return getToken(BeetlParser.Identifier, 0); }
-		public TerminalNode StringLiteral() { return getToken(BeetlParser.StringLiteral, 0); }
-		public TerminalNode COLON() { return getToken(BeetlParser.COLON, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
+		public TerminalNode StringLiteral() { return getToken(BeetlParser.StringLiteral, 0); }
+		public TerminalNode COLON() { return getToken(BeetlParser.COLON, 0); }
 		public JsonKeyValueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -3339,10 +3339,10 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class LiteralContext extends ParserRuleContext {
-		public TerminalNode DecimalLiteral() { return getToken(BeetlParser.DecimalLiteral, 0); }
-		public TerminalNode NULL() { return getToken(BeetlParser.NULL, 0); }
 		public TerminalNode StringLiteral() { return getToken(BeetlParser.StringLiteral, 0); }
 		public TerminalNode FloatingPointLiteral() { return getToken(BeetlParser.FloatingPointLiteral, 0); }
+		public TerminalNode DecimalLiteral() { return getToken(BeetlParser.DecimalLiteral, 0); }
+		public TerminalNode NULL() { return getToken(BeetlParser.NULL, 0); }
 		public BooleanLiteralContext booleanLiteral() {
 			return getRuleContext(BooleanLiteralContext.class,0);
 		}
@@ -3405,8 +3405,8 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class BooleanLiteralContext extends ParserRuleContext {
-		public TerminalNode FALSE() { return getToken(BeetlParser.FALSE, 0); }
 		public TerminalNode TRUE() { return getToken(BeetlParser.TRUE, 0); }
+		public TerminalNode FALSE() { return getToken(BeetlParser.FALSE, 0); }
 		public BooleanLiteralContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -3440,11 +3440,11 @@ public class BeetlParser extends Parser {
 	}
 
 	public static class ArgumentsContext extends ParserRuleContext {
+		public TerminalNode RIGHT_PAR() { return getToken(BeetlParser.RIGHT_PAR, 0); }
+		public TerminalNode LEFT_PAR() { return getToken(BeetlParser.LEFT_PAR, 0); }
 		public ExpressionListContext expressionList() {
 			return getRuleContext(ExpressionListContext.class,0);
 		}
-		public TerminalNode LEFT_PAR() { return getToken(BeetlParser.LEFT_PAR, 0); }
-		public TerminalNode RIGHT_PAR() { return getToken(BeetlParser.RIGHT_PAR, 0); }
 		public ArgumentsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}

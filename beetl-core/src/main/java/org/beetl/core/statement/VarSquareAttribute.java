@@ -60,7 +60,6 @@ public class VarSquareAttribute extends VarAttribute
 			Object value = exp.evaluate(ctx);
 			return aa.value(o, value);
 		}catch(ClassCastException ex){
-			System.out.println(o.getClass().getClassLoader()+"=="+aa.getClass().getClassLoader());
 			throw BeetlUtil.throwCastException(ex, ctx.gt);
 		}
 		

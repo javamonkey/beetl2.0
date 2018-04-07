@@ -713,7 +713,8 @@ public class GroupTemplate
 	public void close()
 	{
 		this.resourceLoader.close();
-		ContextLocalBuffer.threadLocal.remove();
+		//没有用
+		ContextLocalBuffer.clear();
 	}
 
 	// /** 为事件类型注册一个监听器

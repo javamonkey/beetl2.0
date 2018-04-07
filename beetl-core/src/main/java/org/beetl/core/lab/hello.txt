@@ -1,5 +1,1 @@
-abc
-<%
-//abcd
-var a =1;
-%>
+${hasAttribute(user,"age","name1")}

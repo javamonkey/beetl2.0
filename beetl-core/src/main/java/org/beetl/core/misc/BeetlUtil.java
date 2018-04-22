@@ -43,13 +43,13 @@ import org.beetl.core.io.ByteWriter_Char;
 
 /**
  * Beetl使用方法
- * @author joelli
+ * @author xiandafu
  *
  */
 public class BeetlUtil
 {
 	//一般变量名称12个足够了
-	static char[] commonArray = new char[12];
+	
 
 	protected static String webroot;
 
@@ -300,14 +300,11 @@ public class BeetlUtil
 	 */
 	public static boolean checkNameing(String str)
 	{
+		char[] commonArray = new char[str.length()];
 		int len = 0;
 		if (str == null || (len = str.length()) == 0)
 		{
 			return false;
-		}
-		if (len > commonArray.length)
-		{
-			commonArray = new char[len];
 		}
 		str.getChars(0, len, commonArray, 0);
 		int index = 0;

@@ -51,9 +51,8 @@ public class Test {
 
 			Template t = gt.getTemplate("/hello.txt");
 
-			t.binding("user", new TestUser("jo"));
-			t.binding("id", 2);
-			t.binding("list", list);
+			t.binding("_root", new TestUser("jo"));
+		
 
 			ByteArrayOutputStream bs = new ByteArrayOutputStream();
 			try {

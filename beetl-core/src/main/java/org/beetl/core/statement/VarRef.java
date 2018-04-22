@@ -27,9 +27,15 @@
  */
 package org.beetl.core.statement;
 
+import java.util.List;
+import java.util.Map;
+
 import org.beetl.core.Context;
 import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
+import org.beetl.core.om.MethodInvoker;
+import org.beetl.core.om.ObjectAA;
+import org.beetl.core.om.ObjectUtil;
 
 /**
  * user.name
@@ -70,26 +76,49 @@ public class VarRef extends Expression implements IVarIndex
 		Object value = ctx.vars[varIndex];
 		if (value == Context.NOT_EXIST_OBJECT)
 		{
-			if (hasSafe)
-			{
+			
+			if(ctx.globalVar!=null&&ctx.globalVar.containsKey("_root")) {
+				//如果有一个根对象
+				Object root = ctx.getGlobal("_root");
+				String attr = firstToken.text;
+				if(root==null) {
+					if(hasSafe) {
+						return safe == null ? null : safe.evaluate(ctx);
+					}else {
+						BeetlException be = new BeetlException(BeetlException.NULL, "根对象为空指针，无"+this.firstToken.text+"值");
+						be.pushToken(this.firstToken);
+						throw be;
+					}
+					
+				}
+			
+				if(hasAttr(root,attr)) {
+					value = ObjectAA.defaultObjectAA().value(root, attr);
+					if (value == null&&hasSafe) {
+						return safe == null ? null : safe.evaluate(ctx);
+					}
+					
+				}else {
+					//当没有属性的时候，忽略安全输出，直接报错,以免得系统重构的时候模板不报错
+					BeetlException ex = new BeetlException(BeetlException.ATTRIBUTE_INVALID,"根对象 "+root.getClass()+" 无此属性");
+					ex.pushToken(this.firstToken);
+					throw ex;
+				}
+				ctx.vars[varIndex] = value;
+				
+			}else if(hasSafe){
 				return safe == null ? null : safe.evaluate(ctx);
-			}
-			else
-			{
+			}else {
 				BeetlException ex = new BeetlException(BeetlException.VAR_NOT_DEFINED);
 				ex.pushToken(this.firstToken);
 				throw ex;
 			}
-		}
-
-		if (value == null)
+		}else if (value == null&&hasSafe)
 		{
-			if (hasSafe)
-			{
-				return safe == null ? null : safe.evaluate(ctx);
-			}
+			return safe == null ? null : safe.evaluate(ctx);
 		}
-
+		
+		//属性
 		if (attributes.length == 0)
 		{
 			return value;
@@ -152,6 +181,26 @@ public class VarRef extends Expression implements IVarIndex
 
 	}
 	
+
+	private boolean hasAttr(Object o, String attr) {
+
+		if (o instanceof Map) {
+			return ((Map) o).containsKey(attr);
+		} else if (o instanceof List) {
+			return true;
+
+		}
+		else {
+			Class c = o.getClass();
+			MethodInvoker invoker = ObjectUtil.getInvokder(c, (String) attr);
+			if (invoker != null) {
+				return true;
+			} else {
+				return false;
+			}
+
+		}
+	}
 	
 	/** 计算所有表达式，知道最后一值，用于a.b[xx].c = 1  赋值，只计算到a.b[xx]
 	 * @param ctx

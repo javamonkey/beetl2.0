@@ -7,7 +7,7 @@ public class TemplateEngineFactory
 	/**
 	 * 也可以使用org.beetl.core.DefaultTemplateEngine
 	 */
-	public static String ENGINE = "org.beetl.core.FastRuntimeEngine";
+	public static String ENGINE = "org.beetl.core.DefaultTemplateEngine";
 
 	public static TemplateEngine getEngine(String engine)
 	{

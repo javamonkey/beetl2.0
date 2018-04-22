@@ -44,7 +44,12 @@ public class ProgramCacheFactory
 
 	public static Cache defaulCache()
 	{
-		return (Cache) ObjectUtil.instance(CACHE);
+		
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		if(loader==null) {
+			loader = ProgramCacheFactory.class.getClassLoader();
+		}
+		return (Cache) ObjectUtil.instance(CACHE,loader);
 
 	}
 }

@@ -55,15 +55,15 @@ import org.beetl.core.statement.ErrorGrammarProgram;
 import org.beetl.core.statement.Program;
 
 /**
- * 系统核心类，详见指南
- * @author joelli
+ * 系统核心类，重量级对象，详见指南
+ * @author xiangdafu
  *
  */
 public class GroupTemplate
 {
 
 	/* 模板在运行过程中,class方法，accessory调用等需要的classLoader */
-	ClassLoader classLoader = GroupTemplate.class.getClassLoader();
+	ClassLoader classLoader = Thread.currentThread().getContextClassLoader()!=null? Thread.currentThread().getContextClassLoader():GroupTemplate.class.getClassLoader();
 	
 	ByteClassLoader byteLoader = new ByteClassLoader(classLoader);
 	AttributeAccessFactory attributeAccessFactory = new AttributeAccessFactory();
@@ -74,12 +74,16 @@ public class GroupTemplate
 	List<Listener> ls = new ArrayList<Listener>();
 	//所有注册的方法
 	Map<String, Function> fnMap = new HashMap<String, Function>();
+	//格式化函数
 	Map<String, Format> formatMap = new HashMap<String, Format>();
 	Map<Class, Format> defaultFormatMap = new HashMap<Class, Format>(0);
+	//虚拟函数
 	List<VirtualAttributeEval> virtualAttributeList = new ArrayList<VirtualAttributeEval>();
 	Map<Class, VirtualClassAttribute> virtualClass = new HashMap<Class, VirtualClassAttribute>();
+	//标签函数
 	Map<String, TagFactory> tagFactoryMap = new HashMap<String, TagFactory>();
 	ClassSearch classSearch = null;
+	//java调用安全管理器
 	NativeSecurityManager nativeSecurity = null;
 	ErrorHandler errorHandler = null;
 	Map<String, Object> sharedVars = null;
@@ -134,9 +138,17 @@ public class GroupTemplate
 	public GroupTemplate(ResourceLoader loader, Configuration conf)
 	{
 
+		this(loader,conf,null);
+
+	}
+	
+	public GroupTemplate(ResourceLoader loader, Configuration conf,ClassLoader classLoader)
+	{
+
 		try
 		{
 			this.resourceLoader = loader;
+			this.classLoader = classLoader==null?this.classLoader:classLoader;
 			this.conf = conf;
 			init();
 			initResourceLoader();
@@ -152,7 +164,7 @@ public class GroupTemplate
 	{
 		if (this.resourceLoader == null)
 		{
-			this.resourceLoader = (ResourceLoader) ObjectUtil.instance(conf.resourceLoader);
+			this.resourceLoader = (ResourceLoader) ObjectUtil.instance(conf.resourceLoader,classLoader);
 
 		}
 		resourceLoader.init(this);
@@ -168,14 +180,14 @@ public class GroupTemplate
 		this.initVirtual();
 		
 		classSearch = new ClassSearch(conf.getPkgList(),this);
-		nativeSecurity = (NativeSecurityManager) ObjectUtil.instance(conf.getNativeSecurity());
+		nativeSecurity = (NativeSecurityManager) ObjectUtil.instance(conf.getNativeSecurity(),this.classLoader);
 		if (conf.errorHandlerClass == null)
 		{
 			errorHandler = null;
 		}
 		else
 		{
-			errorHandler = (ErrorHandler) ObjectUtil.instance(conf.errorHandlerClass);
+			errorHandler = (ErrorHandler) ObjectUtil.instance(conf.errorHandlerClass,classLoader);
 
 		}
 
@@ -189,7 +201,7 @@ public class GroupTemplate
 		{
 			String name = entry.getKey();
 			String clsName = entry.getValue();
-			this.registerFunction(name, (Function) ObjectUtil.instance(clsName));
+			this.registerFunction(name, (Function) ObjectUtil.instance(clsName,classLoader));
 		}
 
 		Map<String, String> fnpMap = this.conf.fnPkgMap;
@@ -197,7 +209,7 @@ public class GroupTemplate
 		{
 			String name = entry.getKey();
 			String clsName = entry.getValue();
-			this.registerFunctionPackage(name, ObjectUtil.getClassByName(clsName), ObjectUtil.tryInstance(clsName));
+			this.registerFunctionPackage(name, ObjectUtil.getClassByName(clsName,this.classLoader), ObjectUtil.tryInstance(clsName,classLoader));
 		}
 
 	}
@@ -210,7 +222,7 @@ public class GroupTemplate
 		{
 			String name = entry.getKey();
 			String clsName = entry.getValue();
-			this.registerFormat(name, (Format) ObjectUtil.instance(clsName));
+			this.registerFormat(name, (Format) ObjectUtil.instance(clsName,classLoader));
 		}
 
 		Map<String, String> defaultFormatMap = this.conf.defaultFormatMap;
@@ -222,10 +234,10 @@ public class GroupTemplate
 			Format format = temp.get(formatClass);
 			if (format == null)
 			{
-				format = (Format) ObjectUtil.instance(formatClass);
+				format = (Format) ObjectUtil.instance(formatClass,classLoader);
 				temp.put(formatClass, format);
 			}
-			this.registerDefaultFormat(ObjectUtil.getClassByName(defaultType), format);
+			this.registerDefaultFormat(ObjectUtil.getClassByName(defaultType,this.classLoader), format);
 		}
 
 		//原始类型无法通过反射获取，因此不再配置文件里
@@ -246,7 +258,7 @@ public class GroupTemplate
 		{
 			String name = entry.getKey();
 			String clsName = entry.getValue();
-			this.registerTag(name, ObjectUtil.getClassByName(clsName));
+			this.registerTag(name, ObjectUtil.getClassByName(clsName,this.classLoader));
 		}
 
 		Map<String, String> tagFactoryMap = this.conf.tagFactoryMap;
@@ -254,7 +266,7 @@ public class GroupTemplate
 		{
 			String name = entry.getKey();
 			String clsName = entry.getValue();
-			this.registerTagFactory(name, (TagFactory) ObjectUtil.instance(clsName));
+			this.registerTagFactory(name, (TagFactory) ObjectUtil.instance(clsName,classLoader));
 		}
 
 	}
@@ -791,7 +803,7 @@ public class GroupTemplate
 	public void registerFunctionPackage(String packageName, Class cls)
 	{
 		checkFunctionName(packageName);
-		Object o = ObjectUtil.tryInstance(cls.getName());
+		Object o = ObjectUtil.tryInstance(cls.getName(),this.classLoader);
 		registerFunctionPackage(packageName, cls, o);
 
 	}

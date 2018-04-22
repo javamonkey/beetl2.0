@@ -27,9 +27,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.beetl.ext.struts2;
 
+
 import java.io.IOException;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -69,6 +69,10 @@ public class Struts2BeetlActionResult extends StrutsResultSupport
 			throw new RuntimeException("加载GroupTemplate失败", e);
 		}
 	}
+	
+	public Struts2BeetlActionResult() {
+		
+	}
 
 	@Inject
 	public void setReflectionProvider(ReflectionProvider prov)
@@ -97,18 +101,11 @@ public class Struts2BeetlActionResult extends StrutsResultSupport
 			protected void modifyTemplate(Template template, String key, HttpServletRequest request,
 					HttpServletResponse response, Object... args)
 			{
-				Map model = (Map) args[0];
-
-				for (Object o : model.entrySet())
-				{
-					Entry entry = (Entry) o;
-					String name = (String) entry.getKey();
-					Object value = entry.getValue();
-					template.binding(name, value);
-				}
+				Object action = args[0];
+				template.binding("_root",action);
 			}
 		};
-		render.render(locationArg, req, rsp, values);
+		render.render(locationArg, req, rsp, action);
 
 	}
 
@@ -123,3 +120,4 @@ public class Struts2BeetlActionResult extends StrutsResultSupport
 	}
 
 }
+

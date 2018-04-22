@@ -593,11 +593,11 @@ public class ObjectUtil
 	 * @param clsName
 	 * @return 如果未加载成功，则抛出Runtime异常
 	 */
-	public static Class getClassByName(String clsName)
+	public static Class getClassByName(String clsName,ClassLoader loader)
 	{
 		try
 		{
-			return Class.forName(clsName);
+			return Class.forName(clsName,true,loader);
 		}
 
 		catch (ClassNotFoundException e)
@@ -610,11 +610,11 @@ public class ObjectUtil
 	 * @param clsName
 	 * @return 如果未能创建实例，则抛出runtime异常
 	 */
-	public static Object instance(String clsName)
+	public static Object instance(String clsName,ClassLoader loader)
 	{
 		try
 		{
-			return Class.forName(clsName).newInstance();
+			return Class.forName(clsName,true,loader).newInstance();
 		}
 		catch (InstantiationException e)
 		{
@@ -634,11 +634,11 @@ public class ObjectUtil
 	 * @param clsName
 	 * @return
 	 */
-	public static Object tryInstance(String clsName)
+	public static Object tryInstance(String clsName,ClassLoader loader)
 	{
 		try
 		{
-			return instance(clsName);
+			return instance(clsName,loader);
 		}
 		catch (Exception ex)
 		{

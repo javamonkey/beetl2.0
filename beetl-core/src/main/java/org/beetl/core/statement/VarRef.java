@@ -73,50 +73,12 @@ public class VarRef extends Expression implements IVarIndex
 	public Object evaluate(Context ctx)
 	{
 
-		Object value = ctx.vars[varIndex];
-		if (value == Context.NOT_EXIST_OBJECT)
-		{
-			
-			if(ctx.globalVar!=null&&ctx.globalVar.containsKey("_root")) {
-				//如果有一个根对象
-				Object root = ctx.getGlobal("_root");
-				String attr = firstToken.text;
-				if(root==null) {
-					if(hasSafe) {
-						return safe == null ? null : safe.evaluate(ctx);
-					}else {
-						BeetlException be = new BeetlException(BeetlException.NULL, "根对象为空指针，无"+this.firstToken.text+"值");
-						be.pushToken(this.firstToken);
-						throw be;
-					}
-					
-				}
-			
-				if(hasAttr(root,attr)) {
-					value = ObjectAA.defaultObjectAA().value(root, attr);
-					if (value == null&&hasSafe) {
-						return safe == null ? null : safe.evaluate(ctx);
-					}
-					
-				}else {
-					//当没有属性的时候，忽略安全输出，直接报错,以免得系统重构的时候模板不报错
-					BeetlException ex = new BeetlException(BeetlException.ATTRIBUTE_INVALID,"根对象 "+root.getClass()+" 无此属性");
-					ex.pushToken(this.firstToken);
-					throw ex;
-				}
-				ctx.vars[varIndex] = value;
-				
-			}else if(hasSafe){
-				return safe == null ? null : safe.evaluate(ctx);
-			}else {
-				BeetlException ex = new BeetlException(BeetlException.VAR_NOT_DEFINED);
-				ex.pushToken(this.firstToken);
-				throw ex;
-			}
-		}else if (value == null&&hasSafe)
-		{
-			return safe == null ? null : safe.evaluate(ctx);
+		Result ret = this.getValue(ctx);
+		if(ret.safe) {
+			return ret.value;
 		}
+		
+		Object value = ret.value;
 		
 		//属性
 		if (attributes.length == 0)
@@ -181,13 +143,75 @@ public class VarRef extends Expression implements IVarIndex
 
 	}
 	
-
+	class Result{
+		Object value;
+		boolean safe = false;
+		public Result(Object value,boolean safe) {
+			this.value = value;
+			this.safe = safe;
+		}
+		
+		public Result(Object value) {
+			this(value,false);
+		}
+		
+	}
+	
+	private Result getValue(Context ctx) {
+		
+		Object value = ctx.vars[varIndex];
+		if (value == Context.NOT_EXIST_OBJECT)
+		{
+			
+			if(ctx.globalVar!=null&&ctx.globalVar.containsKey("_root")) {
+				//如果有一个根对象
+				Object root = ctx.getGlobal("_root");
+				String attr = firstToken.text;
+				if(root==null) {
+					if(hasSafe) {
+						return new Result(safe == null ? null : safe.evaluate(ctx),true);
+					}else {
+						BeetlException be = new BeetlException(BeetlException.NULL, "_root为空指针，无"+this.firstToken.text+"值");
+						be.pushToken(this.firstToken);
+						throw be;
+					}
+					
+				}
+			
+				if(hasAttr(root,attr)) {
+					value = ObjectAA.defaultObjectAA().value(root, attr);
+					if (value == null&&hasSafe) {
+						return new Result(safe == null ? null : safe.evaluate(ctx),true);
+					}
+					
+				}else {
+					//当没有属性的时候，忽略安全输出，直接报错,以免得系统重构的时候模板不报错
+					BeetlException ex = new BeetlException(BeetlException.ATTRIBUTE_INVALID,"_root "+root.getClass()+" 无此属性");
+					ex.pushToken(this.firstToken);
+					throw ex;
+				}
+				ctx.vars[varIndex] = value;
+				
+			}else if(hasSafe){
+				return new Result(safe == null ? null : safe.evaluate(ctx),true);
+			}else {
+				BeetlException ex = new BeetlException(BeetlException.VAR_NOT_DEFINED);
+				ex.pushToken(this.firstToken);
+				throw ex;
+			}
+		}else if (value == null&&hasSafe)
+		{
+			return new Result(safe == null ? null : safe.evaluate(ctx),true);
+		}
+		
+		return new Result(value);
+	}
 	private boolean hasAttr(Object o, String attr) {
 
 		if (o instanceof Map) {
-			return ((Map) o).containsKey(attr);
+			 return true;
 		} else if (o instanceof List) {
-			return true;
+			return false;
 
 		}
 		else {
@@ -207,19 +231,14 @@ public class VarRef extends Expression implements IVarIndex
 	 * @return
 	 */
 	public Object evaluateUntilLast(Context ctx){
+		
 		if (attributes.length == 0)
 		{
 			//不可能发生，除非beetl写错了，先放在着
 			throw new RuntimeException();
 		}
-		Object value = ctx.vars[varIndex];
-		if (value == Context.NOT_EXIST_OBJECT)
-		{
-			BeetlException ex = new BeetlException(BeetlException.VAR_NOT_DEFINED);
-			ex.pushToken(this.firstToken);
-			throw ex;
-		}
-
+		Result ret = this.getValue(ctx);
+		Object value = ret.value;
 		if (value == null)
 		{
 			BeetlException ex = new BeetlException(BeetlException.NULL);

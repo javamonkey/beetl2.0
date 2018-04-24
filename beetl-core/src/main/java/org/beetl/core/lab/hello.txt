@@ -1,2 +1,1 @@
-${age}
-${age}
+${lover.age12!'haaa'}

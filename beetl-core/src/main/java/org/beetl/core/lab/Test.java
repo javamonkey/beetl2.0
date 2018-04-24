@@ -50,10 +50,10 @@ public class Test {
 		for (int i = 0; i < 1; i++) {
 
 			Template t = gt.getTemplate("/hello.txt");
-
-			t.binding("_root", new TestUser("jo"));
+			TestUser user = new TestUser("jo");
+			user.lover = new TestUser("dddd");
+			t.binding("_root", new HashMap());
 		
-
 			ByteArrayOutputStream bs = new ByteArrayOutputStream();
 			try {
 				t.renderTo(bs);

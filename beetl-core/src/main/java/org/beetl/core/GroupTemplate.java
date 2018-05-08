@@ -944,15 +944,30 @@ public class GroupTemplate
 	{
 		return errorHandler;
 	}
-
+	/**
+	 * 获得共享变量，如果未有，返回一个空的HashMap
+	 * @return
+	 */
 	public Map<String, Object> getSharedVars()
 	{
+		if(sharedVars==null) {
+			sharedVars = new HashMap<String, Object>();
+		}
 		return sharedVars;
 	}
 
-	public void setSharedVars(Map<String, Object> sharedVars)
+	/**
+	 * 添加共享变量
+	 * @param vars
+	 */
+	public void setSharedVars(Map<String, Object> vars)
 	{
-		this.sharedVars = sharedVars;
+		if(this.sharedVars!=null) {
+			this.sharedVars.putAll(vars);
+		}else {
+			this.sharedVars = vars;
+		}
+		
 	}
 
 	public void setErrorHandler(ErrorHandler errorHandler)

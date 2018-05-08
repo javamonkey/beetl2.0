@@ -39,6 +39,7 @@ public class BeetlKit
 		}
 		gt = new GroupTemplate(resourceLoader, cfg);
 		gt.registerFunction("beetlKit", new GetValueFunction());
+		//默认并不显示错误异常，渲染结果（Writer）里放置异常信息
 		gt.setErrorHandler(new ConsoleErrorHandler() {
 			protected void println(Writer w, String msg)
 			{
@@ -129,6 +130,9 @@ public class BeetlKit
 	{
 		String start = gt.getConf().getStatementStart();
 		String end = gt.getConf().getStatementEnd();
+		if(end==null) {
+			end = "";
+		}
 		StringBuilder sb = new StringBuilder(script.length() + start.length() + end.length());
 		sb.append(start).append(script);
 		if (locals != null)
@@ -160,6 +164,9 @@ public class BeetlKit
 	{
 		String start = gt.getConf().getStatementStart();
 		String end = gt.getConf().getStatementEnd();
+		if(end==null) {
+			end = "";
+		}
 		StringBuilder sb = new StringBuilder(script.length() + start.length() + end.length());
 		sb.append(start).append(script);
 
@@ -199,6 +206,9 @@ public class BeetlKit
 
 	public static void main(String[] args)
 	{
+		BeetlKit.gt.getConf().setStatementStart("@");
+		BeetlKit.gt.getConf().setStatementEnd(null);
+//		BeetlKit.gt.setErrorHandler(new ConsoleErrorHandler());
 		String template = "${a}";
 		String initValue = "var a=1,c=2+1";
 		String result = testTemplate(template, initValue);

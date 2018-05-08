@@ -274,9 +274,16 @@ public class BeetlUtil
 			String path = BeetlUtil.class.getClassLoader().getResource("").toURI().getPath();
 			if (path == null)
 			{
-				throw new NullPointerException("Beetl未能自动检测到WebRoot，请手工指定WebRoot路径");
+				throw new RuntimeException("Beetl未能自动检测到WebRoot，请手工指定WebRoot路径");
 			}
-			String root = new File(path).getParentFile().getParentFile().getCanonicalPath();
+			File file = new File(path);
+			String root = null;
+			if(file.getParentFile()!=null&&file.getParentFile().getParentFile()!=null) {
+				root = file.getParentFile().getParentFile().getCanonicalPath();
+			}else {
+				throw new RuntimeException("Beetl检测到Beetl.jar位于"+path+"但未能自动检测到WebRoot，请手工指定WebRoot路径");
+			}
+			
 			return root;
 		}
 

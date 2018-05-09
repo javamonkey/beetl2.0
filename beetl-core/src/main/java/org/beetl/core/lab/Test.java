@@ -37,8 +37,7 @@ public class Test {
 		// cfg.setPlaceholderStart("{{");
 		// cfg.setPlaceholderEnd("}}");
 		//
-		gt.registerFunction("test", new TestFun());
-		gt.registerTag("test", TestTag.class);
+	
 		List list = new ArrayList();
 		list.add(null);
 		list.add(new TestUser("abc"));

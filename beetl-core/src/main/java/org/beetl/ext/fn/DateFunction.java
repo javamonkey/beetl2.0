@@ -53,9 +53,12 @@ public class DateFunction implements Function
 		if (paras.length == 0)
 		{
 			return new Date();
-		}
-		else
-		{
+		} else if (paras.length == 1) {
+			if(paras[0] !=null && paras[0] instanceof Long) {
+				return new Date((Long) paras[0]);
+			}
+			throw new RuntimeException("Parse date Error, Arg Long ");
+		} else {
 			if (paras.length == 2)
 			{
 

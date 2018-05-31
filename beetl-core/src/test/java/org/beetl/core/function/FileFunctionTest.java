@@ -56,6 +56,24 @@ public class FileFunctionTest extends BasicTestCase
 		AssertJUnit.assertEquals(this.getFileContent("/function/dilimter_expected.html"), str);
 
 	}
+
+	/**
+	 * 测试DateFunction中1个参数，即date(long)的用例
+	 * @throws Exception
+	 */
+	@Test
+	public void testFunctionDilimter2() throws Exception{
+		//测试html 方法和注解允许使用特殊符号
+		Template t = newGt.getTemplate("/function/dilimter_template2.html");
+
+		String str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/function/dilimter_expected2.html"), str);
+
+		t = newGt.getTemplate("/function/dilimter_template2.html");
+
+		str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/function/dilimter_expected2.html"), str);
+	}
 	
 	@Test
 	public void testFileFunctionRetrun() throws Exception

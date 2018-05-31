@@ -114,7 +114,7 @@ public class TestUser
 
 	public List getFriends()
 	{
-		return null;
+		return this.friends;
 	}
 
 	public void setFriends(List friends)

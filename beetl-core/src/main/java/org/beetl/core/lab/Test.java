@@ -39,20 +39,20 @@ public class Test {
 		//
 	
 		List list = new ArrayList();
-		list.add(null);
+		list.add(new TestUser("def"));
 		list.add(new TestUser("abc"));
 		
 		HashMap map = new HashMap();
 		map.put("key", 123);
-		gt.enableStrict();
+//		gt.enableStrict();
 
 		for (int i = 0; i < 1; i++) {
 
 			Template t = gt.getTemplate("/hello.txt");
 			TestUser user = new TestUser("jo");
 			user.lover = new TestUser("dddd");
-			t.binding("_root", new HashMap());
-		
+			user.friends = list;
+			t.binding("user",user);
 			ByteArrayOutputStream bs = new ByteArrayOutputStream();
 			try {
 				t.renderTo(bs);

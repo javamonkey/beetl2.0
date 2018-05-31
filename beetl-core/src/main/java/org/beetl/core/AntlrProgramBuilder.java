@@ -1091,6 +1091,9 @@ public class AntlrProgramBuilder
 		{
 			//for(a in list)...
 			ForInControlContext forCtx = forTypeCtx.forInControl();
+			
+			Expression exp = this.parseExpress(forCtx.expression());
+
 			VarDefineNode forVar = new VarDefineNode(this.getBTToken(forCtx.Identifier().getSymbol()));
 
 			if (pbCtx.hasDefined(forVar.token.text) != null)
@@ -1130,8 +1133,7 @@ public class AntlrProgramBuilder
 			//
 			//			pbCtx.addVarAndPostion(sizeVar);
 
-			Expression exp = this.parseExpress(forCtx.expression());
-
+			
 			Statement forPart = this.parseStatment(forContext);
 			//elsefor
 			Statement elseForPart = null;

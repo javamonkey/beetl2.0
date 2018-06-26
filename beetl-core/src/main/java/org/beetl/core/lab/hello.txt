@@ -1,7 +1,3 @@
 <%
-
-for(user in user.friends){
-print(user.name);
-}
-print(user.name);
+printFile("include.txt");
 %>

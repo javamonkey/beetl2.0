@@ -88,6 +88,28 @@ public class StringUtil
 		return str.split(key);
 	}
 
+	public String join(String[] arr, String separator) {
+
+		if (arr == null) {
+			return null;
+		}
+
+		if (separator == null) {
+			separator = "";
+		}
+
+		StringBuilder buf = new StringBuilder();
+		for (int i = 0; i < arr.length; i++) {
+			if (i > 0) {
+				buf.append(separator);
+			}
+			if (arr[i] != null) {
+				buf.append(arr[i]);
+			}
+		}
+		return buf.toString();
+	}
+
 	public boolean contain(String str, String key)
 	{
 		if (str == null)

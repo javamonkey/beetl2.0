@@ -96,7 +96,11 @@ public class ClasspathResource extends Resource
 
 		if (url.getProtocol().equals("file"))
 		{
-			file = new File(url.getFile());
+			try {
+                file = new File(java.net.URLDecoder.decode(url.getFile(),"UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
 			lastModified = file.lastModified();
 		}
 

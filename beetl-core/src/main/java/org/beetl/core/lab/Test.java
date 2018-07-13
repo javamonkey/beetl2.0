@@ -13,6 +13,7 @@ import org.beetl.core.GroupTemplate;
 import org.beetl.core.ResourceLoader;
 import org.beetl.core.Template;
 import org.beetl.core.resource.ClasspathResourceLoader;
+import org.beetl.core.resource.FileResourceLoader;
 
 /**
  * http://sports.qq.com/a/20151126/029300.htm
@@ -23,8 +24,11 @@ import org.beetl.core.resource.ClasspathResourceLoader;
 public class Test {
 	public static void main(String[] args) throws Exception {
 
-		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("org/beetl/core/lab/");
+//		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("org/beetl/core/lab/");
 		Configuration cfg = Configuration.defaultConfiguration();
+		
+		FileResourceLoader resourceLoader = new FileResourceLoader(System.getProperty("user.dir")+"/"+"中文目录");
+		
 		cfg.setDirectByteOutput(true);
 		cfg.getResourceMap().put("tagRoot", "/");
 		cfg.getPkgList().add("org.beetl.core.lab.");

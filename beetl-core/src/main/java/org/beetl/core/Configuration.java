@@ -39,9 +39,9 @@ import java.util.Set;
 
 /**
  * 模板配置，核心文件之一
- * 
+ *
  * @author joelli
- * 
+ *
  */
 public class Configuration
 {
@@ -96,17 +96,17 @@ public class Configuration
 	 * 类搜索的包名列表
 	 */
 	Set<String> pkgList = new HashSet<String>();
-	
+
 	/**
 	 * 渲染web 前执行的代码，需要实现WebRenderExt接口，如果为空，则不做操作
 	 */
 	String webAppExt = null;
-	
+
 	//html方法和html标签是否使用特殊的定界符，如模板使用简介的@和回车,html 标签和html tag使用<%%>
 	boolean hasFunctionLimiter = false;
 	String functionLimiterStart = null;
 	String functionLimiterEnd = null;
-	
+
 
 	// 关于引擎的设置
 
@@ -153,9 +153,7 @@ public class Configuration
 
 	public Configuration() throws IOException
 	{
-		//总是添加这俩个
-		pkgList.add("java.util.");
-		pkgList.add("java.lang.");
+		init();
 		//beetl默认
 		ps = new Properties();
 		ps.load(Configuration.class.getResourceAsStream("/org/beetl/core/beetl-default.properties"));
@@ -174,11 +172,18 @@ public class Configuration
 
 	public Configuration(Properties ps) throws IOException
 	{
-		this();
+//		this();
 //		this.ps.putAll(myPs);
+		init();
 		parseProperties(ps);
 
 	}
+
+    public void init() {
+		//总是添加这俩个
+		pkgList.add("java.util.");
+		pkgList.add("java.lang.");
+    }
 
 	public void add(File path) throws IOException
 	{
@@ -264,12 +269,12 @@ public class Configuration
 
 		}else if(key.equalsIgnoreCase(WEBAPP_EXT)){
 			if(value==null||value.length()==0){
-				
+
 				this.webAppExt = null;
 			}else{
 				this.webAppExt = value;
 			}
-			
+
 		}
 		else if (key.equalsIgnoreCase(MVC_STRICT))
 		{
@@ -612,8 +617,8 @@ public class Configuration
 		this.nativeSecurity = nativeSecurity;
 	}
 
-	
-	
+
+
 	public String getWebAppExt() {
 		return webAppExt;
 	}

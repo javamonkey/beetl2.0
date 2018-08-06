@@ -95,7 +95,7 @@ public class WebErrorHandler extends ConsoleErrorHandler
 		ResourceLoader resLoader = e.gt.getResourceLoader();
 		//潜在问题，此时可能得到是一个新的模板，不过可能性很小，忽略！
 		String content = null;
-		Resource res = resLoader.getResource(e.resource.getId());
+		Resource res = e.resource;
 		//显示前后三行的内容
 		int[] range = this.getRange(line);
 		try

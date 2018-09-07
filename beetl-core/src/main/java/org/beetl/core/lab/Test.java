@@ -24,10 +24,9 @@ import org.beetl.core.resource.FileResourceLoader;
 public class Test {
 	public static void main(String[] args) throws Exception {
 
-//		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("org/beetl/core/lab/");
+		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("org/beetl/core/lab/");
 		Configuration cfg = Configuration.defaultConfiguration();
 		
-		FileResourceLoader resourceLoader = new FileResourceLoader(System.getProperty("user.dir")+"/"+"中文目录");
 		
 		cfg.setDirectByteOutput(true);
 		cfg.getResourceMap().put("tagRoot", "/");
@@ -57,6 +56,7 @@ public class Test {
 			user.lover = new TestUser("dddd");
 			user.friends = list;
 			t.binding("user",user);
+			t.binding("$page",new HashMap());
 			ByteArrayOutputStream bs = new ByteArrayOutputStream();
 			try {
 				t.renderTo(bs);

@@ -39,6 +39,7 @@ import java.util.Stack;
 import java.util.TreeMap;
 
 import org.beetl.core.exception.HTMLTagParserException;
+import org.beetl.core.exception.TextParserException;
 import org.beetl.core.statement.GrammarToken;
 
 /**
@@ -477,11 +478,14 @@ public class Transformator
 	{
 		index = index + this.startStatement.length();
 		lineStatus.setStatment();
+		boolean findEndStatement =false;
+		int startLine = totalLineCount;
 		while (index < cs.length)
 		{
 			if (endStatement!=null&&match(this.endStatement))
 			{
 
+				findEndStatement = true;
 				// 如果前面一个是转义符
 				if (this.isEscape(sb, index))
 				{
@@ -551,7 +555,18 @@ public class Transformator
 				break;
 			}
 		}
+		
 		status = 4;
+		if(!findEndStatement) {
+//			throw new RuntimeException("未发现定界结束符号");
+			GrammarToken token = GrammarToken.createToken(this.endStatement, this.totalLineCount + 1);
+
+			TextParserException ex = new TextParserException("起始的第"+(startLine+1)+"行的定界符'"+this.startStatement+"'未找到匹配的结束符'" + this.endStatement+"'");
+			ex.pushToken(token);
+			ex.line = totalLineCount + 1;
+			this.clear();
+			throw ex;
+		}
 	}
 
 	public void readCommonString()
@@ -959,7 +974,7 @@ public class Transformator
 		{
 
 			// String str = "   #:var u='hello';:#  \n  $u$";
-			String str = "abc\n<%//cccc%>";
+			String str = "<%/*a*/a=1; */ %>";
 
 			BufferedReader reader = new BufferedReader(p.transform(str));
 			String line = null;

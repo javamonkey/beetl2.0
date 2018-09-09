@@ -216,9 +216,11 @@ public class AntlrProgramBuilder
 		safeParameters.add("isNotEmpty");
 	}
 
+	
 	public AntlrProgramBuilder(GroupTemplate gt)
 	{
 		this.gt = gt;
+		
 	}
 
 	/** 通过Antlr的ParseTree生成Beetl的ProgramMetaData
@@ -1267,6 +1269,7 @@ public class AntlrProgramBuilder
 		}
 		else
 		{
+			
 			PlaceholderST placeholder = new PlaceholderST(exp, format, null);
 			return placeholder;
 		}

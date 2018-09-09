@@ -88,7 +88,9 @@ public class TagStatement extends Statement
 		}
 		catch (BeetlException ex)
 		{
-			ex.pushToken(this.token);
+			if(!ex.inTagBody) {
+				ex.pushToken(this.token);
+			}
 			throw ex;
 		}
 		catch (RuntimeException ex)

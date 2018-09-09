@@ -29,7 +29,7 @@ public class Test {
 		
 		
 		cfg.setDirectByteOutput(true);
-		cfg.getResourceMap().put("tagRoot", "/");
+		cfg.getResourceMap().put("tagRoot", "");
 		cfg.getPkgList().add("org.beetl.core.lab.");
 
 		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
@@ -52,25 +52,13 @@ public class Test {
 		for (int i = 0; i < 1; i++) {
 
 			Template t = gt.getTemplate("/hello.txt");
-			TestUser user = new TestUser("jo");
-			user.lover = new TestUser("dddd");
-			user.friends = list;
-			t.binding("user",user);
+//			TestUser user = new TestUser("jo");
+//			user.lover = new TestUser("dddd");
+//			user.friends = list;
+//			t.binding("user",user);
 			t.binding("$page",new HashMap());
-			ByteArrayOutputStream bs = new ByteArrayOutputStream();
-			try {
-				t.renderTo(bs);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-
-//			TestUser test = new TestUser("a");
-//			test.setLover(new TestUser("b"));
-//			t.binding("user", test);
-			System.out.println(t.render());
+			System.out.print(t.render());
 			
-			
-
 		}
 
 	}

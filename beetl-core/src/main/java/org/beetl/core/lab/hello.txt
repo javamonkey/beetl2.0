@@ -1,3 +1,7 @@
-<#form >
-<#input name="a"/>
-</#form>
+<%
+/* dsfsdfsdf */
+var a=1;
+
+*/
+
+%>

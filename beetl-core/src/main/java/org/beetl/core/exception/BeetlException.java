@@ -56,6 +56,8 @@ public class BeetlException extends RuntimeException
 
 	public List<Resource> errorResourceStack = new ArrayList<Resource>(3);
 	public List<GrammarToken> errorTokenStack = new ArrayList<GrammarToken>(3);
+	
+	public boolean inTagBody = false;
 
 	/**
 	 * GroupTemplate
@@ -253,6 +255,22 @@ public class BeetlException extends RuntimeException
 
 	public void pushResource(Resource resource)
 	{
+	
+		if(this.inTagBody) {
+			/**
+			 * 如果当前渲染的是html标签，则出错资源应该使用该html标签的页面，而不是渲染改标签的页面
+			 * 参考,HTMLTagSupportWrapper2,TagStatment
+			 * <#form >
+				<#block>
+				<#input name="a"/>
+				</#block>
+				</#form>
+				 input 内部渲染错误，但显示的出错页面应该是这个html页面，而不是block标签页面
+				 2018-9-9
+			 */
+			this.inTagBody = false;
+			return ;
+		}
 		if (this.resource == null)
 		{
 			this.resource = resource;
@@ -263,6 +281,7 @@ public class BeetlException extends RuntimeException
 
 	public void pushToken(GrammarToken token)
 	{
+		
 		if (this.token == null)
 		{
 			this.token = token;

@@ -1,5 +1,0 @@
-<%
-layout("/include.txt"){
-%>
-body
-<%}%>

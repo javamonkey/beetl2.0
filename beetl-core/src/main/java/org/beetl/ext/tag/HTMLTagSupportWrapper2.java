@@ -1,11 +1,13 @@
 package org.beetl.ext.tag;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.beetl.core.BodyContent;
+import org.beetl.core.Resource;
 import org.beetl.core.Template;
-import org.beetl.ext.fn.RenderTagBodyFunction;
+import org.beetl.core.exception.BeetlException;
 
 public class HTMLTagSupportWrapper2 extends HTMLTagSupportWrapper {
     protected void callHtmlTag(String path) {
@@ -24,17 +26,21 @@ public class HTMLTagSupportWrapper2 extends HTMLTagSupportWrapper {
             }
         }
         /*
-                 *  模板需要调用方法  ${getTagBody(innerTag)},与默认实现不同，并没有先渲染body体，而是延迟处理， 等待调用的时候在获取tag体内容
-           参考getTagBody实现类RenderTagBody
+           模板需要调用方法 与默认实现不同，并没有先渲染body体，而是延迟处理， 等待调用的时候在获取tag体内容
+          
          */
-        t.binding("innerTag", new RenderTagBodyFunction.TagContentRunner() {
-
-            @Override
-            public BodyContent run() {
-                return HTMLTagSupportWrapper2.super.getBodyContent();
-            }
+        t.binding("tagBody", new Object() {
+        	public String toString() {
+        		try {
+        			return HTMLTagSupportWrapper2.super.getBodyContent().toString();
+        		}catch(BeetlException ex){
+        			ex.inTagBody = true;
+        			throw ex;
+        		}
+        		
+        		
+        	}
         });
-
         t.renderTo(ctx.byteWriter);
     }
 }

@@ -228,9 +228,17 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 			expect = "'模板的占位结束符号'";
 		}
 		
-		String tokenStr = getTokenErrorDisplay(t);
 		
-		String msg = "缺少输入 " + expect + " 在 " + tokenStr+" 后面";
+		String tokenStr = getTokenErrorDisplay(t);
+		String msg = null;
+		if(expect.equals("'}'")&&tokenStr.equals("'>>'")) {
+			 msg = "试图在第"+t.getLine()+"行未找到 '{' 匹配的结束符号 '}'";
+		}else {
+			//常规情况
+			 msg = "缺少输入 " + expect + " 在 " + tokenStr+" 后面";
+		}
+		
+		
 
 		BeetlException exception = new BeetlParserException(BeetlException.PARSER_MISS_ERROR, msg);
 		exception.pushToken(this.getGrammarToken(t));

@@ -1,7 +1,1 @@
-<%
-/* dsfsdfsdf */
-var a=1;
-
-*/
-
-%>
+${has(user.id)}

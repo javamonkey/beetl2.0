@@ -194,6 +194,9 @@ public class BeetlException extends RuntimeException
 
 	//对象的属性get方法出错
 	public static final String GET_CALL_ERROR = "GET_CALL_ERROR";
+	
+	//has函数调用错误
+	public static final String HAS_CALL_ILLEGAL = "HAS_CALL_ILLEGAL";
 
 	//语法错误
 	public static final String ERROR = "ERROR";

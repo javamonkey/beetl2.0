@@ -975,6 +975,11 @@ public class AntlrProgramBuilder
 
 					//强制为变量引用增加一个安全输出
 					VarRef ref = (VarRef) one;
+					if(ref.attributes.length!=0) {
+						BeetlException ex = new BeetlException(BeetlException.HAS_CALL_ILLEGAL,"has函数用于判断全局变量是否存在，不能判断其属性是否有值，可以使用安全输出符号或者isEmpty函数");
+						ex.pushToken(ref.token);
+						throw ex;
+					}
 					String name = ref.token.text;
 					Literal newExp = new Literal(name, ref.token);
 					//将变量引用转化为字符串

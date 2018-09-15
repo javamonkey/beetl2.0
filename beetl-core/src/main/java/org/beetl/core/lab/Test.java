@@ -57,6 +57,11 @@ public class Test {
 //			user.friends = list;
 //			t.binding("user",user);
 			t.binding("$page",new HashMap());
+			Long a = 12342343434l;
+			Object c = a;
+			t.binding("x", a);
+			t.binding("y", c);
+			t.binding("user", new TestUser("def") );
 			System.out.print(t.render());
 			
 		}

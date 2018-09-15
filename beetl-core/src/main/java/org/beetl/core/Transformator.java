@@ -557,7 +557,7 @@ public class Transformator
 		}
 		
 		status = 4;
-		if(!findEndStatement) {
+		if(!findEndStatement&&endStatement!=null) {
 //			throw new RuntimeException("未发现定界结束符号");
 			GrammarToken token = GrammarToken.createToken(this.endStatement, this.totalLineCount + 1);
 
@@ -968,13 +968,13 @@ public class Transformator
 	public static void main(String[] args)
 	{
 		char c = '\\';
-		Transformator p = new Transformator("${", "}", "<%", "%>") ;
+		Transformator p = new Transformator("${", "}", "@", null) ;
 		p.enableHtmlTagSupport("<#", "/#>", "var");
 		try
 		{
 
 			// String str = "   #:var u='hello';:#  \n  $u$";
-			String str = "<%/*a*/a=1; */ %>";
+			String str = "@ var a =1;";
 
 			BufferedReader reader = new BufferedReader(p.transform(str));
 			String line = null;

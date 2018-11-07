@@ -19,6 +19,10 @@ public class ScriptFragment implements Fragment {
         while (!source.isScriptEnd()) {
             script.append(source.consumeAndGet());
         }
+        if(source.sd.endIsCr) {
+        	script.append(TextParser.systemCr);
+        }
+       
 
         if (source.isEof()) {
             return null;

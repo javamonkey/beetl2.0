@@ -974,7 +974,7 @@ public class Transformator
 		{
 
 			// String str = "   #:var u='hello';:#  \n  $u$";
-			String str = "@ var a =1;";
+			String str = "${abc}\n@var a =1;\n @var a =1;\n abc";
 
 			BufferedReader reader = new BufferedReader(p.transform(str));
 			String line = null;

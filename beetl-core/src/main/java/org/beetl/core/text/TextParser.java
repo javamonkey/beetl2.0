@@ -1,5 +1,6 @@
 package org.beetl.core.text;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -14,9 +15,11 @@ public class TextParser {
     ScriptDelimeter sd;
     Source source = null;
     StringBuilder script = new StringBuilder(64);
+    //操作系统可能出现的回车换行符号
     static char[] cr1 = "\n".toCharArray();
     static char[] cr2 = "\r\n".toCharArray();
     static char[] cr3 = "\r".toCharArray();
+    static char[] systemCr = System.getProperty("line.separator").toCharArray();
 
     public TextParser(PlaceHolderDelimeter pd, ScriptDelimeter sd) {
         this.pd = pd;
@@ -60,19 +63,25 @@ public class TextParser {
         return textVars;
     }
 
-    public String getTextVarName() {
-        return "txt" + (textNameSuffix++);
+    public String getRandomeTextVarName() {
+        return "" + (++textNameSuffix);
     }
 
     public static void main(String[] args) throws IOException {
-        PlaceHolderDelimeter pd = new PlaceHolderDelimeter("${".toCharArray(), "}".toCharArray());
-        ScriptDelimeter sd = new ScriptDelimeter("<%".toCharArray(), "%>".toCharArray());
-        String text = "abcd${abc}<%var a =1;%>";
+        PlaceHolderDelimeter pd = new PlaceHolderDelimeter("${".toCharArray(), "}".toCharArray(),"#{".toCharArray(), "}".toCharArray());
+        ScriptDelimeter sd = new ScriptDelimeter("@".toCharArray(), null);
+        String text = "${abc}\n  @var a =1;\n @var a =1;\n abc";
         StringReader str = new StringReader(text);
         TextParser textParser = new TextParser(pd, sd);
         textParser.doParse(str);
         System.out.println(textParser.getTextVars());
-        System.out.println(textParser.getScript());
+        String line = null;
+        BufferedReader reader = new BufferedReader(new StringReader(textParser.getScript().toString()));
+        System.out.println("==============================");
+		while ((line = reader.readLine()) != null)
+		{
+			System.out.println(line);
+		}
 
     }
 

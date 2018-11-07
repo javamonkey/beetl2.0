@@ -9,7 +9,7 @@ public class TextFragment implements Fragment {
 
     public TextFragment(Source source) {
         this.source = source;
-        this.varName = source.getParser().getTextVarName();;
+        this.varName = source.getParser().getRandomeTextVarName();;
     }
 
     @Override

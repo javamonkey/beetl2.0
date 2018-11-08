@@ -22,6 +22,7 @@ public class TextParser {
     static char[] cr2 = "\r\n".toCharArray();
     static char[] cr3 = "\r".toCharArray();
     static char[] systemCr = System.getProperty("line.separator").toCharArray();
+    static String systemCrStr = System.getProperty("line.separator");
     List<Fragment> list = new LinkedList<Fragment>();
 
     public TextParser(PlaceHolderDelimeter pd, ScriptDelimeter sd) {
@@ -62,39 +63,17 @@ public class TextParser {
     }
 
     /**
-     * 格式化，把有些TextFragment用于格式化的静态内容删除
+     * 格式化，把有些TextFragment用于格式化的静态内容删除,原则是在同一行的text和script，如果text只有空或者tab，则认为是控制符
      * 
      */
     protected void scan2() {
-        ListIterator<Fragment> it = list.listIterator();
-        while (it.hasNext()) {
-            Fragment fragment = it.next();
-            if (fragment instanceof ScriptFragment) {
-                Fragment previous = getPrevious(it);
-                if (previous == null) {
-                    continue;
-                }
-
-                if (fragment instanceof TextFragment && inSameLine(previous, fragment)) {
-
-                }
-            }
-        }
+    	FragmentFormmater ff = new FragmentFormmater(list);
+    	ff.format();
+        
     }
+    
+    
 
-    protected Fragment getPrevious(ListIterator<Fragment> it) {
-        if (it.hasPrevious()) {
-            Fragment fragment = it.previous();
-            // reset
-            it.next();
-            return fragment;
-        }
-        return null;
-    }
-
-    protected boolean inSameLine(Fragment previous, Fragment fragement) {
-        return previous.endLine == fragement.startLine;
-    }
 
     public StringBuilder getScript() {
         return script;

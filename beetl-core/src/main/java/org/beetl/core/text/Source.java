@@ -7,6 +7,7 @@ public class Source {
     PlaceHolderDelimeter pd;
     ScriptDelimeter sd;
     TextParser parser;
+    int curLine = 0;
 
     public Source(char[] cs) {
         this.cs = cs;
@@ -47,13 +48,21 @@ public class Source {
         return isMatch;
     }
 
-    public char[] matchCrAndSkip() {
+    public boolean matchCrAndSkip() {
+
+        char[] chs = doMatchCrAndSkip();
+        return chs != null;
+    }
+
+    protected char[] doMatchCrAndSkip() {
         // window \r\n linux \n mac \r
         if (cs[p] == '\n') {
             this.consume();
+            this.addLine();
             return this.parser.cr1;
         } else if (cs[p] == '\r') {
             this.consume();
+            this.addLine();
             if (p + 1 < size && cs[p + 1] == '\n') {
                 this.consume();
                 return this.parser.cr2;
@@ -62,6 +71,10 @@ public class Source {
 
         }
         return null;
+    }
+
+    protected void addLine() {
+        this.curLine++;
     }
 
     public boolean hasEscape() {
@@ -100,10 +113,23 @@ public class Source {
         p = p + x;
     }
 
-    public char consumeAndGet() {
+    /**
+     * 通用读取方法 读取一个或者一个回车换行符号
+     * 
+     * @return
+     */
+    public char[] consumeAndGet() {
         char c = cs[p];
-        p++;
-        return c;
+        if (c == '\n' || c == '\r') {
+            char[] cs = doMatchCrAndSkip();
+            p = p + cs.length;
+            return cs;
+        } else {
+            p++;
+            // 性能优化，重用这个数组
+            return new char[] {c};
+        }
+
     }
 
     public char get() {

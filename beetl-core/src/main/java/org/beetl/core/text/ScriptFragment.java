@@ -1,11 +1,12 @@
 package org.beetl.core.text;
 
-public class ScriptFragment implements Fragment {
+public class ScriptFragment extends Fragment {
 
     Source source = null;
     StringBuilder script = new StringBuilder();
 
     public ScriptFragment(Source source) {
+        super(source);
         this.source = source;
     }
 
@@ -19,21 +20,15 @@ public class ScriptFragment implements Fragment {
         while (!source.isScriptEnd()) {
             script.append(source.consumeAndGet());
         }
-        if(source.sd.endIsCr) {
-        	script.append(TextParser.systemCr);
+        if (source.sd.endIsCr) {
+            script.append(TextParser.systemCr);
         }
-       
 
         if (source.isEof()) {
+            this.setEndLine();
             return null;
         }
-        if (source.isScriptStart()) {
-            return new ScriptFragment(source);
-        } else if (source.isPlaceHolderStart()) {
-            return new PlaceHolderFragment(source);
-        } else {
-            return new TextFragment(source);
-        }
+        return this.findNext();
 
     }
 

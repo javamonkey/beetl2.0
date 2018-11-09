@@ -1,12 +1,12 @@
 package org.beetl.core.text;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 public class TextParser {
@@ -34,6 +34,9 @@ public class TextParser {
 
         scan1(orginal);
         scan2();
+        for (Fragment f : list) {
+            script.append(f.getScript());
+        }
 
     }
 
@@ -67,13 +70,10 @@ public class TextParser {
      * 
      */
     protected void scan2() {
-    	FragmentFormmater ff = new FragmentFormmater(list);
-    	ff.format();
-        
-    }
-    
-    
+        FragmentFormmater ff = new FragmentFormmater(list);
+        ff.format();
 
+    }
 
     public StringBuilder getScript() {
         return script;
@@ -91,20 +91,20 @@ public class TextParser {
         PlaceHolderDelimeter pd =
             new PlaceHolderDelimeter("${".toCharArray(), "}".toCharArray(), "#{".toCharArray(), "}".toCharArray());
         ScriptDelimeter sd = new ScriptDelimeter("<%".toCharArray(), "%>".toCharArray());
-        String text = "   <%var a =1;%>\nabc";
+        String text = "   \n <%var a =1;%>      ";
         StringReader str = new StringReader(text);
         TextParser textParser = new TextParser(pd, sd);
         textParser.doParse(str);
-        List<Fragment> firsScanResult = textParser.list;
-        System.out.println(firsScanResult);
+        // List<Fragment> firsScanResult = textParser.list;
+        // System.out.println(firsScanResult);
 
-        // System.out.println(textParser.getTextVars());
-        // String line = null;
-        // BufferedReader reader = new BufferedReader(new StringReader(textParser.getScript().toString()));
-        // System.out.println("==============================");
-        // while ((line = reader.readLine()) != null) {
-        // System.out.println(line);
-        // }
+        System.out.println(textParser.getTextVars());
+        String line = null;
+        BufferedReader reader = new BufferedReader(new StringReader(textParser.getScript().toString()));
+        System.out.println("==============================");
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line);
+        }
 
     }
 

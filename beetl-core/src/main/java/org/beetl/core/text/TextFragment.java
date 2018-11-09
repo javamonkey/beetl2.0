@@ -47,32 +47,52 @@ public class TextFragment extends Fragment {
         this.setEndLine();
         return null;
     }
-    
+
     /**
      * 去掉文本部分用于格式化的部分，是文本最后一行的
      */
-    public void format() {
-    	for(int i=text.length()-1;i>0;i--) {
-    		char c = text.charAt(i);
-    		if(isCr(c)) {
-    			doFormat(i);
-    			return ;
-    		}
-    		if(!isSpace(c)) {
-    			break;
-    		}
-    	}
+    public void formatEnd() {
+        int len = text.length();
+        for (int i = len - 1; i > 0; i--) {
+            char c = text.charAt(i);
+            if (isCr(c)) {
+                // 去掉格式化部分
+                text.setLength(i);
+                return;
+            }
+            if (!isSpace(c)) {
+                return;
+            }
+        }
+        text.setLength(0);
+
     }
-    
+
+    public void formatStart() {
+        int len = text.length();
+        for (int i = 0; i < len; i++) {
+            char c = text.charAt(i);
+            if (isCr(c)) {
+                text.delete(0, i);
+                return;
+            }
+            if (!isSpace(c)) {
+                return;
+            }
+        }
+        text.setLength(0);
+    }
+
     protected void doFormat(int i) {
-    	text.setLength(i);
+        text.setLength(i);
     }
-    
+
     protected boolean isSpace(char c) {
-    	return c==' '||c=='\t';
+        return c == ' ' || c == '\t';
     }
+
     protected boolean isCr(char c) {
-    	return c =='\n' ||c=='\r';
+        return c == '\n' || c == '\r';
     }
 
 }

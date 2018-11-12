@@ -15,8 +15,12 @@ public class HtmlTagConfig {
 
     char[] start = null;
     char[] end = null;
+    
+    //<#a attr="${abc}" >
+    String phStart = "${";
+    String phEnd = "}";
 
-    Stack htmlTagStack = new Stack();
+    Stack<String> htmlTagStack = new Stack<String>();
     Source source = null;
 
     public HtmlTagConfig(String htmlTagStart, String htmlTagEnd, String htmlTagBindingAttribute) {
@@ -26,9 +30,16 @@ public class HtmlTagConfig {
         this.start = htmlTagStart.toCharArray();
         this.end = this.htmlTagEnd.toCharArray();
     }
+    
+    public HtmlTagConfig() {
+    	 this.start = htmlTagStart.toCharArray();
+         this.end = this.htmlTagEnd.toCharArray();
+    }
 
     public void init(Source source) {
         this.source = source;
+        phStart = new String(source.pd.start);
+        phEnd = new String(source.pd.end);
     }
 
     public boolean matchTagStart() {

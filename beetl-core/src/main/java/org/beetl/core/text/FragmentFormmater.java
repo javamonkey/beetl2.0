@@ -56,8 +56,10 @@ public class FragmentFormmater {
                 hasHolder = true;
             } else if (fr instanceof TextFragment) {
                 hasText = true;
-            } else {
-                throw new RuntimeException("不支持的fr");
+            } else if(fr instanceof HtmlTagStartFragment||fr instanceof HtmlTagEndFragment ){
+            	hasScript = true; ;
+            }else {
+            	 throw new RuntimeException("不支持的fr");
             }
         }
 

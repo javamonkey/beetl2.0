@@ -159,6 +159,10 @@ public class Source {
     public boolean isEof() {
         return p == size;
     }
+    
+    public void move(int p) {
+    	this.p = p;
+    }
 
     public TextParser getParser() {
         return parser;

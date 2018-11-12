@@ -96,8 +96,8 @@ public class TextParser {
     public static void main(String[] args) throws IOException {
         PlaceHolderDelimeter pd =
             new PlaceHolderDelimeter("${".toCharArray(), "}".toCharArray(), "#{".toCharArray(), "}".toCharArray());
-        ScriptDelimeter sd = new ScriptDelimeter("<%".toCharArray(), "%>".toCharArray());
-        String text = "   \n <%var a =1;%>      ";
+        ScriptDelimeter sd = new ScriptDelimeter("@".toCharArray(),null,"<%".toCharArray(),"%>".toCharArray());
+        String text = "@ck\n  <%abc%> #{scc}";
         StringReader str = new StringReader(text);
         TextParser textParser = new TextParser(pd, sd);
         textParser.doParse(str);

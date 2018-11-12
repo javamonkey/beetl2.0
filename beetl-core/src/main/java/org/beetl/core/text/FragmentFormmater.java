@@ -20,9 +20,8 @@ public class FragmentFormmater {
             if (f.startLine == start) {
                 lineStatus.add(f);
             } else {
+            	TextFragment textFragment = lineStatus.lastTextFragment();
                 lineStatus.format();
-                TextFragment textFragment = lineStatus.lastTextFragment();
-                lineStatus.reset();
                 if (textFragment != null && textFragment.startLine != textFragment.endLine
                     && textFragment.endLine == f.startLine) {
                     // 放到下一次比较
@@ -63,7 +62,12 @@ public class FragmentFormmater {
         }
 
         public TextFragment lastTextFragment() {
-            Fragment f = list.get(list.size() - 1);
+        	Fragment f  = null;
+        	if(list.size()==1) {
+        		f =list.get(0);
+        	}else {
+        		 f = list.get(list.size() - 1);
+        	}
             if (f instanceof TextFragment) {
                 return (TextFragment)f;
             } else {
@@ -85,13 +89,24 @@ public class FragmentFormmater {
             }
 
             // 格式化
-            if (list.get(0) instanceof TextFragment) {
-                ((TextFragment)list.get(0)).formatEnd();
-            }
-
-            if (list.get(list.size() - 1) instanceof TextFragment) {
-                ((TextFragment)list.get(list.size() - 1)).formatStart();
-            }
+            int size = list.size();
+            for(int i=0;i<size;i++) {
+            	Fragment f = list.get(i);
+            	if(f instanceof TextFragment) {
+            		TextFragment text = (TextFragment)f;
+            		if(i==0) {
+            			text.formatEnd();
+            		}else if(i==size-1 ) {
+              			text.formatStart();
+              		}else {
+              			text.foramtSpace();
+            		
+              		}
+            	}
+        		
+        		
+        	
+        	}
 
             reset();
 
@@ -99,7 +114,7 @@ public class FragmentFormmater {
 
         private void reset() {
             list.clear();
-            hasScript = false;
+            hasScript = false;	
             hasHolder = false;
             hasText = false;
         }

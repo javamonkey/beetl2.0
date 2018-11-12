@@ -17,8 +17,8 @@ public class ScriptFragment extends Fragment {
 
     @Override
     public Fragment consumeAndReturnNext() {
-        while (!source.isScriptEnd()) {
-            script.append(source.consumeAndGet());
+        while (!source.isEof()&&!source.isScriptEnd()) {
+        	script.append(source.consumeAndGet());
         }
         if (source.sd.endIsCr) {
             script.append(TextParser.systemCr);

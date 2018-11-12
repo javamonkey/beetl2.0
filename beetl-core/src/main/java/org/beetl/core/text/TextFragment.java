@@ -2,9 +2,9 @@ package org.beetl.core.text;
 
 public class TextFragment extends Fragment {
     StringBuilder text = new StringBuilder();
-    // 记录换行个数，以便在script脚本中保留换行
-    int crCount;
+    boolean insertCr = false;
     String varName;
+
 
     public TextFragment(Source source) {
         super(source);
@@ -13,17 +13,20 @@ public class TextFragment extends Fragment {
 
     @Override
     public StringBuilder getScript() {
-
+    	char[] cr = source.parser.systemCr;
+    	StringBuilder script = new StringBuilder();
+        if(insertCr) {
+        	script.append(cr);
+        	
+        }
         if (text.length() == 0) {
-            return text;
+            return script;
         }
-        StringBuilder script = new StringBuilder();
-        int i = 0;
-        while (i < crCount) {
-            script.append(TextParser.systemCr);
-            i++;
-        }
+        
         script.append("<$" + varName + ">>");
+        for(int i=this.startLine+(insertCr?1:0);i<this.endLine;i++) {
+        	script.append(source.parser.systemCr);
+        }
         // 添加一个静态变量
         source.parser.getTextVars().put(varName, text.toString());
         return script;
@@ -64,7 +67,8 @@ public class TextFragment extends Fragment {
             char c = text.charAt(i);
             if (isCr(c)) {
                 // 去掉格式化部分
-                text.setLength(i);
+                text.setLength(i+getCrLen(c,i)-1);
+                
                 return;
             }
             if (!isSpace(c)) {
@@ -73,6 +77,17 @@ public class TextFragment extends Fragment {
         }
         text.setLength(0);
 
+    }
+    
+    public void foramtSpace() {
+    	 int len = text.length();
+         for (int i = 0; i < len; i++) {
+             char c = text.charAt(i);
+             if (!isSpace(c)) {
+                 return;
+             }
+         }
+         text.setLength(0);
     }
 
     public void formatStart() {
@@ -80,7 +95,10 @@ public class TextFragment extends Fragment {
         for (int i = 0; i < len; i++) {
             char c = text.charAt(i);
             if (isCr(c)) {
-                text.delete(0, i);
+            	
+                text= text.delete(0, i+getCrLen(c,i));
+               //脚本记录需要插入一个cr以保证格式正确
+                insertCr = true;
                 return;
             }
             if (!isSpace(c)) {
@@ -89,6 +107,19 @@ public class TextFragment extends Fragment {
         }
         text.setLength(0);
     }
+    
+    protected int getCrLen(char c ,int i) {
+   	 if (c=='\n') {
+            return 1;
+        }else {
+         
+            if (text.length()>i+1&&text.charAt(i+1) == '\n') {
+              return 2;
+            }
+            return 1;
+        }
+
+   }
 
     protected void doFormat(int i) {
         text.setLength(i);

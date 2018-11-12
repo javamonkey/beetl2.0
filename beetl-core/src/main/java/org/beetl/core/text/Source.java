@@ -74,6 +74,9 @@ public class Source {
 
     protected char[] doMatchCrAndSkip() {
         // window \r\n linux \n mac \r
+    	if(isEof()) {
+    		return null;
+    	}
         if (cs[p] == '\n') {
             this.consume();
             this.addLine();
@@ -140,7 +143,6 @@ public class Source {
         char c = cs[p];
         if (c == '\n' || c == '\r') {
             char[] cs = doMatchCrAndSkip();
-            p = p + cs.length;
             return cs;
         } else {
             p++;
@@ -166,4 +168,8 @@ public class Source {
         this.parser = parser;
     }
 
+    
+    public String toString() {
+    	return new String(cs,0,p);
+    }
 }

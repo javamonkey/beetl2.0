@@ -186,9 +186,9 @@
 					<source>1.6</source>
 					<target>1.6</target>
 					<encoding>UTF-8</encoding>
-					<excludes>
+					<!-- <excludes>
 	                    <exclude>org/beetl/core/lab/**</exclude>
-	                </excludes>
+	                </excludes> -->
 				</configuration>
 			</plugin>
 			<plugin>

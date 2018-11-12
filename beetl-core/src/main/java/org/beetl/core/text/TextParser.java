@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class TextParser {
 
-	Map<String, String> textVars = new HashMap<String, String>();
+	Map<Integer, String> textVars = new HashMap<Integer, String>();
 	int textNameSuffix = 0;
 	PlaceHolderDelimeter pd;
 	ScriptDelimeter sd;
@@ -22,7 +22,7 @@ public class TextParser {
 	static char[] cr2 = "\r\n".toCharArray();
 	static char[] cr3 = "\r".toCharArray();
 	static char[] systemCr = System.getProperty("line.separator").toCharArray();
-	static String systemCrStr = System.getProperty("line.separator");
+	public static String systemCrStr = System.getProperty("line.separator");
 	List<Fragment> list = new LinkedList<Fragment>();
 	HtmlTagConfig htmlTagConfig = null;
 
@@ -85,12 +85,17 @@ public class TextParser {
 		return script;
 	}
 
-	public Map<String, String> getTextVars() {
+	public Map<Integer, String> getTextVars() {
 		return textVars;
 	}
 
-	public String getRandomeTextVarName() {
-		return "" + (++textNameSuffix);
+	public Integer getRandomeTextVarName() {
+		return ++textNameSuffix;
+	}
+
+
+	public void setTextVars(Map<Integer, String> textVars) {
+		this.textVars = textVars;
 	}
 
 	public static void main(String[] args) throws IOException {

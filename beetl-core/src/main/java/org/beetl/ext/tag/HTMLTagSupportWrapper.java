@@ -27,7 +27,6 @@
  */
 package org.beetl.ext.tag;
 
-import java.io.File;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -44,17 +43,14 @@ import org.beetl.core.statement.Statement;
  * @author joelli
  *
  */
-public class HTMLTagSupportWrapper extends Tag
-{
+public class HTMLTagSupportWrapper extends Tag {
 
 	protected String tagRoot = null;
 	protected String tagSuffix = null;
 
 	@Override
-	public void render()
-	{
-		if (args.length == 0 || args.length > 2)
-		{
+	public void render() {
+		if (args.length == 0 || args.length > 2) {
 			throw new RuntimeException("参数错误，期望child,Map .....");
 		}
 		String child = (String) args[0];
@@ -62,42 +58,35 @@ public class HTMLTagSupportWrapper extends Tag
 		TagFactory tagFactory = null;
 		String functionTagName = child.replace(':', '.');
 		tagFactory = this.gt.getTagFactory(functionTagName);
-		if (tagFactory == null)
-		{
+		if (tagFactory == null) {
 			String path = getHtmlTagResourceId(child);
 			callHtmlTag(path);
 
-		}
-		else
-		{
+		} else {
 
 			callTag(tagFactory);
 		}
 
 	}
 
-	protected String getHtmlTagResourceId(String child)
-	{
+	protected String getHtmlTagResourceId(String child) {
 		String path = child.replace(':', '/');
 		StringBuilder sb = new StringBuilder("/");
 		sb.append(this.tagRoot).append("/").append(path).append(".").append(this.tagSuffix);
 		return sb.toString();
 	}
 
-	protected void callHtmlTag(String path)
-	{
+	protected void callHtmlTag(String path) {
 		Template t = null;
 
-		t = gt.getHtmlFunctionOrTagTemplate(path, this.ctx.getResourceId());
+		t = gt.getTemplate(path, this.ctx.getResourceId());
 
 		t.binding(ctx.globalVar);
 		t.dynamic(ctx.objectKeys);
 
-		if (args.length == 2)
-		{
+		if (args.length == 2) {
 			Map<String, Object> map = (Map<String, Object>) args[1];
-			for (Entry<String, Object> entry : map.entrySet())
-			{
+			for (Entry<String, Object> entry : map.entrySet()) {
 				t.binding(entry.getKey(), entry.getValue());
 
 			}
@@ -109,8 +98,7 @@ public class HTMLTagSupportWrapper extends Tag
 		t.renderTo(ctx.byteWriter);
 	}
 
-	protected void callTag(TagFactory tagFactory)
-	{
+	protected void callTag(TagFactory tagFactory) {
 
 		Tag tag = tagFactory.createTag();
 		tag.init(ctx, args, bs);
@@ -118,8 +106,7 @@ public class HTMLTagSupportWrapper extends Tag
 
 	}
 
-	public void init(Context ctx, Object[] args, Statement st)
-	{
+	public void init(Context ctx, Object[] args, Statement st) {
 		super.init(ctx, args, st);
 		tagRoot = ctx.gt.getConf().getResourceMap().get("tagRoot");
 		tagSuffix = ctx.gt.getConf().getResourceMap().get("tagSuffix");

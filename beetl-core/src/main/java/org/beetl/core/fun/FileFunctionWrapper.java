@@ -37,55 +37,44 @@ import org.beetl.core.exception.BeetlException;
  * @author joelli
  *
  */
-public class FileFunctionWrapper implements Function
-{
+public class FileFunctionWrapper implements Function {
 
 	String resourceId = null;
 
 	/** 模板文件的资源标示
 	 * @param resourceId
 	 */
-	public FileFunctionWrapper(String resourceId)
-	{
+	public FileFunctionWrapper(String resourceId) {
 		this.resourceId = resourceId;
 	}
 
 	@Override
-	public Object call(Object[] paras, Context ctx)
-	{
-		try
-		{
+	public Object call(Object[] paras, Context ctx) {
+		try {
 
-			Template template = ctx.gt.getHtmlFunctionOrTagTemplate(this.resourceId);
+			Template template = ctx.gt.getTemplate(this.resourceId);
 			// 能显示异常
 			template.isRoot = false;
 			template.binding(ctx.globalVar);
-			for (int i = 0; i < paras.length; i++)
-			{
+			for (int i = 0; i < paras.length; i++) {
 				template.binding("para".concat(String.valueOf(i)), paras[i]);
 			}
 
 			template.renderTo(ctx.byteWriter);
 			Object[] vars = template.getCtx().vars;
 			Object o = vars[vars.length - 1];
-			if (o != Context.NOT_EXIST_OBJECT)
-			{
+			if (o != Context.NOT_EXIST_OBJECT) {
 				return o;
-			}
-			else
-			{
+			} else {
 				return null;
 			}
 
 		}
 
-		catch (BeetlException ex)
-		{
+		catch (BeetlException ex) {
 
 			throw ex;
-		}
-		catch (Exception ex)
-		{
+		} catch (Exception ex) {
 			BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "调用方法出错 " + this.resourceId,
 					ex);
 

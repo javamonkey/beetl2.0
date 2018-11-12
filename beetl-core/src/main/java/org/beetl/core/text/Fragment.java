@@ -21,6 +21,13 @@ public abstract class Fragment {
         } else if (source.isPlaceHolderStart()) {
             this.setEndLine();
             return new PlaceHolderFragment(source);
+        } else if (source.isHtmlTagStart()) {
+            this.setEndLine();
+            return new HtmlTagStartFragment(source);
+
+        } else if (source.isHtmlTagEnd()) {
+            this.setEndLine();
+            return new HtmlTagEndFragment(source);
         } else {
             this.setEndLine();
             return new TextFragment(source);

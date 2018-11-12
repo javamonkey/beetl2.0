@@ -31,13 +31,7 @@ public class PlaceHolderFragment extends Fragment {
             return null;
         }
 
-        if (source.isScriptStart()) {
-            return new ScriptFragment(source);
-        } else if (source.isPlaceHolderStart()) {
-            return new PlaceHolderFragment(source);
-        } else {
-            return new TextFragment(source);
-        }
+        return super.findNext();
     }
 
 }

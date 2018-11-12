@@ -6,22 +6,28 @@ public class Source {
     int size = 0;
     PlaceHolderDelimeter pd;
     ScriptDelimeter sd;
+    HtmlTagConfig htmlTagConfig;
     TextParser parser;
     int curLine = 0;
+    boolean isSupportHtmlTag = false;
 
     public Source(char[] cs) {
         this.cs = cs;
         this.p = 0;
         this.size = cs.length;
-
     }
 
-    public void init(TextParser parser, PlaceHolderDelimeter pd, ScriptDelimeter sd) {
+    public void init(TextParser parser, PlaceHolderDelimeter pd, ScriptDelimeter sd, HtmlTagConfig htmlTagConfig) {
         this.pd = pd;
         this.sd = sd;
         pd.setSource(this);
         sd.setSource(this);
         this.parser = parser;
+        this.htmlTagConfig = htmlTagConfig;
+        if (htmlTagConfig != null) {
+            htmlTagConfig.init(this);
+            isSupportHtmlTag = true;
+        }
     }
 
     public boolean isPlaceHolderStart() {
@@ -40,12 +46,24 @@ public class Source {
         return sd.matchEnd();
     }
 
+    public boolean isHtmlTagStart() {
+        return isSupportHtmlTag && htmlTagConfig.matchTagStart();
+    }
+
+    public boolean isHtmlTagEnd() {
+        return isSupportHtmlTag && htmlTagConfig.matchTagEnd();
+    }
+
     public boolean matchAndSKip(char[] text) {
         boolean isMatch = this.isMatch(text) && !hasEscape();
         if (isMatch) {
             this.consume(text.length);
         }
         return isMatch;
+    }
+
+    public boolean isSupportHtmlTag() {
+        return isSupportHtmlTag;
     }
 
     public boolean matchCrAndSkip() {

@@ -39,6 +39,13 @@ public class TextFragment extends Fragment {
             } else if (source.isScriptStart()) {
                 this.setEndLine();
                 return new ScriptFragment(source);
+            } else if (source.isHtmlTagStart()) {
+                this.setEndLine();
+                return new HtmlTagStartFragment(source);
+
+            } else if (source.isHtmlTagEnd()) {
+                this.setEndLine();
+                return new HtmlTagEndFragment(source);
             } else {
                 char[] cs = source.consumeAndGet();
                 text.append(cs);

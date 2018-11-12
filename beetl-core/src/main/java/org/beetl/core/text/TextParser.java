@@ -24,10 +24,16 @@ public class TextParser {
     static char[] systemCr = System.getProperty("line.separator").toCharArray();
     static String systemCrStr = System.getProperty("line.separator");
     List<Fragment> list = new LinkedList<Fragment>();
+    HtmlTagConfig htmlTagConfig = null;
 
     public TextParser(PlaceHolderDelimeter pd, ScriptDelimeter sd) {
         this.pd = pd;
         this.sd = sd;
+    }
+
+    public TextParser(PlaceHolderDelimeter pd, ScriptDelimeter sd, HtmlTagConfig htmlTagConfig) {
+        this(pd, sd);
+        this.htmlTagConfig = htmlTagConfig;
     }
 
     public void doParse(Reader orginal) throws IOException {
@@ -53,7 +59,7 @@ public class TextParser {
 
         cs = temp.toString().toCharArray();
         source = new Source(cs);
-        source.init(this, pd, sd);
+        source.init(this, pd, sd, htmlTagConfig);
         Fragment test = new TextFragment(source);
         list.add(test);
         Fragment next = test.consumeAndReturnNext();

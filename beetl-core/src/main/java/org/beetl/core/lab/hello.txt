@@ -1,1 +1,1 @@
-${has(user.id)}
+${user}

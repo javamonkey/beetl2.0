@@ -195,7 +195,7 @@ public class Configuration {
 
 	}
 
-	protected void initOther() {
+	public void initDelimeter() {
 		if (this.placeholderStart2 != null) {
 			pd = new PlaceHolderDelimeter(placeholderStart.toCharArray(), placeholderEnd.toCharArray(),
 					placeholderStart2.toCharArray(), placeholderEnd2.toCharArray());
@@ -239,7 +239,7 @@ public class Configuration {
 			String value = (String) entry.getValue();
 			setValue(key, value == null ? null : value.trim());
 		}
-		initOther();
+		initDelimeter();
 	}
 
 	protected void setValue(String key, String value) {
@@ -316,9 +316,7 @@ public class Configuration {
 			this.engine = value;
 		} else if (key.equalsIgnoreCase(NATIVE_SECUARTY_MANAGER)) {
 			this.nativeSecurity = value;
-		}
-
-		else if (key.equalsIgnoreCase(RESOURCE_LOADER)) {
+		} else if (key.equalsIgnoreCase(RESOURCE_LOADER)) {
 			this.resourceLoader = value;
 		} else {
 			// 扩展

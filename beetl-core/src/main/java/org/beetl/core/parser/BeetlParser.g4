@@ -122,8 +122,9 @@ statementExpression
     :   expression
     ;
 textStatment:   //表达式输
-         LEFT_TOKEN NOT LEFT_PAR textVar RIGHT_PAR RIGHT_TOKEN 
-      |    LEFT_TOKEN textVar RIGHT_TOKEN;
+    
+       LEFT_TOKEN textVar RIGHT_TOKEN
+      |    LEFT_TOKEN2 textVar RIGHT_TOKEN;
 textVar	
 :	b=expression  (COMMA textformat)?
 ;

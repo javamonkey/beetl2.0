@@ -61,6 +61,7 @@ COLON:':';
 PERIOD:'.';
 FOR_IN:'in';
 LEFT_TOKEN:'<<';
+LEFT_TOKEN2:'<#';
 RIGHT_TOKEN:'>>';
 LEFT_TEXT_TOKEN	:'<$';
      

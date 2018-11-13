@@ -166,7 +166,6 @@ import org.beetl.core.statement.OrExpression;
 import org.beetl.core.statement.PlaceholderST;
 import org.beetl.core.statement.ProgramMetaData;
 import org.beetl.core.statement.ReturnStatement;
-import org.beetl.core.statement.SafePlaceholderST;
 import org.beetl.core.statement.SelectStatement;
 import org.beetl.core.statement.Statement;
 import org.beetl.core.statement.StatementExpression;
@@ -199,52 +198,46 @@ import org.beetl.core.statement.nat.NativeNode;
  * @author joelli
  *
  */
-public class AntlrProgramBuilder
-{
+public class AntlrProgramBuilder {
 
 	protected ProgramMetaData data = new ProgramMetaData();
 	protected ProgramBuilderContext pbCtx = new ProgramBuilderContext();
 
 	protected Expression[] EMPTY_EXPRESSION = new Expression[0];
 	protected GroupTemplate gt;
-	//多余分号
+	// 多余分号
 	static EndStatement endStatment = new EndStatement();
-	public static Set<String>  safeParameters = new HashSet<String>();
+	public static Set<String> safeParameters = new HashSet<String>();
 	static {
 		// 可以对参数增强安全输出，比如isEmpty(a)，实际调用是改写成isEmpty(a!)
 		safeParameters.add("isEmpty");
 		safeParameters.add("isNotEmpty");
 	}
 
-	
-	public AntlrProgramBuilder(GroupTemplate gt)
-	{
+
+	public AntlrProgramBuilder(GroupTemplate gt) {
 		this.gt = gt;
-		
+
 	}
 
 	/** 通过Antlr的ParseTree生成Beetl的ProgramMetaData
 	 * @param tree
 	 * @return
 	 */
-	public ProgramMetaData build(ParseTree tree)
-	{
+	public ProgramMetaData build(ParseTree tree) {
 
 		int size = tree.getChildCount() - 1;
 		List<Statement> ls = new ArrayList<Statement>(size);
-		for (int i = 0; i < size; i++)
-		{
+		for (int i = 0; i < size; i++) {
 			Statement st = parseStatment((ParserRuleContext) tree.getChild(i));
-			if (st != null)
-			{
+			if (st != null) {
 				ls.add(st);
 			}
 
 		}
 
-		if (pbCtx.current.gotoValue == IGoto.RETURN || pbCtx.current.gotoValue == IGoto.BREAK)
-		{
-			//如果顶级scope也有return 和break，则检测
+		if (pbCtx.current.gotoValue == IGoto.RETURN || pbCtx.current.gotoValue == IGoto.BREAK) {
+			// 如果顶级scope也有return 和break，则检测
 			data.hasGoto = true;
 		}
 
@@ -261,187 +254,137 @@ public class AntlrProgramBuilder
 
 	}
 
-	private Statement parseStatment(ParserRuleContext node)
-	{
+	private Statement parseStatment(ParserRuleContext node) {
 
-		if (node == null)
-		{
+		if (node == null) {
 			return null;
 		}
 
-		if (node instanceof VarStContext)
-		{
+		if (node instanceof VarStContext) {
 			VarAssignStatementSeq varSeq = parseVarSt((VarStContext) node);
-			if (gt.conf.isStrict)
-			{
+			if (gt.conf.isStrict) {
 				throw new MVCStrictException(varSeq.sts[0].token);
 			}
 			return varSeq;
 
-		}
-		else if (node instanceof BlockStContext)
-		{
+		} else if (node instanceof BlockStContext) {
 			BlockStContext bc = (BlockStContext) node;
 			Statement block = parseBlock(bc.block().statement(), node);
 			return block;
-		}
-		else if (node instanceof TextOutputStContext)
-		{
+		} else if (node instanceof TextOutputStContext) {
 			return this.parseTextOutputSt((TextOutputStContext) node);
-		}
-		else if (node instanceof ReturnStContext)
-		{
+		} else if (node instanceof ReturnStContext) {
 			ReturnStContext rtnCtx = (ReturnStContext) node;
 			ExpressionContext expCtx = rtnCtx.expression();
 			Expression exp = null;
-			if (expCtx != null)
-			{
+			if (expCtx != null) {
 				exp = this.parseExpress(expCtx);
 			}
 			ReturnStatement st = new ReturnStatement(exp, null);
 			pbCtx.current.gotoValue = IGoto.RETURN;
 			return st;
-		}
-		else if (node instanceof BreakStContext)
-		{
+		} else if (node instanceof BreakStContext) {
 			BreakStatement st = new BreakStatement(null);
-			if (pbCtx.current.gotoValue != IGoto.RETURN)
-			{
+			if (pbCtx.current.gotoValue != IGoto.RETURN) {
 				pbCtx.current.gotoValue = IGoto.BREAK;
 
 			}
 
 			return st;
-		}
-		else if (node instanceof ContinueStContext)
-		{
+		} else if (node instanceof ContinueStContext) {
 			ContinueStatement st = new ContinueStatement(null);
-			if (pbCtx.current.gotoValue != IGoto.RETURN)
-			{
+			if (pbCtx.current.gotoValue != IGoto.RETURN) {
 				pbCtx.current.gotoValue = IGoto.CONTINUE;
 
 			}
 
 			return st;
-		}
-		else if (node instanceof ForStContext)
-		{
+		} else if (node instanceof ForStContext) {
 			return parseForSt((ForStContext) node);
 
-		}
-		else if (node instanceof StaticOutputStContext)
-		{
+		} else if (node instanceof StaticOutputStContext) {
 			StaticOutputStContext st = (StaticOutputStContext) node;
 			ConstantsTextStatmentContext cst = st.constantsTextStatment();
 			String str = cst.DecimalLiteral().getSymbol().getText();
 			int position = Integer.parseInt(str);
-			if (!this.gt.getConf().directByteOutput)
-			{
+			if (!this.gt.getConf().directByteOutput) {
 				StaticTextASTNode textNode = new StaticTextASTNode(position, null);
 				return textNode;
-			}
-			else
-			{
+			} else {
 				StaticTextByteASTNode textNode = new StaticTextByteASTNode(position, null);
 				return textNode;
 			}
 
-		}
-		else if (node instanceof IfStContext)
-		{
+		} else if (node instanceof IfStContext) {
 			return parseIf((IfStContext) node);
 		}
 
-		else if (node instanceof StatmentExpStContext)
-		{
+		else if (node instanceof StatmentExpStContext) {
 
 			StatementExpressionContext sec = ((StatmentExpStContext) node).statementExpression();
 			Expression expression = this.parseExpress(sec.expression());
 			StatementExpression se = new StatementExpression(expression, null);
 			return se;
-		}
-		else if (node instanceof DirectiveStContext)
-		{
+		} else if (node instanceof DirectiveStContext) {
 			return parseDirectiveStatement((DirectiveStContext) node);
 
-		}
-		else if (node instanceof CommentTagStContext)
-		{
+		} else if (node instanceof CommentTagStContext) {
 			CommentTypeTagContext typeCtx = ((CommentTagStContext) node).commentTypeTag();
 			this.parseCommentTag(typeCtx);
 			return null;
 
-		}
-		else if (node instanceof TryStContext)
-		{
+		} else if (node instanceof TryStContext) {
 
 			return parseTryCatch((TryStContext) node);
-		}
-		else if (node instanceof FunctionTagStContext)
-		{
+		} else if (node instanceof FunctionTagStContext) {
 			FunctionTagStContext fc = (FunctionTagStContext) node;
 			return this.parseTag(fc.functionTagCall());
-		}
-		else if (node instanceof WhileStContext)
-		{
+		} else if (node instanceof WhileStContext) {
 			return this.parseWhile((WhileStContext) node);
-		}
-		else if (node instanceof AssignStContext)
-		{
+		} else if (node instanceof AssignStContext) {
 			VarAssignStatement vas = this.parseAssign(((AssignStContext) node).assignMent());
-			if(!(vas instanceof VarRefAssignStatement)){
+			if (!(vas instanceof VarRefAssignStatement)) {
 				// 如果是临时变量定义
 				pbCtx.setVarPosition(vas.token.text, vas);
 			}
-			
+
 			return vas;
-		}
-		else if (node instanceof SiwchStContext)
-		{
+		} else if (node instanceof SiwchStContext) {
 			return this.parseSwitch((SiwchStContext) node);
-		}
-		else if (node instanceof SelectStContext)
-		{
+		} else if (node instanceof SelectStContext) {
 			SelectStContext selectCtx = (SelectStContext) node;
 
 			return this.parseSelect(selectCtx);
-		}
-		else if (node instanceof AjaxStContext)
-		{
+		} else if (node instanceof AjaxStContext) {
 			return this.parseAjax((AjaxStContext) node);
 		}
 
-		else if (node instanceof EndContext)
-		{
+		else if (node instanceof EndContext) {
 			return endStatment;
 		}
 
-		else
-		{
+		else {
 			throw new UnsupportedOperationException("未识别，确认模板书写是否正确");
 		}
 
 	}
 
-	protected SelectStatement parseSelect(SelectStContext selectCtx)
-	{
-		//		this.pbCtx.enterBlock();
-		//		this.pbCtx.current.canStopContinueBreakFlag = true;
+	protected SelectStatement parseSelect(SelectStContext selectCtx) {
+		// this.pbCtx.enterBlock();
+		// this.pbCtx.current.canStopContinueBreakFlag = true;
 		G_switchStatmentContext ctx = selectCtx.g_switchStatment();
 		ExpressionContext exp = ctx.expression();
 		Expression base = exp != null ? this.parseExpress(exp) : null;
 		List<G_caseStatmentContext> caseCtxList = ctx.g_caseStatment();
 		List<Expression> condtionList = new LinkedList<Expression>();
 		List<BlockStatement> blockList = new LinkedList<BlockStatement>();
-		for (G_caseStatmentContext caseCtx : caseCtxList)
-		{
+		for (G_caseStatmentContext caseCtx : caseCtxList) {
 			List<ExpressionContext> expCtxList = caseCtx.expression();
 			List<StatementContext> statCtxList = caseCtx.statement();
 			BlockStatement block = this.parseBlock(statCtxList, caseCtx);
-			for (ExpressionContext expCtx : expCtxList)
-			{
+			for (ExpressionContext expCtx : expCtxList) {
 				Expression condition = this.parseExpress(expCtx);
-				//select case 的条件是||的关系，只要任何一个条件满足，都可以执行block
+				// select case 的条件是||的关系，只要任何一个条件满足，都可以执行block
 				condtionList.add(condition);
 				blockList.add(block);
 			}
@@ -450,57 +393,54 @@ public class AntlrProgramBuilder
 
 		BlockStatement defaultStatement = null;
 		G_defaultStatmentContext defaultCtx = ctx.g_defaultStatment();
-		if (defaultCtx != null)
-		{
+		if (defaultCtx != null) {
 			List<StatementContext> defaultCtxList = ctx.g_defaultStatment().statement();
 			defaultStatement = this.parseBlock(defaultCtxList, ctx);
 		}
 
 		SelectStatement select = new SelectStatement(base, condtionList.toArray(new Expression[0]),
-				blockList.toArray(new BlockStatement[0]), defaultStatement, this.getBTToken(selectCtx.Select()
-						.getSymbol()));
+				blockList.toArray(new BlockStatement[0]), defaultStatement,
+				this.getBTToken(selectCtx.Select().getSymbol()));
 
 		return select;
 	}
 
-	protected AjaxStatement parseAjax(AjaxStContext ajaxCtx)
-	{
+	protected AjaxStatement parseAjax(AjaxStContext ajaxCtx) {
 		GrammarToken token = null;
 		String flag = "render";
-		List<TerminalNode>  nodes = ajaxCtx.Identifier();
-		if(nodes.size()==1){
+		List<TerminalNode> nodes = ajaxCtx.Identifier();
+		if (nodes.size() == 1) {
 			token = this.getBTToken(nodes.get(0).getSymbol());
-		}else{
+		} else {
 			token = this.getBTToken(nodes.get(1).getSymbol());
-			flag =  nodes.get(0).getSymbol().getText();
-			if(!(flag.equals("render")||flag.equals("norender"))){
-				BeetlException be = new BeetlException(BeetlException.AJAX_PROPERTY_ERROR,"expect render or norender ,but "+flag);
+			flag = nodes.get(0).getSymbol().getText();
+			if (!(flag.equals("render") || flag.equals("norender"))) {
+				BeetlException be = new BeetlException(BeetlException.AJAX_PROPERTY_ERROR,
+						"expect render or norender ,but " + flag);
 				be.pushToken(token);
 				throw be;
 			}
-				
-			
+
+
 		}
-		
-		
-		
+
+
 		BlockContext blockCtx = ajaxCtx.block();
 
 		BlockStatement block = (BlockStatement) this.parseBlock(blockCtx.statement(), blockCtx);
 
-		AjaxStatement ajaxStat = new AjaxStatement(block, token,flag.equals("render"));
+		AjaxStatement ajaxStat = new AjaxStatement(block, token, flag.equals("render"));
 
-		if (this.data.ajaxs == null)
-		{
+		if (this.data.ajaxs == null) {
 			this.data.ajaxs = new HashMap<String, AjaxStatement>();
 
 		}
 
 		String anchor = ajaxStat.token.text;
-		if (this.data.ajaxs.containsKey(anchor))
-		{
+		if (this.data.ajaxs.containsKey(anchor)) {
 			GrammarToken lastToken = this.data.ajaxs.get(anchor).token;
-			BeetlException ex = new BeetlException(BeetlException.AJAX_ALREADY_DEFINED, "已经在第" + lastToken.line + "行定义");
+			BeetlException ex = new BeetlException(BeetlException.AJAX_ALREADY_DEFINED,
+					"已经在第" + lastToken.line + "行定义");
 			ex.pushToken(token);
 			throw ex;
 		}
@@ -509,10 +449,9 @@ public class AntlrProgramBuilder
 		return ajaxStat;
 	}
 
-	protected SwitchStatement parseSwitch(SiwchStContext sctx)
-	{
-		//		this.pbCtx.enterBlock();
-		//		this.pbCtx.current.canStopContinueBreakFlag = true;
+	protected SwitchStatement parseSwitch(SiwchStContext sctx) {
+		// this.pbCtx.enterBlock();
+		// this.pbCtx.current.canStopContinueBreakFlag = true;
 
 		ExpressionContext ect = sctx.parExpression().expression();
 		Expression exp = this.parseExpress(ect);
@@ -520,23 +459,18 @@ public class AntlrProgramBuilder
 		LinkedHashMap<Expression, BlockStatement> condtionsStatementsMap = new LinkedHashMap<Expression, BlockStatement>();
 		List<Expression> conditionList = new ArrayList<Expression>();
 		BlockStatement defaultBlock = null;
-		for (SwitchBlockStatementGroupContext group : list)
-		{
+		for (SwitchBlockStatementGroupContext group : list) {
 			List<SwitchLabelContext> labels = group.switchLabel();
 			List<StatementContext> stats = group.statement();
 			BlockStatement block = stats != null ? this.parseBlock(stats, group) : null;
-			for (SwitchLabelContext label : labels)
-			{
+			for (SwitchLabelContext label : labels) {
 				Expression caseExp = this.parseExpress(label.expression());
-				if (caseExp == null)
-				{
-					//default
+				if (caseExp == null) {
+					// default
 					defaultBlock = block;
 					break;
 
-				}
-				else
-				{
+				} else {
 					conditionList.add(caseExp);
 					condtionsStatementsMap.put(caseExp, block);
 				}
@@ -549,7 +483,7 @@ public class AntlrProgramBuilder
 				this.getBTToken(sctx.getStart()));
 		return switchStat;
 	}
-	
+
 	/**
 	 *  赋值变量
 	 * @param agc
@@ -560,11 +494,11 @@ public class AntlrProgramBuilder
 		VarRefAssignExpress vas = null;
 		ExpressionContext expCtx = agc.generalAssignExp().expression();
 		Expression exp = parseExpress(expCtx);
-		VarRefContext varRefCtx = agc.generalAssignExp().varRef();		
+		VarRefContext varRefCtx = agc.generalAssignExp().varRef();
 		VarRef ref = this.parseVarRefInLeftExpression(varRefCtx);
-		vas = new VarRefAssignExpress(exp,ref);
-		
-		if (ref.attributes.length==0) {
+		vas = new VarRefAssignExpress(exp, ref);
+
+		if (ref.attributes.length == 0) {
 			// 变量定义:
 			Token token = varRefCtx.Identifier().getSymbol();
 			if (pbCtx.hasDefined(token.getText()) != null) {
@@ -576,27 +510,27 @@ public class AntlrProgramBuilder
 				throw ex;
 			}
 
-		} 
+		}
 		return vas;
-		
+
 
 	}
-//	纪录一个新变量
-	protected void registerNewVar(ASTNode vas){
-		if (pbCtx.hasDefined(vas.token.text) != null)
-		{
+
+	// 纪录一个新变量
+	protected void registerNewVar(ASTNode vas) {
+		if (pbCtx.hasDefined(vas.token.text) != null) {
 			GrammarToken token = pbCtx.hasDefined(vas.token.text);
 			BeetlException ex = new BeetlException(BeetlException.VAR_ALREADY_DEFINED, "已经在第" + token.line + "行定义");
 			ex.pushToken(vas.token);
 			throw ex;
 		}
 		pbCtx.addVar(vas.token.text);
-		pbCtx.setVarPosition(vas.token.text, vas);	
+		pbCtx.setVarPosition(vas.token.text, vas);
 	}
-	
-	//纪录一个变量
-	protected void registerVar(ASTNode vas){
-		pbCtx.setVarPosition(vas.token.text, vas);	
+
+	// 纪录一个变量
+	protected void registerVar(ASTNode vas) {
+		pbCtx.setVarPosition(vas.token.text, vas);
 	}
 
 	/**
@@ -604,84 +538,70 @@ public class AntlrProgramBuilder
 	 * @param amc
 	 * @return
 	 */
-	protected VarAssignStatement parseAssign(AssignMentContext amc)
-	{
+	protected VarAssignStatement parseAssign(AssignMentContext amc) {
 
 		VarAssignStatement vas = null;
-		if (amc instanceof AssignGeneralInStContext)
-		{
+		if (amc instanceof AssignGeneralInStContext) {
 			AssignGeneralInStContext agc = (AssignGeneralInStContext) amc;
 			ExpressionContext expCtx = agc.generalAssignExp().expression();
 			Expression exp = parseExpress(expCtx);
 			VarRefContext varRefCtx = agc.generalAssignExp().varRef();
-			if(varRefCtx.children.size()==1){
-				//var a=1;
-				Token token =  varRefCtx.Identifier().getSymbol();
+			if (varRefCtx.children.size() == 1) {
+				// var a=1;
+				Token token = varRefCtx.Identifier().getSymbol();
 				vas = new VarAssignStatement(exp, getBTToken(token));
-			}else{
+			} else {
 				// var a.b=1 since 2.7.0
-				
+
 				VarRef ref = this.parseVarRefInLeftExpression(varRefCtx);
-				
+
 				vas = new VarRefAssignStatement(exp, ref);
 			}
-			
+
 
 			return vas;
-		}
-		else if (amc instanceof AssignIdContext)
-		{
+		} else if (amc instanceof AssignIdContext) {
 			AssignIdContext idCtx = (AssignIdContext) amc;
 			vas = new VarAssignStatement(Literal.NULLLiteral, getBTToken(idCtx.Identifier().getSymbol()));
 
 			return vas;
 
-		}
-		else if (amc instanceof AssignTemplateVarContext)
-		{
+		} else if (amc instanceof AssignTemplateVarContext) {
 			AssignTemplateVarContext templateVarCtx = (AssignTemplateVarContext) amc;
 			BlockContext blockCtx = templateVarCtx.block();
 
 			BlockStatement block = this.parseBlock(blockCtx.statement(), blockCtx);
-			ContentBodyExpression bodyExp = new ContentBodyExpression(block, getBTToken(templateVarCtx.Identifier()
-					.getSymbol()));
+			ContentBodyExpression bodyExp = new ContentBodyExpression(block,
+					getBTToken(templateVarCtx.Identifier().getSymbol()));
 
 			vas = new VarAssignStatement(bodyExp, getBTToken(templateVarCtx.Identifier().getSymbol()));
 
-		}
-		else
-		{
-			throw new RuntimeException("不支持 在 "+amc.start.getLine());
+		} else {
+			throw new RuntimeException("不支持 在 " + amc.start.getLine());
 		}
 
 		return vas;
 	}
 
-	protected void checkGoto(IGoto gotoHandleStat)
-	{
+	protected void checkGoto(IGoto gotoHandleStat) {
 
-		switch (pbCtx.current.gotoValue)
-		{
+		switch (pbCtx.current.gotoValue) {
 			case IGoto.NORMAL:
 				return;
 			case IGoto.CONTINUE:
 			case IGoto.BREAK:
-				if (!pbCtx.current.canStopContinueBreakFlag)
-				{
-					//传递给上一级，除非碰到for while这样能停止传递的
+				if (!pbCtx.current.canStopContinueBreakFlag) {
+					// 传递给上一级，除非碰到for while这样能停止传递的
 					pbCtx.current.parent.gotoValue = pbCtx.current.gotoValue;
 				}
 				gotoHandleStat.setGoto(true);
 				return;
 			case IGoto.RETURN:
-				if (pbCtx.current.parent != pbCtx.root)
-				{
-					//上一级必须检测return
+				if (pbCtx.current.parent != pbCtx.root) {
+					// 上一级必须检测return
 					pbCtx.current.parent.gotoValue = IGoto.RETURN;
-				}
-				else
-				{
-					//整个程序都需要检测return
+				} else {
+					// 整个程序都需要检测return
 					this.data.hasGoto = true;
 				}
 				gotoHandleStat.setGoto(true);
@@ -689,10 +609,9 @@ public class AntlrProgramBuilder
 		}
 	}
 
-	protected WhileStatement parseWhile(WhileStContext wc)
-	{
+	protected WhileStatement parseWhile(WhileStContext wc) {
 		pbCtx.enterBlock();
-		//break，continue语句到此为止
+		// break，continue语句到此为止
 		pbCtx.current.canStopContinueBreakFlag = true;
 		ExpressionContext condtionCtx = wc.parExpression().expression();
 		StatementContext bodyCtx = wc.statement();
@@ -704,34 +623,28 @@ public class AntlrProgramBuilder
 		return whileStat;
 	}
 
-	protected TagStatement parseTag(FunctionTagCallContext fc)
-	{
+	protected TagStatement parseTag(FunctionTagCallContext fc) {
 		String id = this.getID(fc.functionNs().Identifier());
 		ExpressionListContext expListCtx = fc.expressionList();
 		List<ExpressionContext> list = null;
-		if (expListCtx != null)
-		{
+		if (expListCtx != null) {
 			list = fc.expressionList().expression();
-		}
-		else
-		{
+		} else {
 			list = Collections.EMPTY_LIST;
 
 		}
 
 		Expression[] expList = this.parseExpressionCtxList(list);
-		if (id.equals("htmltagvar"))
-		{
+		if (id.equals("htmltagvar")) {
 			int line = fc.functionNs().getStart().getLine();
 			// 标签具有绑定变量功能
 			Literal l = (Literal) expList[2];
 			String varList = (String) l.obj;
 			String[] vars = varList.split(",");
-			//定义的变量仅仅在标签体内可见
+			// 定义的变量仅仅在标签体内可见
 			this.pbCtx.enterBlock();
 			VarDefineNode[] varDefine = new VarDefineNode[vars.length];
-			for (int i = 0; i < vars.length; i++)
-			{
+			for (int i = 0; i < vars.length; i++) {
 				VarDefineNode varNode = new VarDefineNode(this.getBTToken(vars[i].trim(), line));
 				this.pbCtx.addVarAndPostion(varNode);
 				varDefine[i] = varNode;
@@ -741,46 +654,39 @@ public class AntlrProgramBuilder
 
 			this.pbCtx.exitBlock();
 			TagFactory tf = this.gt.getTagFactory(id);
-			if (tf == null)
-			{
+			if (tf == null) {
 				BeetlException ex = new BeetlException(BeetlException.TAG_NOT_FOUND);
 				ex.pushToken(this.getBTToken(id, fc.functionNs().getStart().getLine()));
 				throw ex;
 			}
 			TagStatement tag = new TagVarBindingStatement(id, expList, block, varDefine, this.getBTToken(id, line));
 			return tag;
-		}
-		else
-		{
+		} else {
 			BlockContext blockCtx = fc.block();
 			Statement block = parseBlock(blockCtx.statement(), blockCtx);
 			TagFactory tf = this.gt.getTagFactory(id);
-			if (tf == null)
-			{
+			if (tf == null) {
 				BeetlException ex = new BeetlException(BeetlException.TAG_NOT_FOUND);
 				ex.pushToken(this.getBTToken(id, fc.functionNs().getStart().getLine()));
 				throw ex;
 			}
-			TagStatement tag = new TagStatement(id, expList, block, this.getBTToken(id, fc.functionNs().getStart()
-					.getLine()));
+			TagStatement tag = new TagStatement(id, expList, block,
+					this.getBTToken(id, fc.functionNs().getStart().getLine()));
 			return tag;
 		}
 
 	}
 
-	protected TryCatchStatement parseTryCatch(TryStContext tryStCtx)
-	{
+	protected TryCatchStatement parseTryCatch(TryStContext tryStCtx) {
 
 		BlockContext tryBlockCtx = tryStCtx.block(0);
 
 		BlockStatement tryPart = (BlockStatement) this.parseBlock(tryBlockCtx.statement(), tryBlockCtx);
 		BlockStatement catchPart = null;
 		VarDefineNode errorNode = null;
-		if (tryStCtx.Catch() != null)
-		{
+		if (tryStCtx.Catch() != null) {
 			this.pbCtx.enterBlock();
-			if (tryStCtx.Identifier() != null)
-			{
+			if (tryStCtx.Identifier() != null) {
 				Token errorToken = tryStCtx.Identifier().getSymbol();
 				errorNode = new VarDefineNode(this.getBTToken(errorToken));
 				this.pbCtx.addVarAndPostion(errorNode);
@@ -791,16 +697,14 @@ public class AntlrProgramBuilder
 			this.pbCtx.exitBlock();
 
 		}
-		TryCatchStatement statement = new TryCatchStatement(tryPart, catchPart, errorNode, this.getBTToken(tryStCtx
-				.Try().getSymbol()));
+		TryCatchStatement statement = new TryCatchStatement(tryPart, catchPart, errorNode,
+				this.getBTToken(tryStCtx.Try().getSymbol()));
 		return statement;
 	}
 
-	protected void parseCommentTag(CommentTypeTagContext typeCtx)
-	{
+	protected void parseCommentTag(CommentTypeTagContext typeCtx) {
 		List<CommentTypeItemTagContext> list = typeCtx.commentTypeItemTag();
-		for (CommentTypeItemTagContext ctx : list)
-		{
+		for (CommentTypeItemTagContext ctx : list) {
 			ClassOrInterfaceTypeContext classCtx = ctx.classOrInterfaceType();
 			Type type = getClassType(classCtx);
 			String globalVarName = ctx.Identifier1().getSymbol().getText();
@@ -809,13 +713,11 @@ public class AntlrProgramBuilder
 		}
 	}
 
-	private Type getClassType(ClassOrInterfaceTypeContext ctx)
-	{
+	private Type getClassType(ClassOrInterfaceTypeContext ctx) {
 		List<TerminalNode> list = ctx.Identifier1();
 		String className = this.getID(list);
 		Class cls = gt.loadClassBySimpleName(className);
-		if (cls == null)
-		{
+		if (cls == null) {
 
 			BeetlException ex = new BeetlException(BeetlException.TYPE_SEARCH_ERROR, className);
 			ex.pushToken(this.getBTToken(ctx.getStart()));
@@ -823,15 +725,12 @@ public class AntlrProgramBuilder
 		}
 		Type classType = new Type(cls);
 		TypeArgumentsContext typeArgCtx = ctx.typeArguments();
-		if (typeArgCtx != null)
-		{
+		if (typeArgCtx != null) {
 			List<TypeArgumentContext> listType = typeArgCtx.typeArgument();
-			if (listType != null)
-			{
+			if (listType != null) {
 				Type[] subType = new Type[listType.size()];
 				int i = 0;
-				for (TypeArgumentContext typeCtx : listType)
-				{
+				for (TypeArgumentContext typeCtx : listType) {
 					ClassOrInterfaceTypeContext child = typeCtx.classOrInterfaceType();
 					Type type = this.getClassType(child);
 					subType[i++] = type;
@@ -849,8 +748,7 @@ public class AntlrProgramBuilder
 	 * @param node
 	 * @return
 	 */
-	protected DirectiveStatement parseDirectiveStatement(DirectiveStContext node)
-	{
+	protected DirectiveStatement parseDirectiveStatement(DirectiveStContext node) {
 		DirectiveStContext stContext = (DirectiveStContext) node;
 		DirectiveExpContext direExp = stContext.directiveExp();
 		Token token = direExp.Identifier().getSymbol();
@@ -858,137 +756,108 @@ public class AntlrProgramBuilder
 		TerminalNode value = direExp.StringLiteral();
 		List<TerminalNode> idNodeList = null;
 		DirectiveExpIDListContext directExpidLisCtx = direExp.directiveExpIDList();
-		if (directExpidLisCtx != null)
-		{
+		if (directExpidLisCtx != null) {
 			idNodeList = directExpidLisCtx.Identifier();
 		}
 
 		Set<String> idList = null;
 		DirectiveStatement ds = null;
 
-		if (value != null)
-		{
+		if (value != null) {
 			String idListValue = this.getStringValue(value.getText());
 			idList = new HashSet(Arrays.asList(idListValue.split(",")));
 			ds = new DirectiveStatement(directive, idList, this.getBTToken(token));
 
-		}
-		else if (idNodeList != null)
-		{
+		} else if (idNodeList != null) {
 			idList = new HashSet<String>();
-			for (TerminalNode t : idNodeList)
-			{
+			for (TerminalNode t : idNodeList) {
 				idList.add(t.getText());
 			}
 			ds = new DirectiveStatement(directive, idList, this.getBTToken(token));
 
-		}
-		else
-		{
+		} else {
 			ds = new DirectiveStatement(directive, Collections.EMPTY_SET, this.getBTToken(token));
 		}
 
-		if (directive.equals("dynamic"))
-		{
+		if (directive.equals("dynamic")) {
 
-			if (ds.getIdList().size() == 0)
-			{
+			if (ds.getIdList().size() == 0) {
 				data.allDynamic = true;
-			}
-			else
-			{
+			} else {
 				data.dynamicObjectSet = ds.getIdList();
 			}
 			ds = new DirectiveStatement(directive, Collections.EMPTY_SET, this.getBTToken(token));
-			
+
 			return ds;
 
-		}
-		else if (directive.equalsIgnoreCase("safe_output_open".intern()))
-		{
+		} else if (directive.equalsIgnoreCase("safe_output_open".intern())) {
 			this.pbCtx.isSafeOutput = true;
 			return ds;
-		}
-		else if (directive.equalsIgnoreCase("safe_output_close".intern()))
-		{
+		} else if (directive.equalsIgnoreCase("safe_output_close".intern())) {
 			this.pbCtx.isSafeOutput = false;
 			return ds;
-		}
-		else
-		{
+		} else {
 			return ds;
 		}
 	}
 
-	protected FunctionExpression parseFunExp(FunctionCallContext ctx)
-	{
+	protected FunctionExpression parseFunExp(FunctionCallContext ctx) {
 		ExpressionListContext expListCtx = ctx.expressionList();
 		Expression[] exps = this.getExprssionList(expListCtx);
 		List<VarAttributeContext> vaListCtx = ctx.varAttribute();
 		Safe_outputContext soctx = ctx.safe_output();
 		Expression safeExp = null;
 		boolean hasSafe = false;
-		if (soctx != null)
-		{
+		if (soctx != null) {
 			safeExp = this.parseSafeOutput(soctx);
 			hasSafe = true;
 
 		}
-		if (this.pbCtx.isSafeOutput)
-		{
+		if (this.pbCtx.isSafeOutput) {
 			hasSafe = true;
 		}
-		
+
 		VarAttribute[] vs = this.parseVarAttribute(vaListCtx);
-		
-		 List<TerminalNode> idList = ctx.functionNs().Identifier();
-		
+
+		List<TerminalNode> idList = ctx.functionNs().Identifier();
+
 		String nsId = this.getID(idList);
 		GrammarToken btToken = new org.beetl.core.statement.GrammarToken(nsId, ctx.start.getLine(), 0);
-		//需要做些特殊处理的函数
-		if ( safeParameters.contains(nsId))
-		{
+		// 需要做些特殊处理的函数
+		if (safeParameters.contains(nsId)) {
 
-			if (exps.length != 0)
-			{
+			if (exps.length != 0) {
 				Expression one = exps[0];
-				if (one instanceof VarRef)
-				{
-					//强制为变量引用增加一个安全输出
+				if (one instanceof VarRef) {
+					// 强制为变量引用增加一个安全输出
 					VarRef ref = (VarRef) one;
-					if (!ref.hasSafe)
-					{
+					if (!ref.hasSafe) {
 						ref.hasSafe = true;
 						ref.safe = null;
 					}
 				}
 			}
 
-		}
-		else if (nsId.equals("has"))
-		{
-			if (exps.length != 0)
-			{
+		} else if (nsId.equals("has")) {
+			if (exps.length != 0) {
 				Expression one = exps[0];
-				if (one instanceof VarRef)
-				{
+				if (one instanceof VarRef) {
 
-					//强制为变量引用增加一个安全输出
+					// 强制为变量引用增加一个安全输出
 					VarRef ref = (VarRef) one;
-					if(ref.attributes.length!=0) {
-						BeetlException ex = new BeetlException(BeetlException.HAS_CALL_ILLEGAL,"has函数用于判断全局变量是否存在，不能判断其属性是否有值，可以使用安全输出符号或者isEmpty函数");
+					if (ref.attributes.length != 0) {
+						BeetlException ex = new BeetlException(BeetlException.HAS_CALL_ILLEGAL,
+								"has函数用于判断全局变量是否存在，不能判断其属性是否有值，可以使用安全输出符号或者isEmpty函数");
 						ex.pushToken(ref.token);
 						throw ex;
 					}
 					String name = ref.token.text;
 					Literal newExp = new Literal(name, ref.token);
-					//将变量引用转化为字符串
+					// 将变量引用转化为字符串
 					exps[0] = newExp;
 				}
 			}
-		}
-		else if (nsId.equals("debug"))
-		{
+		} else if (nsId.equals("debug")) {
 			// debug函数传递额外的行数
 			Literal l = new Literal(btToken.line, btToken);
 			Expression[] newExps = new Expression[exps.length + 2];
@@ -996,38 +865,35 @@ public class AntlrProgramBuilder
 			String[] expStr = this.getExpressionString(expListCtx);
 			newExps[newExps.length - 2] = new Literal(expStr, btToken);
 			newExps[newExps.length - 1] = l;
-			for (int i = 0; i < exps.length; i++)
-			{
-				if (!(exps[i] instanceof VarRef))
-				{
+			for (int i = 0; i < exps.length; i++) {
+				if (!(exps[i] instanceof VarRef)) {
 					expStr[i] = null;
 				}
 			}
 
 			exps = newExps;
-			//可以通过配置查看是否支持debug，2.1再做
+			// 可以通过配置查看是否支持debug，2.1再做
 
-		}else if(nsId.equals("decode")){
+		} else if (nsId.equals("decode")) {
 			Expression[] newExps = new Expression[exps.length];
-			if(newExps.length>=4){
+			if (newExps.length >= 4) {
 				newExps[0] = exps[0];
 				newExps[1] = exps[1];
-				for(int i=2;i<exps.length;i++){
-					//参数改成runtime 执行
+				for (int i = 2; i < exps.length; i++) {
+					// 参数改成runtime 执行
 					newExps[i] = new ExpressionRuntime(exps[i]);
 				}
 				exps = newExps;
-			}else{
-				//错误的使用了decode函数，不管了，等后面报错吧
+			} else {
+				// 错误的使用了decode函数，不管了，等后面报错吧
 			}
 		}
-		FunctionExpression fe = new FunctionExpression(nsId, exps, vs, hasSafe,safeExp,btToken);
+		FunctionExpression fe = new FunctionExpression(nsId, exps, vs, hasSafe, safeExp, btToken);
 		return fe;
 
 	}
 
-	protected IfStatement parseIf(IfStContext ctx)
-	{
+	protected IfStatement parseIf(IfStContext ctx) {
 		ParExpressionContext pe = ctx.parExpression();
 		ExpressionContext expCtx = pe.expression();
 		Expression exp = this.parseExpress(expCtx);
@@ -1035,91 +901,77 @@ public class AntlrProgramBuilder
 		Statement ifStat = this.parseStatment(ifStatCtx);
 		StatementContext elseStatCtx = ctx.statement(1);
 		Statement elseStat = null;
-		if (elseStatCtx != null)
-		{
+		if (elseStatCtx != null) {
 			elseStat = this.parseStatment(elseStatCtx);
 		}
 		return new IfStatement(exp, ifStat, elseStat, this.getBTToken(ctx.If().getSymbol()));
 	}
 
-	protected String getID(List<TerminalNode> ids)
-	{
+	protected String getID(List<TerminalNode> ids) {
 		StringBuilder sb = new StringBuilder();
-		for (TerminalNode n : ids)
-		{
+		for (TerminalNode n : ids) {
 			sb.append(n.getSymbol().getText()).append(".");
 		}
 		sb.setLength(sb.length() - 1);
 		return sb.toString();
 	}
 
-	protected Expression[] getExprssionList(ExpressionListContext expListCtx)
-	{
+	protected Expression[] getExprssionList(ExpressionListContext expListCtx) {
 
-		if (expListCtx == null)
-			return EMPTY_EXPRESSION;
+		if (expListCtx == null) return EMPTY_EXPRESSION;
 		List<ExpressionContext> ecList = expListCtx.expression();
 		Expression[] exps = new Expression[ecList.size()];
-		for (int i = 0; i < ecList.size(); i++)
-		{
+		for (int i = 0; i < ecList.size(); i++) {
 			exps[i] = this.parseExpress(ecList.get(i));
 		}
 		return exps;
 	}
 
-	protected String[] getExpressionString(ExpressionListContext expListCtx)
-	{
+	protected String[] getExpressionString(ExpressionListContext expListCtx) {
 		{
 
-			if (expListCtx == null)
-				return new String[0];
+			if (expListCtx == null) return new String[0];
 			List<ExpressionContext> ecList = expListCtx.expression();
 			String[] exps = new String[ecList.size()];
-			for (int i = 0; i < ecList.size(); i++)
-			{
+			for (int i = 0; i < ecList.size(); i++) {
 				exps[i] = ecList.get(i).getText();
 			}
 			return exps;
 		}
 	}
 
-	protected Statement parseForSt(ForStContext ctx)
-	{
+	protected Statement parseForSt(ForStContext ctx) {
 
 		pbCtx.enterBlock();
-		//break，continue语句到此为止
+		// break，continue语句到此为止
 		pbCtx.current.canStopContinueBreakFlag = true;
 
 		StatementContext forContext = ctx.statement(0);
 		StatementContext elseContext = null;
 
 		ForControlContext forTypeCtx = ctx.forControl();
-		if (forTypeCtx.forInControl() != null)
-		{
-			//for(a in list)...
+		if (forTypeCtx.forInControl() != null) {
+			// for(a in list)...
 			ForInControlContext forCtx = forTypeCtx.forInControl();
-			
+
 			Expression exp = this.parseExpress(forCtx.expression());
 
 			VarDefineNode forVar = new VarDefineNode(this.getBTToken(forCtx.Identifier().getSymbol()));
 
-			if (pbCtx.hasDefined(forVar.token.text) != null)
-			{
+			if (pbCtx.hasDefined(forVar.token.text) != null) {
 				GrammarToken token = pbCtx.hasDefined(forVar.token.text);
 				BeetlException ex = new BeetlException(BeetlException.VAR_ALREADY_DEFINED, "已经在第" + token.line + "行定义");
 				ex.pushToken(forVar.token);
 				throw ex;
 			}
 
-			VarDefineNode loopStatusVar = new VarDefineNode(new org.beetl.core.statement.GrammarToken(forCtx
-					.Identifier().getSymbol().getText()
-					+ "LP", forCtx.Identifier().getSymbol().getLine(), 0));
+			VarDefineNode loopStatusVar = new VarDefineNode(new org.beetl.core.statement.GrammarToken(
+					forCtx.Identifier().getSymbol().getText() + "LP", forCtx.Identifier().getSymbol().getLine(), 0));
 
-			if (pbCtx.hasDefined(loopStatusVar.token.text) != null)
-			{
+			if (pbCtx.hasDefined(loopStatusVar.token.text) != null) {
 				GrammarToken token = pbCtx.hasDefined(loopStatusVar.token.text);
-				BeetlException ex = new BeetlException(BeetlException.VAR_ALREADY_DEFINED, "For循环隐含变量，已经在第"
-						+ token.line + "行定义");
+				BeetlException ex = new BeetlException(BeetlException.VAR_ALREADY_DEFINED,
+						"For循环隐含变量，已经在第" + token.line + "行定义");
 				ex.pushToken(loopStatusVar.token);
 				throw ex;
 			}
@@ -1127,38 +979,35 @@ public class AntlrProgramBuilder
 
 			pbCtx.addVarAndPostion(loopStatusVar);
 
-			//			//beetl.2 兼容
-			//			VarDefineNode indexVar = new VarDefineNode(new org.beetl.core.statement.GrammarToken(forCtx.Identifier()
-			//					.getSymbol().getText()
-			//					+ "_index", forCtx.Identifier().getSymbol().getLine(), 0));
+			// //beetl.2 兼容
+			// VarDefineNode indexVar = new VarDefineNode(new org.beetl.core.statement.GrammarToken(forCtx.Identifier()
+			// .getSymbol().getText()
+			// + "_index", forCtx.Identifier().getSymbol().getLine(), 0));
 			//
-			//			VarDefineNode sizeVar = new VarDefineNode(new org.beetl.core.statement.GrammarToken(forCtx.Identifier()
-			//					.getSymbol().getText()
-			//					+ "_size", forCtx.Identifier().getSymbol().getLine(), 0));
+			// VarDefineNode sizeVar = new VarDefineNode(new org.beetl.core.statement.GrammarToken(forCtx.Identifier()
+			// .getSymbol().getText()
+			// + "_size", forCtx.Identifier().getSymbol().getLine(), 0));
 			//
-			//			pbCtx.addVarAndPostion(indexVar);
+			// pbCtx.addVarAndPostion(indexVar);
 			//
-			//			pbCtx.addVarAndPostion(sizeVar);
+			// pbCtx.addVarAndPostion(sizeVar);
 
-			
+
 			Statement forPart = this.parseStatment(forContext);
-			//elsefor
+			// elsefor
 			Statement elseForPart = null;
-			if (ctx.Elsefor() != null)
-			{
+			if (ctx.Elsefor() != null) {
 				elseContext = ctx.statement(1);
 				elseForPart = this.parseStatment(elseContext);
 
 			}
 			boolean hasSafe = false;
-			if (exp instanceof VarRef)
-			{
+			if (exp instanceof VarRef) {
 				VarRef varRef = (VarRef) exp;
 				hasSafe = varRef.hasSafe;
 			}
 
-			if (pbCtx.isSafeOutput)
-			{
+			if (pbCtx.isSafeOutput) {
 				hasSafe = true;
 			}
 
@@ -1166,59 +1015,50 @@ public class AntlrProgramBuilder
 			this.checkGoto(forStatement);
 			pbCtx.exitBlock();
 			return forStatement;
-		}
-		else
-		{
+		} else {
 			GeneralForControlContext forCtx = forTypeCtx.generalForControl();
-			
+
 			Expression[] initExp = null;
 			VarAssignStatementSeq varInitSeq = null;
 			Expression condtion = null;
 			Expression[] updateExp = null;
-			if (forCtx.forInit() != null)
-			{
+			if (forCtx.forInit() != null) {
 				ForInitContext forInitCtx = forCtx.forInit();
-				if (forInitCtx.Var() == null)
-				{
-					//for( a=1,b=3;
+				if (forInitCtx.Var() == null) {
+					// for( a=1,b=3;
 					List<ExpressionContext> list = forInitCtx.expressionList().expression();
 					initExp = this.parseExpressionCtxList(list);
 
-				}
-				else
-				{
-					//for( var a=1,b=3;
+				} else {
+					// for( var a=1,b=3;
 					VarDeclareListContext varDeclare = forInitCtx.varDeclareList();
 					varInitSeq = this.parseVarDeclareList(varDeclare);
 
 				}
 			}
 
-			if (forCtx.expression() != null)
-			{
+			if (forCtx.expression() != null) {
 				condtion = this.parseExpress(forCtx.expression());
 
 			}
 
-			if (forCtx.forUpdate() != null)
-			{
+			if (forCtx.forUpdate() != null) {
 				ForUpdateContext updateCtx = forCtx.forUpdate();
 				List<ExpressionContext> list = updateCtx.expressionList().expression();
 				updateExp = this.parseExpressionCtxList(list);
 			}
 
 			Statement forPart = this.parseStatment(forContext);
-			//elsefor
+			// elsefor
 			Statement elseForPart = null;
-			if (ctx.Elsefor() != null)
-			{
+			if (ctx.Elsefor() != null) {
 				elseContext = ctx.statement(1);
 				elseForPart = this.parseStatment(elseContext);
 
 			}
 			String str = forTypeCtx.getText();
 			GeneralForStatement forStat = new GeneralForStatement(varInitSeq, initExp, condtion, updateExp, forPart,
-					elseForPart,this.getBTToken(str, forTypeCtx.start.getLine()));
+					elseForPart, this.getBTToken(str, forTypeCtx.start.getLine()));
 			pbCtx.exitBlock();
 			return forStat;
 
@@ -1226,216 +1066,157 @@ public class AntlrProgramBuilder
 
 	}
 
-	protected Statement parseTextOutputSt(TextOutputStContext ctx)
-	{
+	protected Statement parseTextOutputSt(TextOutputStContext ctx) {
 
 		TextStatmentContext tsc = ctx.textStatment();
 		FormatExpression format = null;
-		boolean isSafe = false;
-		if (tsc.NOT() != null)
-		{
-			isSafe = true;
-		}
+
 		TextVarContext tvc = tsc.textVar();
-		if (tvc.COMMA() != null)
-		{
+		if (tvc.COMMA() != null) {
 			String formatName = null;
 			String pattern = null;
 			String tokenName = null;
 			int line = 0;
 			TextformatContext tfc = tvc.textformat();
 			TerminalNode node = tfc.StringLiteral();
-			if (node != null)
-			{
+			if (node != null) {
 				tokenName = pattern = getStringValue(node.getText());
 				line = node.getSymbol().getLine();
 
 			}
 
 			FunctionNsContext fnsc = tfc.functionNs();
-			if (fnsc != null)
-			{
+			if (fnsc != null) {
 				List<TerminalNode> listId = fnsc.Identifier();
 				formatName = this.getID(listId);
 				tokenName = formatName;
 				line = listId.get(0).getSymbol().getLine();
 
 			}
-			format = new FormatExpression(formatName, pattern, org.beetl.core.statement.GrammarToken.createToken(
-					tokenName, line));
+			format = new FormatExpression(formatName, pattern,
+					org.beetl.core.statement.GrammarToken.createToken(tokenName, line));
 
 		}
 
 		Expression exp = this.parseExpress(tvc.expression());
-		if (isSafe)
-		{
-			SafePlaceholderST placeholder = new SafePlaceholderST(exp, format, null);
-			return placeholder;
-		}
-		else
-		{
-			
+		if (tsc.LEFT_TOKEN() != null) {
 			PlaceholderST placeholder = new PlaceholderST(exp, format, null);
 			return placeholder;
+		} else {
+			PlaceholderST placeholder = new PlaceholderST(exp, format, null);
+			return placeholder;
+
 		}
 	}
 
-	private VarAssignStatementSeq parseVarSt(VarStContext node)
-	{
+	private VarAssignStatementSeq parseVarSt(VarStContext node) {
 		VarStContext varSt = (VarStContext) node;
 		VarDeclareListContext ctx = varSt.varDeclareList();
 		return parseVarDeclareList(ctx);
 
 	}
 
-	private VarAssignStatementSeq parseVarDeclareList(VarDeclareListContext ctx)
-	{
+	private VarAssignStatementSeq parseVarDeclareList(VarDeclareListContext ctx) {
 		List<AssignMentContext> list = ctx.assignMent();
 		List<ASTNode> listNode = new ArrayList<ASTNode>();
-		for (AssignMentContext amc : list)
-		{
+		for (AssignMentContext amc : list) {
 			VarAssignStatement vas = this.parseAssign(amc);
 			listNode.add(vas);
-			if(!(vas instanceof VarRefAssignStatement)){
+			if (!(vas instanceof VarRefAssignStatement)) {
 				// 如果是临时变量定义
 				this.registerNewVar(vas);
 			}
-			
-			
-			
+
+
 		}
-		
+
 		VarAssignStatementSeq seq = new VarAssignStatementSeq(listNode.toArray(new Statement[0]), null);
 		return seq;
 	}
 
-	protected Expression parseExpress(ExpressionContext ctx)
-	{
-		if (ctx == null)
-			return null;
+	protected Expression parseExpress(ExpressionContext ctx) {
+		if (ctx == null) return null;
 
-		if (ctx instanceof LiteralExpContext)
-		{
+		if (ctx instanceof LiteralExpContext) {
 			return parseLiteralExpress(((LiteralExpContext) ctx).literal());
-		}
-		else if (ctx instanceof VarRefExpContext)
-		{
+		} else if (ctx instanceof VarRefExpContext) {
 			return this.parseVarRefExpression(((VarRefExpContext) ctx).varRef());
-		}
-		else if (ctx instanceof CompareExpContext)
-		{
+		} else if (ctx instanceof CompareExpContext) {
 			CompareExpression compare = parseCompareExpression((CompareExpContext) ctx);
-			if (gt.conf.isStrict)
-			{
+			if (gt.conf.isStrict) {
 				throw new MVCStrictException(compare.token);
 			}
 			return compare;
-		}
-		else if (ctx instanceof TernaryExpContext)
-		{
+		} else if (ctx instanceof TernaryExpContext) {
 			return this.parseTernaryExpression((TernaryExpContext) ctx);
-		}
-		else if (ctx instanceof MuldivmodExpContext)
-		{
+		} else if (ctx instanceof MuldivmodExpContext) {
 			ArthExpression arth = this.parseMuldivmodExpression((MuldivmodExpContext) ctx);
-			if (gt.conf.isStrict)
-			{
+			if (gt.conf.isStrict) {
 				throw new MVCStrictException(arth.token);
 			}
 			return arth;
-		}
-		else if (ctx instanceof AddminExpContext)
-		{
+		} else if (ctx instanceof AddminExpContext) {
 			return this.parsePlusMins((AddminExpContext) ctx);
-		}
-		else if (ctx instanceof ParExpContext)
-		{
+		} else if (ctx instanceof ParExpContext) {
 			ParExpContext par = (ParExpContext) ctx;
 			return this.parseExpress(par.expression());
-		}
-		else if (ctx instanceof FunctionCallExpContext)
-		{
+		} else if (ctx instanceof FunctionCallExpContext) {
 			FunctionCallExpContext fceCtx = (FunctionCallExpContext) ctx;
 			FunctionExpression fun = parseFunExp(fceCtx.functionCall());
-			if (gt.conf.isStrict)
-			{
+			if (gt.conf.isStrict) {
 				throw new MVCStrictException(fun.token);
 			}
 			return fun;
-		}
-		else if (ctx instanceof JsonExpContext)
-		{
+		} else if (ctx instanceof JsonExpContext) {
 			JsonContext jc = ((JsonExpContext) ctx).json();
 			return this.parseJson(jc);
-		}
-		else if (ctx instanceof NativeCallExpContext)
-		{
+		} else if (ctx instanceof NativeCallExpContext) {
 			NativeCallContext ncc = ((NativeCallExpContext) ctx).nativeCall();
 			NativeCallExpression nativeCall = this.parseNativeCallExpression(ncc);
-			if (!gt.conf.nativeCall || gt.conf.isStrict)
-			{
+			if (!gt.conf.nativeCall || gt.conf.isStrict) {
 				throw new NativeNotAllowedException(nativeCall.token);
 			}
 			return nativeCall;
-		}
-		else if (ctx instanceof AndExpContext)
-		{
+		} else if (ctx instanceof AndExpContext) {
 			AndExpContext andCtx = (AndExpContext) ctx;
 			return this.parseAndExpression(andCtx);
-		}
-		else if (ctx instanceof OrExpContext)
-		{
+		} else if (ctx instanceof OrExpContext) {
 			OrExpContext orExp = (OrExpContext) ctx;
 			return this.parseOrExpression(orExp);
-		}
-		else if (ctx instanceof NotExpContext)
-		{
+		} else if (ctx instanceof NotExpContext) {
 			NotExpContext notCtx = (NotExpContext) ctx;
 			return this.parseNotExpression(notCtx);
-		}
-		else if (ctx instanceof NegExpContext)
-		{
+		} else if (ctx instanceof NegExpContext) {
 			NegExpContext negCtx = (NegExpContext) ctx;
 			return this.parseNegExpression(negCtx);
-		}
-		else if (ctx instanceof IncDecOneContext)
-		{
+		} else if (ctx instanceof IncDecOneContext) {
 			IncDecOneContext oneCtx = (IncDecOneContext) ctx;
 			IncDecExpression exp = this.parseIncDecOneContext(oneCtx);
-			if (gt.conf.isStrict)
-			{
+			if (gt.conf.isStrict) {
 				throw new NativeNotAllowedException(exp.token);
 			}
 			return exp;
-		}
-		else if (ctx instanceof OneIncDecContext)
-		{
+		} else if (ctx instanceof OneIncDecContext) {
 			OneIncDecContext oneCtx = (OneIncDecContext) ctx;
 			IncDecExpression exp = this.parseOneIncDecContext(oneCtx);
-			if (gt.conf.isStrict)
-			{
+			if (gt.conf.isStrict) {
 				throw new NativeNotAllowedException(exp.token);
 			}
 			return exp;
 
-		}
-		else if (ctx instanceof AssignGeneralInExpContext)
-		{
-			
-			
+		} else if (ctx instanceof AssignGeneralInExpContext) {
+
+
 			AssignGeneralInExpContext agc = (AssignGeneralInExpContext) ctx;
-			VarRefAssignExpress  vas  = this.parseAssingInExp(agc);
+			VarRefAssignExpress vas = this.parseAssingInExp(agc);
 			return vas;
-			
-		}
-		else
-		{
+
+		} else {
 			throw new UnsupportedOperationException();
 		}
 	}
 
-	protected IncDecExpression parseIncDecOneContext(IncDecOneContext ctx)
-	{
+	protected IncDecExpression parseIncDecOneContext(IncDecOneContext ctx) {
 		IncDecExpression exp = null;
 		boolean isInc = ctx.INCREASE() != null;
 		GrammarToken t = this.getBTToken(ctx.Identifier().getSymbol());
@@ -1445,8 +1226,7 @@ public class AntlrProgramBuilder
 
 	}
 
-	protected IncDecExpression parseOneIncDecContext(OneIncDecContext ctx)
-	{
+	protected IncDecExpression parseOneIncDecContext(OneIncDecContext ctx) {
 		IncDecExpression exp = null;
 		boolean isInc = ctx.INCREASE() != null;
 		GrammarToken t = this.getBTToken(ctx.Identifier().getSymbol());
@@ -1456,33 +1236,27 @@ public class AntlrProgramBuilder
 
 	}
 
-	protected Expression parseNegExpression(NegExpContext ctx)
-	{
+	protected Expression parseNegExpression(NegExpContext ctx) {
 		Expression exp = this.parseExpress(ctx.expression());
-		if (ctx.MIN() != null)
-		{
-			//负数
+		if (ctx.MIN() != null) {
+			// 负数
 			NegExpression negExp = new NegExpression(exp, this.getBTToken(ctx.MIN().getSymbol()));
 			return negExp;
 
-		}
-		else
-		{
+		} else {
 			return exp;
 		}
 
 	}
 
-	protected NotBooleanExpression parseNotExpression(NotExpContext ctx)
-	{
+	protected NotBooleanExpression parseNotExpression(NotExpContext ctx) {
 		Expression exp = this.parseExpress(ctx.expression());
 		NotBooleanExpression notExp = new NotBooleanExpression(exp, this.getBTToken(ctx.NOT().getSymbol()));
 		return notExp;
 
 	}
 
-	protected OrExpression parseOrExpression(OrExpContext ctx)
-	{
+	protected OrExpression parseOrExpression(OrExpContext ctx) {
 		Expression exp1 = this.parseExpress(ctx.expression(0));
 		Expression exp2 = this.parseExpress(ctx.expression(1));
 		OrExpression orExp = new OrExpression(exp1, exp2, this.getBTToken(ctx.OR().getSymbol()));
@@ -1490,8 +1264,7 @@ public class AntlrProgramBuilder
 
 	}
 
-	protected AndExpression parseAndExpression(AndExpContext ctx)
-	{
+	protected AndExpression parseAndExpression(AndExpContext ctx) {
 		Expression exp1 = this.parseExpress(ctx.expression(0));
 		Expression exp2 = this.parseExpress(ctx.expression(1));
 		AndExpression andExp = new AndExpression(exp1, exp2, this.getBTToken(ctx.AND().getSymbol()));
@@ -1499,32 +1272,27 @@ public class AntlrProgramBuilder
 
 	}
 
-	protected NativeCallExpression parseNativeCallExpression(NativeCallContext ncc)
-	{
+	protected NativeCallExpression parseNativeCallExpression(NativeCallContext ncc) {
 		NativeCallExpression nativeExp = null;
 		List<ParseTree> list = ncc.children;
-		//nativeCall: nativeVarRefChain (nativeMethod|nativeArray| PERIOD nativeVarRefChain)*;
+		// nativeCall: nativeVarRefChain (nativeMethod|nativeArray| PERIOD nativeVarRefChain)*;
 
 		NativeVarRefChainContext first = (NativeVarRefChainContext) list.get(0);
 		List<TerminalNode> ids = first.Identifier();
 		StringBuilder clsSb = new StringBuilder();
-		//是类静态调用还是实例调用
+		// 是类静态调用还是实例调用
 		boolean isCls = false;
 		int i = 0;
-		for (; i < ids.size(); i++)
-		{
+		for (; i < ids.size(); i++) {
 			String text = ids.get(i).getText();
 
 			char c = text.charAt(0);
-			if (c >= 'A' && c <= 'Z')
-			{
+			if (c >= 'A' && c <= 'Z') {
 				clsSb.append(text);
 				isCls = true;
 				break;
 
-			}
-			else
-			{
+			} else {
 				clsSb.append(text).append(".");
 			}
 		}
@@ -1532,15 +1300,12 @@ public class AntlrProgramBuilder
 		ClassNode clsNode = null;
 		InstanceNode insNode = null;
 
-		if (isCls)
-		{
+		if (isCls) {
 			clsNode = new ClassNode(clsSb.toString());
-			//指向下一个属性或者静态方法
+			// 指向下一个属性或者静态方法
 			i++;
-		}
-		else
-		{
-			//变量的属性引用,回到第一个，构造一个变量
+		} else {
+			// 变量的属性引用,回到第一个，构造一个变量
 			String varName = ids.get(0).getText();
 			VarRef ref = new VarRef(new VarAttribute[0], false, null, this.getBTToken(varName, ncc.start.getLine()));
 			this.pbCtx.setVarPosition(varName, ref);
@@ -1549,147 +1314,110 @@ public class AntlrProgramBuilder
 		}
 		List<NativeNode> nativeList = new ArrayList<NativeNode>();
 
-		for (int j = i; j < ids.size(); j++)
-		{
-			//剩下的是属性
+		for (int j = i; j < ids.size(); j++) {
+			// 剩下的是属性
 			NativeAtrributeNode attribute = new NativeAtrributeNode(ids.get(j).getText());
 			nativeList.add(attribute);
 		}
 
-		for (int z = 1; z < list.size(); z++)
-		{
+		for (int z = 1; z < list.size(); z++) {
 			ParseTree tree = list.get(z);
-			if (tree instanceof NativeMethodContext)
-			{
+			if (tree instanceof NativeMethodContext) {
 				NativeMethodContext methodCtx = (NativeMethodContext) tree;
 				NativeMethodNode methodNode = null;
 				String method = null;
 				NativeNode lastNode = nativeList.get(nativeList.size() - 1);
-				if (lastNode instanceof NativeAtrributeNode)
-				{
+				if (lastNode instanceof NativeAtrributeNode) {
 					method = ((NativeAtrributeNode) lastNode).attribute;
 					//
 					nativeList.remove(nativeList.size() - 1);
 
-				}
-				else
-				{
+				} else {
 
 					String msg = null;
-					if (lastNode instanceof NativeArrayNode)
-					{
+					if (lastNode instanceof NativeArrayNode) {
 						msg = "[]()";
-					}
-					else
-					{
+					} else {
 						msg = "()()";
 					}
 					BeetlException ex = new BeetlException(BeetlException.PARSER_NATIVE_ERROR, msg);
 					ex.pushToken(this.getBTToken(methodCtx.getStart()));
 					throw ex;
 				}
-				//解析参数
+				// 解析参数
 				List<ExpressionContext> expCtxList = methodCtx.expression();
 				Expression[] exp = this.parseExpressionCtxList(expCtxList);
 				methodNode = new NativeMethodNode(method, exp);
 				nativeList.add(methodNode);
-			}
-			else if (tree instanceof NativeArrayContext)
-			{
+			} else if (tree instanceof NativeArrayContext) {
 				ExpressionContext expCtx = ((NativeArrayContext) tree).expression();
 				Expression exp = this.parseExpress(expCtx);
 				NativeArrayNode arrayNode = new NativeArrayNode(exp);
 				nativeList.add(arrayNode);
-			}
-			else if (tree instanceof NativeVarRefChainContext)
-			{
+			} else if (tree instanceof NativeVarRefChainContext) {
 				List<TerminalNode> nodes = ((NativeVarRefChainContext) tree).Identifier();
-				for (TerminalNode node : nodes)
-				{
+				for (TerminalNode node : nodes) {
 					NativeAtrributeNode attributeNode = new NativeAtrributeNode(node.getText());
 					nativeList.add(attributeNode);
 				}
-			}
-			else
-			{
-				//其他节点，这段语法写的不好，造成解析困难，但先这样了
+			} else {
+				// 其他节点，这段语法写的不好，造成解析困难，但先这样了
 				continue;
 			}
 		}
 
 		NativeNode[] chain = nativeList.toArray(new NativeNode[0]);
-		if (clsNode != null)
-		{
+		if (clsNode != null) {
 			nativeExp = new NativeCallExpression(clsNode, chain, this.getBTToken(ncc.start));
-		}
-		else
-		{
+		} else {
 			nativeExp = new NativeCallExpression(insNode, chain, this.getBTToken(ncc.start));
 		}
 		return nativeExp;
 
 	}
 
-	protected Expression[] parseExpressionCtxList(List<ExpressionContext> list)
-	{
-		if (list == null || list.size() == 0)
-		{
+	protected Expression[] parseExpressionCtxList(List<ExpressionContext> list) {
+		if (list == null || list.size() == 0) {
 			return new Expression[0];
 		}
 		List<Expression> expList = new ArrayList<Expression>(list.size());
-		for (ExpressionContext ec : list)
-		{
+		for (ExpressionContext ec : list) {
 			expList.add(this.parseExpress(ec));
 		}
 		return expList.toArray(new Expression[0]);
 
 	}
 
-	protected Expression parseJson(JsonContext ctx)
-	{
-		if (ctx.LEFT_SQBR() != null)
-		{
+	protected Expression parseJson(JsonContext ctx) {
+		if (ctx.LEFT_SQBR() != null) {
 
-			//array
+			// array
 			JsonArrayExpression json = null;
 			List<ExpressionContext> listCtx = ctx.expression();
-			if (listCtx.size() == 0)
-			{
+			if (listCtx.size() == 0) {
 				json = new JsonArrayExpression(Collections.EMPTY_LIST, this.getBTToken(ctx.LEFT_SQBR().getSymbol()));
-			}
-			else
-			{
+			} else {
 				List<Expression> list = new ArrayList<Expression>(listCtx.size());
-				for (ExpressionContext expCtx : listCtx)
-				{
+				for (ExpressionContext expCtx : listCtx) {
 					list.add(this.parseExpress(expCtx));
 				}
 				json = new JsonArrayExpression(list, this.getBTToken(ctx.LEFT_SQBR().getSymbol()));
 
 			}
 			return json;
-		}
-		else
-		{
-			//map
+		} else {
+			// map
 			JsonMapExpression json = null;
 			List<JsonKeyValueContext> listCtx = ctx.jsonKeyValue();
-			if (listCtx.size() == 0)
-			{
+			if (listCtx.size() == 0) {
 				json = new JsonMapExpression(Collections.EMPTY_MAP, this.getBTToken(ctx.LEFT_BRACE().getSymbol()));
-			}
-			else
-			{
+			} else {
 				Map<String, Expression> map = new LinkedHashMap<String, Expression>(listCtx.size());
-				for (JsonKeyValueContext kvCtx : listCtx)
-				{
+				for (JsonKeyValueContext kvCtx : listCtx) {
 					String key = null;
-					if (kvCtx.StringLiteral() != null)
-					{
+					if (kvCtx.StringLiteral() != null) {
 						key = this.getStringValue(kvCtx.StringLiteral().getText());
-					}
-					else
-					{
+					} else {
 						key = kvCtx.Identifier().getSymbol().getText();
 					}
 					Expression exp = this.parseExpress(kvCtx.expression());
@@ -1703,57 +1431,43 @@ public class AntlrProgramBuilder
 		}
 	}
 
-	protected ArthExpression parseMuldivmodExpression(MuldivmodExpContext ctx)
-	{
+	protected ArthExpression parseMuldivmodExpression(MuldivmodExpContext ctx) {
 		Expression a = this.parseExpress(ctx.expression(0));
 		Expression b = this.parseExpress(ctx.expression(1));
 		TerminalNode tn = (TerminalNode) ctx.children.get(1);
 		short mode = 0;
-		if (ctx.MUlTIP() != null)
-		{
+		if (ctx.MUlTIP() != null) {
 			mode = ArthExpression.MUL;
-		}
-		else if (ctx.DIV() != null)
-		{
+		} else if (ctx.DIV() != null) {
 			mode = ArthExpression.DIV;
-		}
-		else if (ctx.MOD() != null)
-		{
+		} else if (ctx.MOD() != null) {
 			mode = ArthExpression.MOD;
 		}
 		return new ArthExpression(a, b, mode, this.getBTToken(tn.getSymbol()));
 
 	}
 
-	protected Expression parsePlusMins(AddminExpContext ctx)
-	{
+	protected Expression parsePlusMins(AddminExpContext ctx) {
 		Expression a = this.parseExpress(ctx.expression(0));
 		Expression b = this.parseExpress(ctx.expression(1));
 		TerminalNode tn = (TerminalNode) ctx.children.get(1);
 		short mode = 0;
-		if (ctx.ADD() != null)
-		{
+		if (ctx.ADD() != null) {
 			mode = ArthExpression.PLUS;
-		}
-		else if (ctx.MIN() != null)
-		{
+		} else if (ctx.MIN() != null) {
 			mode = ArthExpression.MIN;
 		}
 		return new ArthExpression(a, b, mode, this.getBTToken(tn.getSymbol()));
 
 	}
 
-	protected Expression parseTernaryExpression(TernaryExpContext ctx)
-	{
+	protected Expression parseTernaryExpression(TernaryExpContext ctx) {
 		Expression cond = this.parseExpress(ctx.expression(0));
 		Expression a = this.parseExpress(ctx.expression(1));
 		Expression b = null;
-		if (ctx.COLON() == null)
-		{
+		if (ctx.COLON() == null) {
 			b = null;
-		}
-		else
-		{
+		} else {
 			b = this.parseExpress(ctx.expression(2));
 		}
 
@@ -1762,77 +1476,61 @@ public class AntlrProgramBuilder
 
 	}
 
-	protected CompareExpression parseCompareExpression(CompareExpContext ctx)
-	{
+	protected CompareExpression parseCompareExpression(CompareExpContext ctx) {
 		Expression a = this.parseExpress(ctx.expression(0));
 		Expression b = this.parseExpress(ctx.expression(1));
 		TerminalNode tn = (TerminalNode) ctx.children.get(1);
 		short mode = 0;
 
-		if (ctx.EQUAL() != null)
-		{
+		if (ctx.EQUAL() != null) {
 			mode = 0;
-		}
-		else if (ctx.NOT_EQUAL() != null)
-		{
+		} else if (ctx.NOT_EQUAL() != null) {
 			mode = 1;
-		}
-		else if (ctx.LARGE() != null)
-		{
+		} else if (ctx.LARGE() != null) {
 			mode = 2;
-		}
-		else if (ctx.LARGE_EQUAL() != null)
-		{
+		} else if (ctx.LARGE_EQUAL() != null) {
 			mode = 3;
-		}
-		else if (ctx.LESS() != null)
-		{
+		} else if (ctx.LESS() != null) {
 			mode = 4;
-		}
-		else if (ctx.LESS_EQUAL() != null)
-		{
+		} else if (ctx.LESS_EQUAL() != null) {
 			mode = 5;
 		}
 		return new CompareExpression(a, b, mode, this.getBTToken(tn.getSymbol()));
 
 	}
-	
-	protected Expression parseVarRefExpression(VarRefContext varRef)
-	{
+
+	protected Expression parseVarRefExpression(VarRefContext varRef) {
 
 		Expression safeExp = null;
 		Safe_outputContext soctx = varRef.safe_output();
 		boolean hasSafe = false;
-		if (soctx != null)
-		{
+		if (soctx != null) {
 			safeExp = this.parseSafeOutput(soctx);
 			hasSafe = true;
 
 		}
 
-		if (this.pbCtx.isSafeOutput)
-		{
+		if (this.pbCtx.isSafeOutput) {
 			hasSafe = true;
 		}
 
 		List<VarAttributeContext> list = varRef.varAttribute();
 		VarAttribute[] vas = this.parseVarAttribute(list);
-		if (vas.length > 0)
-		{
+		if (vas.length > 0) {
 			VarAttribute first = vas[0];
-			if (!(first instanceof VarSquareAttribute || first instanceof VarVirtualAttribute))
-			{
+			if (!(first instanceof VarSquareAttribute || first instanceof VarVirtualAttribute)) {
 				pbCtx.setVarAttr(varRef.Identifier().getText(), first.token.text);
 			}
 
 		}
 
-		VarRef var = new VarRef(vas, hasSafe, safeExp, this.getBTToken(varRef.getText(), varRef.Identifier()
-				.getSymbol().getLine()), this.getBTToken(varRef.Identifier().getSymbol()));
+		VarRef var = new VarRef(vas, hasSafe, safeExp,
+				this.getBTToken(varRef.getText(), varRef.Identifier().getSymbol().getLine()),
+				this.getBTToken(varRef.Identifier().getSymbol()));
 		pbCtx.setVarPosition(varRef.Identifier().getText(), var);
 		return var;
 	}
-	
+
 	protected Expression parseSafeOutput(Safe_outputContext soctx) {
 		Expression safeExp = null;
 		List list = soctx.children;
@@ -1857,62 +1555,52 @@ public class AntlrProgramBuilder
 		return safeExp;
 	}
 
-	protected VarRef parseVarRefInLeftExpression(VarRefContext varRef)
-	{
+	protected VarRef parseVarRefInLeftExpression(VarRefContext varRef) {
 
 		Expression safeExp = null;
 		Safe_outputContext soctx = varRef.safe_output();
-		if (soctx != null)
-		{
-		  throw new BeetlException(BeetlException.ERROR,"语法错,赋值表达式不能使用安全输出");
+		if (soctx != null) {
+			throw new BeetlException(BeetlException.ERROR, "语法错,赋值表达式不能使用安全输出");
 
 		}
-		
+
 
 		List<VarAttributeContext> list = varRef.varAttribute();
 		VarAttribute[] vas = this.parseVarAttribute(list);
 		// 变量属性，用来收集，暂时未用上
-		if (vas.length > 0)
-		{
+		if (vas.length > 0) {
 			VarAttribute first = vas[0];
-			if (!(first instanceof VarSquareAttribute || first instanceof VarVirtualAttribute))
-			{
+			if (!(first instanceof VarSquareAttribute || first instanceof VarVirtualAttribute)) {
 				pbCtx.setVarAttr(varRef.Identifier().getText(), first.token.text);
 			}
 
 		}
 
-		VarRef var = new VarRef(vas, false, null, this.getBTToken(varRef.getText(), varRef.Identifier()
-				.getSymbol().getLine()), this.getBTToken(varRef.Identifier().getSymbol()));
+		VarRef var = new VarRef(vas, false, null,
+				this.getBTToken(varRef.getText(), varRef.Identifier().getSymbol().getLine()),
+				this.getBTToken(varRef.Identifier().getSymbol()));
 		pbCtx.setVarPosition(varRef.Identifier().getText(), var);
 		return var;
 	}
 
-	protected VarAttribute[] parseVarAttribute(List<VarAttributeContext> list)
-	{
+	protected VarAttribute[] parseVarAttribute(List<VarAttributeContext> list) {
 		List<VarAttribute> listVarAttr = new ArrayList<VarAttribute>();
 
-		for (VarAttributeContext vac : list)
-		{
-			if (vac instanceof VarAttributeGeneralContext)
-			{
+		for (VarAttributeContext vac : list) {
+			if (vac instanceof VarAttributeGeneralContext) {
 				VarAttributeGeneralContext zf = (VarAttributeGeneralContext) vac;
 				VarAttribute attr = new VarAttribute(this.getBTToken(zf.Identifier().getSymbol()));
 				listVarAttr.add(attr);
 				attr.setAA(ObjectAA.defaultObjectAA());
 
-			}
-			else if (vac instanceof VarAttributeArrayOrMapContext)
-			{
+			} else if (vac instanceof VarAttributeArrayOrMapContext) {
 				VarAttributeArrayOrMapContext zf = (VarAttributeArrayOrMapContext) vac;
 
 				Expression exp = this.parseExpress(zf.expression());
 				VarSquareAttribute attr = new VarSquareAttribute(exp, this.getBTToken("[]", exp.token.line));
 				attr.setAA(ObjectAA.defaultObjectAA());
 				listVarAttr.add(attr);
-			}
-			else if (vac instanceof VarAttributeVirtualContext)
-			{
+			} else if (vac instanceof VarAttributeVirtualContext) {
 				VarAttributeVirtualContext zf = (VarAttributeVirtualContext) vac;
 				VarVirtualAttribute attr = new VarVirtualAttribute(this.getBTToken(zf.Identifier().getSymbol()));
 
@@ -1924,58 +1612,42 @@ public class AntlrProgramBuilder
 
 	}
 
-	protected Expression parseLiteralExpress(LiteralContext ctx)
-	{
+	protected Expression parseLiteralExpress(LiteralContext ctx) {
 
 		ParseTree tree = ctx.getChild(0);
 		Object value = null;
-		if (tree instanceof TerminalNode)
-		{
+		if (tree instanceof TerminalNode) {
 			Token node = ((TerminalNode) tree).getSymbol();
 			String strValue = node.getText();
 
 			int type = node.getType();
-			switch (type)
-			{
+			switch (type) {
 				case BeetlParser.StringLiteral:
 					value = getStringValue(strValue);
 					break;
 				case BeetlParser.FloatingPointLiteral:
 					char c = strValue.charAt(strValue.length() - 1);
-					if (isHighScaleNumber(strValue))
-					{
+					if (isHighScaleNumber(strValue)) {
 						String newValue = strValue.substring(0, strValue.length() - 1);
 						value = new BigDecimal(newValue);
-					}
-					else
-					{
+					} else {
 						value = Double.parseDouble(strValue);
 					}
 
 					break;
 				case BeetlParser.DecimalLiteral:
-					if (isHighScaleNumber(strValue))
-					{
+					if (isHighScaleNumber(strValue)) {
 						String newValue = strValue.substring(0, strValue.length() - 1);
 						value = new BigDecimal(newValue);
-					}
-					else
-					{
-						if (strValue.length() < 10)
-						{
+					} else {
+						if (strValue.length() < 10) {
 							value = Integer.parseInt(strValue);
-						}
-						else if (strValue.length() > 10)
-						{
+						} else if (strValue.length() > 10) {
 							value = Long.parseLong(strValue);
-						}
-						else if (strValue.compareTo("2147483647") > 0)
-						{
+						} else if (strValue.compareTo("2147483647") > 0) {
 
 							value = Long.parseLong(strValue);
-						}
-						else
-						{
+						} else {
 							value = Integer.parseInt(strValue);
 						}
 
@@ -1988,38 +1660,29 @@ public class AntlrProgramBuilder
 
 			}
 
-		}
-		else
-		{
+		} else {
 			BooleanLiteralContext blc = (BooleanLiteralContext) tree;
 			String strValue = blc.getChild(0).getText();
 			value = Boolean.parseBoolean(strValue);
 		}
-		if (value == null)
-		{
+		if (value == null) {
 			return Literal.NULLLiteral;
-		}
-		else
-		{
+		} else {
 			Literal literal = new Literal(value, this.getBTToken(ctx.getStart()));
 			return literal;
 		}
 
 	}
 
-	private String getStringValue(String strValue)
-	{
+	private String getStringValue(String strValue) {
 		char[] ch = strValue.toCharArray();
 		StringBuilder sb = new StringBuilder(strValue.length());
-		for (int i = 1; i < ch.length - 1; i++)
-		{
+		for (int i = 1; i < ch.length - 1; i++) {
 			char c = ch[i];
-			if (c == '\\')
-			{
+			if (c == '\\') {
 				char spec = ch[++i];
 				char real = 0;
-				switch (spec)
-				{
+				switch (spec) {
 					case '\"':
 						real = '\"';
 						break;
@@ -2052,37 +1715,29 @@ public class AntlrProgramBuilder
 				}
 				sb.append(real);
 
-			}
-			else
-			{
+			} else {
 				sb.append(c);
 			}
 		}
 		return sb.toString();
 	}
 
-	private boolean isHighScaleNumber(String strValue)
-	{
+	private boolean isHighScaleNumber(String strValue) {
 
 		char c = strValue.charAt(strValue.length() - 1);
-		if (c == 'h' || c == 'H')
-		{
+		if (c == 'h' || c == 'H') {
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
 
-	protected BlockStatement parseBlock(List list, ParserRuleContext ctx)
-	{
+	protected BlockStatement parseBlock(List list, ParserRuleContext ctx) {
 		pbCtx.enterBlock();
 		ASTNode[] statements = new ASTNode[list.size()];
 		List<Statement> nodes = new ArrayList<Statement>();
 		boolean hasGoto = false;
-		for (int i = 0; i < statements.length; i++)
-		{
+		for (int i = 0; i < statements.length; i++) {
 			nodes.add(parseStatment((ParserRuleContext) list.get(i)));
 
 		}
@@ -2093,22 +1748,20 @@ public class AntlrProgramBuilder
 		return block;
 	}
 
-	public GrammarToken getBTToken(Token t)
-	{
+	public GrammarToken getBTToken(Token t) {
 		org.beetl.core.statement.GrammarToken token = new org.beetl.core.statement.GrammarToken(t.getText(),
 				t.getLine(), t.getCharPositionInLine());
 		return token;
 	}
 
-	public GrammarToken getBTToken(String text, int line)
-	{
+	public GrammarToken getBTToken(String text, int line) {
 		org.beetl.core.statement.GrammarToken token = org.beetl.core.statement.GrammarToken.createToken(text, line);
 		return token;
 	}
 
-	//	protected boolean isMVCStrictNode(ASTNode node)
-	//	{
+	// protected boolean isMVCStrictNode(ASTNode node)
+	// {
 	//
-	//	}
+	// }
 
 }

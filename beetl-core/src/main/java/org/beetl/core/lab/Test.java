@@ -1,6 +1,5 @@
 package org.beetl.core.lab;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +12,6 @@ import org.beetl.core.GroupTemplate;
 import org.beetl.core.ResourceLoader;
 import org.beetl.core.Template;
 import org.beetl.core.resource.ClasspathResourceLoader;
-import org.beetl.core.resource.FileResourceLoader;
 
 /**
  * http://sports.qq.com/a/20151126/029300.htm
@@ -26,44 +24,50 @@ public class Test {
 
 		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("org/beetl/core/lab/");
 		Configuration cfg = Configuration.defaultConfiguration();
-		
-		
+
+
 		cfg.setDirectByteOutput(true);
 		cfg.getResourceMap().put("tagRoot", "");
 		cfg.getPkgList().add("org.beetl.core.lab.");
-
+		cfg.setStatementStart("<!--#");
+		cfg.setStatementEnd("-->");
+		cfg.setStatementStart2("//#");
+		cfg.setStatementEnd2(null);
+		cfg.setPlaceholderStart2("#{");
+		cfg.setPlaceholderEnd2("}");
+		cfg.initDelimeter();
 		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
-		
-//		cfg.setStatementStart("@");
-//		cfg.setStatementEnd(null);
+
+		// cfg.setStatementStart("@");
+		// cfg.setStatementEnd(null);
 
 		// cfg.setPlaceholderStart("{{");
 		// cfg.setPlaceholderEnd("}}");
 		//
-	
+
 		List list = new ArrayList();
 		list.add(new TestUser("def"));
 		list.add(new TestUser("abc"));
-		
+
 		HashMap map = new HashMap();
 		map.put("key", 123);
-//		gt.enableStrict();
+		// gt.enableStrict();
 
 		for (int i = 0; i < 1; i++) {
 
 			Template t = gt.getTemplate("/hello.txt");
-//			TestUser user = new TestUser("jo");
-//			user.lover = new TestUser("dddd");
-//			user.friends = list;
-//			t.binding("user",user);
-			t.binding("$page",new HashMap());
+			// TestUser user = new TestUser("jo");
+			// user.lover = new TestUser("dddd");
+			// user.friends = list;
+			// t.binding("user",user);
+			t.binding("$page", new HashMap());
 			Long a = 12342343434l;
 			Object c = a;
 			t.binding("x", a);
 			t.binding("y", c);
-			t.binding("user", new TestUser("def") );
+			t.binding("user", new TestUser("def"));
 			System.out.print(t.render());
-			
+
 		}
 
 	}
@@ -71,34 +75,34 @@ public class Test {
 	public static void testOne() {
 
 	}
-	
-	public static String getRealPath(ResourceLoader loader,String path){
+
+	public static String getRealPath(ResourceLoader loader, String path) {
 		String[] paths = path.split("/");
-		Map<String,String> paras = new HashMap<String,String>();
+		Map<String, String> paras = new HashMap<String, String>();
 		String realPath = "";
-		for(String p:paths){
-			if(p.length()==0||p.equals("/")){
-				continue ;
+		for (String p : paths) {
+			if (p.length() == 0 || p.equals("/")) {
+				continue;
 			}
-			
-			String temp = realPath +"/"+p;
+
+			String temp = realPath + "/" + p;
 			boolean exist = loader.exist(temp);
-			if(!exist){
-				temp = realPath+"/$$";
+			if (!exist) {
+				temp = realPath + "/$$";
 				exist = loader.exist(temp);
-				if(!exist){
+				if (!exist) {
 					return null;
-				}else{
-					realPath=temp;
+				} else {
+					realPath = temp;
 				}
-			}else{
-				realPath=temp;
-				continue ;
+			} else {
+				realPath = temp;
+				continue;
 			}
-			
+
 		}
 		return realPath;
-		
+
 	}
 
 	public static class TestFun implements Function {

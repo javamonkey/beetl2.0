@@ -1,8 +1,9 @@
-<%
-var a=[1,2];
-
-
-%>
-<% for(i in a){ %>
-${i}
-<%}%>
+<!--#  
+var a = [1,2,3];
+-->
+<html>${a[0]}--#{a[1]}</html>
+<script>
+//#for(var i in a){
+var js${iLP.index} = "${i}";
+//#}
+</script>

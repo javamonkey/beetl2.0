@@ -74,9 +74,9 @@ public class Source {
 
     protected char[] doMatchCrAndSkip() {
         // window \r\n linux \n mac \r
-    	if(isEof()) {
-    		return null;
-    	}
+        if (isEof()) {
+            return null;
+        }
         if (cs[p] == '\n') {
             this.consume();
             this.addLine();
@@ -84,7 +84,7 @@ public class Source {
         } else if (cs[p] == '\r') {
             this.consume();
             this.addLine();
-            if (p + 1 < size && cs[p + 1] == '\n') {
+            if (p < size && cs[p] == '\n') {
                 this.consume();
                 return this.parser.cr2;
             }
@@ -159,9 +159,9 @@ public class Source {
     public boolean isEof() {
         return p == size;
     }
-    
+
     public void move(int p) {
-    	this.p = p;
+        this.p = p;
     }
 
     public TextParser getParser() {
@@ -172,8 +172,8 @@ public class Source {
         this.parser = parser;
     }
 
-    
+    @Override
     public String toString() {
-    	return new String(cs,0,p);
+        return new String(cs, 0, p);
     }
 }

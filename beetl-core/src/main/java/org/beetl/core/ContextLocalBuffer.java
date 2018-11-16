@@ -29,6 +29,8 @@ public class ContextLocalBuffer {
 	public static int BYTE_MAX_SIZE = 1024 * 4 * 4;
 	// 采用soft还是weak来保持缓存
 	public static boolean isSoft = true;
+	// 是否采用ThreadLocal来提供性能
+	public static boolean isThreadLocal = true;
 
 	private char[] charBuffer = new char[charBufferSize];
 	private byte[] byteBuffer = new byte[byteBufferSize];
@@ -39,6 +41,10 @@ public class ContextLocalBuffer {
 	static ThreadLocalMap threadLocal = new ThreadLocalMap();
 
 	public static ContextLocalBuffer get() {
+		if (!isThreadLocal) {
+			// 渲染过程使用一个buffer
+			return new ContextLocalBuffer();
+		}
 		Reference<ContextLocalBuffer> re = threadLocal.get();
 		ContextLocalBuffer ctxBuffer = re.get();
 		if (ctxBuffer == null) {

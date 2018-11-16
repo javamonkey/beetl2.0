@@ -130,6 +130,7 @@ public class Configuration {
 
 	int bufferSize = 4096;
 	boolean bufferInSoft = true;
+	boolean enableThreadLocal = true;
 
 	public static String DELIMITER_PLACEHOLDER_START = "DELIMITER_PLACEHOLDER_START";
 	public static String DELIMITER_PLACEHOLDER_END = "DELIMITER_PLACEHOLDER_END";
@@ -154,6 +155,7 @@ public class Configuration {
 
 	public static String BUFFER_SIZE = "GLOBAL.buffer.maxSize";
 	public static String BUFFER_IN_SOFT = "GLOBAL.buffer.isInSoft";
+	public static String THREAD_LOCAL = "GLOBAL.enableThreadLocal";
 
 	Properties ps = null;
 
@@ -188,6 +190,7 @@ public class Configuration {
 		ContextLocalBuffer.MAX_SIZE = this.bufferSize;
 		ContextLocalBuffer.BYTE_MAX_SIZE = this.bufferSize * 4;
 		ContextLocalBuffer.isSoft = this.bufferInSoft;
+		ContextLocalBuffer.isThreadLocal = this.enableThreadLocal;
 
 	}
 
@@ -295,9 +298,9 @@ public class Configuration {
 			}
 		} else if (key.equalsIgnoreCase(BUFFER_IN_SOFT)) {
 			this.bufferInSoft = Boolean.parseBoolean(value);
-		}
-
-		else {
+		} else if (key.equalsIgnoreCase(THREAD_LOCAL)) {
+			this.enableThreadLocal = Boolean.parseBoolean(value);
+		} else {
 			// 扩展
 
 			if (key.startsWith("fn.") || key.startsWith("FN.")) {

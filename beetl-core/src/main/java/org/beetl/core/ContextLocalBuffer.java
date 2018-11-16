@@ -13,122 +13,127 @@ import java.util.concurrent.ConcurrentMap;
  *
  */
 public class ContextLocalBuffer {
-    /**
-     * 初始化的字符数组大小
-     */
-    public static int charBufferSize = 256;
+	/**
+	 * 初始化的字符数组大小
+	 */
+	public static int charBufferSize = 256;
 
-    /**
-     * 初始化的字节大小
-     */
-    public static int byteBufferSize = 256;
+	/**
+	 * 初始化的字节大小
+	 */
+	public static int byteBufferSize = 256;
 
-    /*最大分配的缓存*/
-    public static int MAX_SIZE = 1024 * 5;
-    public static int BYTE_MAX_SIZE = 1024 * 20;
-    // 采用soft还是weak来保持缓存
-    public static boolean isSoft = true;
+	/* 最大分配的缓存 */
+	public static int MAX_SIZE = 1024 * 4;
+	// 考虑字节输出，一个字符可能占用4个字节，所以乘以4
+	public static int BYTE_MAX_SIZE = 1024 * 4 * 4;
+	// 采用soft还是weak来保持缓存
+	public static boolean isSoft = true;
 
-    private char[] charBuffer = new char[charBufferSize];
-    private byte[] byteBuffer = new byte[byteBufferSize];
+	private char[] charBuffer = new char[charBufferSize];
+	private byte[] byteBuffer = new byte[byteBufferSize];
 
-    private char[] EMPTY_CHAR_ARRAY = new char[0];
-    private byte[] EMPTY_BYTE_ARRAY = new byte[0];
+	private char[] EMPTY_CHAR_ARRAY = new char[0];
+	private byte[] EMPTY_BYTE_ARRAY = new byte[0];
 
-    static ThreadLocalMap threadLocal = new ThreadLocalMap();
+	static ThreadLocalMap threadLocal = new ThreadLocalMap();
 
-    public static ContextLocalBuffer get() {
-        Reference<ContextLocalBuffer> re = threadLocal.get();
-        ContextLocalBuffer ctxBuffer = re.get();
-        if (ctxBuffer == null) {
-            Reference<ContextLocalBuffer> one = createOne();
-            // 有可能有问题，刚弄出来就清空了，TODO
-            ctxBuffer = one.get();
-            threadLocal.set(one);
-        }
-        return ctxBuffer;
-    }
+	public static ContextLocalBuffer get() {
+		Reference<ContextLocalBuffer> re = threadLocal.get();
+		ContextLocalBuffer ctxBuffer = re.get();
+		if (ctxBuffer == null) {
+			Reference<ContextLocalBuffer> one = createOne();
 
-    public static void clear() {
-        threadLocal.clear();
-    }
+			ctxBuffer = one.get();
+			if (ctxBuffer == null) {
+				// 对于弱引用，刚弄出来就清空了，很不巧
+				return new ContextLocalBuffer();
+			}
+			threadLocal.set(one);
+		}
+		return ctxBuffer;
+	}
 
-    public char[] getCharBuffer() {
-        return this.charBuffer;
-    }
+	public static void clear() {
+		threadLocal.clear();
+	}
 
-    public byte[] getByteBuffer() {
-        return this.byteBuffer;
-    }
+	public char[] getCharBuffer() {
+		return this.charBuffer;
+	}
 
-    /**
-     * 得到一个期望长度的buffer,调用者应该检测是否返回null，表示
-     * 
-     * @param expected
-     * @return
-     */
-    public char[] getCharBuffer(int expected) {
-        if (this.charBuffer.length >= expected) {
-            return charBuffer;
-        } else if (expected < MAX_SIZE) {
-            // ?预先设置多一点
-            this.charBuffer = new char[(int)(expected * 1.2)];
-        } else {
-            return EMPTY_CHAR_ARRAY;
-        }
-        return this.charBuffer;
-    }
+	public byte[] getByteBuffer() {
+		return this.byteBuffer;
+	}
 
-    /**
-     * 得到期望字节数组大小
-     * 
-     * @param expected
-     * @return
-     */
-    public byte[] getByteBuffer(int expected) {
-        if (this.byteBuffer.length >= expected) {
-            return byteBuffer;
-        } else if (expected < MAX_SIZE) {
-            // ?预先设置多一点
-            byteBuffer = new byte[(int)(expected * 1.2)];
-            return byteBuffer;
-        } else {
-            return EMPTY_BYTE_ARRAY;
-        }
+	/**
+	 * 得到一个期望长度的buffer,调用者应该检测是否返回null，表示
+	 * 
+	 * @param expected
+	 * @return
+	 */
+	public char[] getCharBuffer(int expected) {
+		if (this.charBuffer.length >= expected) {
+			return charBuffer;
+		} else if (expected < MAX_SIZE) {
+			// ?预先设置多一点
+			this.charBuffer = new char[(int) (expected * 1.2)];
+		} else {
+			return EMPTY_CHAR_ARRAY;
+		}
+		return this.charBuffer;
+	}
 
-    }
+	/**
+	 * 得到期望字节数组大小
+	 * 
+	 * @param expected
+	 * @return
+	 */
+	public byte[] getByteBuffer(int expected) {
+		if (this.byteBuffer.length >= expected) {
+			return byteBuffer;
+		} else if (expected < MAX_SIZE) {
+			// ?预先设置多一点
+			byteBuffer = new byte[(int) (expected * 1.2)];
+			return byteBuffer;
+		} else {
+			return EMPTY_BYTE_ARRAY;
+		}
 
-    static class ThreadLocalMap {
-        public ConcurrentMap<Thread, Reference<ContextLocalBuffer>> map =
-            new ConcurrentHashMap<Thread, Reference<ContextLocalBuffer>>();
+	}
 
-        public Reference<ContextLocalBuffer> get() {
-            Thread thread = Thread.currentThread();
-            Reference<ContextLocalBuffer> soft = map.get(thread);
-            if (soft == null) {
-                soft = createOne();
-                map.put(thread, soft);
-            }
-            return soft;
-        }
+	static class ThreadLocalMap {
+		public ConcurrentMap<Thread, Reference<ContextLocalBuffer>> map = new ConcurrentHashMap<Thread, Reference<ContextLocalBuffer>>();
 
-        public void set(Reference<ContextLocalBuffer> o) {
-            Thread thread = Thread.currentThread();
-            map.put(thread, o);
-        }
+		public Reference<ContextLocalBuffer> get() {
+			Thread thread = Thread.currentThread();
+			Reference<ContextLocalBuffer> soft = map.get(thread);
+			if (soft == null) {
+				soft = createOne();
+				map.put(thread, soft);
+			}
+			return soft;
+		}
 
-        public void clear() {
-            map.clear();
-        }
-    }
+		public void set(Reference<ContextLocalBuffer> o) {
+			Thread thread = Thread.currentThread();
+			map.put(thread, o);
+		}
 
-    static Reference<ContextLocalBuffer> createOne() {
-        if (isSoft) {
-            return new SoftReference(new ContextLocalBuffer());
-        } else {
-            return new WeakReference<ContextLocalBuffer>(new ContextLocalBuffer());
-        }
+		public void clear() {
+			map.clear();
+		}
+	}
 
-    }
+	static Reference<ContextLocalBuffer> createOne() {
+		if (isSoft) {
+			return new SoftReference<ContextLocalBuffer>(new ContextLocalBuffer());
+		} else {
+
+			return new WeakReference<ContextLocalBuffer>(new ContextLocalBuffer());
+		}
+
+	}
 
 }

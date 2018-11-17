@@ -28,46 +28,36 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
 
 /**while(exp)  whileBody
  * @author joelli
  *
  */
-public class WhileStatement extends Statement implements IGoto
-{
+public class WhileStatement extends Statement implements IGoto {
 
 	public Expression exp;
 	public Statement whileBody;
 	public boolean hasGoto = false;
 
-	public WhileStatement(Expression exp, Statement whileBody, GrammarToken token)
-	{
+	public WhileStatement(Expression exp, Statement whileBody, GrammarToken token) {
 		super(token);
 		this.exp = exp;
 		this.whileBody = whileBody;
-		if (this.whileBody instanceof BlockStatement)
-		{
+		if (this.whileBody instanceof BlockStatement) {
 			this.hasGoto = ((BlockStatement) whileBody).hasGoto;
 		}
 	}
 
 	@Override
-	public void execute(Context ctx)
-	{
-		if (this.hasGoto)
-		{
-			while (true)
-			{
+	public void execute(Context ctx) {
+		if (this.hasGoto) {
+			while (true) {
 				Object result = exp.evaluate(ctx);
-				if (result instanceof Boolean)
-				{
-					if ((Boolean) result)
-					{
+				if (result instanceof Boolean) {
+					if ((Boolean) result) {
 						whileBody.execute(ctx);
-						switch (ctx.gotoFlag)
-						{
+						switch (ctx.gotoFlag) {
 							case IGoto.NORMAL:
 								break;
 							case IGoto.CONTINUE:
@@ -79,43 +69,30 @@ public class WhileStatement extends Statement implements IGoto
 								ctx.gotoFlag = IGoto.NORMAL;
 								return;
 						}
-					}
-					else
-					{
+					} else {
 						break;
 					}
 
-				}
-				else
-				{
+				} else {
 					BeetlException be = new BeetlException(BeetlException.BOOLEAN_EXPECTED_ERROR);
 					be.pushToken(exp.token);
 					throw be;
 				}
 
 			}
-		}
-		else
-		{
+		} else {
 
-			while (true)
-			{
+			while (true) {
 				Object result = exp.evaluate(ctx);
-				if (result instanceof Boolean)
-				{
-					if ((Boolean) result)
-					{
+				if (result instanceof Boolean) {
+					if ((Boolean) result) {
 						whileBody.execute(ctx);
 
-					}
-					else
-					{
+					} else {
 						break;
 					}
 
-				}
-				else
-				{
+				} else {
 					BeetlException be = new BeetlException(BeetlException.BOOLEAN_EXPECTED_ERROR);
 					be.pushToken(exp.token);
 					throw be;
@@ -125,23 +102,14 @@ public class WhileStatement extends Statement implements IGoto
 		}
 	}
 
-	@Override
-	public void infer(InferContext inferCtx)
-	{
-		exp.infer(inferCtx);
-		whileBody.infer(inferCtx);
-
-	}
 
 	@Override
-	public boolean hasGoto()
-	{
+	public boolean hasGoto() {
 		return this.hasGoto;
 	}
 
 	@Override
-	public void setGoto(boolean occour)
-	{
+	public void setGoto(boolean occour) {
 		this.hasGoto = occour;
 
 	}

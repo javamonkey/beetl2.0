@@ -28,7 +28,6 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 import org.beetl.core.misc.BeetlUtil;
 
 /**
@@ -37,54 +36,27 @@ import org.beetl.core.misc.BeetlUtil;
  * @author joelli
  * 
  */
-public class VarSquareAttribute extends VarAttribute
-{
+public class VarSquareAttribute extends VarAttribute {
 	public Expression exp;
 
-	public VarSquareAttribute(Expression exp, GrammarToken token)
-	{
+	public VarSquareAttribute(Expression exp, GrammarToken token) {
 		super(token);
 		this.exp = exp;
 	}
 
 	@Override
-	public Object evaluate(Context ctx)
-	{
+	public Object evaluate(Context ctx) {
 		throw new UnsupportedOperationException();
 	}
 
-	public Object evaluate(Context ctx, Object o)
-	{
-		
-		try{
+	public Object evaluate(Context ctx, Object o) {
+
+		try {
 			Object value = exp.evaluate(ctx);
 			return aa.value(o, value);
-		}catch(ClassCastException ex){
+		} catch (ClassCastException ex) {
 			throw BeetlUtil.throwCastException(ex, ctx.gt);
 		}
-		
-	}
-
-	public void infer(InferContext inferCtx)
-	{
-
-		exp.infer(inferCtx);
-		Type type = (Type) inferCtx.temp;
-		Type[] tps = type.types;
-		if (tps != null)
-		{
-			if (tps.length == 1)
-			{
-				this.type = tps[0];
-				return;
-			}
-			else if (tps.length == 2)
-			{
-				this.type = tps[1];
-				return;
-			}
-		}
-		this.type = Type.ObjectType;
 
 	}
 

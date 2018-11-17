@@ -28,7 +28,6 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
 
 /**try{
@@ -38,15 +37,14 @@ import org.beetl.core.exception.BeetlException;
  * @author joelli
  *
  */
-public class TryCatchStatement extends Statement
-{
+public class TryCatchStatement extends Statement {
 
 	BlockStatement tryPart;
 	BlockStatement catchPart;
 	VarDefineNode error;
 
-	public TryCatchStatement(BlockStatement tryPart, BlockStatement catchPart, VarDefineNode error, GrammarToken token)
-	{
+	public TryCatchStatement(BlockStatement tryPart, BlockStatement catchPart, VarDefineNode error,
+			GrammarToken token) {
 		super(token);
 		this.tryPart = tryPart;
 		this.catchPart = catchPart;
@@ -54,41 +52,27 @@ public class TryCatchStatement extends Statement
 	}
 
 	@Override
-	public void execute(Context ctx)
-	{
-		try
-		{
+	public void execute(Context ctx) {
+		try {
 			tryPart.execute(ctx);
 
-		}
-		catch (Exception ex)
-		{
-			if (catchPart != null)
-			{
-				if (error != null)
-				{
-					if (ex instanceof BeetlException)
-					{
+		} catch (Exception ex) {
+			if (catchPart != null) {
+				if (error != null) {
+					if (ex instanceof BeetlException) {
 						ctx.vars[error.varIndex] = ex;
-					}
-					else
-					{
+					} else {
 						ctx.vars[error.varIndex] = new BeetlException(BeetlException.ERROR, ex.getMessage(), ex);
 					}
 
 				}
 				catchPart.execute(ctx);
 
-			}
-			else
-			{
+			} else {
 
-				if (ex instanceof BeetlException)
-				{
+				if (ex instanceof BeetlException) {
 					throw (BeetlException) ex;
-				}
-				else
-				{
+				} else {
 					BeetlException be = new BeetlException(BeetlException.ERROR, ex.getMessage(), ex);
 					be.pushToken(tryPart.token);
 					throw be;
@@ -98,15 +82,5 @@ public class TryCatchStatement extends Statement
 
 	}
 
-	@Override
-	public void infer(InferContext inferCtx)
-	{
-		tryPart.infer(inferCtx);
-		if (catchPart != null)
-		{
-			catchPart.infer(inferCtx);
-		}
-
-	}
 
 }

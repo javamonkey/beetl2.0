@@ -28,10 +28,8 @@
 package org.beetl.core.statement;
 
 import java.util.LinkedHashMap;
-import java.util.Map.Entry;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
 import org.beetl.core.misc.ALU;
 
@@ -40,19 +38,17 @@ import org.beetl.core.misc.ALU;
  * @author joelli
  *
  */
-public class SwitchStatement extends Statement
-{
+public class SwitchStatement extends Statement {
 	public Expression value;
 	LinkedHashMap<Expression, BlockStatement> map;
-	//为了类型推测方便，实际上只要map就可以了
+	// 为了类型推测方便，实际上只要map就可以了
 	public Expression[] condtionsList;
 	public BlockStatement[] blocks;
-	//------------
+	// ------------
 	public BlockStatement defaultBlock;
 
-	public SwitchStatement(Expression value, LinkedHashMap<Expression, BlockStatement> map,
-			BlockStatement defaultBlock, GrammarToken token)
-	{
+	public SwitchStatement(Expression value, LinkedHashMap<Expression, BlockStatement> map, BlockStatement defaultBlock,
+			GrammarToken token) {
 		super(token);
 		this.map = map;
 		this.value = value;
@@ -62,28 +58,22 @@ public class SwitchStatement extends Statement
 	}
 
 	@Override
-	public void execute(Context ctx)
-	{
+	public void execute(Context ctx) {
 		Object o = value.evaluate(ctx);
-		if (o == null)
-		{
+		if (o == null) {
 			BeetlException ex = new BeetlException(BeetlException.NULL);
 			ex.pushToken(value.token);
 			throw ex;
 		}
 
 		boolean isMatch = false;
-		for (Expression exp : condtionsList)
-		{
-			if (isMatch ||ALU.equals(o, exp.evaluate(ctx)) )
-			{
+		for (Expression exp : condtionsList) {
+			if (isMatch || ALU.equals(o, exp.evaluate(ctx))) {
 				isMatch = true;
 				BlockStatement block = map.get(exp);
-				if (block != null)
-				{
+				if (block != null) {
 					block.execute(ctx);
-					switch (ctx.gotoFlag)
-					{
+					switch (ctx.gotoFlag) {
 						case IGoto.NORMAL:
 							break;
 						case IGoto.RETURN:
@@ -92,25 +82,19 @@ public class SwitchStatement extends Statement
 							ctx.gotoFlag = IGoto.NORMAL;
 							return;
 					}
-				}
-				else
-				{
+				} else {
 					// 匹配下一个Block
 					continue;
 				}
-			}
-			else
-			{
+			} else {
 				continue;
 			}
 
 		}
 
-		if (!isMatch && defaultBlock != null)
-		{
-			defaultBlock.execute(ctx);			
-			switch (ctx.gotoFlag)
-			{
+		if (!isMatch && defaultBlock != null) {
+			defaultBlock.execute(ctx);
+			switch (ctx.gotoFlag) {
 				case IGoto.NORMAL:
 					break;
 				case IGoto.RETURN:
@@ -123,26 +107,5 @@ public class SwitchStatement extends Statement
 
 	}
 
-	@Override
-	public void infer(InferContext inferCtx)
-	{
-		value.infer(inferCtx);
-		for (Entry<Expression, BlockStatement> entry : map.entrySet())
-		{
-			entry.getKey().infer(inferCtx);
-			BlockStatement block = entry.getValue();
-			if (block != null)
-			{
-				block.infer(inferCtx);
-			}
-
-		}
-
-		if (defaultBlock != null)
-		{
-			defaultBlock.infer(inferCtx);
-		}
-
-	}
 
 }

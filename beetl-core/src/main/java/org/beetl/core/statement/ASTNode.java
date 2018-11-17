@@ -27,22 +27,17 @@
  */
 package org.beetl.core.statement;
 
-import org.beetl.core.InferContext;
-
 /**
  * 节点基类
  * @author joelli
  *
  */
-public abstract class ASTNode implements java.io.Serializable
-{
+public abstract class ASTNode implements java.io.Serializable {
 	public GrammarToken token;
 
-	public ASTNode(GrammarToken token)
-	{
+	public ASTNode(GrammarToken token) {
 		this.token = token;
 	}
 
-	public abstract void infer(InferContext inferCtx);
 
 }

@@ -32,37 +32,29 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 
 /**
  * {a:1,b:2}
  * @author joelli
  *
  */
-public class JsonMapExpression extends Expression
-{
+public class JsonMapExpression extends Expression {
 
 	Map<String, Expression> map;
 	public Expression[] array;
 
-	public JsonMapExpression(Map<String, Expression> map, GrammarToken token)
-	{
+	public JsonMapExpression(Map<String, Expression> map, GrammarToken token) {
 		super(token);
 		this.map = map;
 		array = map.values().toArray(new Expression[0]);
 	}
 
-	public Object evaluate(Context ctx)
-	{
-		if (map.size() == 0)
-		{
+	public Object evaluate(Context ctx) {
+		if (map.size() == 0) {
 			return new LinkedHashMap();
-		}
-		else
-		{
+		} else {
 			Map values = new LinkedHashMap(map.size());
-			for (Entry<String, Expression> entry : map.entrySet())
-			{
+			for (Entry<String, Expression> entry : map.entrySet()) {
 				values.put(entry.getKey(), entry.getValue().evaluate(ctx));
 			}
 			return values;
@@ -70,16 +62,5 @@ public class JsonMapExpression extends Expression
 		}
 	}
 
-	@Override
-	public void infer(InferContext inferCtx)
-	{
-
-		for (Expression exp : array)
-		{
-			exp.infer(inferCtx);
-		}
-		this.type = Type.MapType;
-
-	}
 
 }

@@ -28,7 +28,6 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
 import org.beetl.core.misc.ALU;
 
@@ -36,8 +35,7 @@ import org.beetl.core.misc.ALU;
  * @author joelli
  *
  */
-public class SelectStatement extends Statement
-{
+public class SelectStatement extends Statement {
 
 	public Expression value;
 	public Expression[] conditions;
@@ -45,8 +43,7 @@ public class SelectStatement extends Statement
 	public BlockStatement defaultBlock;
 
 	public SelectStatement(Expression value, Expression[] conditions, BlockStatement[] blocks,
-			BlockStatement defaultBlock, GrammarToken token)
-	{
+			BlockStatement defaultBlock, GrammarToken token) {
 		super(token);
 		this.value = value;
 		this.conditions = conditions;
@@ -55,14 +52,11 @@ public class SelectStatement extends Statement
 	}
 
 	@Override
-	public void execute(Context ctx)
-	{
+	public void execute(Context ctx) {
 		Object base = null;
-		if (value != null)
-		{
+		if (value != null) {
 			base = value.evaluate(ctx);
-			if (base == null)
-			{
+			if (base == null) {
 				BeetlException ex = new BeetlException(BeetlException.NULL);
 				ex.pushToken(value.token);
 				throw ex;
@@ -71,38 +65,28 @@ public class SelectStatement extends Statement
 		}
 
 		boolean isMatch = false;
-		for (int i = 0; i < conditions.length; i++)
-		{
+		for (int i = 0; i < conditions.length; i++) {
 			Expression exp = conditions[i];
 			Object condValue = exp.evaluate(ctx);
 
-			if (value == null)
-			{
-				if (condValue instanceof Boolean)
-				{
+			if (value == null) {
+				if (condValue instanceof Boolean) {
 					isMatch = (Boolean) condValue;
-				}
-				else
-				{
+				} else {
 					BeetlException be = new BeetlException(BeetlException.BOOLEAN_EXPECTED_ERROR);
 					be.pushToken(exp.token);
 					throw be;
 				}
-			}
-			else
-			{
-				if (ALU.equals(base, condValue))
-				{
+			} else {
+				if (ALU.equals(base, condValue)) {
 					isMatch = true;
 				}
 			}
 
-			if (isMatch)
-			{
+			if (isMatch) {
 
 				BlockStatement block = this.blocks[i];
-				if (block != null)
-				{
+				if (block != null) {
 					block.execute(ctx);
 				}
 
@@ -112,32 +96,11 @@ public class SelectStatement extends Statement
 
 		}
 
-		if (!isMatch && defaultBlock != null)
-		{
+		if (!isMatch && defaultBlock != null) {
 			defaultBlock.execute(ctx);
 		}
 
 	}
 
-	@Override
-	public void infer(InferContext inferCtx)
-	{
-		if (value != null)
-			value.infer(inferCtx);
-		for (Expression exp : conditions)
-		{
-			exp.infer(inferCtx);
-		}
-
-		for (BlockStatement block : this.blocks)
-		{
-			block.infer(inferCtx);
-		}
-		if (defaultBlock != null)
-		{
-			defaultBlock.infer(inferCtx);
-		}
-
-	}
 
 }

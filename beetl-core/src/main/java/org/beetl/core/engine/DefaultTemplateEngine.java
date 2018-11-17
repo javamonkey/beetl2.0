@@ -21,23 +21,18 @@ import org.beetl.core.parser.SyntaxErrorListener;
 import org.beetl.core.statement.Program;
 import org.beetl.core.statement.ProgramMetaData;
 
-public class DefaultTemplateEngine implements TemplateEngine
-{
+public class DefaultTemplateEngine implements TemplateEngine {
 
 	protected BeetlAntlrErrorStrategy antlrErrorStrategy = new BeetlAntlrErrorStrategy();
 	protected SyntaxErrorListener syntaxError = new SyntaxErrorListener();
 
 	@Override
 	public Program createProgram(Resource resource, Reader reader, Map<Integer, String> textMap, String cr,
-			GroupTemplate gt)
-	{
+			GroupTemplate gt) {
 		ANTLRInputStream input;
-		try
-		{
+		try {
 			input = new ANTLRInputStream(reader);
-		}
-		catch (IOException e)
-		{
+		} catch (IOException e) {
 			// 不可能发生
 			throw new RuntimeException(e);
 		}
@@ -48,7 +43,7 @@ public class DefaultTemplateEngine implements TemplateEngine
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 
 		BeetlParser parser = new BeetlParser(tokens);
-		//测试代码
+		// 测试代码
 		parser.setErrorHandler(antlrErrorStrategy);
 
 		//
@@ -70,21 +65,14 @@ public class DefaultTemplateEngine implements TemplateEngine
 		Configuration conf = gt.getConf();
 		String charset = conf.getCharset();
 		boolean byteOut = conf.isDirectByteOutput();
-		for (Entry<Integer, String> entry : textMap.entrySet())
-		{
-			if (byteOut)
-			{
-				try
-				{
+		for (Entry<Integer, String> entry : textMap.entrySet()) {
+			if (byteOut) {
+				try {
 					program.metaData.staticTextArray[i++] = entry.getValue().getBytes(charset);
-				}
-				catch (UnsupportedEncodingException e)
-				{
+				} catch (UnsupportedEncodingException e) {
 					throw new RuntimeException(e);
 				}
-			}
-			else
-			{
+			} else {
 
 				program.metaData.staticTextArray[i++] = entry.getValue().toCharArray();
 
@@ -94,9 +82,29 @@ public class DefaultTemplateEngine implements TemplateEngine
 
 		return program;
 	}
-	
-	protected AntlrProgramBuilder getAntlrBuilder(GroupTemplate gt){
-		AntlrProgramBuilder pb = new AntlrProgramBuilder(gt);
+
+	protected AntlrProgramBuilder getAntlrBuilder(GroupTemplate gt) {
+		GrammarCreator gc = this.getGrammerCreator(gt);
+		AntlrProgramBuilder pb = new AntlrProgramBuilder(gt, gc);
 		return pb;
+	}
+
+	protected GrammarCreator getGrammerCreator(GroupTemplate gt) {
+		GrammarCreator grammar = new GrammarCreator();
+		if (gt.getConf().isStrict()) {
+			// 严格MVC 不允许很多语法，跟逻辑相关的
+			grammar.disable("VarAssign");
+			grammar.disable("Function");
+			grammar.disable("IncDec");
+			grammar.disable("VarRefAssignExp");
+			grammar.disable("VarRefAssign");
+			grammar.disable("ClassNativeCall");
+			grammar.disable("InstanceNativeCall");
+			grammar.disable("Arth");
+			grammar.disable("Compare");
+			grammar.disable("InstanceNativeCall");
+
+		}
+		return grammar;
 	}
 }

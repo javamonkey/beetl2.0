@@ -37,8 +37,11 @@ import java.util.Set;
  * @author joelli
  *
  */
-public class Context
-{
+public class Context {
+
+	public Context() {
+
+	}
 
 	public static Object NOT_EXIST_OBJECT = new Object();
 
@@ -107,14 +110,10 @@ public class Context
 	 * @param i
 	 * @return
 	 */
-	protected boolean exist(int i)
-	{
-		if (i >= this.tempVarStartIndex)
-		{
+	protected boolean exist(int i) {
+		if (i >= this.tempVarStartIndex) {
 			return true;
-		}
-		else
-		{
+		} else {
 			Object object = vars[i];
 			return object != NOT_EXIST_OBJECT;
 		}
@@ -124,22 +123,16 @@ public class Context
 	 * @param key
 	 * @param value
 	 */
-	public void set(String key, Object value)
-	{
-		if (globalVar == null)
-			globalVar = new HashMap<String, Object>();
+	public void set(String key, Object value) {
+		if (globalVar == null) globalVar = new HashMap<String, Object>();
 		globalVar.put(key, value);
 	}
 
-	public void set(String key, Object value, boolean isDynamicObject)
-	{
-		if (globalVar == null)
-			globalVar = new HashMap<String, Object>();
+	public void set(String key, Object value, boolean isDynamicObject) {
+		if (globalVar == null) globalVar = new HashMap<String, Object>();
 		globalVar.put(key, value);
-		if (isDynamicObject)
-		{
-			if (objectKeys == null)
-				objectKeys = new HashSet(1);
+		if (isDynamicObject) {
+			if (objectKeys == null) objectKeys = new HashSet(1);
 			objectKeys.add(key);
 		}
 	}
@@ -148,21 +141,18 @@ public class Context
 	 * @param key
 	 * @return
 	 */
-	public Object getGlobal(String key)
-	{
+	public Object getGlobal(String key) {
 		return globalVar.get(key);
 	}
 
-	public String getResourceId()
-	{
+	public String getResourceId() {
 		return this.template.program.res.getId();
 	}
 
 	/** 当前处于哪个Resource
 	 * @return
 	 */
-	public Resource getResource()
-	{
+	public Resource getResource() {
 		return this.template.program.res;
 	}
 

@@ -28,75 +28,60 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
 import org.beetl.core.om.ObjectAA;
-import org.beetl.core.parser.BeetlParser.VarAttributeVirtualContext;
 
 /**
  * var xxx.cc = exp;
  * @author joelli
  *
  */
-public class VarRefAssignStatement extends VarAssignStatement
-{
+public class VarRefAssignStatement extends VarAssignStatement {
 
 	protected int varIndex;
 	public Expression exp;
 	public VarRef varRef;
 	protected VarAttribute lastVarAttribute = null;
 
-	public VarRefAssignStatement(Expression exp, VarRef varRef)
-	{
-		super(exp,exp.token);
+	public VarRefAssignStatement(Expression exp, VarRef varRef) {
+		super(exp, exp.token);
 		this.exp = exp;
 		this.varRef = varRef;
-		lastVarAttribute = varRef.attributes[varRef.attributes.length-1];
+		lastVarAttribute = varRef.attributes[varRef.attributes.length - 1];
 	}
 
-	public void execute(Context ctx)
-	{
-		Object value =  exp.evaluate(ctx);
+	public void execute(Context ctx) {
+		Object value = exp.evaluate(ctx);
 		Object obj = varRef.evaluateUntilLast(ctx);
 		Object key = null;
-		if(lastVarAttribute instanceof VarSquareAttribute){
-			key  = (((VarSquareAttribute)lastVarAttribute).exp).evaluate(ctx);
-			
-			
-		}else {
+		if (lastVarAttribute instanceof VarSquareAttribute) {
+			key = (((VarSquareAttribute) lastVarAttribute).exp).evaluate(ctx);
+
+
+		} else {
 			key = lastVarAttribute.name;
 		}
-		try{
+		try {
 			ObjectAA.defaultObjectAA().setValue(obj, key, value);
-		}catch(ClassCastException ex){
-			BeetlException bx = new BeetlException(BeetlException.ATTRIBUTE_INVALID,ex);
+		} catch (ClassCastException ex) {
+			BeetlException bx = new BeetlException(BeetlException.ATTRIBUTE_INVALID, ex);
 			bx.pushToken(lastVarAttribute.token);
 			throw bx;
-		}catch(BeetlException be){
+		} catch (BeetlException be) {
 			be.pushToken(lastVarAttribute.token);
 			throw be;
 		}
-		
-		
+
 
 	}
-	
 
-	public int getVarIndex()
-	{
+
+	public int getVarIndex() {
 		return varIndex;
 	}
 
-	public void setVarIndex(int varIndex)
-	{
+	public void setVarIndex(int varIndex) {
 		this.varIndex = varIndex;
-	}
-
-	public void infer(InferContext inferCtx)
-	{
-		varRef.infer(inferCtx);
-		exp.infer(inferCtx);
-		
 	}
 
 }

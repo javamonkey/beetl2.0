@@ -29,33 +29,22 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 
 /**
  * break;
  * @author joelli
  *
  */
-public class BreakStatement extends Statement
-{
+public class BreakStatement extends Statement {
 
-	public BreakStatement(GrammarToken token)
-	{
+	public BreakStatement(GrammarToken token) {
 		super(token);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public final void execute(Context ctx)
-	{
+	public final void execute(Context ctx) {
 		ctx.gotoFlag = IGoto.BREAK;
-
-	}
-
-	@Override
-	public void infer(InferContext inferCtx)
-	{
-		// TODO Auto-generated method stub
 
 	}
 

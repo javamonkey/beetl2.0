@@ -31,34 +31,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 
 /** var a = [1,2,3]
  * @author joelli
  *
  */
-public class JsonArrayExpression extends Expression
-{
+public class JsonArrayExpression extends Expression {
 
 	public Expression[] array;
 
-	public JsonArrayExpression(List<Expression> list, GrammarToken token)
-	{
+	public JsonArrayExpression(List<Expression> list, GrammarToken token) {
 		super(token);
 		this.array = list.toArray(new Expression[0]);
 	}
 
-	public Object evaluate(Context ctx)
-	{
-		if (array.length == 0)
-		{
+	public Object evaluate(Context ctx) {
+		if (array.length == 0) {
 			return new ArrayList();
-		}
-		else
-		{
+		} else {
 			List values = new ArrayList(array.length);
-			for (Expression exp : array)
-			{
+			for (Expression exp : array) {
 				values.add(exp.evaluate(ctx));
 			}
 			return values;
@@ -66,16 +58,5 @@ public class JsonArrayExpression extends Expression
 		}
 	}
 
-	@Override
-	public void infer(InferContext inferCtx)
-	{
-
-		for (Expression exp : array)
-		{
-			exp.infer(inferCtx);
-		}
-		this.type = Type.ListType;
-
-	}
 
 }

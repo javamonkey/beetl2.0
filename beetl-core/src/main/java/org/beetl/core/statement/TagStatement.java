@@ -28,7 +28,6 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 import org.beetl.core.Tag;
 import org.beetl.core.TagFactory;
 import org.beetl.core.exception.BeetlException;
@@ -44,15 +43,13 @@ import org.beetl.core.om.ObjectUtil;
  * @author joelli
  *
  */
-public class TagStatement extends Statement
-{
+public class TagStatement extends Statement {
 
 	String tagName;
 	public Expression[] paras;
 	public Statement block;
 
-	public TagStatement(String tagName, Expression[] paras, Statement block, GrammarToken token)
-	{
+	public TagStatement(String tagName, Expression[] paras, Statement block, GrammarToken token) {
 		super(token);
 		this.tagName = tagName;
 		this.paras = paras;
@@ -61,23 +58,17 @@ public class TagStatement extends Statement
 	}
 
 	@Override
-	public void execute(Context ctx)
-	{
+	public void execute(Context ctx) {
 		Tag tag = null;
-		try
-		{
+		try {
 			TagFactory tagFactory = ctx.gt.getTagFactory(this.tagName);
 			tag = tagFactory.createTag();
 			Object[] args = null;
-			if (paras.length == 0)
-			{
+			if (paras.length == 0) {
 				args = ObjectUtil.EMPTY_OBJECT_ARRAY;
-			}
-			else
-			{
+			} else {
 				args = new Object[paras.length];
-				for (int i = 0; i < args.length; i++)
-				{
+				for (int i = 0; i < args.length; i++) {
 					args[i] = paras[i].evaluate(ctx);
 				}
 
@@ -85,16 +76,12 @@ public class TagStatement extends Statement
 
 			tag.init(ctx, args, block);
 			runTag(tag, ctx);
-		}
-		catch (BeetlException ex)
-		{
-			if(!ex.inTagBody) {
+		} catch (BeetlException ex) {
+			if (!ex.inTagBody) {
 				ex.pushToken(this.token);
 			}
 			throw ex;
-		}
-		catch (RuntimeException ex)
-		{
+		} catch (RuntimeException ex) {
 			BeetlException bex = new BeetlException(BeetlException.TAG_INSTANCE_ERROR, ex.getMessage(), ex);
 			bex.pushToken(token);
 			throw bex;
@@ -102,35 +89,19 @@ public class TagStatement extends Statement
 
 	}
 
-	protected void runTag(Tag tag, Context ctx)
-	{
-		try
-		{
+	protected void runTag(Tag tag, Context ctx) {
+		try {
 
 			tag.render();
-		}
-		catch (BeetlException ex)
-		{
-			//BeetlException异常时不要设置token，因为抛出的地方已经设置了
+		} catch (BeetlException ex) {
+			// BeetlException异常时不要设置token，因为抛出的地方已经设置了
 			throw ex;
-		}
-		catch (RuntimeException ex)
-		{
+		} catch (RuntimeException ex) {
 			BeetlException be = new BeetlException(BeetlException.ERROR, "tag执行抛错", ex);
 			be.pushToken(token);
 			throw be;
 		}
 	}
 
-	@Override
-	public void infer(InferContext inferCtx)
-	{
-		for (Expression exp : paras)
-		{
-			exp.infer(inferCtx);
-		}
-		block.infer(inferCtx);
-
-	}
 
 }

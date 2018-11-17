@@ -43,6 +43,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.beetl.core.engine.GrammarCreator;
 import org.beetl.core.exception.BeetlException;
 import org.beetl.core.exception.MVCStrictException;
 import org.beetl.core.exception.NativeNotAllowedException;
@@ -214,9 +215,12 @@ public class AntlrProgramBuilder {
 		safeParameters.add("isNotEmpty");
 	}
 
+	GrammarCreator gc;
 
-	public AntlrProgramBuilder(GroupTemplate gt) {
+
+	public AntlrProgramBuilder(GroupTemplate gt, GrammarCreator gc) {
 		this.gt = gt;
+		this.gc = gc;
 
 	}
 
@@ -262,9 +266,7 @@ public class AntlrProgramBuilder {
 
 		if (node instanceof VarStContext) {
 			VarAssignStatementSeq varSeq = parseVarSt((VarStContext) node);
-			if (gt.conf.isStrict) {
-				throw new MVCStrictException(varSeq.sts[0].token);
-			}
+
 			return varSeq;
 
 		} else if (node instanceof BlockStContext) {
@@ -353,7 +355,6 @@ public class AntlrProgramBuilder {
 			return this.parseSwitch((SiwchStContext) node);
 		} else if (node instanceof SelectStContext) {
 			SelectStContext selectCtx = (SelectStContext) node;
-
 			return this.parseSelect(selectCtx);
 		} else if (node instanceof AjaxStContext) {
 			return this.parseAjax((AjaxStContext) node);
@@ -1118,7 +1119,7 @@ public class AntlrProgramBuilder {
 
 	private VarAssignStatementSeq parseVarDeclareList(VarDeclareListContext ctx) {
 		List<AssignMentContext> list = ctx.assignMent();
-		List<ASTNode> listNode = new ArrayList<ASTNode>();
+		List<VarAssignStatement> listNode = new ArrayList<VarAssignStatement>();
 		for (AssignMentContext amc : list) {
 			VarAssignStatement vas = this.parseAssign(amc);
 			listNode.add(vas);
@@ -1130,7 +1131,7 @@ public class AntlrProgramBuilder {
 
 		}
 
-		VarAssignStatementSeq seq = new VarAssignStatementSeq(listNode.toArray(new Statement[0]), null);
+		VarAssignStatementSeq seq = this.gc.createVarAssignSeq(listNode.toArray(new VarAssignStatement[0]));
 		return seq;
 	}
 
@@ -1742,7 +1743,8 @@ public class AntlrProgramBuilder {
 
 		}
 
-		BlockStatement block = new BlockStatement(nodes.toArray(new Statement[0]), this.getBTToken(ctx.getStart()));
+		BlockStatement block = this.gc.createBlock(nodes.toArray(new Statement[0]), this.getBTToken(ctx.getStart()));
+
 		this.checkGoto(block);
 		pbCtx.exitBlock();
 		return block;

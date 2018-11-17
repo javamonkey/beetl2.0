@@ -30,15 +30,13 @@ package org.beetl.core.statement;
 import org.beetl.core.Context;
 import org.beetl.core.ContextFormat;
 import org.beetl.core.Format;
-import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
 
 /** ${date,dateFormat='yyyy-mm-dd'}
  * @author joelli
  *
  */
-public class FormatExpression extends Expression
-{
+public class FormatExpression extends Expression {
 	String name;
 	String pattern;
 
@@ -47,50 +45,39 @@ public class FormatExpression extends Expression
 	 * @param pattern
 	 * @param token
 	 */
-	public FormatExpression(String name, String pattern, GrammarToken token)
-	{
+	public FormatExpression(String name, String pattern, GrammarToken token) {
 		super(token);
 		this.name = name;
 		this.pattern = pattern;
 	}
 
-	public Object evaluate(Context ctx)
-	{
+	public Object evaluate(Context ctx) {
 		throw new UnsupportedOperationException();
 	}
 
-	public Object evaluateValue(Object o, Context ctx)
-	{
+	public Object evaluateValue(Object o, Context ctx) {
 
 		Format format = null;
-		if (name != null)
-		{
+		if (name != null) {
 			format = ctx.gt.getFormat(name);
-		}
-		else
-		{
-			if (o == null)
-				return null;
+		} else {
+			if (o == null) return null;
 			format = ctx.gt.getDefaultFormat(o.getClass());
 		}
 
-		if (format == null)
-		{
+		if (format == null) {
 			BeetlException ex = new BeetlException(BeetlException.FORMAT_NOT_FOUND);
 			ex.pushToken(token);
 			throw ex;
 		}
-		try
-		{
-			if(format instanceof ContextFormat){
-				return ((ContextFormat)format).format(o, pattern, ctx);
-			}else{
+		try {
+			if (format instanceof ContextFormat) {
+				return ((ContextFormat) format).format(o, pattern, ctx);
+			} else {
 				return format.format(o, pattern);
 			}
-			
-		}
-		catch (Exception e)
-		{
+
+		} catch (Exception e) {
 			BeetlException ex = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "调用格式化函数抛出异常", e);
 			ex.pushToken(token);
 			throw ex;
@@ -98,10 +85,6 @@ public class FormatExpression extends Expression
 
 	}
 
-	public void infer(InferContext inferCtx)
-	{
-		throw new UnsupportedOperationException();
-	}
 
 	public String getName() {
 		return name;

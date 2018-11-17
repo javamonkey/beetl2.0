@@ -118,6 +118,13 @@ public class Configuration {
 	 */
 	String webAppExt = null;
 
+
+	// html方法和html标签是否使用特殊的定界符，如模板使用简介的@和回车,html 标签和html tag使用<%%>
+	boolean hasFunctionLimiter = false;
+	String functionLimiterStart = null;
+	String functionLimiterEnd = null;
+
+
 	// 关于引擎的设置
 
 	// String engine = "org.beetl.core.DefaultTemplateEngine";
@@ -137,6 +144,11 @@ public class Configuration {
 	Map<String, String> tagMap = new HashMap<String, String>();
 	// 资源loader配置
 	Map<String, String> resourceMap = new HashMap<String, String>();
+
+
+	int bufferSize = 4096;
+	boolean bufferInSoft = true;
+	boolean enableThreadLocal = true;
 
 	public static String DELIMITER_PLACEHOLDER_START = "DELIMITER_PLACEHOLDER_START";
 	public static String DELIMITER_PLACEHOLDER_END = "DELIMITER_PLACEHOLDER_END";
@@ -161,6 +173,10 @@ public class Configuration {
 	public static String NATIVE_SECUARTY_MANAGER = "NATIVE_SECUARTY_MANAGER";
 	public static String RESOURCE_LOADER = "RESOURCE_LOADER";
 	public static String HTML_TAG_BINDING_ATTRIBUTE = "HTML_TAG_BINDING_ATTRIBUTE";
+
+	public static String BUFFER_SIZE = "GLOBAL.buffer.maxSize";
+	public static String BUFFER_IN_SOFT = "GLOBAL.buffer.isInSoft";
+	public static String THREAD_LOCAL = "GLOBAL.enableThreadLocal";
 
 	Properties ps = null;
 
@@ -193,9 +209,15 @@ public class Configuration {
 		// this.ps.putAll(myPs);
 		parseProperties(ps);
 
+
 	}
 
-	public void initDelimeter() {
+
+	public void initOther() {
+		ContextLocalBuffer.MAX_SIZE = this.bufferSize;
+		ContextLocalBuffer.BYTE_MAX_SIZE = this.bufferSize * 4;
+		ContextLocalBuffer.isSoft = this.bufferInSoft;
+		ContextLocalBuffer.isThreadLocal = this.enableThreadLocal;
 		if (this.placeholderStart2 != null) {
 			pd = new PlaceHolderDelimeter(placeholderStart.toCharArray(), placeholderEnd.toCharArray(),
 					placeholderStart2.toCharArray(), placeholderEnd2.toCharArray());
@@ -239,7 +261,8 @@ public class Configuration {
 			String value = (String) entry.getValue();
 			setValue(key, value == null ? null : value.trim());
 		}
-		initDelimeter();
+
+		initOther();
 	}
 
 	protected void setValue(String key, String value) {
@@ -318,6 +341,19 @@ public class Configuration {
 			this.nativeSecurity = value;
 		} else if (key.equalsIgnoreCase(RESOURCE_LOADER)) {
 			this.resourceLoader = value;
+		}
+
+		else if (key.equalsIgnoreCase(RESOURCE_LOADER)) {
+			this.resourceLoader = value;
+		} else if (key.equalsIgnoreCase(BUFFER_SIZE)) {
+			this.bufferSize = Integer.parseInt(value);
+			if (bufferSize < 256) {
+				throw new IllegalStateException("GLOBAL.buffer.maxSize 配置不能小于256");
+			}
+		} else if (key.equalsIgnoreCase(BUFFER_IN_SOFT)) {
+			this.bufferInSoft = Boolean.parseBoolean(value);
+		} else if (key.equalsIgnoreCase(THREAD_LOCAL)) {
+			this.enableThreadLocal = Boolean.parseBoolean(value);
 		} else {
 			// 扩展
 
@@ -479,6 +515,7 @@ public class Configuration {
 		this.statementEnd2 = statementEnd2;
 	}
 
+
 	public String getHtmlTagFlag() {
 		return htmlTagFlag;
 	}
@@ -505,6 +542,7 @@ public class Configuration {
 	public void setTagConf(HtmlTagConfig tagConf) {
 		this.tagConf = tagConf;
 	}
+
 
 	public boolean isHtmlTagSupport() {
 		return isHtmlTagSupport;

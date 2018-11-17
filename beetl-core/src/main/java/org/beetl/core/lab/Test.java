@@ -1,6 +1,6 @@
 package org.beetl.core.lab;
 
-import java.io.ByteArrayOutputStream;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,12 +8,12 @@ import java.util.Map;
 
 import org.beetl.core.Configuration;
 import org.beetl.core.Context;
+import org.beetl.core.ContextLocalBuffer;
 import org.beetl.core.Function;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.ResourceLoader;
 import org.beetl.core.Template;
 import org.beetl.core.resource.ClasspathResourceLoader;
-import org.beetl.core.resource.FileResourceLoader;
 
 /**
  * http://sports.qq.com/a/20151126/029300.htm
@@ -24,46 +24,61 @@ import org.beetl.core.resource.FileResourceLoader;
 public class Test {
 	public static void main(String[] args) throws Exception {
 
+		ContextLocalBuffer.isSoft = true;
+		ContextLocalBuffer.MAX_SIZE = 1024 * 10;
+		ContextLocalBuffer.BYTE_MAX_SIZE = ContextLocalBuffer.MAX_SIZE * 4;
 		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("org/beetl/core/lab/");
 		Configuration cfg = Configuration.defaultConfiguration();
-		
-		
+
 		cfg.setDirectByteOutput(true);
 		cfg.getResourceMap().put("tagRoot", "");
 		cfg.getPkgList().add("org.beetl.core.lab.");
 
 		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
-		
-//		cfg.setStatementStart("@");
-//		cfg.setStatementEnd(null);
+
+		// cfg.setStatementStart("@");
+		// cfg.setStatementEnd(null);
 
 		// cfg.setPlaceholderStart("{{");
 		// cfg.setPlaceholderEnd("}}");
 		//
-	
+
 		List list = new ArrayList();
-		list.add(new TestUser("def"));
-		list.add(new TestUser("abc"));
-		
+		// list.add(new TestUser("abc"));
+
 		HashMap map = new HashMap();
 		map.put("key", 123);
-//		gt.enableStrict();
+		// gt.enableStrict();
 
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 100000; i++) {
 
 			Template t = gt.getTemplate("/hello.txt");
-//			TestUser user = new TestUser("jo");
-//			user.lover = new TestUser("dddd");
-//			user.friends = list;
-//			t.binding("user",user);
-			t.binding("$page",new HashMap());
+			// TestUser user = new TestUser("jo");
+			// user.lover = new TestUser("dddd");
+			// user.friends = list;
+			// t.binding("user",user);
+			t.binding("$page", new HashMap());
 			Long a = 12342343434l;
 			Object c = a;
 			t.binding("x", a);
 			t.binding("y", c);
-			t.binding("user", new TestUser("def") );
-			System.out.print(t.render());
-			
+			// t.binding("user", new TestUser("def"));
+			t.render();
+
+			String value = new String("reakl");
+			WeakReference weakRefer = new WeakReference(value);
+
+			String str = (String) weakRefer.get();// null
+			if (str == null) {
+				System.out.println("is null");
+
+			}
+
+			if (i % 10 == 0) {
+				System.gc();
+			}
+			// Thread.currentThread().sleep(1);
+
 		}
 
 	}
@@ -71,34 +86,34 @@ public class Test {
 	public static void testOne() {
 
 	}
-	
-	public static String getRealPath(ResourceLoader loader,String path){
+
+	public static String getRealPath(ResourceLoader loader, String path) {
 		String[] paths = path.split("/");
-		Map<String,String> paras = new HashMap<String,String>();
+		Map<String, String> paras = new HashMap<String, String>();
 		String realPath = "";
-		for(String p:paths){
-			if(p.length()==0||p.equals("/")){
-				continue ;
+		for (String p : paths) {
+			if (p.length() == 0 || p.equals("/")) {
+				continue;
 			}
-			
-			String temp = realPath +"/"+p;
+
+			String temp = realPath + "/" + p;
 			boolean exist = loader.exist(temp);
-			if(!exist){
-				temp = realPath+"/$$";
+			if (!exist) {
+				temp = realPath + "/$$";
 				exist = loader.exist(temp);
-				if(!exist){
+				if (!exist) {
 					return null;
-				}else{
-					realPath=temp;
+				} else {
+					realPath = temp;
 				}
-			}else{
-				realPath=temp;
-				continue ;
+			} else {
+				realPath = temp;
+				continue;
 			}
-			
+
 		}
 		return realPath;
-		
+
 	}
 
 	public static class TestFun implements Function {

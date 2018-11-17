@@ -28,7 +28,6 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 import org.beetl.core.misc.ALU;
 
 /**
@@ -36,15 +35,13 @@ import org.beetl.core.misc.ALU;
  * @author joelli
  *
  */
-public class IfStatement extends Statement
-{
+public class IfStatement extends Statement {
 
 	public Expression condtion;
 	public Statement ifStatement;
 	public Statement elseStatement;
 
-	public IfStatement(Expression condtion, Statement ifStatement, Statement elseStatement, GrammarToken token)
-	{
+	public IfStatement(Expression condtion, Statement ifStatement, Statement elseStatement, GrammarToken token) {
 		super(token);
 		this.condtion = condtion;
 		this.ifStatement = ifStatement;
@@ -53,33 +50,19 @@ public class IfStatement extends Statement
 	}
 
 	@Override
-	public void execute(Context ctx)
-	{
+	public void execute(Context ctx) {
 		// TODO Auto-generated method stub
 		Object value = condtion.evaluate(ctx);
 
-		if (ALU.isTrue(value, this))
-		{
+		if (ALU.isTrue(value, this)) {
 			ifStatement.execute(ctx);
-		}
-		else
-		{
-			if (elseStatement != null)
-			{
+		} else {
+			if (elseStatement != null) {
 				elseStatement.execute(ctx);
 			}
 		}
 
 	}
 
-	public void infer(InferContext inferCtx)
-	{
-		condtion.infer(inferCtx);
-		ifStatement.infer(inferCtx);
-		if (elseStatement != null)
-		{
-			elseStatement.infer(inferCtx);
-		}
-	}
 
 }

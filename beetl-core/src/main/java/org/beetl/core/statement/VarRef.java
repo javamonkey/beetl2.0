@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
 import org.beetl.core.om.MethodInvoker;
 import org.beetl.core.om.ObjectAA;
@@ -42,8 +41,7 @@ import org.beetl.core.om.ObjectUtil;
  * @author joelli
  *
  */
-public class VarRef extends Expression implements IVarIndex
-{
+public class VarRef extends Expression implements IVarIndex {
 
 	public VarAttribute[] attributes;
 	public Expression safe;
@@ -51,15 +49,13 @@ public class VarRef extends Expression implements IVarIndex
 	public boolean hasSafe;
 	private GrammarToken firstToken = null;
 
-	public VarRef(VarAttribute[] attributes, boolean hasSafe, Expression safe, GrammarToken token)
-	{
+	public VarRef(VarAttribute[] attributes, boolean hasSafe, Expression safe, GrammarToken token) {
 		this(attributes, hasSafe, safe, token, token);
 
 	}
 
 	public VarRef(VarAttribute[] attributes, boolean hasSafe, Expression safe, GrammarToken token,
-			GrammarToken firstToken)
-	{
+			GrammarToken firstToken) {
 		super(token);
 
 		this.attributes = attributes;
@@ -70,41 +66,31 @@ public class VarRef extends Expression implements IVarIndex
 	}
 
 	@Override
-	public Object evaluate(Context ctx)
-	{
+	public Object evaluate(Context ctx) {
 
 		Result ret = this.getValue(ctx);
-		if(ret.safe) {
+		if (ret.safe) {
 			return ret.value;
 		}
-		
+
 		Object value = ret.value;
-		
-		//属性
-		if (attributes.length == 0)
-		{
+
+		// 属性
+		if (attributes.length == 0) {
 			return value;
 		}
 
-		for (int i = 0; i < attributes.length; i++)
-		{
+		for (int i = 0; i < attributes.length; i++) {
 
 			VarAttribute attr = attributes[i];
-			if (value == null)
-			{
-				if (hasSafe)
-				{
+			if (value == null) {
+				if (hasSafe) {
 					return safe == null ? null : safe.evaluate(ctx);
-				}
-				else
-				{
+				} else {
 					BeetlException be = new BeetlException(BeetlException.NULL, "空指针");
-					if (i == 0)
-					{
+					if (i == 0) {
 						be.pushToken(this.firstToken);
-					}
-					else
-					{
+					} else {
 						be.pushToken(attributes[i - 1].token);
 					}
 
@@ -113,18 +99,13 @@ public class VarRef extends Expression implements IVarIndex
 
 			}
 
-			try
-			{
+			try {
 				value = attr.evaluate(ctx, value);
-			}
-			catch (BeetlException ex)
-			{
+			} catch (BeetlException ex) {
 				ex.pushToken(attr.token);
 				throw ex;
 
-			}
-			catch (RuntimeException ex)
-			{
+			} catch (RuntimeException ex) {
 				BeetlException be = new BeetlException(BeetlException.ATTRIBUTE_INVALID, "属性访问出错", ex);
 				be.pushToken(attr.token);
 				throw be;
@@ -132,89 +113,87 @@ public class VarRef extends Expression implements IVarIndex
 
 		}
 
-		if (value == null && hasSafe)
-		{
+		if (value == null && hasSafe) {
 			return safe == null ? null : safe.evaluate(ctx);
-		}
-		else
-		{
+		} else {
 			return value;
 		}
 
 	}
-	
-	class Result{
+
+	class Result {
 		Object value;
 		boolean safe = false;
-		public Result(Object value,boolean safe) {
+
+		public Result(Object value, boolean safe) {
 			this.value = value;
 			this.safe = safe;
 		}
-		
+
 		public Result(Object value) {
-			this(value,false);
+			this(value, false);
 		}
-		
+
 	}
-	
+
 	private Result getValue(Context ctx) {
-		
+
 		Object value = ctx.vars[varIndex];
-		if (value == Context.NOT_EXIST_OBJECT)
-		{
-			
-			if(ctx.globalVar!=null&&ctx.globalVar.containsKey("_root")) {
-				//如果有一个根对象
+		if (value == Context.NOT_EXIST_OBJECT) {
+
+			if (ctx.globalVar != null && ctx.globalVar.containsKey("_root")) {
+				// 如果有一个根对象
 				Object root = ctx.getGlobal("_root");
 				String attr = firstToken.text;
-				if(root==null) {
-					if(hasSafe) {
-						return new Result(safe == null ? null : safe.evaluate(ctx),true);
-					}else {
-						BeetlException be = new BeetlException(BeetlException.NULL, "_root为空指针，无"+this.firstToken.text+"值");
+				if (root == null) {
+					if (hasSafe) {
+						return new Result(safe == null ? null : safe.evaluate(ctx), true);
+					} else {
+						BeetlException be = new BeetlException(BeetlException.NULL,
+								"_root为空指针，无" + this.firstToken.text + "值");
 						be.pushToken(this.firstToken);
 						throw be;
 					}
-					
+
 				}
-			
-				if(hasAttr(root,attr)) {
+
+				if (hasAttr(root, attr)) {
 					value = ObjectAA.defaultObjectAA().value(root, attr);
-					if (value == null&&hasSafe) {
-						return new Result(safe == null ? null : safe.evaluate(ctx),true);
+					if (value == null && hasSafe) {
+						return new Result(safe == null ? null : safe.evaluate(ctx), true);
 					}
-					
-				}else {
-					//当没有属性的时候，忽略安全输出，直接报错,以免得系统重构的时候模板不报错
-					BeetlException ex = new BeetlException(BeetlException.ATTRIBUTE_INVALID,"_root "+root.getClass()+" 无此属性");
+
+				} else {
+					// 当没有属性的时候，忽略安全输出，直接报错,以免得系统重构的时候模板不报错
+					BeetlException ex = new BeetlException(BeetlException.ATTRIBUTE_INVALID,
+							"_root " + root.getClass() + " 无此属性");
 					ex.pushToken(this.firstToken);
 					throw ex;
 				}
 				ctx.vars[varIndex] = value;
-				
-			}else if(hasSafe){
-				return new Result(safe == null ? null : safe.evaluate(ctx),true);
-			}else {
+
+			} else if (hasSafe) {
+				return new Result(safe == null ? null : safe.evaluate(ctx), true);
+			} else {
 				BeetlException ex = new BeetlException(BeetlException.VAR_NOT_DEFINED);
 				ex.pushToken(this.firstToken);
 				throw ex;
 			}
-		}else if (value == null&&hasSafe)
-		{
-			return new Result(safe == null ? null : safe.evaluate(ctx),true);
+		} else if (value == null && hasSafe) {
+			return new Result(safe == null ? null : safe.evaluate(ctx), true);
 		}
-		
+
 		return new Result(value);
 	}
+
 	private boolean hasAttr(Object o, String attr) {
 
 		if (o instanceof Map) {
-			 return true;
+			return true;
 		} else if (o instanceof List) {
 			return false;
 
-		}
-		else {
+		} else {
 			Class c = o.getClass();
 			MethodInvoker invoker = ObjectUtil.getInvokder(c, (String) attr);
 			if (invoker != null) {
@@ -225,61 +204,49 @@ public class VarRef extends Expression implements IVarIndex
 
 		}
 	}
-	
+
 	/** 计算所有表达式，知道最后一值，用于a.b[xx].c = 1  赋值，只计算到a.b[xx]
 	 * @param ctx
 	 * @return
 	 */
-	public Object evaluateUntilLast(Context ctx){
-		
-		if (attributes.length == 0)
-		{
-			//不可能发生，除非beetl写错了，先放在着
+	public Object evaluateUntilLast(Context ctx) {
+
+		if (attributes.length == 0) {
+			// 不可能发生，除非beetl写错了，先放在着
 			throw new RuntimeException();
 		}
 		Result ret = this.getValue(ctx);
 		Object value = ret.value;
-		if (value == null)
-		{
+		if (value == null) {
 			BeetlException ex = new BeetlException(BeetlException.NULL);
 			ex.pushToken(this.firstToken);
 			throw ex;
 		}
 
-	
-		for (int i = 0; i < attributes.length-1; i++)
-		{
+
+		for (int i = 0; i < attributes.length - 1; i++) {
 
 			VarAttribute attr = attributes[i];
-			if (value == null)
-			{
-				
-					BeetlException be = new BeetlException(BeetlException.NULL, "空指针");
-					if (i == 0)
-					{
-						be.pushToken(this.firstToken);
-					}
-					else
-					{
-						be.pushToken(attributes[i - 1].token);
-					}
+			if (value == null) {
 
-					throw be;
+				BeetlException be = new BeetlException(BeetlException.NULL, "空指针");
+				if (i == 0) {
+					be.pushToken(this.firstToken);
+				} else {
+					be.pushToken(attributes[i - 1].token);
+				}
+
+				throw be;
 
 			}
 
-			try
-			{
+			try {
 				value = attr.evaluate(ctx, value);
-			}
-			catch (BeetlException ex)
-			{
+			} catch (BeetlException ex) {
 				ex.pushToken(attr.token);
 				throw ex;
 
-			}
-			catch (RuntimeException ex)
-			{
+			} catch (RuntimeException ex) {
 				BeetlException be = new BeetlException(BeetlException.ATTRIBUTE_INVALID, "属性访问出错", ex);
 				be.pushToken(attr.token);
 				throw be;
@@ -287,47 +254,19 @@ public class VarRef extends Expression implements IVarIndex
 
 		}
 
-		return value ;
+		return value;
 	}
 
 	@Override
-	public void setVarIndex(int index)
-	{
+	public void setVarIndex(int index) {
 		this.varIndex = index;
 
 	}
 
 	@Override
-	public int getVarIndex()
-	{
+	public int getVarIndex() {
 		return this.varIndex;
 	}
 
-	@Override
-	public void infer(InferContext inferCtx)
-	{
-
-		Type type = inferCtx.types[this.varIndex];
-		Type lastType = type;
-		Type t = null;
-		for (VarAttribute attr : attributes)
-		{
-			inferCtx.temp = lastType;
-			attr.infer(inferCtx);
-			t = lastType;
-			lastType = attr.type;
-			attr.type = t;
-
-		}
-		this.type = lastType;
-		if (safe != null)
-		{
-			safe.infer(inferCtx);
-			if (!safe.type.equals(this.type))
-			{
-				this.type = Type.ObjectType;
-			}
-		}
-	}
 
 }

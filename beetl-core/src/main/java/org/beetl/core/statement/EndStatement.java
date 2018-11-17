@@ -28,31 +28,22 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 
 /**
  *  ; ; 多余分号
  * @author joelli
  *
  */
-public class EndStatement extends Statement
-{
+public class EndStatement extends Statement {
 
-	public EndStatement()
-	{
+	public EndStatement() {
 		super(null);
 	}
 
-	public final void execute(Context ctx)
-	{
+	public final void execute(Context ctx) {
 
 		return;
 	}
 
-	@Override
-	public final void infer(InferContext inferCtx)
-	{
-		return;
-	}
 
 }

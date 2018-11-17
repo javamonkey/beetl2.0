@@ -27,34 +27,29 @@
  */
 package org.beetl.core.statement;
 
-import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.beetl.core.Context;
 import org.beetl.core.Function;
 import org.beetl.core.GroupTemplate;
-import org.beetl.core.InferContext;
 import org.beetl.core.Resource;
 import org.beetl.core.exception.BeetlException;
 import org.beetl.core.fun.FileFunctionWrapper;
-import org.beetl.core.fun.MutipleFunctionWrapper;
-import org.beetl.core.fun.SingleFunctionWrapper;
 
 /**
  * call();
  * @author joelli
  *
  */
-public class FunctionExpression extends Expression
-{
+public class FunctionExpression extends Expression {
 	String name;
 	public Expression[] exps;
 	public VarAttribute[] vas;
 	public Expression safeExp;
 	boolean hasSafe = false;
 
-	public FunctionExpression(String name, Expression[] exps, VarAttribute[] vas, boolean hasSafe,Expression safeExp,GrammarToken token)
-	{
+	public FunctionExpression(String name, Expression[] exps, VarAttribute[] vas, boolean hasSafe, Expression safeExp,
+			GrammarToken token) {
 		super(token);
 		this.name = name;
 		this.exps = exps;
@@ -63,216 +58,90 @@ public class FunctionExpression extends Expression
 		this.hasSafe = hasSafe;
 	}
 
-	public Object evaluate(Context ctx)
-	{
+	public Object evaluate(Context ctx) {
 		Function fn = ctx.gt.getFunction(name);
-		if (fn == null)
-		{
-			//检查html实现
-			Resource resource = getResource(ctx.gt,name);
-			if(resource.getResourceLoader().exist(resource.getId())) {
+		if (fn == null) {
+			// 检查html实现
+			Resource resource = getResource(ctx.gt, name);
+			if (resource.getResourceLoader().exist(resource.getId())) {
 				fn = new FileFunctionWrapper(resource.getId());
-				
-			}else {
+
+			} else {
 				BeetlException ex = new BeetlException(BeetlException.FUNCTION_NOT_FOUND);
 				ex.pushToken(token);
 				throw ex;
 			}
-			
+
 		}
 
 		Object[] paras = new Object[exps.length];
-		for (int i = 0; i < paras.length; i++)
-		{
+		for (int i = 0; i < paras.length; i++) {
 			paras[i] = exps[i].evaluate(ctx);
 		}
 		Object value = null;
-		try
-		{
+		try {
 			value = fn.call(paras, ctx);
-		}
-		catch (BeetlException ex)
-		{
+		} catch (BeetlException ex) {
 			ex.pushToken(token);
 			throw ex;
-		}
-		catch (RuntimeException ex)
-		{
+		} catch (RuntimeException ex) {
 			BeetlException be = new BeetlException(BeetlException.NATIVE_CALL_EXCEPTION, "调用方法出错 " + name, ex);
 			be.pushToken(this.token);
 			throw be;
 		}
-		
+
 		Object ret = null;
 
-		if (vas == null)
-		{
-			ret =  value;
-		}
-		else
-		{
+		if (vas == null) {
+			ret = value;
+		} else {
 
-			for (VarAttribute attr : vas)
-			{
+			for (VarAttribute attr : vas) {
 
-				try
-				{
+				try {
 					value = attr.evaluate(ctx, value);
-				}
-				catch (BeetlException ex)
-				{
+				} catch (BeetlException ex) {
 					ex.pushToken(attr.token);
 					throw ex;
 
-				}
-				catch (RuntimeException ex)
-				{
+				} catch (RuntimeException ex) {
 					BeetlException be = new BeetlException(BeetlException.ATTRIBUTE_INVALID, "属性访问出错", ex);
 					be.pushToken(attr.token);
 					throw be;
 				}
 
-				if (value == null)
-				{
-					if (hasSafe)
-					{
+				if (value == null) {
+					if (hasSafe) {
 						return safeExp == null ? null : safeExp.evaluate(ctx);
-					}
-					else
-					{
+					} else {
 						BeetlException be = new BeetlException(BeetlException.ERROR, "空指针 ");
 						be.pushToken(attr.token);
 						throw be;
 					}
-					
+
 				}
 
 			}
-			ret =  value;
+			ret = value;
 		}
-		
-		if (ret == null && hasSafe)
-		{
+
+		if (ret == null && hasSafe) {
 			return safeExp == null ? null : safeExp.evaluate(ctx);
-		}
-		else
-		{
+		} else {
 			return ret;
 		}
 
 	}
 
-	public void infer(InferContext inferCtx)
-	{
-		Function fn = inferCtx.gt.getFunction(name);
-		if (fn == null)
-		{
-			Resource resource = getResource(inferCtx.gt,name);
-			if(resource==null){
-				BeetlException ex = new BeetlException(BeetlException.FUNCTION_NOT_FOUND);
-				ex.pushToken(token);
-				throw ex;
-			}else{
-				fn = new FileFunctionWrapper(resource.getId());
-			}
-			
-		}
-		for (Expression exp : exps)
-		{
-			exp.infer(inferCtx);
-		}
-		//return type;
-		Class c = null;
-		if (fn instanceof SingleFunctionWrapper)
-		{
-			SingleFunctionWrapper singleWrapper = (SingleFunctionWrapper) fn;
-			c = singleWrapper.getReturnType();
-		}
-		else if (fn instanceof MutipleFunctionWrapper)
-		{
-			try
-			{
-				Class[] parasType = new Class[exps.length];
-				int i = 0;
-				for (Expression exp : exps)
-				{
-					exp.infer(inferCtx);
-					parasType[i++] = exp.getType().cls;
-				}
-				c = ((MutipleFunctionWrapper) fn).getReturnType(parasType);
-			}
-			catch (BeetlException ex)
-			{
-				ex.pushToken(token);
-				throw ex;
-			}
 
-		}
-		else
-		{
-
-			Method call = null;
-			try
-			{
-				call = fn.getClass().getMethod("call", Object[].class, Context.class);
-				c = call.getReturnType();
-			}
-			catch (NoSuchMethodException e)
-			{
-				BeetlException ex = new BeetlException(BeetlException.FUNCTION_INVALID);
-				ex.pushToken(token);
-				throw ex;
-			}
-			catch (SecurityException e)
-			{
-				BeetlException ex = new BeetlException(BeetlException.FUNCTION_INVALID);
-				ex.pushToken(token);
-				throw ex;
-			}
-		}
-
-		Type lastType = new Type(c);
-		if (vas == null)
-		{
-			this.type = lastType;
-			return;
-		}
-		else
-		{
-
-			Type t = null;
-			for (VarAttribute attr : vas)
-			{
-				inferCtx.temp = lastType;
-				attr.infer(inferCtx);
-				t = lastType;
-				lastType = attr.type;
-				attr.type = t;
-
-			}
-			this.type = lastType;
-		}
-		
-		
-		if (safeExp != null)
-		{
-			safeExp.infer(inferCtx);
-			if (!safeExp.type.equals(this.type))
-			{
-				this.type = Type.ObjectType;
-			}
-		}
-
-	}
-
-	private Resource getResource(GroupTemplate gt,String name){
+	private Resource getResource(GroupTemplate gt, String name) {
 		Map<String, String> resourceMap = gt.getConf().getResourceMap();
 		String functionSuffix = resourceMap.get("functionSuffix");
 		String functionRoot = resourceMap.get("functionRoot");
 		String path = name.replace(".", "/");
-		Resource resource = gt.getResourceLoader().getResource(functionRoot+"/"+path+"."+functionSuffix);
+		Resource resource = gt.getResourceLoader().getResource(functionRoot + "/" + path + "." + functionSuffix);
 		return resource;
-		
+
 	}
-	
+
 }

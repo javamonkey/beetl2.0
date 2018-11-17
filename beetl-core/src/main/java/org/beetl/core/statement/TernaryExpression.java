@@ -28,7 +28,6 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
 
 /**
@@ -38,15 +37,13 @@ import org.beetl.core.exception.BeetlException;
  * @author joelli
  *
  */
-public class TernaryExpression extends Expression
-{
+public class TernaryExpression extends Expression {
 
 	public Expression condtion;
 	public Expression a;
 	public Expression b;
 
-	public TernaryExpression(Expression condtion, Expression a, Expression b, GrammarToken token)
-	{
+	public TernaryExpression(Expression condtion, Expression a, Expression b, GrammarToken token) {
 		super(token);
 		this.condtion = condtion;
 		this.a = a;
@@ -54,71 +51,31 @@ public class TernaryExpression extends Expression
 
 	}
 
-	public Object evaluate(Context ctx)
-	{
-		
+	public Object evaluate(Context ctx) {
+
 		Object value = condtion.evaluate(ctx);
-		if(value==null){
+		if (value == null) {
 			BeetlException be = new BeetlException(BeetlException.NULL);
 			be.pushToken(condtion.token);
 			throw be;
-		}else if(!(value instanceof Boolean)){
+		} else if (!(value instanceof Boolean)) {
 			BeetlException be = new BeetlException(BeetlException.BOOLEAN_EXPECTED_ERROR);
 			be.pushToken(condtion.token);
 			throw be;
 		}
-		boolean cond = (Boolean)value;
+		boolean cond = (Boolean) value;
 
-		if (cond)
-		{
+		if (cond) {
 			return a.evaluate(ctx);
-		}
-		else
-		{
-			if (b != null)
-			{
+		} else {
+			if (b != null) {
 				return b.evaluate(ctx);
-			}
-			else
-			{
+			} else {
 				return null;
 			}
 		}
 
 	}
 
-	public void infer(InferContext inferCtx)
-	{
-		condtion.infer(inferCtx);
-		if (a != null)
-		{
-			a.infer(inferCtx);
-			if (b == null)
-			{
-				this.type = a.type;
-				return;
-			}
-		}
-		if (b != null)
-		{
-			b.infer(inferCtx);
-			if (a == null)
-			{
-				this.type = b.type;
-				return;
-			}
-		}
-
-		if (a.type.equals(b.type))
-		{
-			this.type = a.type;
-		}
-		else
-		{
-			// 能优化成共同的接口或者父类？
-			this.type = Type.ObjectType;
-		}
-
-	}
 
 }

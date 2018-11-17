@@ -30,7 +30,6 @@ package org.beetl.core.statement;
 import java.io.IOException;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
 
 /**
@@ -38,27 +37,21 @@ import org.beetl.core.exception.BeetlException;
  * @author joelli
  *
  */
-public final class StaticTextByteASTNode extends Statement
-{
+public final class StaticTextByteASTNode extends Statement {
 
 	int textIndex;
 
-	public StaticTextByteASTNode(int textIndex, GrammarToken token)
-	{
+	public StaticTextByteASTNode(int textIndex, GrammarToken token) {
 		super(token);
 		this.textIndex = textIndex;
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public void execute(Context ctx)
-	{
-		try
-		{
+	public void execute(Context ctx) {
+		try {
 			ctx.byteWriter.write((byte[]) ctx.staticTextArray[textIndex]);
-		}
-		catch (IOException ex)
-		{
+		} catch (IOException ex) {
 			BeetlException be = new BeetlException(BeetlException.CLIENT_IO_ERROR_ERROR, "Client IO Error", ex);
 			be.pushToken(this.token);
 			throw be;
@@ -66,10 +59,5 @@ public final class StaticTextByteASTNode extends Statement
 
 	}
 
-	@Override
-	public void infer(InferContext inferCtx)
-	{
-		// do nothing
-	}
 
 }

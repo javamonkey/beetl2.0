@@ -28,35 +28,25 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 
 /** call();
  * @author joelli
  *
  */
-public class FunctionStatement extends Statement
-{
+public class FunctionStatement extends Statement {
 
 	public FunctionExpression fe;
 
-	public FunctionStatement(FunctionExpression fe, GrammarToken token)
-	{
+	public FunctionStatement(FunctionExpression fe, GrammarToken token) {
 		super(token);
 		this.fe = fe;
 	}
 
 	@Override
-	public void execute(Context ctx)
-	{
+	public void execute(Context ctx) {
 		fe.evaluate(ctx);
 
 	}
 
-	@Override
-	public void infer(InferContext inferCtx)
-	{
-		fe.infer(inferCtx);
-
-	}
 
 }

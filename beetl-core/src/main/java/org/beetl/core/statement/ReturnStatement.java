@@ -28,46 +28,31 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 
 /**
  * return 
  * @author joelli
  *
  */
-public class ReturnStatement extends Statement
-{
+public class ReturnStatement extends Statement {
 
 	public Expression exp = null;
 
-	public ReturnStatement(Expression exp, GrammarToken token)
-	{
+	public ReturnStatement(Expression exp, GrammarToken token) {
 		super(token);
 		this.exp = exp;
 	}
 
 	@Override
-	public void execute(Context ctx)
-	{
+	public void execute(Context ctx) {
 		ctx.gotoFlag = IGoto.RETURN;
-		if (this.exp != null)
-		{
+		if (this.exp != null) {
 			Object value = exp.evaluate(ctx);
-			//最后一个存放返回值
+			// 最后一个存放返回值
 			ctx.vars[ctx.vars.length - 1] = value;
 		}
 
 	}
 
-	@Override
-	public void infer(InferContext inferCtx)
-	{
-		if (exp != null)
-		{
-			exp.infer(inferCtx);
-
-		}
-
-	}
 
 }

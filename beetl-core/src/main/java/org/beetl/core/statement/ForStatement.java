@@ -28,10 +28,8 @@
 package org.beetl.core.statement;
 
 import java.util.Collections;
-import java.util.Map;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 import org.beetl.core.IteratorStatus;
 import org.beetl.core.exception.BeetlException;
 import org.beetl.core.exception.BeetlParserException;
@@ -40,8 +38,7 @@ import org.beetl.core.exception.BeetlParserException;
  * @author joelli
  *
  */
-public final class ForStatement extends Statement implements IGoto
-{
+public final class ForStatement extends Statement implements IGoto {
 	public Expression idNode;
 	public Expression exp;
 	public Statement forPart;
@@ -58,9 +55,8 @@ public final class ForStatement extends Statement implements IGoto
 	 * @param elseforPart
 	 * @param token
 	 */
-	public ForStatement(VarDefineNode idNode, Expression exp, boolean hasSafe, Statement forPart,
-			Statement elseforPart, GrammarToken token)
-	{
+	public ForStatement(VarDefineNode idNode, Expression exp, boolean hasSafe, Statement forPart, Statement elseforPart,
+			GrammarToken token) {
 		super(token);
 		this.idNode = idNode;
 		this.exp = exp;
@@ -70,32 +66,25 @@ public final class ForStatement extends Statement implements IGoto
 
 	}
 
-	public final void execute(Context ctx)
-	{
+	public final void execute(Context ctx) {
 		// idNode 是其后设置的
 		int varIndex = ((IVarIndex) idNode).getVarIndex();
 		Object collection = exp.evaluate(ctx);
 		IteratorStatus it = null;
-		if (collection == null)
-		{
-			if (!this.hasSafe)
-			{
+		if (collection == null) {
+			if (!this.hasSafe) {
 				BeetlException ex = new BeetlException(BeetlException.NULL);
 				ex.pushToken(exp.token);
 				throw ex;
-			}
-			else
-			{
+			} else {
 				it = new IteratorStatus(Collections.EMPTY_LIST);
 			}
 
-		}
-		else
-		{
+		} else {
 			it = IteratorStatus.getIteratorStatusByType(collection, itType);
-			if (it == null)
-			{
-				BeetlParserException ex = new BeetlParserException(BeetlParserException.COLLECTION_EXPECTED_ERROR,"实际类型是:"+collection.getClass());
+			if (it == null) {
+				BeetlParserException ex = new BeetlParserException(BeetlParserException.COLLECTION_EXPECTED_ERROR,
+						"实际类型是:" + collection.getClass());
 				ex.pushToken(exp.token);
 				throw ex;
 			}
@@ -103,18 +92,15 @@ public final class ForStatement extends Statement implements IGoto
 
 		ctx.vars[varIndex + 1] = it;
 		// loop_index
-		//		ctx.vars[varIndex+2] = 0;
-		//		ctx.vars[varIndex+3] = it.getSize();
-		//		
-		if (this.hasGoto)
-		{
+		// ctx.vars[varIndex+2] = 0;
+		// ctx.vars[varIndex+3] = it.getSize();
+		//
+		if (this.hasGoto) {
 
-			while (it.hasNext())
-			{
+			while (it.hasNext()) {
 				ctx.vars[varIndex] = it.next();
 				forPart.execute(ctx);
-				switch (ctx.gotoFlag)
-				{
+				switch (ctx.gotoFlag) {
 					case IGoto.NORMAL:
 						break;
 					case IGoto.CONTINUE:
@@ -128,26 +114,19 @@ public final class ForStatement extends Statement implements IGoto
 				}
 			}
 
-			if (!it.hasData())
-			{
-				if (elseforPart != null)
-					elseforPart.execute(ctx);
+			if (!it.hasData()) {
+				if (elseforPart != null) elseforPart.execute(ctx);
 			}
 			return;
 
-		}
-		else
-		{
-			while (it.hasNext())
-			{
+		} else {
+			while (it.hasNext()) {
 				ctx.vars[varIndex] = it.next();
 				forPart.execute(ctx);
 
 			}
-			if (!it.hasData())
-			{
-				if (elseforPart != null)
-					elseforPart.execute(ctx);
+			if (!it.hasData()) {
+				if (elseforPart != null) elseforPart.execute(ctx);
 			}
 
 		}
@@ -155,52 +134,16 @@ public final class ForStatement extends Statement implements IGoto
 	}
 
 	@Override
-	public final boolean hasGoto()
-	{
+	public final boolean hasGoto() {
 		// TODO Auto-generated method stub
 		return hasGoto;
 	}
 
 	@Override
-	public final void setGoto(boolean occour)
-	{
+	public final void setGoto(boolean occour) {
 		this.hasGoto = occour;
 
 	}
 
-	@Override
-	public void infer(InferContext inferCtx)
-	{
-		exp.infer(inferCtx);
-		if (exp.getType().types != null)
-		{
-
-			if (Map.class.isAssignableFrom(exp.getType().cls))
-			{
-				idNode.type = Type.mapEntryType;
-
-			}
-			else
-			{
-				//list or array
-				idNode.type = exp.getType().types[0];
-			}
-
-		}
-		else
-		{
-			idNode.type = Type.ObjectType;
-		}
-
-		int index = ((IVarIndex) idNode).getVarIndex();
-		inferCtx.types[index] = idNode.type;
-		inferCtx.types[index + 1] = new Type(IteratorStatus.class, idNode.type.cls);
-		forPart.infer(inferCtx);
-		if (elseforPart != null)
-		{
-			elseforPart.infer(inferCtx);
-		}
-
-	}
 
 }

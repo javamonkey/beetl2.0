@@ -28,43 +28,33 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 
 /**
  *  { statement1;statement2 }
  * @author joelli
  *
  */
-public class BlockStatement extends Statement implements IGoto
-{
+public class BlockStatement extends Statement implements IGoto {
 
 	public Statement[] nodes = null;
 	boolean hasGoto = false;
 
-	public BlockStatement(Statement[] nodes, GrammarToken token)
-	{
+	public BlockStatement(Statement[] nodes, GrammarToken token) {
 		super(token);
 		this.nodes = nodes;
 	}
 
-	public void execute(Context ctx)
-	{
-		if (this.hasGoto)
-		{
-			for (Statement node : nodes)
-			{
+	public void execute(Context ctx) {
+		if (this.hasGoto) {
+			for (Statement node : nodes) {
 				node.execute(ctx);
-				if (ctx.gotoFlag != 0)
-				{
+				if (ctx.gotoFlag != 0) {
 					return;
 				}
 
 			}
-		}
-		else
-		{
-			for (Statement node : nodes)
-			{
+		} else {
+			for (Statement node : nodes) {
 				node.execute(ctx);
 			}
 		}
@@ -73,26 +63,16 @@ public class BlockStatement extends Statement implements IGoto
 	}
 
 	@Override
-	public boolean hasGoto()
-	{
+	public boolean hasGoto() {
 		// TODO Auto-generated method stub
 		return hasGoto;
 	}
 
 	@Override
-	public void setGoto(boolean occour)
-	{
+	public void setGoto(boolean occour) {
 		this.hasGoto = occour;
 
 	}
 
-	@Override
-	public void infer(InferContext inferCtx)
-	{
-		for (Statement st : nodes)
-		{
-			st.infer(inferCtx);
-		}
-	}
 
 }

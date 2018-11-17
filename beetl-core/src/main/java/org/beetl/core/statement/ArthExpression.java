@@ -28,7 +28,6 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 import org.beetl.core.misc.ALU;
 
 /**
@@ -36,8 +35,7 @@ import org.beetl.core.misc.ALU;
  * @author joelli
  *
  */
-public class ArthExpression extends Expression
-{
+public class ArthExpression extends Expression {
 
 	public static final short PLUS = 0;
 	public static final short MIN = 1;
@@ -49,20 +47,17 @@ public class ArthExpression extends Expression
 	public Expression a;
 	public Expression b;
 
-	public ArthExpression(Expression a, Expression b, short mode, GrammarToken token)
-	{
+	public ArthExpression(Expression a, Expression b, short mode, GrammarToken token) {
 		super(token);
 		this.a = a;
 		this.b = b;
 		this.arthMode = mode;
 	}
 
-	public Object evaluate(Context ctx)
-	{
+	public Object evaluate(Context ctx) {
 		Object x = a.evaluate(ctx);
 		Object y = b.evaluate(ctx);
-		switch (arthMode)
-		{
+		switch (arthMode) {
 			case PLUS:
 				return ALU.plus(x, y, a, b);
 			case MIN:
@@ -81,12 +76,5 @@ public class ArthExpression extends Expression
 
 	}
 
-	public void infer(InferContext inferCtx)
-	{
-		a.infer(inferCtx);
-		b.infer(inferCtx);
-		//should check it ?
-		this.type = new Type(ALU.getBaseTypeClass(a.type.cls, b.type.cls));
-	}
 
 }

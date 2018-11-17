@@ -28,7 +28,6 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
 
 /**
@@ -37,8 +36,7 @@ import org.beetl.core.exception.BeetlException;
  * @author joelli
  *
  */
-public class GeneralForStatement extends Statement implements IGoto
-{
+public class GeneralForStatement extends Statement implements IGoto {
 	public Expression[] expInit;
 	public Expression condtion;
 	public Expression[] expUpdate;
@@ -48,10 +46,9 @@ public class GeneralForStatement extends Statement implements IGoto
 	public boolean hasGoto = false;
 	public short itType = 0;
 
-	//for(expInit;condtion;expUpdate){}
+	// for(expInit;condtion;expUpdate){}
 	public GeneralForStatement(VarAssignStatementSeq varAssignSeq, Expression[] expInit, Expression condtion,
-			Expression[] expUpdate, Statement forPart, Statement elseforPart, GrammarToken token)
-	{
+			Expression[] expUpdate, Statement forPart, Statement elseforPart, GrammarToken token) {
 		super(token);
 		this.varAssignSeq = varAssignSeq;
 		this.expInit = expInit;
@@ -62,43 +59,33 @@ public class GeneralForStatement extends Statement implements IGoto
 
 	}
 
-	public void execute(Context ctx)
-	{
-		if (expInit != null)
-		{
-			for (Expression exp : expInit)
-			{
+	public void execute(Context ctx) {
+		if (expInit != null) {
+			for (Expression exp : expInit) {
 				exp.evaluate(ctx);
 			}
 		}
-		if (varAssignSeq != null)
-		{
+		if (varAssignSeq != null) {
 			varAssignSeq.execute(ctx);
 		}
-		//todo 需要提高效率，减少hasLooped赋值，以及每次gotoFlag检测，然而，这个不太常用，目前不优化
+		// todo 需要提高效率，减少hasLooped赋值，以及每次gotoFlag检测，然而，这个不太常用，目前不优化
 
-//		boolean hasLooped = false;
-		for (;;)
-		{
+		// boolean hasLooped = false;
+		for (;;) {
 			Object val = condtion.evaluate(ctx);
 			boolean bool = false;
-			if (val instanceof Boolean)
-			{
+			if (val instanceof Boolean) {
 				bool = ((Boolean) val).booleanValue();
-			}
-			else
-			{
+			} else {
 				BeetlException be = new BeetlException(BeetlException.BOOLEAN_EXPECTED_ERROR);
 				be.pushToken(condtion.token);
 				throw be;
 			}
 
-			if (bool)
-			{
-//				hasLooped = true;
+			if (bool) {
+				// hasLooped = true;
 				forPart.execute(ctx);
-				switch (ctx.gotoFlag)
-				{
+				switch (ctx.gotoFlag) {
 					case IGoto.NORMAL:
 						break;
 					case IGoto.CONTINUE:
@@ -111,16 +98,12 @@ public class GeneralForStatement extends Statement implements IGoto
 						return;
 				}
 
-			}
-			else
-			{
+			} else {
 				break;
 			}
 
-			if (this.expUpdate != null)
-			{
-				for (Expression exp : expUpdate)
-				{
+			if (this.expUpdate != null) {
+				for (Expression exp : expUpdate) {
 					exp.evaluate(ctx);
 				}
 			}
@@ -130,56 +113,16 @@ public class GeneralForStatement extends Statement implements IGoto
 	}
 
 	@Override
-	public final boolean hasGoto()
-	{
+	public final boolean hasGoto() {
 		// TODO Auto-generated method stub
 		return hasGoto;
 	}
 
 	@Override
-	public final void setGoto(boolean occour)
-	{
+	public final void setGoto(boolean occour) {
 		this.hasGoto = occour;
 
 	}
 
-	@Override
-	public void infer(InferContext inferCtx)
-	{
-		if (expInit != null)
-		{
-			for (Expression exp : expInit)
-			{
-				exp.infer(inferCtx);
-
-			}
-		}
-
-		if (varAssignSeq != null)
-		{
-			varAssignSeq.infer(inferCtx);
-		}
-
-		if (condtion != null)
-		{
-			condtion.infer(inferCtx);
-		}
-
-		if (expUpdate != null)
-		{
-			for (Expression exp : expUpdate)
-			{
-				exp.infer(inferCtx);
-
-			}
-		}
-
-		forPart.infer(inferCtx);
-		if (elseforPart != null)
-		{
-			elseforPart.infer(inferCtx);
-		}
-
-	}
 
 }

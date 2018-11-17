@@ -3,7 +3,6 @@ package org.beetl.core.statement;
 import java.io.IOException;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
 
 /**
@@ -11,17 +10,15 @@ import org.beetl.core.exception.BeetlException;
  * @author joelli
  *
  */
-public final class PlaceholderST extends Statement
-{
+public final class PlaceholderST extends Statement {
 
 	public Expression expression;
 	public Type type = null;
 	protected FormatExpression format;
-	//用户定义输出
+	// 用户定义输出
 	public static Output output = null;
 
-	public PlaceholderST(Expression exp, FormatExpression format, GrammarToken token)
-	{
+	public PlaceholderST(Expression exp, FormatExpression format, GrammarToken token) {
 		super(token);
 		this.format = format;
 		this.expression = exp;
@@ -29,53 +26,36 @@ public final class PlaceholderST extends Statement
 	}
 
 	@Override
-	public final void execute(Context ctx)
-	{
+	public final void execute(Context ctx) {
 		Object value = expression.evaluate(ctx);
-		try
-		{
-			if (format != null)
-			{
+		try {
+			if (format != null) {
 				value = format.evaluateValue(value, ctx);
 			}
-			if(output!=null){
+			if (output != null) {
 				output.write(ctx, value);
-				return ;
+				return;
 			}
-			if (value != null)
-			{
-				if (value.getClass() == String.class)
-				{
+			if (value != null) {
+				if (value.getClass() == String.class) {
 					ctx.byteWriter.writeString((String) value);
 					return;
-				}
-				else
-				{
-					if (value instanceof Number)
-					{
+				} else {
+					if (value instanceof Number) {
 						Class c = value.getClass();
-						if (c == Integer.class)
-						{
+						if (c == Integer.class) {
 							ctx.byteWriter.writeInteger((Integer) value);
 							return;
-						}
-						else if (c == Long.class)
-						{
+						} else if (c == Long.class) {
 							ctx.byteWriter.writeLong((Long) value);
 							return;
-						}
-						else if (c == Double.class)
-						{
+						} else if (c == Double.class) {
 							ctx.byteWriter.writeDouble((Double) value);
 							return;
-						}
-						else if (c == Float.class)
-						{
+						} else if (c == Float.class) {
 							ctx.byteWriter.writeFloat((Float) value);
 							return;
-						}
-						else if (c == Short.class)
-						{
+						} else if (c == Short.class) {
 							ctx.byteWriter.writeShort((Short) value);
 							return;
 						}
@@ -84,10 +64,8 @@ public final class PlaceholderST extends Statement
 				}
 				ctx.byteWriter.writeString(value.toString());
 			}
-			//			ctx.byteWriter.writeObject(value);
-		}
-		catch (IOException e)
-		{
+			// ctx.byteWriter.writeObject(value);
+		} catch (IOException e) {
 			BeetlException be = new BeetlException(BeetlException.CLIENT_IO_ERROR_ERROR, e.getMessage(), e);
 			be.pushToken(this.token);
 			throw be;
@@ -95,20 +73,14 @@ public final class PlaceholderST extends Statement
 
 	}
 
-	@Override
-	public void infer(InferContext inferCtx)
-	{
-		expression.infer(inferCtx);
-		this.type = expression.type;
-	}
 
-	public static interface Output{
-		public void write(Context ctx,Object value) throws IOException;
+	public static interface Output {
+		public void write(Context ctx, Object value) throws IOException;
 	}
 
 	public FormatExpression getFormat() {
 		return format;
 	}
-	
-	
+
+
 }

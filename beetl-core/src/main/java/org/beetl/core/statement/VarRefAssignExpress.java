@@ -28,80 +28,69 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 import org.beetl.core.exception.BeetlException;
 import org.beetl.core.om.ObjectAA;
-import org.beetl.core.parser.BeetlParser.VarAttributeVirtualContext;
 
 /**
  * call(xxx.cc = exp);
  * @author joelli
  *
  */
-public class VarRefAssignExpress extends  Expression implements IVarIndex
-{
+public class VarRefAssignExpress extends Expression implements IVarIndex {
 
 	public Expression exp;
 	public VarRef varRef;
 	protected VarAttribute lastVarAttribute = null;
 	protected int varIndex = -1;
-	public VarRefAssignExpress(Expression exp, VarRef varRef)
-	{
+
+	public VarRefAssignExpress(Expression exp, VarRef varRef) {
 		super(varRef.token);
 		this.exp = exp;
 		this.varRef = varRef;
-		if(varRef.attributes.length==0){
+		if (varRef.attributes.length == 0) {
 			lastVarAttribute = null;
-		}else{
-			lastVarAttribute = varRef.attributes[varRef.attributes.length-1];
+		} else {
+			lastVarAttribute = varRef.attributes[varRef.attributes.length - 1];
 
 		}
 	}
 
-	public Object evaluate(Context ctx){
-		Object value =  exp.evaluate(ctx);
-		if(lastVarAttribute==null){
-			
+	public Object evaluate(Context ctx) {
+		Object value = exp.evaluate(ctx);
+		if (lastVarAttribute == null) {
+
 			ctx.vars[varIndex] = value;
 			return value;
 		}
 		Object obj = varRef.evaluateUntilLast(ctx);
 		Object key = null;
-		
-		if(lastVarAttribute instanceof VarSquareAttribute){
-			key  = (((VarSquareAttribute)lastVarAttribute).exp).evaluate(ctx);
-		}else {
+
+		if (lastVarAttribute instanceof VarSquareAttribute) {
+			key = (((VarSquareAttribute) lastVarAttribute).exp).evaluate(ctx);
+		} else {
 			key = lastVarAttribute.name;
 		}
-		
-		try{
+
+		try {
 			ObjectAA.defaultObjectAA().setValue(obj, key, value);
-		}catch(ClassCastException ex){
-			BeetlException bx = new BeetlException(BeetlException.ATTRIBUTE_INVALID,ex);
+		} catch (ClassCastException ex) {
+			BeetlException bx = new BeetlException(BeetlException.ATTRIBUTE_INVALID, ex);
 			bx.pushToken(lastVarAttribute.token);
 			throw bx;
-		}catch(BeetlException be){
+		} catch (BeetlException be) {
 			be.pushToken(lastVarAttribute.token);
 			throw be;
 		}
-		
+
 		return value;
-		
+
 	}
 
-
-
-	public void infer(InferContext inferCtx)
-	{
-		varRef.infer(inferCtx);
-		exp.infer(inferCtx);
-		
-	}
 
 	@Override
 	public void setVarIndex(int index) {
 		varIndex = index;
-		
+
 	}
 
 	@Override

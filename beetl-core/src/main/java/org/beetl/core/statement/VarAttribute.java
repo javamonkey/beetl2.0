@@ -28,8 +28,6 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
-import org.beetl.core.exception.BeetlException;
 import org.beetl.core.misc.BeetlUtil;
 import org.beetl.core.om.AttributeAccess;
 
@@ -37,56 +35,35 @@ import org.beetl.core.om.AttributeAccess;
  * @author joelli
  *
  */
-public class VarAttribute extends Expression
-{
+public class VarAttribute extends Expression {
 	public int aaIndex = -1;
 	public AttributeAccess aa = null;
 	String name = null;
 
-	public VarAttribute(GrammarToken token)
-	{
+	public VarAttribute(GrammarToken token) {
 		super(token);
 		name = token.text;
 	}
 
 	@Override
-	public Object evaluate(Context ctx)
-	{
+	public Object evaluate(Context ctx) {
 		throw new UnsupportedOperationException();
 	}
 
-	public Object evaluate(Context ctx, Object o)
-	{
-		try{
+	public Object evaluate(Context ctx, Object o) {
+		try {
 
 			return aa.value(o, name);
-		}catch(ClassCastException ex){
-//			System.out.println(o.getClass().getClassLoader()+" ==== "+aa.getClass().getClassLoader());
-			throw BeetlUtil.throwCastException(ex,ctx.gt);
+		} catch (ClassCastException ex) {
+			// System.out.println(o.getClass().getClassLoader()+" ==== "+aa.getClass().getClassLoader());
+			throw BeetlUtil.throwCastException(ex, ctx.gt);
 		}
-		
+
 	}
 
-	public void setAA(AttributeAccess aa)
-	{
+	public void setAA(AttributeAccess aa) {
 		this.aa = aa;
 	}
 
-	@Override
-	public void infer(InferContext inferCtx)
-	{
-		Type type = (Type) inferCtx.temp;
-		String attrName = token.text;
-		try
-		{
-			this.type = type.getType(attrName);
-		}
-		catch (BeetlException be)
-		{
-			be.pushToken(token);
-			throw be;
-		}
-
-	}
 
 }

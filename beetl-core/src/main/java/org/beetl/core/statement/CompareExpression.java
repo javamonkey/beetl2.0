@@ -29,7 +29,6 @@
 package org.beetl.core.statement;
 
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 import org.beetl.core.misc.ALU;
 
 /**
@@ -37,8 +36,7 @@ import org.beetl.core.misc.ALU;
  * @author joelli
  *
  */
-public class CompareExpression extends Expression
-{
+public class CompareExpression extends Expression {
 
 	final short EQUAL = 0;
 	final short NOT_EQUAL = 1;
@@ -52,21 +50,18 @@ public class CompareExpression extends Expression
 	public Expression a;
 	public Expression b;
 
-	public CompareExpression(Expression a, Expression b, short mode, GrammarToken token)
-	{
+	public CompareExpression(Expression a, Expression b, short mode, GrammarToken token) {
 		super(token);
 		this.a = a;
 		this.b = b;
 		this.compareMode = mode;
 	}
 
-	public Object evaluate(Context ctx)
-	{
+	public Object evaluate(Context ctx) {
 		Object x = a.evaluate(ctx);
 		Object y = b.evaluate(ctx);
 		int r = 0;
-		switch (compareMode)
-		{
+		switch (compareMode) {
 			case EQUAL:
 				return ALU.equals(x, y);
 
@@ -88,11 +83,5 @@ public class CompareExpression extends Expression
 
 	}
 
-	public void infer(InferContext inferCtx)
-	{
-		a.infer(inferCtx);
-		b.infer(inferCtx);
-		this.type = Type.BooleanType;
-	}
 
 }

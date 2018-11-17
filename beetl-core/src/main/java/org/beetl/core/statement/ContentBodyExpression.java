@@ -29,26 +29,22 @@ package org.beetl.core.statement;
 
 import org.beetl.core.ByteWriter;
 import org.beetl.core.Context;
-import org.beetl.core.InferContext;
 
 /**
  * var a = { ...}
  * @author joelli
  *
  */
-public class ContentBodyExpression extends Expression
-{
+public class ContentBodyExpression extends Expression {
 
 	public BlockStatement block;
 
-	public ContentBodyExpression(BlockStatement block, GrammarToken token)
-	{
+	public ContentBodyExpression(BlockStatement block, GrammarToken token) {
 		super(token);
 		this.block = block;
 	}
 
-	public Object evaluate(Context ctx)
-	{
+	public Object evaluate(Context ctx) {
 		ByteWriter real = ctx.byteWriter;
 		ByteWriter temp = real.getTempWriter(real);
 		ctx.byteWriter = temp;
@@ -58,12 +54,5 @@ public class ContentBodyExpression extends Expression
 
 	}
 
-	@Override
-	public void infer(InferContext inferCtx)
-	{
-		block.infer(inferCtx);
-		this.type = Type.BodyContentType;
-
-	}
 
 }

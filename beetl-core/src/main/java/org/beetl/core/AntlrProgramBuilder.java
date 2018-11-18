@@ -174,8 +174,6 @@ import org.beetl.core.statement.StaticTextASTNode;
 import org.beetl.core.statement.StaticTextByteASTNode;
 import org.beetl.core.statement.SwitchStatement;
 import org.beetl.core.statement.TagStatement;
-import org.beetl.core.statement.TagVarBindingStatement;
-import org.beetl.core.statement.TernaryExpression;
 import org.beetl.core.statement.TryCatchStatement;
 import org.beetl.core.statement.Type;
 import org.beetl.core.statement.VarAssignStatement;
@@ -282,11 +280,11 @@ public class AntlrProgramBuilder {
 			if (expCtx != null) {
 				exp = this.parseExpress(expCtx);
 			}
-			ReturnStatement st = new ReturnStatement(exp, null);
+			ReturnStatement st = gc.createReturn(exp);
 			pbCtx.current.gotoValue = IGoto.RETURN;
 			return st;
 		} else if (node instanceof BreakStContext) {
-			BreakStatement st = new BreakStatement(null);
+			BreakStatement st = gc.createBreak(null);
 			if (pbCtx.current.gotoValue != IGoto.RETURN) {
 				pbCtx.current.gotoValue = IGoto.BREAK;
 
@@ -294,12 +292,11 @@ public class AntlrProgramBuilder {
 
 			return st;
 		} else if (node instanceof ContinueStContext) {
-			ContinueStatement st = new ContinueStatement(null);
+			ContinueStatement st = gc.createContinue(null);
 			if (pbCtx.current.gotoValue != IGoto.RETURN) {
 				pbCtx.current.gotoValue = IGoto.CONTINUE;
 
 			}
-
 			return st;
 		} else if (node instanceof ForStContext) {
 			return parseForSt((ForStContext) node);
@@ -310,10 +307,10 @@ public class AntlrProgramBuilder {
 			String str = cst.DecimalLiteral().getSymbol().getText();
 			int position = Integer.parseInt(str);
 			if (!this.gt.getConf().directByteOutput) {
-				StaticTextASTNode textNode = new StaticTextASTNode(position, null);
+				StaticTextASTNode textNode = gc.createStaticText(position, null);
 				return textNode;
 			} else {
-				StaticTextByteASTNode textNode = new StaticTextByteASTNode(position, null);
+				StaticTextByteASTNode textNode = gc.createStaticByteText(position, null);
 				return textNode;
 			}
 
@@ -399,9 +396,11 @@ public class AntlrProgramBuilder {
 			defaultStatement = this.parseBlock(defaultCtxList, ctx);
 		}
 
-		SelectStatement select = new SelectStatement(base, condtionList.toArray(new Expression[0]),
+
+		SelectStatement select = gc.createSelect(base, condtionList.toArray(new Expression[0]),
 				blockList.toArray(new BlockStatement[0]), defaultStatement,
 				this.getBTToken(selectCtx.Select().getSymbol()));
+
 
 		return select;
 	}
@@ -430,8 +429,7 @@ public class AntlrProgramBuilder {
 
 		BlockStatement block = (BlockStatement) this.parseBlock(blockCtx.statement(), blockCtx);
 
-		AjaxStatement ajaxStat = new AjaxStatement(block, token, flag.equals("render"));
-
+		AjaxStatement ajaxStat = gc.createAjax(block, token, flag.equals("render"));
 		if (this.data.ajaxs == null) {
 			this.data.ajaxs = new HashMap<String, AjaxStatement>();
 
@@ -480,8 +478,10 @@ public class AntlrProgramBuilder {
 
 		}
 
-		SwitchStatement switchStat = new SwitchStatement(exp, condtionsStatementsMap, defaultBlock,
+
+		SwitchStatement switchStat = gc.createSwitch(exp, condtionsStatementsMap, defaultBlock,
 				this.getBTToken(sctx.getStart()));
+
 		return switchStat;
 	}
 
@@ -497,7 +497,7 @@ public class AntlrProgramBuilder {
 		Expression exp = parseExpress(expCtx);
 		VarRefContext varRefCtx = agc.generalAssignExp().varRef();
 		VarRef ref = this.parseVarRefInLeftExpression(varRefCtx);
-		vas = new VarRefAssignExpress(exp, ref);
+		vas = gc.createVarRefAssignExp(exp, ref);
 
 		if (ref.attributes.length == 0) {
 			// 变量定义:
@@ -550,13 +550,12 @@ public class AntlrProgramBuilder {
 			if (varRefCtx.children.size() == 1) {
 				// var a=1;
 				Token token = varRefCtx.Identifier().getSymbol();
-				vas = new VarAssignStatement(exp, getBTToken(token));
+				vas = gc.createVarAssign(exp, getBTToken(token));
 			} else {
 				// var a.b=1 since 2.7.0
 
 				VarRef ref = this.parseVarRefInLeftExpression(varRefCtx);
-
-				vas = new VarRefAssignStatement(exp, ref);
+				vas = gc.createVarRefAssign(exp, ref);
 			}
 
 
@@ -572,10 +571,9 @@ public class AntlrProgramBuilder {
 			BlockContext blockCtx = templateVarCtx.block();
 
 			BlockStatement block = this.parseBlock(blockCtx.statement(), blockCtx);
-			ContentBodyExpression bodyExp = new ContentBodyExpression(block,
+			ContentBodyExpression bodyExp = gc.createTemplateContent(block,
 					getBTToken(templateVarCtx.Identifier().getSymbol()));
-
-			vas = new VarAssignStatement(bodyExp, getBTToken(templateVarCtx.Identifier().getSymbol()));
+			vas = gc.createVarAssign(bodyExp, getBTToken(templateVarCtx.Identifier().getSymbol()));
 
 		} else {
 			throw new RuntimeException("不支持 在 " + amc.start.getLine());
@@ -618,8 +616,7 @@ public class AntlrProgramBuilder {
 		StatementContext bodyCtx = wc.statement();
 		Expression condtion = this.parseExpress(condtionCtx);
 		Statement body = this.parseStatment(bodyCtx);
-		WhileStatement whileStat = new WhileStatement(condtion, body, this.getBTToken(wc.getStart()));
-
+		WhileStatement whileStat = gc.createWhile(condtion, body, this.getBTToken(wc.getStart()));
 		pbCtx.exitBlock();
 		return whileStat;
 	}
@@ -660,7 +657,8 @@ public class AntlrProgramBuilder {
 				ex.pushToken(this.getBTToken(id, fc.functionNs().getStart().getLine()));
 				throw ex;
 			}
-			TagStatement tag = new TagVarBindingStatement(id, expList, block, varDefine, this.getBTToken(id, line));
+			TagStatement tag = gc.createVarTag(id, expList, block, varDefine, this.getBTToken(id, line));
+
 			return tag;
 		} else {
 			BlockContext blockCtx = fc.block();
@@ -671,7 +669,9 @@ public class AntlrProgramBuilder {
 				ex.pushToken(this.getBTToken(id, fc.functionNs().getStart().getLine()));
 				throw ex;
 			}
-			TagStatement tag = new TagStatement(id, expList, block,
+
+
+			TagStatement tag = gc.createTag(id, expList, block,
 					this.getBTToken(id, fc.functionNs().getStart().getLine()));
 			return tag;
 		}
@@ -698,7 +698,8 @@ public class AntlrProgramBuilder {
 			this.pbCtx.exitBlock();
 
 		}
-		TryCatchStatement statement = new TryCatchStatement(tryPart, catchPart, errorNode,
+
+		TryCatchStatement statement = gc.createTry(tryPart, catchPart, errorNode,
 				this.getBTToken(tryStCtx.Try().getSymbol()));
 		return statement;
 	}
@@ -853,18 +854,18 @@ public class AntlrProgramBuilder {
 						throw ex;
 					}
 					String name = ref.token.text;
-					Literal newExp = new Literal(name, ref.token);
+					Literal newExp = gc.createLiteral(name, ref.token);
 					// 将变量引用转化为字符串
 					exps[0] = newExp;
 				}
 			}
 		} else if (nsId.equals("debug")) {
 			// debug函数传递额外的行数
-			Literal l = new Literal(btToken.line, btToken);
+			Literal l = gc.createLiteral(btToken.line, btToken);
 			Expression[] newExps = new Expression[exps.length + 2];
 			System.arraycopy(exps, 0, newExps, 0, exps.length);
 			String[] expStr = this.getExpressionString(expListCtx);
-			newExps[newExps.length - 2] = new Literal(expStr, btToken);
+			newExps[newExps.length - 2] = gc.createLiteral(expStr, btToken);
 			newExps[newExps.length - 1] = l;
 			for (int i = 0; i < exps.length; i++) {
 				if (!(exps[i] instanceof VarRef)) {
@@ -889,7 +890,7 @@ public class AntlrProgramBuilder {
 				// 错误的使用了decode函数，不管了，等后面报错吧
 			}
 		}
-		FunctionExpression fe = new FunctionExpression(nsId, exps, vs, hasSafe, safeExp, btToken);
+		FunctionExpression fe = gc.createFunctionExp(nsId, exps, vs, hasSafe, safeExp, btToken);
 		return fe;
 
 	}
@@ -905,7 +906,7 @@ public class AntlrProgramBuilder {
 		if (elseStatCtx != null) {
 			elseStat = this.parseStatment(elseStatCtx);
 		}
-		return new IfStatement(exp, ifStat, elseStat, this.getBTToken(ctx.If().getSymbol()));
+		return gc.createIf(exp, ifStat, elseStat, this.getBTToken(ctx.If().getSymbol()));
 	}
 
 	protected String getID(List<TerminalNode> ids) {
@@ -1012,7 +1013,8 @@ public class AntlrProgramBuilder {
 				hasSafe = true;
 			}
 
-			ForStatement forStatement = new ForStatement(forVar, exp, hasSafe, forPart, elseForPart, forVar.token);
+			ForStatement forStatement = gc.createForIn(forVar, exp, hasSafe, forPart, elseForPart, forVar.token);
+
 			this.checkGoto(forStatement);
 			pbCtx.exitBlock();
 			return forStatement;
@@ -1058,8 +1060,11 @@ public class AntlrProgramBuilder {
 
 			}
 			String str = forTypeCtx.getText();
-			GeneralForStatement forStat = new GeneralForStatement(varInitSeq, initExp, condtion, updateExp, forPart,
-					elseForPart, this.getBTToken(str, forTypeCtx.start.getLine()));
+
+			GeneralForStatement forStat = gc.createFor(varInitSeq, initExp, condtion, updateExp, forPart, elseForPart,
+					this.getBTToken(str, forTypeCtx.start.getLine()));
+
+
 			pbCtx.exitBlock();
 			return forStat;
 
@@ -1094,17 +1099,18 @@ public class AntlrProgramBuilder {
 				line = listId.get(0).getSymbol().getLine();
 
 			}
-			format = new FormatExpression(formatName, pattern,
+			format = gc.createFormat(formatName, pattern,
 					org.beetl.core.statement.GrammarToken.createToken(tokenName, line));
 
 		}
 
 		Expression exp = this.parseExpress(tvc.expression());
-		if (tsc.LEFT_TOKEN() != null) {
-			PlaceholderST placeholder = new PlaceholderST(exp, format, null);
+		if (tsc.LEFT_TOKEN2() == null) {
+			PlaceholderST placeholder = this.gc.createTextOutputSt(exp, format);
 			return placeholder;
 		} else {
-			PlaceholderST placeholder = new PlaceholderST(exp, format, null);
+			// TODO
+			PlaceholderST placeholder = this.gc.createTextOutputSt2(exp, format);
 			return placeholder;
 
 		}
@@ -1221,7 +1227,7 @@ public class AntlrProgramBuilder {
 		IncDecExpression exp = null;
 		boolean isInc = ctx.INCREASE() != null;
 		GrammarToken t = this.getBTToken(ctx.Identifier().getSymbol());
-		exp = new IncDecExpression(isInc, false, t);
+		exp = gc.createIncDec(isInc, false, t);
 		this.pbCtx.setVarPosition(t.text, exp);
 		return exp;
 
@@ -1231,7 +1237,7 @@ public class AntlrProgramBuilder {
 		IncDecExpression exp = null;
 		boolean isInc = ctx.INCREASE() != null;
 		GrammarToken t = this.getBTToken(ctx.Identifier().getSymbol());
-		exp = new IncDecExpression(isInc, true, t);
+		exp = gc.createIncDec(isInc, true, t);
 		this.pbCtx.setVarPosition(t.text, exp);
 		return exp;
 
@@ -1241,7 +1247,7 @@ public class AntlrProgramBuilder {
 		Expression exp = this.parseExpress(ctx.expression());
 		if (ctx.MIN() != null) {
 			// 负数
-			NegExpression negExp = new NegExpression(exp, this.getBTToken(ctx.MIN().getSymbol()));
+			NegExpression negExp = gc.createNeg(exp, this.getBTToken(ctx.MIN().getSymbol()));
 			return negExp;
 
 		} else {
@@ -1252,7 +1258,8 @@ public class AntlrProgramBuilder {
 
 	protected NotBooleanExpression parseNotExpression(NotExpContext ctx) {
 		Expression exp = this.parseExpress(ctx.expression());
-		NotBooleanExpression notExp = new NotBooleanExpression(exp, this.getBTToken(ctx.NOT().getSymbol()));
+		NotBooleanExpression notExp = gc.createNot(exp, this.getBTToken(ctx.NOT().getSymbol()));
+
 		return notExp;
 
 	}
@@ -1260,7 +1267,7 @@ public class AntlrProgramBuilder {
 	protected OrExpression parseOrExpression(OrExpContext ctx) {
 		Expression exp1 = this.parseExpress(ctx.expression(0));
 		Expression exp2 = this.parseExpress(ctx.expression(1));
-		OrExpression orExp = new OrExpression(exp1, exp2, this.getBTToken(ctx.OR().getSymbol()));
+		OrExpression orExp = gc.createOr(exp1, exp2, this.getBTToken(ctx.OR().getSymbol()));
 		return orExp;
 
 	}
@@ -1268,7 +1275,7 @@ public class AntlrProgramBuilder {
 	protected AndExpression parseAndExpression(AndExpContext ctx) {
 		Expression exp1 = this.parseExpress(ctx.expression(0));
 		Expression exp2 = this.parseExpress(ctx.expression(1));
-		AndExpression andExp = new AndExpression(exp1, exp2, this.getBTToken(ctx.AND().getSymbol()));
+		AndExpression andExp = gc.createAnd(exp1, exp2, this.getBTToken(ctx.AND().getSymbol()));
 		return andExp;
 
 	}
@@ -1308,7 +1315,8 @@ public class AntlrProgramBuilder {
 		} else {
 			// 变量的属性引用,回到第一个，构造一个变量
 			String varName = ids.get(0).getText();
-			VarRef ref = new VarRef(new VarAttribute[0], false, null, this.getBTToken(varName, ncc.start.getLine()));
+			VarRef ref = gc.createVarRef(new VarAttribute[0], false, null,
+					this.getBTToken(varName, ncc.start.getLine()), null);
 			this.pbCtx.setVarPosition(varName, ref);
 			insNode = new InstanceNode(ref);
 			i = 1;
@@ -1369,9 +1377,9 @@ public class AntlrProgramBuilder {
 
 		NativeNode[] chain = nativeList.toArray(new NativeNode[0]);
 		if (clsNode != null) {
-			nativeExp = new NativeCallExpression(clsNode, chain, this.getBTToken(ncc.start));
+			nativeExp = gc.createClassNativeCall(clsNode, chain, this.getBTToken(ncc.start));
 		} else {
-			nativeExp = new NativeCallExpression(insNode, chain, this.getBTToken(ncc.start));
+			nativeExp = gc.createInstanceNativeCall(insNode, chain, this.getBTToken(ncc.start));
 		}
 		return nativeExp;
 
@@ -1396,14 +1404,13 @@ public class AntlrProgramBuilder {
 			JsonArrayExpression json = null;
 			List<ExpressionContext> listCtx = ctx.expression();
 			if (listCtx.size() == 0) {
-				json = new JsonArrayExpression(Collections.EMPTY_LIST, this.getBTToken(ctx.LEFT_SQBR().getSymbol()));
+				json = gc.createJasonArray(Collections.EMPTY_LIST, this.getBTToken(ctx.LEFT_SQBR().getSymbol()));
 			} else {
 				List<Expression> list = new ArrayList<Expression>(listCtx.size());
 				for (ExpressionContext expCtx : listCtx) {
 					list.add(this.parseExpress(expCtx));
 				}
-				json = new JsonArrayExpression(list, this.getBTToken(ctx.LEFT_SQBR().getSymbol()));
-
+				json = gc.createJasonArray(list, this.getBTToken(ctx.LEFT_SQBR().getSymbol()));
 			}
 			return json;
 		} else {
@@ -1411,7 +1418,8 @@ public class AntlrProgramBuilder {
 			JsonMapExpression json = null;
 			List<JsonKeyValueContext> listCtx = ctx.jsonKeyValue();
 			if (listCtx.size() == 0) {
-				json = new JsonMapExpression(Collections.EMPTY_MAP, this.getBTToken(ctx.LEFT_BRACE().getSymbol()));
+				json = gc.createJsonMap(Collections.EMPTY_MAP, this.getBTToken(ctx.LEFT_BRACE().getSymbol()));
+
 			} else {
 				Map<String, Expression> map = new LinkedHashMap<String, Expression>(listCtx.size());
 				for (JsonKeyValueContext kvCtx : listCtx) {
@@ -1424,7 +1432,7 @@ public class AntlrProgramBuilder {
 					Expression exp = this.parseExpress(kvCtx.expression());
 					map.put(key, exp);
 				}
-				json = new JsonMapExpression(map, this.getBTToken(ctx.LEFT_BRACE().getSymbol()));
+				json = gc.createJsonMap(map, this.getBTToken(ctx.LEFT_BRACE().getSymbol()));
 
 			}
 			return json;
@@ -1444,7 +1452,7 @@ public class AntlrProgramBuilder {
 		} else if (ctx.MOD() != null) {
 			mode = ArthExpression.MOD;
 		}
-		return new ArthExpression(a, b, mode, this.getBTToken(tn.getSymbol()));
+		return gc.createArth(a, b, mode, this.getBTToken(tn.getSymbol()));
 
 	}
 
@@ -1458,7 +1466,7 @@ public class AntlrProgramBuilder {
 		} else if (ctx.MIN() != null) {
 			mode = ArthExpression.MIN;
 		}
-		return new ArthExpression(a, b, mode, this.getBTToken(tn.getSymbol()));
+		return gc.createArth(a, b, mode, this.getBTToken(tn.getSymbol()));
 
 	}
 
@@ -1473,7 +1481,7 @@ public class AntlrProgramBuilder {
 		}
 
 		TerminalNode tn = (TerminalNode) ctx.getChild(1);
-		return new TernaryExpression(cond, a, b, this.getBTToken(tn.getSymbol()));
+		return gc.createTernary(cond, a, b, this.getBTToken(tn.getSymbol()));
 
 	}
 
@@ -1496,7 +1504,7 @@ public class AntlrProgramBuilder {
 		} else if (ctx.LESS_EQUAL() != null) {
 			mode = 5;
 		}
-		return new CompareExpression(a, b, mode, this.getBTToken(tn.getSymbol()));
+		return gc.createCompare(a, b, mode, this.getBTToken(tn.getSymbol()));
 
 	}
 
@@ -1525,9 +1533,11 @@ public class AntlrProgramBuilder {
 
 		}
 
-		VarRef var = new VarRef(vas, hasSafe, safeExp,
+		VarRef var = gc.createVarRef(vas, hasSafe, safeExp,
 				this.getBTToken(varRef.getText(), varRef.Identifier().getSymbol().getLine()),
 				this.getBTToken(varRef.Identifier().getSymbol()));
+
+
 		pbCtx.setVarPosition(varRef.Identifier().getText(), var);
 		return var;
 	}
@@ -1669,7 +1679,7 @@ public class AntlrProgramBuilder {
 		if (value == null) {
 			return Literal.NULLLiteral;
 		} else {
-			Literal literal = new Literal(value, this.getBTToken(ctx.getStart()));
+			Literal literal = gc.createLiteral(value, this.getBTToken(ctx.getStart()));
 			return literal;
 		}
 

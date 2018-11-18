@@ -11,6 +11,7 @@ import org.beetl.core.statement.ArthExpression;
 import org.beetl.core.statement.BlockStatement;
 import org.beetl.core.statement.BreakStatement;
 import org.beetl.core.statement.CompareExpression;
+import org.beetl.core.statement.ContentBodyExpression;
 import org.beetl.core.statement.ContinueStatement;
 import org.beetl.core.statement.Expression;
 import org.beetl.core.statement.ForStatement;
@@ -96,6 +97,9 @@ public class GrammarCreator {
 		return new PlaceholderST(exp, format, null);
 	}
 
+	public PlaceholderST createTextOutputSt2(Expression exp, FormatExpression format) {
+		return new PlaceholderST(exp, format, null);
+	}
 
 	public ReturnStatement createReturn(Expression exp) {
 		return new ReturnStatement(exp, null);
@@ -253,9 +257,25 @@ public class GrammarCreator {
 		return exp;
 	}
 
+	public VarRef createVarRef(VarAttribute[] attributes, boolean hasSafe, Expression safe, GrammarToken token,
+			GrammarToken firstToken) {
+		VarRef express = new VarRef(attributes, hasSafe, safe, firstToken);
+		return express;
+	}
+
 	public VarRefAssignExpress createVarRefAssignExp(Expression exp, VarRef varRef) {
 		VarRefAssignExpress express = new VarRefAssignExpress(exp, varRef);
 		return express;
+	}
+
+	public ContentBodyExpression createTemplateContent(BlockStatement block, GrammarToken token) {
+		ContentBodyExpression express = new ContentBodyExpression(block, token);
+		return express;
+	}
+
+	public FormatExpression createFormat(String name, String pattern, GrammarToken token) {
+		FormatExpression f = new FormatExpression(name, pattern, token);
+		return f;
 	}
 
 

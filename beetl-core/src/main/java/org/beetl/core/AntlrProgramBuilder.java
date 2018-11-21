@@ -427,7 +427,7 @@ public class AntlrProgramBuilder {
 
 		BlockContext blockCtx = ajaxCtx.block();
 
-		BlockStatement block = (BlockStatement) this.parseBlock(blockCtx.statement(), blockCtx);
+		BlockStatement block = this.parseBlock(blockCtx.statement(), blockCtx);
 
 		AjaxStatement ajaxStat = gc.createAjax(block, token, flag.equals("render"));
 		if (this.data.ajaxs == null) {
@@ -682,7 +682,7 @@ public class AntlrProgramBuilder {
 
 		BlockContext tryBlockCtx = tryStCtx.block(0);
 
-		BlockStatement tryPart = (BlockStatement) this.parseBlock(tryBlockCtx.statement(), tryBlockCtx);
+		BlockStatement tryPart = this.parseBlock(tryBlockCtx.statement(), tryBlockCtx);
 		BlockStatement catchPart = null;
 		VarDefineNode errorNode = null;
 		if (tryStCtx.Catch() != null) {
@@ -694,7 +694,7 @@ public class AntlrProgramBuilder {
 			}
 
 			BlockContext catchBlockCtx = tryStCtx.block(1);
-			catchPart = (BlockStatement) this.parseBlock(catchBlockCtx.statement(), catchBlockCtx);
+			catchPart = this.parseBlock(catchBlockCtx.statement(), catchBlockCtx);
 			this.pbCtx.exitBlock();
 
 		}
@@ -751,7 +751,7 @@ public class AntlrProgramBuilder {
 	 * @return
 	 */
 	protected DirectiveStatement parseDirectiveStatement(DirectiveStContext node) {
-		DirectiveStContext stContext = (DirectiveStContext) node;
+		DirectiveStContext stContext = node;
 		DirectiveExpContext direExp = stContext.directiveExp();
 		Token token = direExp.Identifier().getSymbol();
 		String directive = token.getText().toLowerCase().intern();
@@ -781,18 +781,7 @@ public class AntlrProgramBuilder {
 			ds = new DirectiveStatement(directive, Collections.EMPTY_SET, this.getBTToken(token));
 		}
 
-		if (directive.equals("dynamic")) {
-
-			if (ds.getIdList().size() == 0) {
-				data.allDynamic = true;
-			} else {
-				data.dynamicObjectSet = ds.getIdList();
-			}
-			ds = new DirectiveStatement(directive, Collections.EMPTY_SET, this.getBTToken(token));
-
-			return ds;
-
-		} else if (directive.equalsIgnoreCase("safe_output_open".intern())) {
+		if (directive.equalsIgnoreCase("safe_output_open".intern())) {
 			this.pbCtx.isSafeOutput = true;
 			return ds;
 		} else if (directive.equalsIgnoreCase("safe_output_close".intern())) {
@@ -1117,7 +1106,7 @@ public class AntlrProgramBuilder {
 	}
 
 	private VarAssignStatementSeq parseVarSt(VarStContext node) {
-		VarStContext varSt = (VarStContext) node;
+		VarStContext varSt = node;
 		VarDeclareListContext ctx = varSt.varDeclareList();
 		return parseVarDeclareList(ctx);
 

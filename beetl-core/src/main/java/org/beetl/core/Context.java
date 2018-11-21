@@ -28,9 +28,7 @@
 package org.beetl.core;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 模板渲染的Context
@@ -39,7 +37,7 @@ import java.util.Set;
  */
 public class Context {
 
-	public Context() {
+	protected Context() {
 
 	}
 
@@ -61,10 +59,7 @@ public class Context {
 	public GroupTemplate gt = null;
 	/** 全局变量 */
 	public Map<String, Object> globalVar;
-	/**
-	 * 内容为Object的变量，beetl要求全局变量类型总是一致，如果一个key 对应的类型不一样，则需要设置objectKeys
-	 */
-	public Set<String> objectKeys;
+
 
 	/**
 	 * 输出模式
@@ -128,13 +123,19 @@ public class Context {
 		globalVar.put(key, value);
 	}
 
+	/**
+	 * 3.0版本后不在有dynamic 这个概念
+	 * @param key
+	 * @param value
+	 * @param isDynamicObject
+	 */
+	@Deprecated
 	public void set(String key, Object value, boolean isDynamicObject) {
-		if (globalVar == null) globalVar = new HashMap<String, Object>();
-		globalVar.put(key, value);
-		if (isDynamicObject) {
-			if (objectKeys == null) objectKeys = new HashSet(1);
-			objectKeys.add(key);
+		if (globalVar == null) {
+			globalVar = new HashMap<String, Object>();
 		}
+		globalVar.put(key, value);
+
 	}
 
 	/** 得到全局变量

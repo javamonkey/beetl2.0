@@ -27,9 +27,6 @@
  */
 package org.beetl.ext.fn;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.beetl.core.Context;
 import org.beetl.core.Function;
 
@@ -37,54 +34,28 @@ import org.beetl.core.Function;
  * 
  * @author 张健川 dlut.zjc@gmail.com ,xiandafu
  */
-public class ParseDouble implements Function
-{
+public class ParseDouble implements Function {
 
 	@Override
-	public Object call(Object[] paras, Context ctx)
-	{
+	public Object call(Object[] paras, Context ctx) {
 		Object o = paras[0];
-		if (o == null)
-			throw new NullPointerException("Error:parseDouble(null)");
+		if (o == null) throw new NullPointerException("Error:parseDouble(null)");
 		String str = "";
 		double result;
-		if (o instanceof Number)
-		{
+		if (o instanceof Number) {
 			Double n = ((Number) o).doubleValue();
 			return n;
-		}
-		else
-		{
+		} else {
 			str = o.toString();
 		}
-		try
-		{
+		try {
 			result = Double.parseDouble(str);
+		} catch (NumberFormatException e) {
+			throw new RuntimeException("不能转化" + str, e);
 		}
-		catch (NumberFormatException e)
-		{
-			throw new RuntimeException("不能转化"+str,e);
-		}
-		
+
 		return result;
 	}
 
-		public static void main(String[] args)
-		{
-			Double d = 1232323232323.89;
-			System.out.println(d);
-			String str = d.toString();
-			double c = Double.parseDouble(str);
-			System.out.println(c);
-			ParseDouble pDouble = new ParseDouble();
-			Context ctx = new Context();
-			System.out.println(pDouble.call(new Object[]
-			{ -01.}, ctx));
-			System.out.println(pDouble.call(new Object[]
-			{ 2332.23213 }, ctx));
-			System.out.println(pDouble.call(new Object[]
-			{ "-1.023" }, ctx));
-			System.out.println(pDouble.call(new Object[]
-			{ "abcd" }, ctx));
-		}
+
 }

@@ -27,7 +27,6 @@
  */
 package org.beetl.ext.fn;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
@@ -51,65 +50,44 @@ import org.beetl.core.misc.PrimitiveArrayUtil;
  *
  */
 @Deprecated
-public class EmptyFunction implements Function
-{
+public class EmptyFunction implements Function {
 
-	public Boolean call(Object[] paras, Context ctx)
-	{
+	@Override
+	public Boolean call(Object[] paras, Context ctx) {
 
 		String key = null;
-		for (Object o : paras)
-		{
+		for (Object o : paras) {
 			key = (String) o;
-			if (ctx.globalVar.containsKey(key))
-			{
+			if (ctx.globalVar.containsKey(key)) {
 				Object result = ctx.getGlobal(key);
-				if (result != null)
-				{
+				if (result != null) {
 
-					if (result instanceof String)
-					{
+					if (result instanceof String) {
 
-						if (((String) result).length() != 0)
-						{
+						if (((String) result).length() != 0) {
 							return false;
 						}
 
-					}
-					else if (result instanceof Collection)
-					{
-						if (((Collection) result).size() != 0)
-						{
+					} else if (result instanceof Collection) {
+						if (((Collection) result).size() != 0) {
 							return false;
 						}
-					}
-					else if (result instanceof Map)
-					{
-						if (((Map) result).size() != 0)
-						{
+					} else if (result instanceof Map) {
+						if (((Map) result).size() != 0) {
 							return false;
 						}
-					}
-					else if (result.getClass().isArray())
-					{
+					} else if (result.getClass().isArray()) {
 						Class ct = result.getClass().getComponentType();
-						if (ct.isPrimitive())
-						{
-							return PrimitiveArrayUtil.getSize(result)==0;
+						if (ct.isPrimitive()) {
+							return PrimitiveArrayUtil.getSize(result) == 0;
+						} else {
+							return ((Object[]) result).length == 0;
 						}
-						else
-						{
-							return ((Object[]) result).length==0;
-						}
-					}
-					else
-					{
+					} else {
 						return false;
 					}
 
-				}
-				else
-				{
+				} else {
 
 					continue;
 				}
@@ -122,25 +100,5 @@ public class EmptyFunction implements Function
 
 	}
 
-	public static void main(String[] args)
-	{
-		EmptyFunction fn = new EmptyFunction();
-		Context ctx = new Context();
-		ctx.set("list", new ArrayList());
-		ctx.set("array", new Object[]
-		{});
-
-		ctx.set("array1", new Object[]
-		{ 1, 2 });
-		System.out.println(fn.call(new Object[]
-		{ "lijz" }, ctx));
-		System.out.println(fn.call(new Object[]
-		{ "list" }, ctx));
-		System.out.println(fn.call(new Object[]
-		{ "array" }, ctx));
-		System.out.println(fn.call(new Object[]
-		{ "array1" }, ctx));
-
-	}
 
 }

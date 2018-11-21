@@ -30,15 +30,13 @@ package org.beetl.ext.tag;
 import org.beetl.core.Tag;
 
 /** 什么都不干的tag，遗留代码
- * @author joelli
+ * @author xiandafu
  *
  */
-public class DeleteTag extends Tag
-{
+public class DeleteTag extends Tag {
 
 	@Override
-	public void render()
-	{
+	public void render() {
 		// do nothing,just ignore body
 
 	}

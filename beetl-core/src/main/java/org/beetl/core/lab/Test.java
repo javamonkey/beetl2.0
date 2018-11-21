@@ -27,6 +27,7 @@ public class Test {
 		cfg.getPkgList().add("org.beetl.core.lab.");
 		cfg.setStatementStart("<!--#");
 		cfg.setStatementEnd("-->");
+		// js 里专用
 		cfg.setStatementStart2("//#");
 		cfg.setStatementEnd2(null);
 		cfg.setPlaceholderStart2("#{");
@@ -34,20 +35,14 @@ public class Test {
 		cfg.initOther();
 		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 
-		// cfg.setStatementStart("@");
-		// cfg.setStatementEnd(null);
 
-		// cfg.setPlaceholderStart("{{");
-		// cfg.setPlaceholderEnd("}}");
-		//
-
-
-		for (int i = 0; i < 100000; i++) {
+		for (int i = 0; i < 1; i++) {
 
 			Template t = gt.getTemplate("/hello.txt");
 			TestUser user = new TestUser("jo");
 			user.lover = new TestUser("dddd");
 			t.binding("user", user);
+			System.out.println(t.render());
 
 
 		}

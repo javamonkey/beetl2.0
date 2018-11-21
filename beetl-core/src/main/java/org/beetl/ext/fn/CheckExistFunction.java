@@ -37,40 +37,23 @@ import org.beetl.core.Function;
  * @author joelli
  *
  */
-public class CheckExistFunction implements Function
-{
+public class CheckExistFunction implements Function {
 
-	public Boolean call(Object[] paras, Context ctx)
-	{
+	@Override
+	public Boolean call(Object[] paras, Context ctx) {
 
-		if (ctx.globalVar == null)
-			return false;
+		if (ctx.globalVar == null) return false;
 		String key = null;
-		for (Object o : paras)
-		{
+		for (Object o : paras) {
 			key = (String) o;
 
-			if (ctx.globalVar.containsKey(key))
-			{
+			if (ctx.globalVar.containsKey(key)) {
 				continue;
-			}
-			else
-			{
+			} else {
 				return false;
 			}
 		}
 		return true;
-
-	}
-
-	public static void main(String[] args)
-	{
-		CheckExistFunction fn = new CheckExistFunction();
-		Context ctx = new Context();
-		ctx.set("list", null);
-
-		System.out.println(fn.call(new Object[]
-		{ "list" }, ctx));
 
 	}
 

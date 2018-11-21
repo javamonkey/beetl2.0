@@ -75,48 +75,38 @@ import org.beetl.core.Template;
  * @since 2.0
  * 
  */
-public class LayoutTag extends Tag
-{
+public class LayoutTag extends Tag {
 	public static String defaultLayoutName = "layoutContent";
 
 	@Override
-	public void render()
-	{
-		if (args.length == 0 || args.length > 3)
-		{
+	public void render() {
+		if (args.length == 0 || args.length > 3) {
 			throw new RuntimeException("参数错误，期望child,map");
 		}
 		String layoutFile = getRelResourceId();
 		Template t = this.gt.getTemplate(layoutFile, this.ctx.getResourceId());
 
 		t.binding(ctx.globalVar);
-		t.dynamic(ctx.objectKeys);
 
-		if (args.length >= 2)
-		{
+		if (args.length >= 2) {
 			Map<String, Object> map = (Map<String, Object>) args[1];
-			for (Entry<String, Object> entry : map.entrySet())
-			{
+			for (Entry<String, Object> entry : map.entrySet()) {
 				t.binding(entry.getKey(), entry.getValue());
 			}
 		}
 
 		BodyContent content = this.getBodyContent();
-		if (args.length == 3)
-		{
+		if (args.length == 3) {
 
 			t.binding((String) args[2], content);
-		}
-		else
-		{
+		} else {
 			t.binding(defaultLayoutName, content);
 		}
 		t.renderTo(ctx.byteWriter);
 
 	}
 
-	protected String getRelResourceId()
-	{
+	protected String getRelResourceId() {
 
 		Resource sibling = ctx.getResource();
 		return gt.getResourceLoader().getResourceId(sibling, (String) this.args[0]);

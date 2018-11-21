@@ -28,10 +28,8 @@
 package org.beetl.core.statement;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.beetl.core.Context;
 import org.beetl.core.exception.BeetlException;
@@ -42,8 +40,7 @@ import org.beetl.core.om.ObjectUtil;
  * @author joelli
  *
  */
-public class ProgramMetaData implements java.io.Serializable
-{
+public class ProgramMetaData implements java.io.Serializable {
 
 	/**
 	 * 模板的换行符
@@ -82,15 +79,6 @@ public class ProgramMetaData implements java.io.Serializable
 	 */
 	public Map<String, String[]> globalVarAttr = new HashMap<String, String[]>();
 
-	/**
-	 * directive dynamic ; 指示改模板全局变量类型是否是动态的
-	 */
-	public boolean allDynamic = false;
-
-	/**
-	 * directive dynamic xx,bb,cc 对应的描述
-	 */
-	public Set<String> dynamicObjectSet = new HashSet<String>(0);
 
 	/**
 	 * <pre>
@@ -102,6 +90,9 @@ public class ProgramMetaData implements java.io.Serializable
 
 	public Map<String, AjaxStatement> ajaxs = null;
 
+	// 是否存在tagFunction,且嵌套
+	public boolean hasTagNest = false;
+
 	/**
 	 * 模板里的顶级变量映射关系
 	 */
@@ -111,8 +102,7 @@ public class ProgramMetaData implements java.io.Serializable
 	 * 模板每次渲染前，初始化ctx,如分配变量空间
 	 * @param ctx
 	 */
-	public void initContext(Context ctx)
-	{
+	public void initContext(Context ctx) {
 		// 模板静态文本部分
 		ctx.staticTextArray = staticTextArray;
 		// 模板各种缓存存放地
@@ -133,28 +123,21 @@ public class ProgramMetaData implements java.io.Serializable
 	 * 
 	 * @param ctx
 	 */
-	protected void putGlobaToArray(Context ctx)
-	{
+	protected void putGlobaToArray(Context ctx) {
 		Map<String, Object> globalVar = ctx.globalVar;
-		if (globalVar == null)
-		{
-			for (int i = 0; i < this.tempVarStartIndex; i++)
-			{
+		if (globalVar == null) {
+			for (int i = 0; i < this.tempVarStartIndex; i++) {
 				ctx.vars[i] = ctx.NOT_EXIST_OBJECT;
 			}
 			return;
 		}
 
-		for (Entry<String, Integer> entry : globalIndexMap.entrySet())
-		{
+		for (Entry<String, Integer> entry : globalIndexMap.entrySet()) {
 			String key = entry.getKey();
 			int index = entry.getValue();
-			if (globalVar.containsKey(key))
-			{
+			if (globalVar.containsKey(key)) {
 				ctx.vars[index] = globalVar.get(key);
-			}
-			else
-			{
+			} else {
 				// 不存在
 				ctx.vars[index] = ctx.NOT_EXIST_OBJECT;
 			}
@@ -164,8 +147,7 @@ public class ProgramMetaData implements java.io.Serializable
 	/** 获取一个脚本描述的副本，用于优化
 	 * @return
 	 */
-	public ProgramMetaData copy()
-	{
+	public ProgramMetaData copy() {
 		ProgramMetaData newCopy = (ProgramMetaData) ObjectUtil.copy(this);
 		return newCopy;
 	}
@@ -173,24 +155,20 @@ public class ProgramMetaData implements java.io.Serializable
 	/** 获取模板顶级临时变量的在变量素组里的索引
 	 * @return
 	 */
-	public Map<String, Integer> getTemplateRootScopeIndexMap()
-	{
+	public Map<String, Integer> getTemplateRootScopeIndexMap() {
 		return templateRootScopeIndexMap;
 	}
 
 	/** 设置模板顶级临时变量的在变量素组里的索引
 	 * @param templateRootScopeIndexMap
 	 */
-	public void setTemplateRootScopeIndexMap(Map<String, Integer> templateRootScopeIndexMap)
-	{
+	public void setTemplateRootScopeIndexMap(Map<String, Integer> templateRootScopeIndexMap) {
 		this.templateRootScopeIndexMap = templateRootScopeIndexMap;
 	}
 
-	public AjaxStatement getAjax(String anchor)
-	{
+	public AjaxStatement getAjax(String anchor) {
 
-		if (ajaxs == null)
-		{
+		if (ajaxs == null) {
 			BeetlException be = new BeetlException(BeetlException.AJAX_NOT_FOUND, "该模板文件没有发现任何ajax锚点");
 			be.pushToken(new GrammarToken(anchor, 0, 0));
 			throw be;

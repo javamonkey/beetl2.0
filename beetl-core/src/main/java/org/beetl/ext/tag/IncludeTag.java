@@ -27,7 +27,6 @@
  */
 package org.beetl.ext.tag;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -36,40 +35,22 @@ import org.beetl.core.Resource;
 import org.beetl.core.Tag;
 import org.beetl.core.Template;
 
-public class IncludeTag extends Tag
-{
+public class IncludeTag extends Tag {
 
 	@Override
-	public void render()
-	{
+	public void render() {
 		String resourceId = getRelResourceId();
-		;
 
 		Template t = gt.getTemplate(resourceId, this.ctx.getResourceId());
-		//快速复制父模板的变量
+		// 快速复制父模板的变量
 		t.binding(this.ctx.globalVar);
-		if (ctx.objectKeys != null && ctx.objectKeys.size() != 0)
-		{
-			t.dynamic(ctx.objectKeys);
-		}
-
-		if (this.args.length == 2)
-		{
+		if (this.args.length == 2) {
+			@SuppressWarnings("unchecked")
 			Map<String, Object> map = (Map<String, Object>) this.args[1];
-			for (Entry<String, Object> entry : map.entrySet())
-			{
+			for (Entry<String, Object> entry : map.entrySet()) {
 				Object value = entry.getValue();
-				if (value instanceof Map || value instanceof Collection)
-				{
-					t.binding((String) entry.getKey(), value, true);
-				}
-				else
-				{
-					t.binding((String) entry.getKey(), value);
-				}
-
+				t.binding(entry.getKey(), value);
 			}
-
 		}
 
 		ByteWriter bw = ctx.byteWriter;
@@ -77,11 +58,10 @@ public class IncludeTag extends Tag
 
 	}
 
-	protected String getRelResourceId()
-	{
+	protected String getRelResourceId() {
 
 		Resource sibling = ctx.getResource();
-		//不要使用resource的loder，因为有可能是
+		// 不要使用resource的loder，因为有可能是
 		return gt.getResourceLoader().getResourceId(sibling, (String) this.args[0]);
 
 	}

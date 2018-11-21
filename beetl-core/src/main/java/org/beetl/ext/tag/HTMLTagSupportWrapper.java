@@ -38,17 +38,21 @@ import org.beetl.core.Template;
 import org.beetl.core.statement.Statement;
 
 /**
+ * 最新版本使用HTMLTagSupportWrapper2，延迟获得tagBody内容
  * 封装了html标签调用的标签，先寻找是否有注册的标签类，如果没有，再调用
- * htmltags目录下的html标签文件
+ * htmltags目录下的html标签文件，
  * @author joelli
  *
  */
+@Deprecated
 public class HTMLTagSupportWrapper extends Tag {
 
 	protected String tagRoot = null;
 	protected String tagSuffix = null;
 
 	@Override
+
+
 	public void render() {
 		if (args.length == 0 || args.length > 2) {
 			throw new RuntimeException("参数错误，期望child,Map .....");
@@ -82,7 +86,6 @@ public class HTMLTagSupportWrapper extends Tag {
 		t = gt.getTemplate(path, this.ctx.getResourceId());
 
 		t.binding(ctx.globalVar);
-		t.dynamic(ctx.objectKeys);
 
 		if (args.length == 2) {
 			Map<String, Object> map = (Map<String, Object>) args[1];
@@ -106,6 +109,7 @@ public class HTMLTagSupportWrapper extends Tag {
 
 	}
 
+	@Override
 	public void init(Context ctx, Object[] args, Statement st) {
 		super.init(ctx, args, st);
 		tagRoot = ctx.gt.getConf().getResourceMap().get("tagRoot");

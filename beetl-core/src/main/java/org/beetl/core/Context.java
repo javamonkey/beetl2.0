@@ -99,6 +99,9 @@ public class Context {
 	 */
 	public ContextLocalBuffer localBuffer = ContextLocalBuffer.get();
 
+
+	public Tag currentTag = null;
+
 	/**
 	 * 判断全局变量是否存在
 	 * 

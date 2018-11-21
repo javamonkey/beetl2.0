@@ -46,23 +46,21 @@ import org.beetl.core.statement.Statement;
  * 
  * @author joeli
  */
-public abstract class Tag
-{
+public abstract class Tag {
 	protected Object[] args = null;
 	protected GroupTemplate gt;
 	protected Context ctx;
 	protected ByteWriter bw;
 	protected Statement bs;
+	protected Tag parent;
 
-	protected void doBodyRender()
-	{
+	protected void doBodyRender() {
 
 		bs.execute(ctx);
 
 	}
 
-	protected BodyContent getBodyContent()
-	{
+	protected BodyContent getBodyContent() {
 		ByteWriter writer = ctx.byteWriter;
 		ByteWriter tempWriter = ctx.byteWriter.getTempWriter(writer);
 		ctx.byteWriter = tempWriter;
@@ -73,13 +71,19 @@ public abstract class Tag
 
 	public abstract void render();
 
-	public void init(Context ctx, Object[] args, Statement st)
-	{
+	public void init(Context ctx, Object[] args, Statement st) {
 		this.ctx = ctx;
 		this.bw = ctx.byteWriter;
 		this.gt = ctx.gt;
 		this.args = args;
 		this.bs = st;
+		this.parent = ctx.currentTag;
+		ctx.currentTag = this;
 	}
+
+	public Tag getParent() {
+		return parent;
+	}
+
 
 }

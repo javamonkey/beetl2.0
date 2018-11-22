@@ -1,2 +1,3 @@
-${title} abcd 
-${layoutContent}
+<input>
+${parentTag().attrs.name}
+</input>

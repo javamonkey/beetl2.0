@@ -43,6 +43,7 @@ public class HTMLTagSupportWrapper2 extends HTMLTagSupportWrapper {
 
 			}
 		});
+
 		t.renderTo(ctx.byteWriter);
 	}
 }

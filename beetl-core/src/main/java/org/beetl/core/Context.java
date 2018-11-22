@@ -100,8 +100,6 @@ public class Context {
 	public ContextLocalBuffer localBuffer = ContextLocalBuffer.get();
 
 
-	public Tag currentTag = null;
-
 	/**
 	 * 判断全局变量是否存在
 	 * 
@@ -126,20 +124,6 @@ public class Context {
 		globalVar.put(key, value);
 	}
 
-	/**
-	 * 3.0版本后不在有dynamic 这个概念
-	 * @param key
-	 * @param value
-	 * @param isDynamicObject
-	 */
-	@Deprecated
-	public void set(String key, Object value, boolean isDynamicObject) {
-		if (globalVar == null) {
-			globalVar = new HashMap<String, Object>();
-		}
-		globalVar.put(key, value);
-
-	}
 
 	/** 得到全局变量
 	 * @param key
@@ -160,4 +144,19 @@ public class Context {
 		return this.template.program.res;
 	}
 
+	public void setCurrentTag(Tag tag) {
+		Map map = (Map) getGlobal("$page");
+		if (map == null) {
+			return;
+		}
+		map.put("$parentTag", tag);
+	}
+
+	public Tag getCurrentTag() {
+		Map map = (Map) getGlobal("$page");
+		if (map == null) {
+			return null;
+		}
+		return (Tag) map.get("$parentTag");
+	}
 }

@@ -204,7 +204,7 @@ public class Template {
 	 *            模板变量
 	 */
 	public void binding(String varName, Object o) {
-		this.binding(varName, o);
+		ctx.set(varName, o);
 	}
 
 	/**

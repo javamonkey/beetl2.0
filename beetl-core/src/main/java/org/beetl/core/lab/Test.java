@@ -1,6 +1,8 @@
 package org.beetl.core.lab;
 
 
+import java.util.HashMap;
+
 import org.beetl.core.Configuration;
 import org.beetl.core.ContextLocalBuffer;
 import org.beetl.core.GroupTemplate;
@@ -42,6 +44,8 @@ public class Test {
 			TestUser user = new TestUser("jo");
 			user.lover = new TestUser("dddd");
 			t.binding("user", user);
+			t.binding("$page", new HashMap());
+
 			System.out.println(t.render());
 
 

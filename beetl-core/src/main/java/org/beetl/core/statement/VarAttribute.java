@@ -55,7 +55,6 @@ public class VarAttribute extends Expression {
 
 			return aa.value(o, name);
 		} catch (ClassCastException ex) {
-			// System.out.println(o.getClass().getClassLoader()+" ==== "+aa.getClass().getClassLoader());
 			throw BeetlUtil.throwCastException(ex, ctx.gt);
 		}
 

@@ -103,7 +103,7 @@ public class TextParser {
 		ScriptDelimeter sd = new ScriptDelimeter("@".toCharArray(), null, "<%".toCharArray(), "%>".toCharArray());
 
 		HtmlTagConfig htmlConfig = new HtmlTagConfig();
-		String text = "<%a%>a\n<%c%>";
+		String text = "<#block name=\"block123\"><#input></#input></#block>";
 		StringReader str = new StringReader(text);
 		TextParser textParser = new TextParser(pd, sd, htmlConfig);
 		textParser.doParse(str);

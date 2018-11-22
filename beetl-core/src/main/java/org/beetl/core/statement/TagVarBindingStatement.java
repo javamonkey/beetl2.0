@@ -41,6 +41,7 @@ public class TagVarBindingStatement extends TagStatement {
 				throw be;
 			}
 			tag.render();
+			tag.afterRender();
 		} catch (BeetlException ex) {
 			// BeetlException异常时不要设置token，因为抛出的地方已经设置了
 			throw ex;

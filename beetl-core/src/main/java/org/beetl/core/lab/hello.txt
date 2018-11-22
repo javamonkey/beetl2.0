@@ -1,3 +1,4 @@
-<#html:layout parent="input.tag" title="hello" >
-ok，1234
-</#html:layout>
+<#block name="block123">
+<#input>
+</#input>
+</#block>

@@ -71,18 +71,26 @@ public abstract class Tag {
 
 	public abstract void render();
 
+	public void afterRender() {
+		ctx.setCurrentTag(parent);
+	}
+
 	public void init(Context ctx, Object[] args, Statement st) {
 		this.ctx = ctx;
 		this.bw = ctx.byteWriter;
 		this.gt = ctx.gt;
 		this.args = args;
 		this.bs = st;
-		this.parent = ctx.currentTag;
-		ctx.currentTag = this;
+		this.parent = ctx.getCurrentTag();
+		ctx.setCurrentTag(this);
 	}
 
 	public Tag getParent() {
 		return parent;
+	}
+
+	public Object[] getArgs() {
+		return this.args;
 	}
 
 

@@ -27,6 +27,7 @@
  */
 package org.beetl.ext.tag;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -97,7 +98,6 @@ public class HTMLTagSupportWrapper extends Tag {
 
 		BodyContent bodyContent = super.getBodyContent();
 		t.binding("tagBody", bodyContent);
-
 		t.renderTo(ctx.byteWriter);
 	}
 
@@ -106,6 +106,7 @@ public class HTMLTagSupportWrapper extends Tag {
 		Tag tag = tagFactory.createTag();
 		tag.init(ctx, args, bs);
 		tag.render();
+		tag.afterRender();
 
 	}
 
@@ -114,6 +115,15 @@ public class HTMLTagSupportWrapper extends Tag {
 		super.init(ctx, args, st);
 		tagRoot = ctx.gt.getConf().getResourceMap().get("tagRoot");
 		tagSuffix = ctx.gt.getConf().getResourceMap().get("tagSuffix");
+	}
+
+	public Map getAttrs() {
+		if (this.args.length == 1) {
+			return Collections.emptyMap();
+		} else {
+			return (Map) this.args[1];
+		}
+
 	}
 
 }

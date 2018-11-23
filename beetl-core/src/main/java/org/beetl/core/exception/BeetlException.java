@@ -39,8 +39,7 @@ import org.beetl.core.statement.GrammarToken;
  * @author joelli
  *
  */
-public class BeetlException extends RuntimeException
-{
+public class BeetlException extends RuntimeException {
 	/**
 	 * 错误的Token
 	 */
@@ -56,7 +55,7 @@ public class BeetlException extends RuntimeException
 
 	public List<Resource> errorResourceStack = new ArrayList<Resource>(3);
 	public List<GrammarToken> errorTokenStack = new ArrayList<GrammarToken>(3);
-	
+
 	public boolean inTagBody = false;
 
 	/**
@@ -86,7 +85,7 @@ public class BeetlException extends RuntimeException
 	 * AJAX已经定义过了
 	 */
 	public static final String AJAX_NOT_FOUND = "AJAX_NOT_FOUND";
-	
+
 	/**
 	 * AJAX 属性定义错误
 	 */
@@ -192,13 +191,13 @@ public class BeetlException extends RuntimeException
 	 */
 	public static final String NATIVE_NOT_ALLOWED = "NATIVE_NOT_ALLOWED";
 
-	//对象的属性get方法出错
+	// 对象的属性get方法出错
 	public static final String GET_CALL_ERROR = "GET_CALL_ERROR";
-	
-	//has函数调用错误
+
+	// has函数调用错误
 	public static final String HAS_CALL_ILLEGAL = "HAS_CALL_ILLEGAL";
 
-	//语法错误
+	// 语法错误
 	public static final String ERROR = "ERROR";
 
 	public static final String TOKEN_ERROR = "TOKEN_ERROR";
@@ -206,60 +205,57 @@ public class BeetlException extends RuntimeException
 	public static final String PARSER_VIABLE_ERROR = "PARSER_VIABLE_ERROR";
 	public static final String PARSER_MISS_ERROR = "PARSER_MISS_ERROR";
 	public static final String PARSER_PREDICATE_ERROR = "PARSER_PREDICATE_ERROR";
-	//HTML TAG 解析出错
+	// HTML TAG 解析出错
 	public static final String PARSER_HTML_TAG_ERROR = "PARSER_HTML_TAG_ERROR";
-	//类型识别错误
+	// 类型识别错误
 	public static final String TYPE_SEARCH_ERROR = "TYPE_SEARCH_ERROR";
 
-	//本地调用格式错误,如a[0](1,2)
+	// 本地调用格式错误,如a[0](1,2)
 	public static final String PARSER_NATIVE_ERROR = "PARSER_NATIVE_ERROR";
 
-	//模板加载失败
+	// 模板加载失败
 	public static final String TEMPLATE_LOAD_ERROR = "TEMPLATE_LOAD_ERROR";
 
-	//Client IO 
+	// Client IO
 	public static final String CLIENT_IO_ERROR_ERROR = "CLIENT_IO_ERROR_ERROR";
 
-	//表达式类型不一致，无法运算,如俩个字符串相乘
+	// 表达式类型不一致，无法运算,如俩个字符串相乘
 	public static final String EXPRESSION_NOT_COMPATIBLE = "EXPRESSION_NOT_COMPATIBLE";
+	// 不允许的语法
+	public static final String GRAMMAR_NOT_ALLOWED = "GRAMMAR_NOT_ALLOWED";
 
-	public BeetlException(String detailCode, String msg)
-	{
+	public BeetlException(String detailCode, String msg) {
 		super(msg);
 
 		this.detailCode = detailCode;
 
 	}
 
-	public BeetlException(String detailCode)
-	{
+	public BeetlException(String detailCode) {
 		super();
 		this.detailCode = detailCode;
 	}
 
-	public BeetlException(String detailCode, Throwable cause)
-	{
+	public BeetlException(String detailCode, Throwable cause) {
 		super(cause);
 		this.detailCode = detailCode;
 
 	}
 
-	public BeetlException(String detailCode, String msg, Throwable cause)
-	{
+	public BeetlException(String detailCode, String msg, Throwable cause) {
 		super(msg, cause);
 		this.detailCode = detailCode;
 	}
 
-	public String toString()
-	{
+	@Override
+	public String toString() {
 		return detailCode;
-		//		return "Error:" + detailCode + "at " + token.line + super.getMessage() != null ? super.getMessage() : "";
+		// return "Error:" + detailCode + "at " + token.line + super.getMessage() != null ? super.getMessage() : "";
 	}
 
-	public void pushResource(Resource resource)
-	{
-	
-		if(this.inTagBody) {
+	public void pushResource(Resource resource) {
+
+		if (this.inTagBody) {
 			/**
 			 * 如果当前渲染的是html标签，则出错资源应该使用该html标签的页面，而不是渲染改标签的页面
 			 * 参考,HTMLTagSupportWrapper2,TagStatment
@@ -272,21 +268,18 @@ public class BeetlException extends RuntimeException
 				 2018-9-9
 			 */
 			this.inTagBody = false;
-			return ;
+			return;
 		}
-		if (this.resource == null)
-		{
+		if (this.resource == null) {
 			this.resource = resource;
 		}
 		this.errorResourceStack.add(resource);
 
 	}
 
-	public void pushToken(GrammarToken token)
-	{
-		
-		if (this.token == null)
-		{
+	public void pushToken(GrammarToken token) {
+
+		if (this.token == null) {
 			this.token = token;
 		}
 

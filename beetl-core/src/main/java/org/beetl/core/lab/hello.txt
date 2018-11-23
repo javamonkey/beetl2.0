@@ -1,4 +1,1 @@
-<#block name="block123">
-<#input>
-</#input>
-</#block>
+${env()}

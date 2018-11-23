@@ -1,8 +1,6 @@
 package org.beetl.core.lab;
 
 
-import java.util.HashMap;
-
 import org.beetl.core.Configuration;
 import org.beetl.core.ContextLocalBuffer;
 import org.beetl.core.GroupTemplate;
@@ -23,12 +21,12 @@ public class Test {
 		ContextLocalBuffer.BYTE_MAX_SIZE = ContextLocalBuffer.MAX_SIZE * 4;
 		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("org/beetl/core/lab/");
 		Configuration cfg = Configuration.defaultConfiguration();
-
+		cfg.setEngine("org.beetl.core.engine.OnlineTemplateEngine");
 		cfg.setDirectByteOutput(true);
 		cfg.getResourceMap().put("tagRoot", "");
 		cfg.getPkgList().add("org.beetl.core.lab.");
-		cfg.setStatementStart("<!--#");
-		cfg.setStatementEnd("-->");
+		cfg.setStatementStart("<%");
+		cfg.setStatementEnd("%>");
 		// js 里专用
 		cfg.setStatementStart2("//#");
 		cfg.setStatementEnd2(null);
@@ -44,7 +42,6 @@ public class Test {
 			TestUser user = new TestUser("jo");
 			user.lover = new TestUser("dddd");
 			t.binding("user", user);
-			t.binding("$page", new HashMap());
 
 			System.out.println(t.render());
 

@@ -25,7 +25,7 @@ import org.beetl.core.statement.WhileStatement;
 public class OnlineTemplateEngine extends DefaultTemplateEngine {
 
 	public static int MAX = 5;
-	public static String ERROR = "在线引擎不允许循环次数超过  " + MAX;
+	public static String ERROR = "错误:在线引擎不允许循环次数超过  " + MAX;
 
 	@Override
 	public Program createProgram(Resource rs, Reader reader, Map<Integer, String> textMap, String cr,

@@ -27,14 +27,13 @@
  */
 package org.beetl.core.resource;
 
-import java.io.File;
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.Map;
 
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Resource;
 import org.beetl.core.ResourceLoader;
-import org.beetl.core.fun.FileFunctionWrapper;
 import org.beetl.core.misc.BeetlUtil;
 
 /**
@@ -268,15 +267,50 @@ public class ClasspathResourceLoader implements ResourceLoader
 		}
 	}
 	
+	
 	protected String getChildPath(String path,String child){
-		if(child.length()==0){
-			return path;
-		}else if(child.startsWith("/")){
-			return path+child;			
-		}else{
-			return path+"/"+child;
-		}
+        // 首先, 与父路径拼接起来
+        String re = null;
+        if(child.length()==0){
+            return path;
+        }
+        else if(child.startsWith("/")){
+            re = path+child;          
+        }
+        else{
+            re = path+"/"+child;
+        }
+        // 如果不包含`../` 或者 `./`,那就无需处理了
+        if (!re.contains("./"))
+            return re;
+        // 分解成一段一段的路径,TODO 这种路径和include需要统一处理，留在3.0
+        String[] tmp = re.split("[\\\\/]");
+        LinkedList<String> list = new LinkedList<String>();
+        for (String str : tmp) {
+            if (str == null || str.isEmpty())
+                continue;
+            if ("..".equals(str)) { // 向上退一层
+                int sz = list.size();
+                if (sz > 0) // 预防顶部异常
+                    list.remove(sz - 1);
+            }
+            else if (".".equals(str)) // 属于多余路径,跳过
+                continue;
+            else {
+                list.add(str);
+            }
+        }
+        // 没有一个值? 返回空, 或者抛异常?
+        if (list.isEmpty())
+            return "";
+        StringBuilder sb = new StringBuilder();
+        for (String str : list) {
+            sb.append(str).append('/');
+        }
+        sb.setLength(sb.length() - 1);
+        return sb.toString();
 	}
+	
 	
 	
 }

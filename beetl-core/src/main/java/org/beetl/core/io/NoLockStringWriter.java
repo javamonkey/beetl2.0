@@ -71,17 +71,21 @@ public class NoLockStringWriter extends Writer
 		if (str != null)
 		{
 			int len = str.length();
-			if (len < buf.length)
+			int newcount = count + len;
+			if (newcount > buf.length)
 			{
-				str.getChars(0, len, buf, 0);
-				this.write(buf, 0, len);
-
+				//overflow ignore
+				buf = copyOf(buf, Math.max(buf.length << 1, newcount));
+				str.getChars(0, len, buf,count);
+				
 			}
 			else
 			{
 
-				this.write(str.toCharArray());
+				str.getChars(0, len, buf,count);
 			}
+			count = newcount;
+			
 
 		}
 	}

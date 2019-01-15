@@ -1,19 +1,12 @@
 package org.beetl.core.lab;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.beetl.core.Configuration;
 import org.beetl.core.Context;
-import org.beetl.core.ContextLocalBuffer;
 import org.beetl.core.Function;
-import org.beetl.core.GroupTemplate;
 import org.beetl.core.ResourceLoader;
-import org.beetl.core.Template;
-import org.beetl.core.resource.ClasspathResourceLoader;
+import org.beetl.core.io.NoLockStringWriter;
 
 /**
  * http://sports.qq.com/a/20151126/029300.htm
@@ -23,18 +16,28 @@ import org.beetl.core.resource.ClasspathResourceLoader;
  */
 public class Test {
 	public static void main(String[] args) throws Exception {
+		
+		NoLockStringWriter w = new NoLockStringWriter(new char[12]);
+		w.write("1abcdef");
+		w.write("2abcdef");
+		w.write("3abcdef");
+		w.write("4abcdef");
+		
+		String a = w.toString();
+		System.out.println(a.length()+":"+a);
 
-		ContextLocalBuffer.isSoft = true;
-		ContextLocalBuffer.MAX_SIZE = 1024 * 10;
-		ContextLocalBuffer.BYTE_MAX_SIZE = ContextLocalBuffer.MAX_SIZE * 4;
-		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("org/beetl/core/lab/");
-		Configuration cfg = Configuration.defaultConfiguration();
-
-		cfg.setDirectByteOutput(true);
-		cfg.getResourceMap().put("tagRoot", "");
-		cfg.getPkgList().add("org.beetl.core.lab.");
-
-		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
+//		ContextLocalBuffer.isSoft = true;
+//		ContextLocalBuffer.MAX_SIZE = 1024 * 10;
+//		ContextLocalBuffer.BYTE_MAX_SIZE = ContextLocalBuffer.MAX_SIZE * 4;
+//		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("org/beetl/core/lab/");
+//		Configuration cfg = Configuration.defaultConfiguration();
+//
+//		cfg.setDirectByteOutput(true);
+//		cfg.getResourceMap().put("tagRoot", "");
+//		cfg.getPkgList().add("org.beetl.core.lab.");
+//
+//		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
+//		gt.registerFunction("bigString", new TestFun());
 
 		// cfg.setStatementStart("@");
 		// cfg.setStatementEnd(null);
@@ -43,43 +46,37 @@ public class Test {
 		// cfg.setPlaceholderEnd("}}");
 		//
 
-		List list = new ArrayList();
-		// list.add(new TestUser("abc"));
-
-		HashMap map = new HashMap();
-		map.put("key", 123);
-		// gt.enableStrict();
-
-		for (int i = 0; i < 100000; i++) {
-
-			Template t = gt.getTemplate("/hello.txt");
-			// TestUser user = new TestUser("jo");
-			// user.lover = new TestUser("dddd");
-			// user.friends = list;
-			// t.binding("user",user);
-			t.binding("$page", new HashMap());
-			Long a = 12342343434l;
-			Object c = a;
-			t.binding("x", a);
-			t.binding("y", c);
-			// t.binding("user", new TestUser("def"));
-			t.render();
-
-			String value = new String("reakl");
-			WeakReference weakRefer = new WeakReference(value);
-
-			String str = (String) weakRefer.get();// null
-			if (str == null) {
-				System.out.println("is null");
-
-			}
-
-			if (i % 10 == 0) {
-				System.gc();
-			}
-			// Thread.currentThread().sleep(1);
-
-		}
+//		List list = new ArrayList();
+//		// list.add(new TestUser("abc"));
+//
+//		HashMap map = new HashMap();
+//		map.put("key", 123);
+//		// gt.enableStrict();
+//
+//		for (int i = 0; i < 1; i++) {
+//
+//			Template t = gt.getTemplate("/hello.txt");
+//			// TestUser user = new TestUser("jo");
+//			// user.lover = new TestUser("dddd");
+//			// user.friends = list;
+//			// t.binding("user",user);
+//			t.binding("$page", new HashMap());
+//			Long a = 12342343434l;
+//			Object c = a;
+//			t.binding("x", a);
+//			t.binding("y", c);
+//			// t.binding("user", new TestUser("def"));
+//			String str = t.render();
+//			System.out.println(str.length());
+//			if(str.endsWith("end")) {
+//				System.out.println("ok end ");
+//				
+//				
+//			}
+//
+//			
+//
+//		}
 
 	}
 
@@ -119,12 +116,13 @@ public class Test {
 	public static class TestFun implements Function {
 
 		@Override
-		public String[] call(Object[] paras, Context ctx) {
-			List list = new ArrayList();
-			list.add("hi");
-			list.add("joel");
-			System.out.println("list -----");
-			return (String[]) list.toArray(new String[0]);
+		public String call(Object[] paras, Context ctx) {
+			StringBuilder sb = new StringBuilder();
+			for(int i=0;i<1024*1000;i++) {
+				sb.append("a");
+			}
+			sb.append("end");
+			return sb.toString();
 
 		}
 

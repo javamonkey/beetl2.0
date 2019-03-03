@@ -39,9 +39,10 @@ public class Test {
 		for (int i = 0; i < 1; i++) {
 
 			Template t = gt.getTemplate("/hello.txt");
-			TestUser user = new TestUser("jo");
-			user.lover = new TestUser("dddd");
-			t.binding("user", user);
+			t.binding("a",1);
+//			TestUser user = new TestUser("jo");
+//			user.lover = new TestUser("dddd");
+//			t.binding("user", user);
 
 			System.out.println(t.render());
 

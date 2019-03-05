@@ -13,7 +13,7 @@ import org.beetl.core.exception.BeetlException;
 public final class PlaceholderST extends Statement {
 
 	public Expression expression;
-	public Type type = null;
+	
 	protected FormatExpression format;
 	// 用户定义输出
 	public static Output output = null;

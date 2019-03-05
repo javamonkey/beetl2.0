@@ -63,187 +63,114 @@ import org.beetl.core.om.ObjectMethodMatchConf;
  */
 public class ObjectUtil
 {
-	public static Map<Class, Map<String,MethodInvoker>> methodInvokerCache = new ConcurrentHashMap<Class, Map<String,MethodInvoker>>();
+//	public static Map<Class, Map<String,MethodInvoker>> methodInvokerCache = new ConcurrentHashMap<Class, Map<String,MethodInvoker>>();
 	//	static Map<Class, Method[]> cacheClassMethodMap = new ConcurrentHashMap<Class, Method[]>();
 	public static Map<Class, ObjectInfo> cachedClassInfoMap = new ConcurrentHashMap<Class, ObjectInfo>();
 	public static Object[] EMPTY_OBJECT_ARRAY = new Object[0];
 	public static Class[] EMPTY_CLASS_ARRAY = new Class[0];
 
-	/**深度复制一个对象，该对象及其属性都必须实现java.io.Serializable方法。此方法用于
-	 * TypeEngine引擎复制一个Program，并做优化用
-	 * @param o
-	 * @return
-	 */
-	public static Object copy(Object o)
-	{
-		if (o instanceof java.io.Serializable)
-		{
-			try
-			{
-				ByteArrayOutputStream bs = new ByteArrayOutputStream(128);
-				ObjectOutputStream dos = new ObjectOutputStream(bs);
-				dos.writeObject(o);
-				ByteArrayInputStream is = new ByteArrayInputStream(bs.toByteArray());
-				ObjectInputStream ios = new ObjectInputStream(is);
-				Object copy = ios.readObject();
-				return copy;
-
-			}
-			catch (IOException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch (ClassNotFoundException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		}
-
-		return null;
-	}
-
-	/** 已知属性名，得出get方法，如属性名是name,get方法是getName
-	 * 遵循javabean规范
-	 * @param attrName
-	 * @return
-	 * @deprecated 并不遵循java规范
-	 */
-	public static String getGetMethod(String attrName)
-	{
-		StringBuilder mbuffer = new StringBuilder("get");
-		mbuffer.append(attrName.substring(0, 1).toUpperCase()).append(attrName.substring(1));
-		return mbuffer.toString();
-	}
-
-	/** 已知属性名，得出set方法，如属性名是name,get方法是setName
-	 * 遵循javabean规范
-	 * @param attrName
-	 * @return
-	 * @deprecated 并不遵循java规范
-	 */
-	public static String getSetMethod(String attrName)
-	{
-		StringBuilder mbuffer = new StringBuilder("set");
-		mbuffer.append(attrName.substring(0, 1).toUpperCase()).append(attrName.substring(1));
-		return mbuffer.toString();
-	}
-
-	/** 已知属性名，得出is方法，如属性名是boy,is方法是isBoy
-	 * 遵循javabean规范
-	 * @param attrName
-	 * @return
-	 * @deprecated 并不遵循java规范
-	 */
-	public static String getIsMethod(String attrName)
-	{
-		StringBuilder mbuffer = new StringBuilder("is");
-		mbuffer.append(attrName.substring(0, 1).toUpperCase()).append(attrName.substring(1));
-		return mbuffer.toString();
-	}
-
-	/** 得到一个可供调用get属性的invoker,invoker用于封装对对象的属性读取
-	 * @param c
-	 * @param name
-	 * @return
-	 */
-	public static MethodInvoker getInvokder(Class c, String name)
-	{
-		//先检测 get，然后 is，然后是general get
-//性能慢，但需要证,重要的是，类重加载后，根据字符串知道method，是错误的
-//		String key = c.toString().concat("_").concat(name); 
-		MethodInvoker invoker = null;
-		Map<String,MethodInvoker> map = methodInvokerCache.get(c);
-		if(map!=null){
-			invoker = map.get(name);
-			if (invoker != null)
-			{
-				return invoker;
-			}
-		}
-		
-		//try get
-		String methodName = getGetMethod(name);
-		Method method = getGetMethod(c, methodName, null);
-		if (method != null)
-		{
-			invoker = new PojoMethodInvoker(method);
-			
-		}
-		
-		//try is 
-		if(invoker==null){			
-			if(name.startsWith("is")){
-				methodName = name;
-				method = getGetMethod(c, methodName, null);
-				if(method!=null){
-					invoker = new PojoMethodInvoker(method);
-				}
-			}else{
-				methodName = getIsMethod(name);
-				method = getGetMethod(c, methodName, null);
-				if(method!=null){
-					invoker = new PojoMethodInvoker(method);
-				}
-			}
 	
-		}
-		
-		//bug fix:java bean 规范  cName--> getcName()
-		if(invoker==null){
-			if(name.length()>1&&(name.charAt(1)>='A'&&name.charAt(1)<='Z')){				
-				methodName = "get"+name;
-				method = getGetMethod(c, methodName, null);
-				if(method!=null){
-					invoker = new PojoMethodInvoker(method);
-				}else{
-					methodName = "is"+name;
-					method = getGetMethod(c, methodName, null);
-					if(method!=null){
-						invoker = new PojoMethodInvoker(method);
-					}
-				}
-				
-			}
-		}
-		
-		// general get,string objct allow
-		if(invoker==null){
-			method = getGetMethod(c, "get", new Class[]
-					{ Object.class });
-			if (method != null)
-			{
-				invoker = new GeneralGetMethodInvoker(method, name);
-			}else{
-				method = getGetMethod(c, "get", new Class[]
-						{ String.class });
-				if(method!=null){
-					invoker = new GeneralGetMethodInvoker(method, name);
-				}
-			}
-			
-		}
-		
-		
-		
-		
-		if (invoker != null)
-		{
-			if(map==null){
-				map = new ConcurrentHashMap<String,MethodInvoker>();
-				methodInvokerCache.put(c, map);
-			}
-			map.put(name, invoker);
-			return invoker;
-		}
-		else
-		{
-			return null;
-		}
-
-	}
+//
+//	/** 得到一个可供调用get属性的invoker,invoker用于封装对对象的属性读取
+//	 * @param c
+//	 * @param name
+//	 * @return
+//	 */
+//	public static MethodInvoker getInvokder(Class c, String name)
+//	{
+//		//先检测 get，然后 is，然后是general get
+////性能慢，但需要证,重要的是，类重加载后，根据字符串知道method，是错误的
+////		String key = c.toString().concat("_").concat(name); 
+//		MethodInvoker invoker = null;
+//		Map<String,MethodInvoker> map = methodInvokerCache.get(c);
+//		if(map!=null){
+//			invoker = map.get(name);
+//			if (invoker != null)
+//			{
+//				return invoker;
+//			}
+//		}
+//		
+//		//try get
+//		String methodName = getGetMethod(name);
+//		Method method = getGetMethod(c, methodName, null);
+//		if (method != null)
+//		{
+//			invoker = new PojoMethodInvoker(method);
+//			
+//		}
+//		
+//		//try is 
+//		if(invoker==null){			
+//			if(name.startsWith("is")){
+//				methodName = name;
+//				method = getGetMethod(c, methodName, null);
+//				if(method!=null){
+//					invoker = new PojoMethodInvoker(method);
+//				}
+//			}else{
+//				methodName = getIsMethod(name);
+//				method = getGetMethod(c, methodName, null);
+//				if(method!=null){
+//					invoker = new PojoMethodInvoker(method);
+//				}
+//			}
+//	
+//		}
+//		
+//		//bug fix:java bean 规范  cName--> getcName()
+//		if(invoker==null){
+//			if(name.length()>1&&(name.charAt(1)>='A'&&name.charAt(1)<='Z')){				
+//				methodName = "get"+name;
+//				method = getGetMethod(c, methodName, null);
+//				if(method!=null){
+//					invoker = new PojoMethodInvoker(method);
+//				}else{
+//					methodName = "is"+name;
+//					method = getGetMethod(c, methodName, null);
+//					if(method!=null){
+//						invoker = new PojoMethodInvoker(method);
+//					}
+//				}
+//				
+//			}
+//		}
+//		
+//		// general get,string objct allow
+//		if(invoker==null){
+//			method = getGetMethod(c, "get", new Class[]
+//					{ Object.class });
+//			if (method != null)
+//			{
+//				invoker = new GeneralGetMethodInvoker(method, name);
+//			}else{
+//				method = getGetMethod(c, "get", new Class[]
+//						{ String.class });
+//				if(method!=null){
+//					invoker = new GeneralGetMethodInvoker(method, name);
+//				}
+//			}
+//			
+//		}
+//		
+//		
+//		
+//		
+//		if (invoker != null)
+//		{
+//			if(map==null){
+//				map = new ConcurrentHashMap<String,MethodInvoker>();
+//				methodInvokerCache.put(c, map);
+//			}
+//			map.put(name, invoker);
+//			return invoker;
+//		}
+//		else
+//		{
+//			return null;
+//		}
+//
+//	}
 
 	/** 获取对象的某个方法，如果无此方法，则仅仅返回null
 	 * @param c 对象

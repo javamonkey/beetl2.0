@@ -174,7 +174,6 @@ import org.beetl.core.statement.StaticTextByteASTNode;
 import org.beetl.core.statement.SwitchStatement;
 import org.beetl.core.statement.TagStatement;
 import org.beetl.core.statement.TryCatchStatement;
-import org.beetl.core.statement.Type;
 import org.beetl.core.statement.VarAssignStatement;
 import org.beetl.core.statement.VarAssignStatementSeq;
 import org.beetl.core.statement.VarAttribute;
@@ -327,8 +326,7 @@ public class AntlrProgramBuilder {
 			return parseDirectiveStatement((DirectiveStContext) node);
 
 		} else if (node instanceof CommentTagStContext) {
-			CommentTypeTagContext typeCtx = ((CommentTagStContext) node).commentTypeTag();
-			this.parseCommentTag(typeCtx);
+			//兼容2.x版本
 			return null;
 
 		} else if (node instanceof TryStContext) {
@@ -703,47 +701,9 @@ public class AntlrProgramBuilder {
 		return statement;
 	}
 
-	protected void parseCommentTag(CommentTypeTagContext typeCtx) {
-		List<CommentTypeItemTagContext> list = typeCtx.commentTypeItemTag();
-		for (CommentTypeItemTagContext ctx : list) {
-			ClassOrInterfaceTypeContext classCtx = ctx.classOrInterfaceType();
-			Type type = getClassType(classCtx);
-			String globalVarName = ctx.Identifier1().getSymbol().getText();
-			this.data.globalType.put(globalVarName, type);
+	
 
-		}
-	}
-
-	private Type getClassType(ClassOrInterfaceTypeContext ctx) {
-		List<TerminalNode> list = ctx.Identifier1();
-		String className = this.getID(list);
-		Class cls = gt.loadClassBySimpleName(className);
-		if (cls == null) {
-
-			BeetlException ex = new BeetlException(BeetlException.TYPE_SEARCH_ERROR, className);
-			ex.pushToken(this.getBTToken(ctx.getStart()));
-			throw ex;
-		}
-		Type classType = new Type(cls);
-		TypeArgumentsContext typeArgCtx = ctx.typeArguments();
-		if (typeArgCtx != null) {
-			List<TypeArgumentContext> listType = typeArgCtx.typeArgument();
-			if (listType != null) {
-				Type[] subType = new Type[listType.size()];
-				int i = 0;
-				for (TypeArgumentContext typeCtx : listType) {
-					ClassOrInterfaceTypeContext child = typeCtx.classOrInterfaceType();
-					Type type = this.getClassType(child);
-					subType[i++] = type;
-				}
-				classType.types = subType;
-			}
-
-		}
-
-		return classType;
-
-	}
+	
 
 	/** directive dynamic xxx,yy
 	 * @param node

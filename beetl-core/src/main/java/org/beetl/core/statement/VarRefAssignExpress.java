@@ -71,7 +71,9 @@ public class VarRefAssignExpress extends Expression implements IVarIndex {
 		}
 
 		try {
-			ObjectAA.defaultObjectAA().setValue(obj, key, value);
+			//TODO3.0
+//			ObjectAA.defaultObjectAA().setValue(obj, key, value);
+			throw new UnsupportedOperationException();
 		} catch (ClassCastException ex) {
 			BeetlException bx = new BeetlException(BeetlException.ATTRIBUTE_INVALID, ex);
 			bx.pushToken(lastVarAttribute.token);
@@ -81,7 +83,7 @@ public class VarRefAssignExpress extends Expression implements IVarIndex {
 			throw be;
 		}
 
-		return value;
+//		return value;
 
 	}
 

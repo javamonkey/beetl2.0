@@ -26,12 +26,13 @@ public class HasAttributeFunction implements Function {
 		Class type  = o.getClass();
 		for(int i=1;i<paras.length;i++) {
 			String key = (String)paras[i];
-			MethodInvoker invoke = ObjectUtil.getInvokder(type, key);
-			if(invoke==null) {
-				return false;
-			}else if(invoke instanceof GeneralGetMethodInvoker) {
-				return false ;
-			}
+			//TODO3.0,  通过反射获取
+//			MethodInvoker invoke = ObjectUtil.getInvokder(type, key);
+//			if(invoke==null) {
+//				return false;
+//			}else if(invoke instanceof GeneralGetMethodInvoker) {
+//				return false ;
+//			}
 		}
 		return true;
 	}

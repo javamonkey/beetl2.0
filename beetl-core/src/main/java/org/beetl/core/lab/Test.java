@@ -40,6 +40,7 @@ public class Test {
 
 			Template t = gt.getTemplate("/hello.txt");
 			t.binding("a",1);
+			t.binding("user",new TestUser("jo"));
 //			TestUser user = new TestUser("jo");
 //			user.lover = new TestUser("dddd");
 //			t.binding("user", user);

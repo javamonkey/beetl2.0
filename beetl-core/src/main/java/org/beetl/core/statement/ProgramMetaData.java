@@ -33,7 +33,6 @@ import java.util.Map.Entry;
 
 import org.beetl.core.Context;
 import org.beetl.core.exception.BeetlException;
-import org.beetl.core.om.ObjectUtil;
 
 /**
  * 脚本的描述
@@ -144,13 +143,7 @@ public class ProgramMetaData implements java.io.Serializable {
 		}
 	}
 
-	/** 获取一个脚本描述的副本，用于优化
-	 * @return
-	 */
-	public ProgramMetaData copy() {
-		ProgramMetaData newCopy = (ProgramMetaData) ObjectUtil.copy(this);
-		return newCopy;
-	}
+
 
 	/** 获取模板顶级临时变量的在变量素组里的索引
 	 * @return

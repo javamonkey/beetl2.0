@@ -47,7 +47,6 @@ import org.beetl.core.engine.GrammarCreator;
 import org.beetl.core.exception.BeetlException;
 import org.beetl.core.exception.MVCStrictException;
 import org.beetl.core.exception.NativeNotAllowedException;
-import org.beetl.core.om.ObjectAA;
 import org.beetl.core.parser.BeetlParser;
 import org.beetl.core.parser.BeetlParser.AddminExpContext;
 import org.beetl.core.parser.BeetlParser.AjaxStContext;
@@ -1591,19 +1590,17 @@ public class AntlrProgramBuilder {
 				VarAttributeGeneralContext zf = (VarAttributeGeneralContext) vac;
 				VarAttribute attr = new VarAttribute(this.getBTToken(zf.Identifier().getSymbol()));
 				listVarAttr.add(attr);
-				attr.setAA(ObjectAA.defaultObjectAA());
 
 			} else if (vac instanceof VarAttributeArrayOrMapContext) {
 				VarAttributeArrayOrMapContext zf = (VarAttributeArrayOrMapContext) vac;
 
 				Expression exp = this.parseExpress(zf.expression());
 				VarSquareAttribute attr = new VarSquareAttribute(exp, this.getBTToken("[]", exp.token.line));
-				attr.setAA(ObjectAA.defaultObjectAA());
+
 				listVarAttr.add(attr);
 			} else if (vac instanceof VarAttributeVirtualContext) {
 				VarAttributeVirtualContext zf = (VarAttributeVirtualContext) vac;
 				VarVirtualAttribute attr = new VarVirtualAttribute(this.getBTToken(zf.Identifier().getSymbol()));
-
 				listVarAttr.add(attr);
 			}
 		}

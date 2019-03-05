@@ -29,7 +29,6 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 import org.beetl.core.exception.BeetlException;
-import org.beetl.core.om.ObjectAA;
 
 /**
  * call(xxx.cc = exp);

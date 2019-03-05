@@ -31,7 +31,7 @@ import org.beetl.core.Context;
 import org.beetl.core.Tag;
 import org.beetl.core.TagFactory;
 import org.beetl.core.exception.BeetlException;
-import org.beetl.core.om.ObjectUtil;
+import org.beetl.core.fun.ObjectUtil;
 
 /**
  * 标签，如:

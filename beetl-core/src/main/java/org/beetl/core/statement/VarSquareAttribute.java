@@ -29,6 +29,8 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 import org.beetl.core.misc.BeetlUtil;
+import org.beetl.core.om.AttributeAccess;
+import org.beetl.core.om.AttributeAccessFactory;
 
 /**
  * a.[]
@@ -53,6 +55,7 @@ public class VarSquareAttribute extends VarAttribute {
 
 		try {
 			Object value = exp.evaluate(ctx);
+			AttributeAccess aa = AttributeAccessFactory.buildFiledAccessor(o.getClass(),name,ctx.gt);
 			return aa.value(o, value);
 		} catch (ClassCastException ex) {
 			throw BeetlUtil.throwCastException(ex, ctx.gt);

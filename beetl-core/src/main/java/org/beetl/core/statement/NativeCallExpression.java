@@ -9,7 +9,7 @@ import org.beetl.core.exception.BeetlException;
 import org.beetl.core.exception.BeetlParserException;
 import org.beetl.core.misc.BeetlUtil;
 import org.beetl.core.om.ObjectMethodMatchConf;
-import org.beetl.core.om.ObjectUtil;
+import org.beetl.core.fun.ObjectUtil;
 import org.beetl.core.statement.nat.ClassNode;
 import org.beetl.core.statement.nat.InstanceNode;
 import org.beetl.core.statement.nat.NativeArrayNode;

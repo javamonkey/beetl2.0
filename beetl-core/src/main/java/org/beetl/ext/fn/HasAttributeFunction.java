@@ -4,9 +4,7 @@ import java.util.Map;
 
 import org.beetl.core.Context;
 import org.beetl.core.Function;
-import org.beetl.core.om.GeneralGetMethodInvoker;
-import org.beetl.core.om.MethodInvoker;
-import org.beetl.core.om.ObjectUtil;
+import org.beetl.core.fun.ObjectUtil;
 
 /**
  * 判断指定对象是否包含属性

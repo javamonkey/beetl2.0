@@ -32,9 +32,7 @@ import java.util.Map;
 
 import org.beetl.core.Context;
 import org.beetl.core.exception.BeetlException;
-import org.beetl.core.om.MethodInvoker;
-import org.beetl.core.om.ObjectAA;
-import org.beetl.core.om.ObjectUtil;
+import org.beetl.core.fun.ObjectUtil;
 
 /**
  * user.name

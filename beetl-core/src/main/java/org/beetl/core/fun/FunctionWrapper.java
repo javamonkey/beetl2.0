@@ -35,8 +35,6 @@ import java.util.Map.Entry;
 
 import org.beetl.core.Context;
 import org.beetl.core.Function;
-import org.beetl.core.om.ObjectInfo;
-import org.beetl.core.om.ObjectUtil;
 
 /**
  * 将native方法包装成Function

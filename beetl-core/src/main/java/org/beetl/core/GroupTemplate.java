@@ -50,7 +50,7 @@ import org.beetl.core.misc.ByteClassLoader;
 import org.beetl.core.misc.ClassSearch;
 import org.beetl.core.misc.PrimitiveArrayUtil;
 import org.beetl.core.om.AttributeAccessFactory;
-import org.beetl.core.om.ObjectUtil;
+import org.beetl.core.fun.ObjectUtil;
 import org.beetl.core.resource.ClasspathResourceLoader;
 import org.beetl.core.statement.ErrorGrammarProgram;
 import org.beetl.core.statement.Program;

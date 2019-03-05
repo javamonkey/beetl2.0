@@ -25,42 +25,73 @@
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.beetl.core.statement;
+package org.beetl.core.fun;
 
-import org.beetl.core.Context;
-import org.beetl.core.misc.BeetlUtil;
-import org.beetl.core.om.AttributeAccess;
-import org.beetl.core.om.AttributeAccessFactory;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-/** user.name
+/**
+ * 指定类包含的所有方法，并且按照方法名归类
  * @author joelli
  *
  */
-public class VarAttribute extends Expression {
-	public int aaIndex = -1;
-	String name = null;
+public class ObjectInfo
+{
+	Map<String, List<Method>> map = new HashMap<String, List<Method>>();
+	List<Method> allMethod = new ArrayList<Method>();
+	Class c = null;
 
-	public VarAttribute(GrammarToken token) {
-		super(token);
-		name = token.text;
+	public ObjectInfo(Class c)
+	{
+		this.c = c;
+		init();
 	}
 
-	@Override
-	public Object evaluate(Context ctx) {
-		throw new UnsupportedOperationException();
+	public List<Method> getMethods(String name)
+	{
+		return map.get(name);
 	}
 
-	public Object evaluate(Context ctx, Object o) {
-		try {
-			AttributeAccess aa = AttributeAccessFactory.buildFiledAccessor(o.getClass(),name,ctx.gt);
-			return aa.value(o, name);
-		} catch (ClassCastException ex) {
-			throw BeetlUtil.throwCastException(ex, ctx.gt);
+	public List<Method> allMethods()
+	{
+		return allMethod;
+	}
+
+	public Map<String, List<Method>> getMap()
+	{
+		return this.map;
+	}
+
+	private void init()
+	{
+		Method[] ms = c.getMethods();
+		for (Method m : ms)
+		{
+			//仅仅获取public
+			if (Modifier.isPublic(m.getModifiers()))
+			{
+				if (m.getDeclaringClass() == Object.class)
+				{
+					continue;
+				}
+				String name = m.getName();
+				List<Method> list = map.get(name);
+				if (list == null)
+				{
+					list = new ArrayList<Method>(1);
+					map.put(name, list);
+
+				}
+				list.add(m);
+				allMethod.add(m);
+			}
+
 		}
 
 	}
-
-
-
 
 }

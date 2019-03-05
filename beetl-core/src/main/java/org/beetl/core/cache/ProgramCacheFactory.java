@@ -27,7 +27,7 @@
  */
 package org.beetl.core.cache;
 
-import org.beetl.core.om.ObjectUtil;
+import org.beetl.core.fun.ObjectUtil;
 
 /**
  * 存储Program的缓存，默认是采用{@link LocalCache},可以通过设置

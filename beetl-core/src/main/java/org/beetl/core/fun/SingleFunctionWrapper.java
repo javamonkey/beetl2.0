@@ -32,7 +32,6 @@ import java.lang.reflect.Method;
 
 import org.beetl.core.Context;
 import org.beetl.core.exception.BeetlException;
-import org.beetl.core.om.ObjectUtil;
 
 /**
  * 对单个native方法的封装

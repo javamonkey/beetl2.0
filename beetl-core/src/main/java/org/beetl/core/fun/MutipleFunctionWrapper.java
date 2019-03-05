@@ -36,7 +36,6 @@ import org.beetl.core.Context;
 import org.beetl.core.exception.BeetlException;
 import org.beetl.core.misc.BeetlUtil;
 import org.beetl.core.om.ObjectMethodMatchConf;
-import org.beetl.core.om.ObjectUtil;
 
 /**
  * 此Function代表了一个类有多个同名方法。当模板调用的时候，自动寻找最合适的Native方法调用，

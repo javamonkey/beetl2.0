@@ -33,10 +33,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.beetl.core.BodyContent;
-import org.beetl.core.IteratorStatus;
 import org.beetl.core.exception.BeetlException;
-import org.beetl.core.om.MethodInvoker;
-import org.beetl.core.om.ObjectUtil;
+import org.beetl.core.fun.ObjectUtil;
 
 /**
  * 表达式类型

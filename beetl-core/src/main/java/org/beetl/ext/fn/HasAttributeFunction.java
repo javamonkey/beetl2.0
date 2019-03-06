@@ -4,6 +4,8 @@ import java.util.Map;
 
 import org.beetl.core.Context;
 import org.beetl.core.Function;
+import org.beetl.core.fun.GeneralGetMethodInvoker;
+import org.beetl.core.fun.MethodInvoker;
 import org.beetl.core.fun.ObjectUtil;
 
 /**
@@ -27,12 +29,12 @@ public class HasAttributeFunction implements Function {
 		for(int i=1;i<paras.length;i++) {
 			String key = (String)paras[i];
 			//TODO3.0,  通过反射获取
-//			MethodInvoker invoke = ObjectUtil.getInvokder(type, key);
-//			if(invoke==null) {
-//				return false;
-//			}else if(invoke instanceof GeneralGetMethodInvoker) {
-//				return false ;
-//			}
+			MethodInvoker invoke = ObjectUtil.getInvokder(type, key);
+			if(invoke==null) {
+				return false;
+			}else if(invoke instanceof GeneralGetMethodInvoker) {
+				return false ;
+			}
 		}
 		return true;
 	}

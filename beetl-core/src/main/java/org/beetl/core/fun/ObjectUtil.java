@@ -38,11 +38,15 @@ import static org.beetl.core.om.ObjectMethodMatchConf.NO_CONVERT;
 import static org.beetl.core.om.ObjectMethodMatchConf.SHORT_CONVERT;
 import static org.beetl.core.om.ObjectMethodMatchConf.VARIABLE_ARRAY;
 
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.beans.BeanInfo;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -63,114 +67,105 @@ import org.beetl.core.om.ObjectMethodMatchConf;
  */
 public class ObjectUtil
 {
-//	public static Map<Class, Map<String,MethodInvoker>> methodInvokerCache = new ConcurrentHashMap<Class, Map<String,MethodInvoker>>();
-	//	static Map<Class, Method[]> cacheClassMethodMap = new ConcurrentHashMap<Class, Method[]>();
+	//TODO3.0 改成SoftReference，控制内存大小
+	public static Map<Class, Map<String,MethodInvoker>> methodInvokerCache = new ConcurrentHashMap<Class, Map<String,MethodInvoker>>();
+	public static Map<Class,GeneralGetMethodInvoker> genneraInvokerCache = new ConcurrentHashMap<Class, GeneralGetMethodInvoker>();
+
+	static Map<Class, Method[]> cacheClassMethodMap = new ConcurrentHashMap<Class, Method[]>();
 	public static Map<Class, ObjectInfo> cachedClassInfoMap = new ConcurrentHashMap<Class, ObjectInfo>();
 	public static Object[] EMPTY_OBJECT_ARRAY = new Object[0];
 	public static Class[] EMPTY_CLASS_ARRAY = new Class[0];
 
-	
-//
-//	/** 得到一个可供调用get属性的invoker,invoker用于封装对对象的属性读取
-//	 * @param c
-//	 * @param name
-//	 * @return
-//	 */
-//	public static MethodInvoker getInvokder(Class c, String name)
-//	{
-//		//先检测 get，然后 is，然后是general get
-////性能慢，但需要证,重要的是，类重加载后，根据字符串知道method，是错误的
-////		String key = c.toString().concat("_").concat(name); 
-//		MethodInvoker invoker = null;
-//		Map<String,MethodInvoker> map = methodInvokerCache.get(c);
-//		if(map!=null){
-//			invoker = map.get(name);
-//			if (invoker != null)
-//			{
-//				return invoker;
-//			}
-//		}
-//		
-//		//try get
-//		String methodName = getGetMethod(name);
-//		Method method = getGetMethod(c, methodName, null);
-//		if (method != null)
-//		{
-//			invoker = new PojoMethodInvoker(method);
-//			
-//		}
-//		
-//		//try is 
-//		if(invoker==null){			
-//			if(name.startsWith("is")){
-//				methodName = name;
-//				method = getGetMethod(c, methodName, null);
-//				if(method!=null){
-//					invoker = new PojoMethodInvoker(method);
-//				}
-//			}else{
-//				methodName = getIsMethod(name);
-//				method = getGetMethod(c, methodName, null);
-//				if(method!=null){
-//					invoker = new PojoMethodInvoker(method);
-//				}
-//			}
-//	
-//		}
-//		
-//		//bug fix:java bean 规范  cName--> getcName()
-//		if(invoker==null){
-//			if(name.length()>1&&(name.charAt(1)>='A'&&name.charAt(1)<='Z')){				
-//				methodName = "get"+name;
-//				method = getGetMethod(c, methodName, null);
-//				if(method!=null){
-//					invoker = new PojoMethodInvoker(method);
-//				}else{
-//					methodName = "is"+name;
-//					method = getGetMethod(c, methodName, null);
-//					if(method!=null){
-//						invoker = new PojoMethodInvoker(method);
-//					}
-//				}
-//				
-//			}
-//		}
-//		
-//		// general get,string objct allow
-//		if(invoker==null){
-//			method = getGetMethod(c, "get", new Class[]
-//					{ Object.class });
-//			if (method != null)
-//			{
-//				invoker = new GeneralGetMethodInvoker(method, name);
-//			}else{
-//				method = getGetMethod(c, "get", new Class[]
-//						{ String.class });
-//				if(method!=null){
-//					invoker = new GeneralGetMethodInvoker(method, name);
-//				}
-//			}
-//			
-//		}
-//		
-//		
-//		
-//		
-//		if (invoker != null)
-//		{
-//			if(map==null){
-//				map = new ConcurrentHashMap<String,MethodInvoker>();
-//				methodInvokerCache.put(c, map);
-//			}
-//			map.put(name, invoker);
-//			return invoker;
-//		}
-//		else
-//		{
-//			return null;
-//		}
-//
-//	}
+
+	protected static PropertyDescriptor[] propertyDescriptors(Class<?> c) throws IntrospectionException {
+
+		BeanInfo beanInfo = null;
+		beanInfo = Introspector.getBeanInfo(c);
+		return beanInfo.getPropertyDescriptors();
+
+	}
+
+	protected static PropertyDescriptor find(PropertyDescriptor[]  pd,String name){
+		for(PropertyDescriptor p:pd){
+			if(p.getName().equals(name)){
+				return p;
+			}
+		}
+		return null;
+	}
+
+	/** 得到一个可供调用get属性的invoker,invoker用于封装对对象的属性读取
+	 * @param c
+	 * @param name
+	 * @return
+	 */
+	public static MethodInvoker getInvokder(Class c, String name)
+	{
+
+		MethodInvoker invoker = null;
+		Map<String,MethodInvoker> map = methodInvokerCache.get(c);
+		if(map!=null){
+			invoker = map.get(name);
+			if (invoker != null)
+			{
+				return invoker;
+			}
+		}
+
+		invoker = genneraInvokerCache.get(c);
+		if(invoker!=null){
+			return invoker;
+		}
+
+
+		PropertyDescriptor property = null;
+		try {
+			PropertyDescriptor[]  pd  = propertyDescriptors(c);
+			property = find(pd,name);
+		} catch (IntrospectionException e) {
+			throw new BeetlException(BeetlException.ERROR,"获取类属性错",e);
+		}
+
+		if(property!=null){
+			invoker = new PojoMethodInvoker(property);
+			if(map==null){
+				map = new ConcurrentHashMap<String,MethodInvoker>();
+				methodInvokerCache.put(c, map);
+			}
+			map.put(name, invoker);
+			return invoker;
+		}else{
+			Method method = getGetMethod(c, "get", new Class[]
+					{ Object.class });
+			if (method != null)
+			{
+				invoker = new GeneralGetMethodInvoker(method, name);
+			}else{
+				method = getGetMethod(c, "get", new Class[]
+						{ String.class });
+				if(method!=null){
+					invoker = new GeneralGetMethodInvoker(method, name);
+				}
+			}
+			genneraInvokerCache.put(c,(GeneralGetMethodInvoker)invoker);
+		}
+
+
+		if (invoker != null)
+		{
+			if(map==null){
+				map = new ConcurrentHashMap<String,MethodInvoker>();
+				methodInvokerCache.put(c, map);
+			}
+			map.put(name, invoker);
+			return invoker;
+		}
+		else
+		{
+			return null;
+		}
+
+	}
 
 	/** 获取对象的某个方法，如果无此方法，则仅仅返回null
 	 * @param c 对象
@@ -178,7 +173,7 @@ public class ObjectUtil
 	 * @param paras 参数列表
 	 * @return
 	 */
-	public static Method getGetMethod(Class c, String methodName, Class... paras)
+	protected static Method getGetMethod(Class c, String methodName, Class... paras)
 	{
 
 		//需要优化
@@ -592,6 +587,45 @@ public class ObjectUtil
 			}
 		}
 		return info;
+	}
+
+	/** 已知属性名，得出get方法，如属性名是name,get方法是getName
+	 * 遵循javabean规范
+	 * @param attrName
+	 * @return
+	 * @deprecated 并不遵循java规范
+	 */
+	public static String getGetMethod(String attrName)
+	{
+		StringBuilder mbuffer = new StringBuilder("get");
+		mbuffer.append(attrName.substring(0, 1).toUpperCase()).append(attrName.substring(1));
+		return mbuffer.toString();
+	}
+
+	/** 已知属性名，得出set方法，如属性名是name,get方法是setName
+	 * 遵循javabean规范
+	 * @param attrName
+	 * @return
+	 * @deprecated 并不遵循java规范
+	 */
+	public static String getSetMethod(String attrName)
+	{
+		StringBuilder mbuffer = new StringBuilder("set");
+		mbuffer.append(attrName.substring(0, 1).toUpperCase()).append(attrName.substring(1));
+		return mbuffer.toString();
+	}
+
+	/** 已知属性名，得出is方法，如属性名是boy,is方法是isBoy
+	 * 遵循javabean规范
+	 * @param attrName
+	 * @return
+	 * @deprecated 并不遵循java规范
+	 */
+	public static String getIsMethod(String attrName)
+	{
+		StringBuilder mbuffer = new StringBuilder("is");
+		mbuffer.append(attrName.substring(0, 1).toUpperCase()).append(attrName.substring(1));
+		return mbuffer.toString();
 	}
 
 }

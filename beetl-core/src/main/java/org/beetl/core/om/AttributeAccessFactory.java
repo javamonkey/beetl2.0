@@ -46,11 +46,12 @@ import org.beetl.core.GroupTemplate;
  */
 public class AttributeAccessFactory {
 
-    static MapAA mapAA = new MapAA();
-    static ListAA listAA = new ListAA();
-    static ArrayAA arrayAA = new ArrayAA();
-    static MapEntryAA mapEntryAA = new MapEntryAA();
-    static Map<Class, AttributeAccess> classAttrs = new ConcurrentHashMap<Class, AttributeAccess>();
+    public static ListAA listAA = new ListAA();
+    public static MapAA mapAA = new MapAA();
+    public static ArrayAA arrayAA = new ArrayAA();
+    public static MapEntryAA mapEntryAA = new MapEntryAA();
+    public static ReflectBeanAA reflectBeanAA = new  ReflectBeanAA();
+    public static Map<Class, AttributeAccess> classAttrs = new ConcurrentHashMap<Class, AttributeAccess>();
 
     static {
         classAttrs.put(HashMap.class, mapAA);
@@ -87,7 +88,8 @@ public class AttributeAccessFactory {
     }
 
     static public AttributeAccess registerClass(Class c) {
-        return new BeanAA();
+        classAttrs.put(c,reflectBeanAA);
+        return reflectBeanAA;
     }
 
 

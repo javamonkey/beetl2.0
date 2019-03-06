@@ -36,7 +36,6 @@ import org.beetl.core.Context;
 public abstract class Expression extends ASTNode
 {
 
-	public Type type = null;
 
 	public Expression(GrammarToken token)
 	{
@@ -49,14 +48,5 @@ public abstract class Expression extends ASTNode
 		throw new RuntimeException("MUST IMPLEMENT");
 	}
 
-	public Type getType()
-	{
-		return this.type;
-	}
-
-	public void setType(Type type)
-	{
-		this.type = type;
-	}
-
+	
 }

@@ -49,9 +49,7 @@ public class AttributeAccessFactory {
     static MapAA mapAA = new MapAA();
     static ListAA listAA = new ListAA();
     static ArrayAA arrayAA = new ArrayAA();
-    static ASMBeanAA objectAA = new ASMBeanAA();
     static MapEntryAA mapEntryAA = new MapEntryAA();
-    //TODO,可扩展，以免生成的代码太多
     static Map<Class, AttributeAccess> classAttrs = new ConcurrentHashMap<Class, AttributeAccess>();
 
     static {
@@ -89,7 +87,7 @@ public class AttributeAccessFactory {
     }
 
     static public AttributeAccess registerClass(Class c) {
-        return new ASMBeanAA();
+        return new BeanAA();
     }
 
 

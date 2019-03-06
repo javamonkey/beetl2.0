@@ -33,6 +33,8 @@ import java.util.Map;
 import org.beetl.core.Context;
 import org.beetl.core.exception.BeetlException;
 import org.beetl.core.fun.ObjectUtil;
+import org.beetl.core.om.AttributeAccess;
+import org.beetl.core.om.AttributeAccessFactory;
 
 /**
  * user.name
@@ -154,20 +156,17 @@ public class VarRef extends Expression implements IVarIndex {
 					}
 
 				}
-
-				if (hasAttr(root, attr)) {
-					value = ObjectAA.defaultObjectAA().value(root, attr);
-					if (value == null && hasSafe) {
-						return new Result(safe == null ? null : safe.evaluate(ctx), true);
-					}
-
-				} else {
-					// 当没有属性的时候，忽略安全输出，直接报错,以免得系统重构的时候模板不报错
+				
+				AttributeAccess aa = AttributeAccessFactory.buildFiledAccessor(root.getClass(), attr, ctx.gt);
+				try {
+					value = aa.value(root, attr);
+				}catch(RuntimeException e) {
 					BeetlException ex = new BeetlException(BeetlException.ATTRIBUTE_INVALID,
-							"_root " + root.getClass() + " 无此属性");
+							"_root " + root.getClass() + " 属性访问错误");
 					ex.pushToken(this.firstToken);
 					throw ex;
 				}
+				
 				ctx.vars[varIndex] = value;
 
 			} else if (hasSafe) {
@@ -184,24 +183,24 @@ public class VarRef extends Expression implements IVarIndex {
 		return new Result(value);
 	}
 
-	private boolean hasAttr(Object o, String attr) {
-
-		if (o instanceof Map) {
-			return true;
-		} else if (o instanceof List) {
-			return false;
-
-		} else {
-			Class c = o.getClass();
-			MethodInvoker invoker = ObjectUtil.getInvokder(c, (String) attr);
-			if (invoker != null) {
-				return true;
-			} else {
-				return false;
-			}
-
-		}
-	}
+//	private boolean hasAttr(Object o, String attr) {
+//
+//		if (o instanceof Map) {
+//			return true;
+//		} else if (o instanceof List) {
+//			return false;
+//
+//		} else {
+//			Class c = o.getClass();
+//			MethodInvoker invoker = ObjectUtil.getInvokder(c, (String) attr);
+//			if (invoker != null) {
+//				return true;
+//			} else {
+//				return false;
+//			}
+//
+//		}
+//	}
 
 	/** 计算所有表达式，知道最后一值，用于a.b[xx].c = 1  赋值，只计算到a.b[xx]
 	 * @param ctx

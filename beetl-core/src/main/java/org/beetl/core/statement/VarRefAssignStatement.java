@@ -61,7 +61,9 @@ public class VarRefAssignStatement extends VarAssignStatement {
 			key = lastVarAttribute.name;
 		}
 		try {
-			ObjectAA.defaultObjectAA().setValue(obj, key, value);
+			//TODO3.0
+			throw new UnsupportedOperationException();
+//			ObjectAA.defaultObjectAA().setValue(obj, key, value);
 		} catch (ClassCastException ex) {
 			BeetlException bx = new BeetlException(BeetlException.ATTRIBUTE_INVALID, ex);
 			bx.pushToken(lastVarAttribute.token);

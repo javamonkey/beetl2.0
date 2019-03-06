@@ -79,13 +79,7 @@ public class ProgramMetaData implements java.io.Serializable {
 	public Map<String, String[]> globalVarAttr = new HashMap<String, String[]>();
 
 
-	/**
-	 * <pre>
-	 * type(User cc,List &lt;User &gt; list)  
-	 * </pre>
-	 * 对应的描述
-	 */
-	public Map<String, Type> globalType = new HashMap<String, Type>(0);
+
 
 	public Map<String, AjaxStatement> ajaxs = null;
 

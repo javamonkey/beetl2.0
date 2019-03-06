@@ -42,6 +42,7 @@ import java.util.Map.Entry;
 import org.beetl.core.cache.Cache;
 import org.beetl.core.cache.ProgramCacheFactory;
 import org.beetl.core.exception.BeetlException;
+import org.beetl.core.exception.ErrorInfo;
 import org.beetl.core.exception.HTMLTagParserException;
 import org.beetl.core.exception.ScriptEvalError;
 import org.beetl.core.fun.FunctionWrapper;
@@ -341,19 +342,24 @@ public class GroupTemplate {
 			throws ScriptEvalError {
 		Template t = loadScriptTemplate(key, loader);
 		t.fastBinding(paras);
-		if (w == null) {
-			t.render();
-		} else {
-			t.renderTo(w);
-		}
+		
 
 		try {
+			if (w == null) {
+				t.render();
+			} else {
+				t.renderTo(w);
+			}
 			Map map = getSrirptTopScopeVars(t);
 			if (map == null) {
 				throw new ScriptEvalError();
 			}
 			return map;
-		} catch (ScriptEvalError ex) {
+		}catch(BeetlException  ex) {
+			ErrorInfo error = new ErrorInfo(ex);
+			throw new ScriptEvalError("错误符号:"+error.getErrorTokenText()+" 位于:"+error.getErrorTokenLine()+" 错误原因: "+error.getMsg(),ex);
+		}
+		catch (ScriptEvalError ex) {
 			throw ex;
 		} catch (Exception ex) {
 			throw new ScriptEvalError(ex);

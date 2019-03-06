@@ -3,89 +3,39 @@ package org.beetl.core;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.beetl.core.exception.ScriptEvalError;
 import org.beetl.core.resource.StringTemplateResourceLoader;
 import org.beetl.ext.fn.GetValueFunction;
 
 /**
- * beetl小工具,加载classpath下的beetl.properties 来配置模板引擎，通常用于简单测试，或者性能要求不高的场景 
- * 不要用于生产环境
+ *  一个综合展示Beetl功能代码
  * * @author
  * 
  * 
  */
-public class BeetlKit
-{
+public class BeetlKit {
 
 	/**
 	 * BeetlKit 默认使用的GroupTemplate，用户可以设置新的
 	 */
 	public static GroupTemplate gt = null;
-	static
-	{
+	static {
 		StringTemplateResourceLoader resourceLoader = new StringTemplateResourceLoader();
 		Configuration cfg;
-		try
-		{
+		try {
 			cfg = Configuration.defaultConfiguration();
 
-		}
-		catch (IOException e)
-		{
+		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 		gt = new GroupTemplate(resourceLoader, cfg);
-		gt.registerFunction("beetlKit", new GetValueFunction());
-		//默认并不显示错误异常，渲染结果（Writer）里放置异常信息
-		gt.setErrorHandler(new ConsoleErrorHandler() {
-			protected void println(Writer w, String msg)
-			{
-				try
-				{
-					w.write(msg);
-					w.write('\n');
-				}
-				catch (IOException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-
-			protected void print(Writer w, String msg)
-			{
-				try
-				{
-					w.write(msg);
-				}
-				catch (IOException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-
-			protected void printThrowable(Writer w, Throwable t)
-			{
-
-				t.printStackTrace(new PrintWriter(w));
-			}
-
-			protected String getResourceName(String resourceId)
-			{
-				if (resourceId.length() > 10)
-				{
-					return resourceId.substring(0, 10).concat("...");
-				}
-				else
-				{
-					return resourceId;
-				}
-			}
-		});
+		gt.setErrorHandler(new ReThrowConsoleErrorHandler());
+		
 	}
 
 	/* 模板部分 */
@@ -95,8 +45,7 @@ public class BeetlKit
 	 * @param paras
 	 * @return 模板返回值
 	 */
-	public static String render(String template, Map<String, Object> paras)
-	{
+	public static String render(String template, Map<String, Object> paras) {
 		Template t = gt.getTemplate(template);
 		t.binding(paras);
 		return t.render();
@@ -107,88 +56,38 @@ public class BeetlKit
 	 * @param writer
 	 * @param paras
 	 */
-	public static void renderTo(String template, Writer writer, Map<String, Object> paras)
-	{
+	public static void renderTo(String template, Writer writer, Map<String, Object> paras) {
 		Template t = gt.getTemplate(template);
 		t.binding(paras);
 		t.renderTo(writer);
 	}
 
 	/* 脚本部分 */
-	public static void execute(String script, Map<String, Object> paras)
-	{
-		execute(script, paras, null);
-	}
-
-	/**执行某个脚本，返回指定的的变量
+	
+	/**
+	 * 
 	 * @param script
-	 * @param paras
-	 * @param locals 指定的变量，只能是全局的，或者是root scope的
+	 * @param paras 返回map，包含的"return" 是返回值，其他均为顶级变量
 	 * @return
+	 * @throws ScriptEvalError
 	 */
-	public static Map execute(String script, Map<String, Object> paras, String[] locals)
-	{
-		String start = gt.getConf().getStatementStart();
-		String end = gt.getConf().getStatementEnd();
-		if(end==null) {
-			end = "";
-		}
-		StringBuilder sb = new StringBuilder(script.length() + start.length() + end.length());
-		sb.append(start).append(script);
-		if (locals != null)
-		{
-			sb.append("beetlKit(");
-			for (String varName : locals)
-			{
-				sb.append("'").append(varName).append("',").append(varName).append("!,");
-			}
-			sb.setLength(sb.length() - 1);
-			sb.append(");");
-		}
-
-		sb.append(end);
-		Template t = gt.getTemplate(sb.toString());
-		t.binding(paras);
-		HashMap map = new HashMap();
-		t.binding("beetlKitMap", map);
-		t.render();
-		return map;
-
+	public static Map execute(String script, Map<String, Object> paras)  throws ScriptEvalError{
+		 return gt.runScript(script, Collections.emptyMap());
 	}
+
+	
 
 	/** 执行脚本，和参数，返回脚本里的Root scope的变量
 	 * @param script
 	 * @return
+	 * @throws ScriptEvalError 
 	 */
-	public static Map executeAndReturnRootScopeVars(String script)
-	{
-		String start = gt.getConf().getStatementStart();
-		String end = gt.getConf().getStatementEnd();
-		if(end==null) {
-			end = "";
-		}
-		StringBuilder sb = new StringBuilder(script.length() + start.length() + end.length());
-		sb.append(start).append(script);
-
-		sb.append(end);
-		Template t = gt.getTemplate(sb.toString());
-		//		t.binding(paras);
-		t.render();
-		Map<String, Integer> idnexMap = t.program.metaData.getTemplateRootScopeIndexMap();
-		Object[] values = t.ctx.vars;
-		Map<String, Object> result = new HashMap<String, Object>();
-		for (Entry<String, Integer> entry : idnexMap.entrySet())
-		{
-			String name = entry.getKey();
-			int index = entry.getValue();
-			Object value = values[index];
-			result.put(name, value);
-		}
-		return result;
+	public static Map execute(String script) throws ScriptEvalError {
+		return gt.runScript(script, Collections.emptyMap());
 
 	}
 
-	/* 模板自测试部分 */
+	
 
 	/**
 	 * @param template
@@ -196,23 +95,19 @@ public class BeetlKit
 	 * @param initValue
 	 *            模板初始化值
 	 * @return 模板渲染结果
+	 * @throws ScriptEvalError 
 	 */
-	public static String testTemplate(String template, String initValue)
-	{
-		Map map = executeAndReturnRootScopeVars(initValue);
+	public static String testTemplate(String template, String initValue) throws ScriptEvalError {
+		Map map = execute(initValue);
 		String result = render(template, map);
 		return result;
 	}
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) throws ScriptEvalError {
 		BeetlKit.gt.getConf().setStatementStart("@");
 		BeetlKit.gt.getConf().setStatementEnd(null);
-//		BeetlKit.gt.setErrorHandler(new ConsoleErrorHandler());
-		String template = "${a}";
-		String initValue = "var a=1,c=2+1";
-		String result = testTemplate(template, initValue);
-		System.out.println(result);
+		String initValue = "var a=1,c=2+a";
+		execute(initValue);
 
 	}
 }

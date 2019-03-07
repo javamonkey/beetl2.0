@@ -6,11 +6,11 @@ public class ScriptEvalError extends Exception {
 	}
 	
 
-	public ScriptEvalError(String message,Throwable t) {
+	public ScriptEvalError(String message,BeetlException t) {
 		super(message,t);
 	}
 
-	public ScriptEvalError(Throwable t) {
+	public ScriptEvalError(BeetlException t) {
 		super(t);
 	}
 }

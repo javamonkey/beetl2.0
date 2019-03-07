@@ -286,4 +286,12 @@ public class BeetlException extends RuntimeException {
 		this.errorTokenStack.add(token);
 	}
 
+	/**
+	 * 返回一个描述信息
+	 * @return
+	 */
+	public ErrorInfo toErrorInfo(){
+		return new ErrorInfo(this);
+	}
+
 }

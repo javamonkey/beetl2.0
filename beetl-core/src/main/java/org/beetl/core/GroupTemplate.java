@@ -27,10 +27,7 @@
  */
 package org.beetl.core;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.Writer;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -91,6 +88,8 @@ public class GroupTemplate {
 	NativeSecurityManager nativeSecurity = null;
 	ErrorHandler errorHandler = null;
 	Map<String, Object> sharedVars = null;
+
+	ContextLocalBuffers buffers = null;
 
 
 	/**
@@ -166,6 +165,7 @@ public class GroupTemplate {
 		this.initFormatter();
 		this.initTag();
 		this.initVirtual();
+		this.initBuffers();
 
 		classSearch = new ClassSearch(conf.getPkgList(), this);
 		nativeSecurity = (NativeSecurityManager) ObjectUtil.instance(conf.getNativeSecurity(), this.classLoader);
@@ -175,6 +175,8 @@ public class GroupTemplate {
 			errorHandler = (ErrorHandler) ObjectUtil.instance(conf.errorHandlerClass, classLoader);
 
 		}
+
+
 
 	}
 
@@ -285,6 +287,11 @@ public class GroupTemplate {
 		});
 	}
 
+	protected void initBuffers(){
+		//TODO3.0
+		buffers = new ContextLocalBuffers(10,768);
+	}
+
 	/**
 	 * GroupTempalte 动态加载默写类使用的classloader
 	 * 
@@ -309,13 +316,34 @@ public class GroupTemplate {
 	}
 
 
+	/**
+	 * 获得脚本
+	 * @param key
+	 * @return
+	 */
+	public Script getScript(String key){
+	  Script t = loadScriptTemplate(key, this.resourceLoader);
+	  return t;
+	}
+
+	/**
+	 * 获得脚本
+	 * @param key
+	 * @param loader
+	 * @return
+	 */
+	public Script getScript(String key,ResourceLoader loader){
+		Script t = loadScriptTemplate(key, loader);
+		return t;
+	}
+
 	/** 执行某个脚本，参数是paras，返回的是顶级变量
 	 * @param key
 	 * @param paras
 	 * @return
 	 */
 	public Map runScript(String key, Map<String, Object> paras) throws ScriptEvalError {
-		return this.runScript(key, paras, null);
+		return this.runScript(key, paras, new StringWriter());
 
 	}
 
@@ -340,29 +368,15 @@ public class GroupTemplate {
 	 */
 	public Map runScript(String key, Map<String, Object> paras, Writer w, ResourceLoader loader)
 			throws ScriptEvalError {
-		Template t = loadScriptTemplate(key, loader);
+		Script t = loadScriptTemplate(key, loader);
 		t.fastBinding(paras);
-		
 
-		try {
-			if (w == null) {
-				t.render();
-			} else {
-				t.renderTo(w);
-			}
-			Map map = getSrirptTopScopeVars(t);
-			if (map == null) {
-				throw new ScriptEvalError();
-			}
-			return map;
-		}catch(BeetlException  ex) {
-			ErrorInfo error = new ErrorInfo(ex);
-			throw new ScriptEvalError("错误符号:"+error.getErrorTokenText()+" 位于:"+error.getErrorTokenLine()+" 错误原因: "+error.getMsg(),ex);
-		}
-		catch (ScriptEvalError ex) {
-			throw ex;
-		} catch (Exception ex) {
-			throw new ScriptEvalError(ex);
+		t.renderTo(w);
+		if(t.isSuccess()){
+			Map map = t.getResult();
+			return  map;
+		}else{
+			throw new ScriptEvalError(t.ex);
 		}
 
 	}
@@ -378,12 +392,12 @@ public class GroupTemplate {
 	}
 
 	public BeetlException validateScript(String key, ResourceLoader loader) {
-		Template t = loadScriptTemplate(key, loader);
+		Script t = loadScriptTemplate(key, loader);
 		return t.validate();
 	}
 
 	public BeetlException validateScript(String key) {
-		Template t = loadScriptTemplate(key, this.resourceLoader);
+		Script t = loadScriptTemplate(key, this.resourceLoader);
 		return t.validate();
 	}
 
@@ -408,7 +422,7 @@ public class GroupTemplate {
 		return result;
 	}
 
-	private Template loadScriptTemplate(String key, ResourceLoader loader) {
+	private Script loadScriptTemplate(String key, ResourceLoader loader) {
 		Program program = (Program) this.programCache.get(key);
 		if (program == null) {
 			synchronized (key) {
@@ -416,7 +430,7 @@ public class GroupTemplate {
 					Resource resource = loader.getResource(key);
 					program = this.loadScript(resource);
 					this.programCache.set(key, program);
-					return new Template(this, program, this.conf);
+					return new Script(this, program, this.conf);
 				}
 			}
 		}
@@ -429,7 +443,7 @@ public class GroupTemplate {
 			}
 		}
 
-		return new Template(this, program, this.conf);
+		return new Script(this, program, this.conf);
 	}
 
 	/**使用额外的资源加载器加载模板
@@ -605,8 +619,7 @@ public class GroupTemplate {
 	 */
 	public void close() {
 		this.resourceLoader.close();
-		// 没有用
-		ContextLocalBuffer.clear();
+
 	}
 
 	// /** 为事件类型注册一个监听器

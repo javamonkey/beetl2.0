@@ -2,7 +2,7 @@ package org.beetl.core.lab;
 
 
 import org.beetl.core.Configuration;
-import org.beetl.core.ContextLocalBuffer;
+import org.beetl.core.ContextBuffer;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Template;
 import org.beetl.core.resource.ClasspathResourceLoader;
@@ -16,9 +16,9 @@ import org.beetl.core.resource.ClasspathResourceLoader;
 public class Test {
 	public static void main(String[] args) throws Exception {
 
-		ContextLocalBuffer.isSoft = true;
-		ContextLocalBuffer.MAX_SIZE = 1024 * 10;
-		ContextLocalBuffer.BYTE_MAX_SIZE = ContextLocalBuffer.MAX_SIZE * 4;
+		ContextBuffer.isSoft = true;
+		ContextBuffer.MAX_SIZE = 1024 * 10;
+		ContextBuffer.BYTE_MAX_SIZE = ContextBuffer.MAX_SIZE * 4;
 		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("org/beetl/core/lab/");
 		Configuration cfg = Configuration.defaultConfiguration();
 		cfg.setEngine("org.beetl.core.engine.OnlineTemplateEngine");

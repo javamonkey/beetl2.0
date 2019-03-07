@@ -59,7 +59,7 @@ public class Template {
 		this.program = program;
 		this.cf = cf;
 		this.gt = gt;
-		ctx = new Context();
+		ctx = new Context(gt);
 	}
 
 	/**
@@ -177,6 +177,9 @@ public class Template {
 				// do nothing ,just ignore
 			}
 
+		}finally {
+			this.ctx.destory();
+			this.ctx  = null;
 		}
 
 	}
@@ -239,6 +242,18 @@ public class Template {
 		}
 		ErrorGrammarProgram error = (ErrorGrammarProgram) program;
 		return error.getException();
+	}
+
+
+
+	/**
+	 * 如果创建模板并没有渲染，调用render方法，这里可以回收，但这不符合逻辑，没有关系，buffer每次都回被创建，影响性能
+	 * @throws Throwable
+	 */
+	protected void finalize() throws Throwable {
+		if(this.ctx!=null){
+			ctx.destory();
+		}
 	}
 
 

@@ -67,7 +67,7 @@ import org.beetl.core.io.LongIOWriter;
 public abstract class ByteWriter
 {
 
-	protected ContextLocalBuffer localBuffer = null;
+	protected ContextBuffer localBuffer = null;
 	protected Context ctx = null;
 	protected ByteWriter parent;
 
@@ -156,7 +156,7 @@ public abstract class ByteWriter
 
 	}
 
-	public ContextLocalBuffer getLocalBuffer()
+	public ContextBuffer getLocalBuffer()
 	{
 		return localBuffer;
 	}

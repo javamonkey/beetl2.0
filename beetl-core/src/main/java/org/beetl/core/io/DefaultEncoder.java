@@ -8,15 +8,15 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.UnsupportedCharsetException;
 
-import org.beetl.core.ContextLocalBuffer;
+import org.beetl.core.ContextBuffer;
 
 public class DefaultEncoder {
 
     private final CharsetEncoder charsetEncoder;
     private final double expansionFactor;
-    ContextLocalBuffer localBuffer = null;
+    ContextBuffer localBuffer = null;
 
-    public DefaultEncoder(String encoding, ContextLocalBuffer localBuffer) {
+    public DefaultEncoder(String encoding, ContextBuffer localBuffer) {
         this.expansionFactor = (this.charsetEncoder = newEncoder(encoding)).maxBytesPerChar();
         this.localBuffer = localBuffer;
     }

@@ -214,10 +214,10 @@ public class Configuration {
 
 
 	public void initOther() {
-		ContextLocalBuffer.MAX_SIZE = this.bufferSize;
-		ContextLocalBuffer.BYTE_MAX_SIZE = this.bufferSize * 4;
-		ContextLocalBuffer.isSoft = this.bufferInSoft;
-		ContextLocalBuffer.isThreadLocal = this.enableThreadLocal;
+		ContextBuffer.MAX_SIZE = this.bufferSize;
+		ContextBuffer.BYTE_MAX_SIZE = this.bufferSize * 4;
+		ContextBuffer.isSoft = this.bufferInSoft;
+		ContextBuffer.isThreadLocal = this.enableThreadLocal;
 		if (this.placeholderStart2 != null) {
 			pd = new PlaceHolderDelimeter(placeholderStart.toCharArray(), placeholderEnd.toCharArray(),
 					placeholderStart2.toCharArray(), placeholderEnd2.toCharArray());

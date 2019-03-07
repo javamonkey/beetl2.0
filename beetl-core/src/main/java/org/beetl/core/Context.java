@@ -37,7 +37,12 @@ import java.util.Map;
  */
 public class Context {
 
-	protected Context() {
+	protected Context(GroupTemplate gt) {
+		this.gt = gt ;
+		this.localBuffer = gt.buffers.getContextLocalBuffer();
+	}
+
+	public void completed(){
 
 	}
 
@@ -97,7 +102,7 @@ public class Context {
 	/**
 	 * 一个字符和字节的buffer
 	 */
-	public ContextLocalBuffer localBuffer = ContextLocalBuffer.get();
+	public ContextBuffer localBuffer = null;
 
 
 	/**
@@ -158,5 +163,9 @@ public class Context {
 			return null;
 		}
 		return (Tag) map.get("$parentTag");
+	}
+
+	public void destory(){
+		this.gt.buffers.putContextLocalBuffer(this.localBuffer);
 	}
 }

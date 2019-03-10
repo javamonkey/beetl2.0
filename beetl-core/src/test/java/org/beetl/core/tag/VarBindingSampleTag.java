@@ -2,9 +2,6 @@ package org.beetl.core.tag;
 
 import java.util.Map;
 
-import org.beetl.core.Tag;
-import org.beetl.core.TagVarBinding;
-
 public class VarBindingSampleTag extends Tag implements TagVarBinding
 {
 

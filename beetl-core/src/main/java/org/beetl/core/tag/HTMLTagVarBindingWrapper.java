@@ -25,26 +25,22 @@
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.beetl.ext.tag;
+package org.beetl.core.tag;
 
 import java.util.LinkedHashMap;
 
 import org.beetl.core.Context;
-import org.beetl.core.GeneralVarTagBinding;
-import org.beetl.core.Tag;
-import org.beetl.core.TagFactory;
-import org.beetl.core.TagVarBinding;
 import org.beetl.core.statement.Statement;
 
 /**
- * 封装了带变量绑定的html标签调用的标签
+ * {@link GeneralVarTagBinding} 的html标签封装，带变量绑定的html标签调用的标签
  * @author joelli
  *
  */
-public class HTMLTagVarBindingWrapper extends Tag implements TagVarBinding
+public class HTMLTagVarBindingWrapper extends Tag 
 {
 
-	Tag tag = null;
+	GeneralVarTagBinding tag = null;
 
 	@Override
 	public void render()
@@ -53,20 +49,11 @@ public class HTMLTagVarBindingWrapper extends Tag implements TagVarBinding
 
 	}
 
-	@Deprecated
-	public Object[] bindVars()
-	{
-
-		return ((TagVarBinding) tag).bindVars();
-	}
 
 	public void mapName2Index(LinkedHashMap<String, Integer> map)
 	{
-		if (tag instanceof GeneralVarTagBinding)
-		{
-			GeneralVarTagBinding mapTag = (GeneralVarTagBinding) tag;
-			mapTag.mapName2Index(map);
-		}
+		
+		tag.mapName2Index(map);
 	}
 
 	public void init(Context ctx, Object[] args, Statement st)
@@ -85,17 +72,18 @@ public class HTMLTagVarBindingWrapper extends Tag implements TagVarBinding
 		{
 			throw new RuntimeException("标签初始化错误，未找到指定的标签实现类" + functionTagName);
 		}
-		tag = tagFactory.createTag();
-		if (tag == null)
+		Tag temp = tagFactory.createTag();
+		if (temp == null)
 		{
 			throw new RuntimeException("找不到注册的Tag");
 
 		}
-		else if (!(tag instanceof TagVarBinding))
+		else if (!(temp instanceof GeneralVarTagBinding))
 		{
 			throw new RuntimeException(tag.getClass() + " 必须是TagVarBinding的实现类");
 		}
 
+		this.tag = ((GeneralVarTagBinding)temp);
 		tag.init(ctx, args, st);
 
 	}

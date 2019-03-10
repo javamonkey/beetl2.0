@@ -1,7 +1,7 @@
 package org.beetl.ext.spring;
 
-import org.beetl.core.Tag;
-import org.beetl.core.TagFactory;
+import org.beetl.core.tag.Tag;
+import org.beetl.core.tag.TagFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

@@ -28,6 +28,8 @@
 package org.beetl.core;
 
 import org.beetl.core.exception.BeetlException;
+import org.beetl.core.tag.Tag;
+import org.beetl.core.tag.TagFactory;
 
 /**
  * Tag工场类

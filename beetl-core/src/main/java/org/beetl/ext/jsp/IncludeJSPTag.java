@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.beetl.core.ResourceLoader;
-import org.beetl.core.Tag;
 import org.beetl.core.misc.BeetlUtil;
 import org.beetl.core.resource.FileResourceLoader;
+import org.beetl.core.tag.Tag;
 import org.beetl.ext.web.WebVariable;
 
 public class IncludeJSPTag extends Tag

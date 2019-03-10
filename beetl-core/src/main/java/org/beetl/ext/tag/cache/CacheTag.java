@@ -30,8 +30,8 @@ package org.beetl.ext.tag.cache;
 import java.io.IOException;
 
 import org.beetl.core.BodyContent;
-import org.beetl.core.Tag;
 import org.beetl.core.exception.BeetlException;
+import org.beetl.core.tag.Tag;
 
 /**
  * cache标签，模板页面可以通过cache标签缓存模板内容<p>

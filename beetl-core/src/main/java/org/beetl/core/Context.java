@@ -30,6 +30,8 @@ package org.beetl.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.beetl.core.tag.Tag;
+
 /**
  * 模板渲染的Context
  * @author joelli

@@ -32,9 +32,9 @@ import java.util.Map.Entry;
 
 import org.beetl.core.ByteWriter;
 import org.beetl.core.Resource;
-import org.beetl.core.Tag;
 import org.beetl.core.Template;
 import org.beetl.core.exception.BeetlException;
+import org.beetl.core.tag.Tag;
 
 /**
  *  一个html标签方式的tag,同includeTag

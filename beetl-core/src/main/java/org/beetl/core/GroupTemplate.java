@@ -52,6 +52,7 @@ import org.beetl.core.fun.ObjectUtil;
 import org.beetl.core.resource.ClasspathResourceLoader;
 import org.beetl.core.statement.ErrorGrammarProgram;
 import org.beetl.core.statement.Program;
+import org.beetl.core.tag.TagFactory;
 import org.beetl.core.text.TextParser;
 
 /**

@@ -27,14 +27,7 @@ public class TagVarBindingStatement extends TagStatement {
 			} 
 			
 			HTMLTagVarBindingWrapper htmlTag = (HTMLTagVarBindingWrapper) tag;
-			// 初始化
-			Object[] vars = htmlTag.bindVars();
-			if (vars != null) {
-				for (int i = 0; i < vars.length; i++) {
-					ctx.vars[varIndexs[i].getVarIndex()] = vars[i];
-				}
-			}
-
+			
 			LinkedHashMap<String, Integer> indexMap = new LinkedHashMap<String, Integer>(this.varIndexs.length);
 			for (VarDefineNode node : this.varIndexs) {
 				indexMap.put(node.token.text, node.varIndex);

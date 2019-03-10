@@ -74,7 +74,7 @@ public class Context {
 	public boolean byteOutputMode;
 
 	/**
-	 *  当前会话相关变量全局变量和临时变量都放在数组里，全局变量放在前面
+	 *  当前会话相关变量全局变量和临时变量都放在数组里，全局变量放在前面，Beetl并没有使用Map来存放变量名和值，世为了提高性能
 		
 	 */
 	public Object[] vars;

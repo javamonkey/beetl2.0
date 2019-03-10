@@ -63,6 +63,9 @@ import java.util.Map;
  */
 public abstract class GeneralVarTagBinding extends Tag 
 {
+	/**
+	 * 记录了变量名字应该放到Contxt.vars的哪一个位置
+	 */
 	private LinkedHashMap<String, Integer> name2Index = null;
 
 	
@@ -75,7 +78,7 @@ public abstract class GeneralVarTagBinding extends Tag
 	/**按照标签变量声明的顺序绑定
 	 * @param array
 	 */
-	public void binds(Object... array)
+	protected void binds(Object... array)
 	{
 		if(name2Index==null){
 			throw new RuntimeException("html标签没有定义绑定变量,但标签实现中试图绑定"+Arrays.asList(array));

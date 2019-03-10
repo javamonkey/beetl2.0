@@ -145,10 +145,10 @@ public class Configuration {
 	// 资源loader配置
 	Map<String, String> resourceMap = new HashMap<String, String>();
 
-
+	// 缓冲数组
 	int bufferSize = 4096;
-	boolean bufferInSoft = true;
-	boolean enableThreadLocal = true;
+	int  buffeerNum = 64;
+	
 
 	public static String DELIMITER_PLACEHOLDER_START = "DELIMITER_PLACEHOLDER_START";
 	public static String DELIMITER_PLACEHOLDER_END = "DELIMITER_PLACEHOLDER_END";
@@ -174,9 +174,9 @@ public class Configuration {
 	public static String RESOURCE_LOADER = "RESOURCE_LOADER";
 	public static String HTML_TAG_BINDING_ATTRIBUTE = "HTML_TAG_BINDING_ATTRIBUTE";
 
-	public static String BUFFER_SIZE = "GLOBAL.buffer.maxSize";
-	public static String BUFFER_IN_SOFT = "GLOBAL.buffer.isInSoft";
-	public static String THREAD_LOCAL = "GLOBAL.enableThreadLocal";
+	public static String BUFFER_SIZE = "buffer.maxSize";
+	public static String BUFFER_NUM = "buffer.num";
+	
 
 	Properties ps = null;
 
@@ -347,10 +347,8 @@ public class Configuration {
 			if (bufferSize < 256) {
 				throw new IllegalStateException("GLOBAL.buffer.maxSize 配置不能小于256");
 			}
-		} else if (key.equalsIgnoreCase(BUFFER_IN_SOFT)) {
-			this.bufferInSoft = Boolean.parseBoolean(value);
-		} else if (key.equalsIgnoreCase(THREAD_LOCAL)) {
-			this.enableThreadLocal = Boolean.parseBoolean(value);
+		} else if (key.equalsIgnoreCase(BUFFER_NUM)) {
+			this.buffeerNum =Integer.parseInt(value);
 		} else {
 			// 扩展
 

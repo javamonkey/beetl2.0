@@ -19,10 +19,7 @@ public class DeleteTagTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/tag/delete_expected.html"), str);
 
-		t = gt.getTemplate("/tag/delete_template.html");
-		this.bind(t, "user", user);
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/tag/delete_expected.html"), str);
+		
 
 	}
 

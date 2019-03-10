@@ -30,16 +30,16 @@ public class ContextBuffer {
 	/**
 	 * 是否是个临时buffer，如果是，不能保存在ContextLocalBuffers
 	 */
-	boolean keep = true;
+	boolean inner = true;
 
 	private char[] charBuffer = new char[charBufferSize];
 	private byte[] byteBuffer = new byte[byteBufferSize];
 
 
 
-	public ContextBuffer(int maxSize, boolean keep){
+	public ContextBuffer(int maxSize, boolean inner){
 		this(maxSize);
-		this.keep = keep;
+		this.inner = inner;
 	}
 
 	public ContextBuffer(int maxSize){

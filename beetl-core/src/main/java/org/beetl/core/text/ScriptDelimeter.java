@@ -26,26 +26,27 @@ public class ScriptDelimeter extends Delimeter {
     public boolean matchEnd() {
         boolean match = false;
         if (isMatchFirstGroup) {
-            if (end != null) {
-                match = source.matchAndSKip(end);
-            } else {
-                match = source.matchCrAndSkip();
-                if (match) {
-                    endIsCr = true;
-                }
-            }
+            match = matchEnd(this.end);
 
         } else if (this.hasTwoGroup) {
-            if (end1 != null) {
-                match = source.matchAndSKip(end1);
-            } else {
-                match = source.matchCrAndSkip();
-                if (match) {
-                    endIsCr = true;
-                }
-            }
+            match = matchEnd(this.end1);
         }
         return match;
+    }
+
+    private boolean matchEnd(char[] end){
+        if (end1 != null) {
+            return source.matchAndSKip(end1);
+        } else {
+            int matchCount = source.isMatchCR();
+            if (matchCount!=0) {
+                endIsCr = true;
+                source.consumeAndGetCR(matchCount);
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

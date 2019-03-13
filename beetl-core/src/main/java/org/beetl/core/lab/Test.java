@@ -1,11 +1,10 @@
 package org.beetl.core.lab;
 
 
-import org.beetl.core.Configuration;
-import org.beetl.core.ContextBuffer;
-import org.beetl.core.GroupTemplate;
-import org.beetl.core.Template;
+import org.beetl.core.*;
+import org.beetl.core.exception.ErrorInfo;
 import org.beetl.core.resource.ClasspathResourceLoader;
+import org.beetl.core.resource.StringTemplateResourceLoader;
 
 /**
  * http://sports.qq.com/a/20151126/029300.htm
@@ -16,10 +15,8 @@ import org.beetl.core.resource.ClasspathResourceLoader;
 public class Test {
 	public static void main(String[] args) throws Exception {
 
-		ContextBuffer.isSoft = true;
-		ContextBuffer.MAX_SIZE = 1024 * 10;
-		ContextBuffer.BYTE_MAX_SIZE = ContextBuffer.MAX_SIZE * 4;
-		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("org/beetl/core/lab/");
+
+		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("lab");
 		Configuration cfg = Configuration.defaultConfiguration();
 		cfg.setEngine("org.beetl.core.engine.OnlineTemplateEngine");
 		cfg.setDirectByteOutput(true);
@@ -35,7 +32,14 @@ public class Test {
 		cfg.initOther();
 		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 
-
+		Script script = gt.getScript("return 1+4;",new StringTemplateResourceLoader());
+		script.execute();
+		if(script.isSuccess()){
+			System.out.println(script.getReturnValue());
+		}else{
+			ErrorInfo error = script.getErrorInfo();
+			System.out.println(error);
+		}
 		for (int i = 0; i < 1; i++) {
 
 			Template t = gt.getTemplate("/hello.txt");

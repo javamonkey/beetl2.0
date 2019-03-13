@@ -32,7 +32,7 @@ public class TextFragment extends Fragment {
 
 	@Override
 	public Fragment consumeAndReturnNext() {
-
+		int matchCr = 0;
 		while (!source.isEof()) {
 			if (source.isPlaceHolderStart()) {
 				this.setEndLine();
@@ -47,13 +47,28 @@ public class TextFragment extends Fragment {
 			} else if (source.isHtmlTagEnd()) {
 				this.setEndLine();
 				return new HtmlTagEndFragment(source);
-			} else {
-				char[] cs = source.consumeAndGet();
-				text.append(cs);
+			} else if((matchCr=source.isMatchCR())!=0){
+				text.append(source.consumeAndGetCR(matchCr));
+			}
+			else {
+				text.append(source.consumeAndGet());
 			}
 		}
 		this.setEndLine();
+
 		return null;
+	}
+
+
+	protected void setEndLine() {
+		if(text.length()<0){
+			return ;
+		}
+		char lastChar = text.charAt(text.length()-1);
+		if(lastChar=='\n'||lastChar=='\r'){
+			this.endLine = source.curLine-1;
+		}
+
 	}
 
 	/**

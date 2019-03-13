@@ -94,24 +94,7 @@ public abstract class GeneralVarTagBinding extends Tag implements TagVarBinding
 		}
 	}
 
-	/** 按照标签申明的变量名字来绑定,建议使用binds方法，因为此方法是按照顺序绑定
-	 * @param name
-	 * @param value
-	 */
-	@Deprecated
-	public void bind(String name, Object value)
-	{
-		if (name2Index == null)
-		{
-			throw new RuntimeException("申明的绑定和代码里实际绑定不一致");
-		}
-		Integer index = name2Index.get(name);
-		if (index == null)
-		{
-			throw new RuntimeException("申明的绑定和代码里实际绑定不一致:试图绑定未申明的变量" + name);
-		}
-		ctx.vars[index] = value;
-	}
+
 
 	public Object getAttributeValue(String attrName)
 	{

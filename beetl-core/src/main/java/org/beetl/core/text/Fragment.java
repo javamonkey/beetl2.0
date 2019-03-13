@@ -39,6 +39,7 @@ public abstract class Fragment {
     }
 
     protected void setEndLine() {
+
         this.endLine = source.curLine;
     }
 

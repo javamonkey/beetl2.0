@@ -27,7 +27,7 @@ public class ContextLocalBuffers {
     }
 
     public  void putContextLocalBuffer(ContextBuffer buffer){
-        if(buffer.keep){
+        if(buffer.inner){
             queue.add(buffer);
         }
         //放弃，等待回收

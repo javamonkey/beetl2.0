@@ -2,7 +2,7 @@ package org.beetl.ext.fn;
 
 import org.beetl.core.Context;
 import org.beetl.core.Function;
-import org.beetl.core.Tag;
+import org.beetl.core.tag.Tag;
 
 public class ParentTagFunction implements Function {
 

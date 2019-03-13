@@ -8,7 +8,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * 文本解析成beetl脚本
+ * @author xiandafu
+ *
+ */
 public class TextParser {
 
 	Map<Integer, String> textVars = new HashMap<Integer, String>();
@@ -103,7 +107,7 @@ public class TextParser {
 		ScriptDelimeter sd = new ScriptDelimeter("@".toCharArray(), null, "<%".toCharArray(), "%>".toCharArray());
 
 		HtmlTagConfig htmlConfig = new HtmlTagConfig();
-		String text = "ab\r\n<%a=1;%>\r\nhello";
+		String text = "hi\r\n<%delete() { %>\r\\n <%var a=1;%>\r\n<%}%>\r\nhello";
 		StringReader str = new StringReader(text);
 		TextParser textParser = new TextParser(pd, sd, htmlConfig);
 		textParser.doParse(str);

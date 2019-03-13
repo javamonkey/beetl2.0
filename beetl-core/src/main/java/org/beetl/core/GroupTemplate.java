@@ -27,7 +27,11 @@
  */
 package org.beetl.core;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,19 +43,19 @@ import java.util.Map.Entry;
 import org.beetl.core.cache.Cache;
 import org.beetl.core.cache.ProgramCacheFactory;
 import org.beetl.core.exception.BeetlException;
-import org.beetl.core.exception.ErrorInfo;
 import org.beetl.core.exception.HTMLTagParserException;
 import org.beetl.core.exception.ScriptEvalError;
 import org.beetl.core.fun.FunctionWrapper;
+import org.beetl.core.fun.ObjectUtil;
 import org.beetl.core.misc.BeetlUtil;
 import org.beetl.core.misc.ByteClassLoader;
 import org.beetl.core.misc.ClassSearch;
 import org.beetl.core.misc.PrimitiveArrayUtil;
 import org.beetl.core.om.AttributeAccessFactory;
-import org.beetl.core.fun.ObjectUtil;
 import org.beetl.core.resource.ClasspathResourceLoader;
 import org.beetl.core.statement.ErrorGrammarProgram;
 import org.beetl.core.statement.Program;
+import org.beetl.core.tag.TagFactory;
 import org.beetl.core.text.TextParser;
 
 /**
@@ -289,7 +293,7 @@ public class GroupTemplate {
 
 	protected void initBuffers(){
 		//TODO3.0
-		buffers = new ContextLocalBuffers(10,768);
+		buffers = new ContextLocalBuffers(conf.buffeerNum,conf.bufferSize);
 	}
 
 	/**

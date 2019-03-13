@@ -27,7 +27,7 @@
  */
 package org.beetl.ext.tag;
 
-import org.beetl.core.Tag;
+import org.beetl.core.tag.Tag;
 
 /** 什么都不干的tag，遗留代码
  * @author xiandafu

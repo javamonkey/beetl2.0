@@ -35,9 +35,9 @@ import java.util.Map.Entry;
 import org.beetl.core.Format;
 import org.beetl.core.Function;
 import org.beetl.core.GroupTemplate;
-import org.beetl.core.TagFactory;
 import org.beetl.core.VirtualAttributeEval;
 import org.beetl.core.VirtualClassAttribute;
+import org.beetl.core.tag.TagFactory;
 
 /**
  * GroupTemplate对象配置类的抽象基类

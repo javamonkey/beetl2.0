@@ -38,8 +38,7 @@ import java.util.Map;
  * @author joelli
  * @create 2013-6-12
  */
-class HTMLTagParser
-{
+class HTMLTagParser {
 
 	int index = 0;
 	char[] cs = null;
@@ -48,26 +47,24 @@ class HTMLTagParser
 	boolean isEmptyTag = false;
 	Map<String, String> expMap = new LinkedHashMap<String, String>();
 	Map<String, Character> quatMap = new LinkedHashMap<String, Character>();
-	//支持换行，记录属性后是否有换行。
+	// 支持换行，记录属性后是否有换行。
 	List<String> crKey = new ArrayList<String>(1);
 	boolean hasVarBinding = false;
 	String varBidingStr = null;
 	// -1非期望
 	int status = 0;
-	//token 起始索引
+	// token 起始索引
 	int ts;
 	int te;
 	String lastKey = null;
-	//默认是var
+	// 默认是var
 	String bindingAttr = null;
 	static char ENT_TAG = '>';
-	static char[] ENT_TAGS = new char[]
-	{ '/', '>' };
-//	char[] cr = new char[]	{ '\n' };
-	
+	static char[] ENT_TAGS = new char[]{'/', '>'};
+	// char[] cr = new char[] { '\n' };
 
-	public HTMLTagParser(char[] cs, int index, String bindingAttr, boolean isStart)
-	{
+
+	public HTMLTagParser(char[] cs, int index, String bindingAttr, boolean isStart) {
 		this.cs = cs;
 		this.bindingAttr = bindingAttr;
 		this.index = index;
@@ -76,27 +73,21 @@ class HTMLTagParser
 		this.te = index;
 	}
 
-	public void parser()
-	{
-		if (isStart)
-		{
+	public void parser() {
+		if (isStart) {
 			parserStart();
-		}
-		else
-		{
+		} else {
 			parserEnd();
 		}
 
 	}
 
-	public void parserStart()
-	{
+	public void parserStart() {
 		findTagName();
 
 		findAttrs();
 		findBindingFlag();
-		if (status != -1)
-		{
+		if (status != -1) {
 			findVars();
 		}
 
@@ -104,23 +95,19 @@ class HTMLTagParser
 
 	}
 
-	public void findTagName()
-	{
+	public void findTagName() {
 
 		idToken();
-		if (status == -1)
-		{
+		if (status == -1) {
 			throw new RuntimeException("非法标签名");
 		}
 		StringBuilder tagSb = new StringBuilder();
 		tagSb.append(this.convertAttr(this.subString()));
 		this.t_consume();
-		while (match(':'))
-		{
+		while (match(':')) {
 			this.move(1);
 			idToken();
-			if (status == -1)
-			{
+			if (status == -1) {
 				throw new RuntimeException("非法标签名");
 			}
 
@@ -133,36 +120,28 @@ class HTMLTagParser
 
 	}
 
-	public boolean match(char c)
-	{
-		if (cs[index] == c)
-		{
+	public boolean match(char c) {
+		if (cs[index] == c) {
 
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
-	
-	protected boolean matchCR(){
-		
-		if(index<cs.length){
-			if (cs[index ] =='\r'||cs[index ] =='\n')
-				return true;
+
+	protected boolean matchCR() {
+
+		if (index < cs.length) {
+			if (cs[index] == '\r' || cs[index] == '\n') return true;
 		}
-		return false ;
-	
+		return false;
+
 	}
 
-	public boolean match(char[] expected)
-	{
+	public boolean match(char[] expected) {
 		int i = 0;
-		while (index + i < cs.length && i < expected.length)
-		{
-			if (cs[index + i] != expected[i])
-				return false;
+		while (index + i < cs.length && i < expected.length) {
+			if (cs[index + i] != expected[i]) return false;
 			i++;
 		}
 		if (i == expected.length)
@@ -171,18 +150,14 @@ class HTMLTagParser
 			return false;
 	}
 
-	protected void findAttrs()
-	{
+	protected void findAttrs() {
 		findAttr();
-		while (status != -1)
-		{
-			if (match(' ') || matchCR())
-			{
+		while (status != -1) {
+			if (match(' ') || matchCR()) {
 				findAttr();
 			}
 
-			else
-			{
+			else {
 				return;
 			}
 
@@ -191,12 +166,10 @@ class HTMLTagParser
 		;
 	}
 
-	protected void findAttr()
-	{
+	protected void findAttr() {
 		boolean findCR = this.stripSpaceAndCR();
 		idToken();
-		if (status == -1)
-		{
+		if (status == -1) {
 
 			return;
 		}
@@ -205,69 +178,61 @@ class HTMLTagParser
 		lastKey = convertAttr(lastKey);
 		this.t_consume();
 		this.stripSpace();
-		if (match('='))
-		{
+		if (match('=')) {
 			this.move(1);
 			boolean isSingleQuat = strToken();
 			String value = this.subString();
 			this.t_consume();
 			this.move(1);
-			if (lastKey.equals(this.bindingAttr))
-			{
+			if (lastKey.equals(this.bindingAttr)) {
 				this.hasVarBinding = true;
 				this.varBidingStr = value;
 				return;
 			}
 			this.quatMap.put(lastKey, isSingleQuat ? '\'' : '\"');
 			this.expMap.put(lastKey, value);
-			if (findCR)
-				this.crKey.add(lastKey);
+			if (findCR) this.crKey.add(lastKey);
 
-		}
-		else
-		{
+		} else {
 			throw new RuntimeException("没有找到属性");
 		}
 
 	}
-	
+
 	/**
 	 * 将带有-符号的属性去掉，换成下一个字母为大写
 	 * @param attr
 	 */
-	private String convertAttr(String attr){
+	private String convertAttr(String attr) {
 		char[] cs = attr.toCharArray();
 		StringBuilder sb = new StringBuilder(cs.length);
 		boolean upper = false;
-		for(int i=0;i<cs.length;i++){
-			if(upper){
-				if(cs[i]=='-'){
+		for (int i = 0; i < cs.length; i++) {
+			if (upper) {
+				if (cs[i] == '-') {
 					continue;
 				}
 				sb.append(Character.toUpperCase(cs[i]));
-				upper=false;
-				
-				
-			}else{
-				if(cs[i]=='-'){
-					upper=true;
-				}else{
+				upper = false;
+
+
+			} else {
+				if (cs[i] == '-') {
+					upper = true;
+				} else {
 					sb.append(cs[i]);
 				}
 			}
-			
-			
+
+
 		}
 		return sb.toString();
 	}
-	
 
 
-	protected void findBindingFlag()
-	{
+	protected void findBindingFlag() {
 		this.stripSpace();
-		if (!this.match(';'))
-		{
+		if (!this.match(';')) {
 			status = -1;
 			return;
 		}
@@ -275,128 +240,98 @@ class HTMLTagParser
 		this.hasVarBinding = true;
 	}
 
-	protected void findVars()
-	{
+	protected void findVars() {
 		this.stripSpace();
 		this.idToken();
 		StringBuilder sb = new StringBuilder();
-		while (status != -1)
-		{
+		while (status != -1) {
 			sb.append(this.subString());
 			this.t_consume();
 			this.stripSpace();
-			if (match(','))
-			{
+			if (match(',')) {
 
 				this.move(1);
 				this.stripSpace();
 				this.idToken();
 				sb.append(",");
-			}
-			else
-			{
+			} else {
 
 				break;
 			}
 
 		}
 		this.t_consume();
-		if (sb.length() != 0)
-		{
+		if (sb.length() != 0) {
 			sb.setLength(sb.length());
 			varBidingStr = sb.toString();
 		}
 
 	}
 
-	protected void endTag()
-	{
+	protected void endTag() {
 		this.stripSpace();
-		if (match(ENT_TAG))
-		{
+		if (match(ENT_TAG)) {
 			this.move(1);
 			this.isEmptyTag = false;
-		}
-		else if (this.match(ENT_TAGS))
-		{
+		} else if (this.match(ENT_TAGS)) {
 			this.isEmptyTag = true;
 			this.move(2);
 
-		}
-		else
-		{
+		} else {
 			char illegal = cs[index];
-			if (illegal == '\r' || illegal == '\n')
-			{
+			if (illegal == '\r' || illegal == '\n') {
 				throw new RuntimeException("标签未正确结束:" + this.tagName + ",碰到换行符号");
 
-			}
-			else
-			{
+			} else {
 				throw new RuntimeException("标签未正确结束:" + this.tagName + ",碰到非法符号'" + cs[index] + "'");
 
 			}
 		}
 	}
 
-	protected boolean strToken()
-	{
+	protected boolean strToken() {
 		this.stripSpace();
-		if (match('\''))
-		{
+		if (match('\'')) {
 			this.move(1);
 			this.findOneChar('\'');
 
-			if (status == -1)
-			{
+			if (status == -1) {
 				throw new RuntimeException("错误的属性，缺少'");
 			}
 
 			return true;
 
-		}
-		else if (match('\"'))
-		{
+		} else if (match('\"')) {
 			this.move(1);
 			this.findOneChar('\"');
-			if (status == -1)
-			{
+			if (status == -1) {
 				throw new RuntimeException("错误的属性,缺少'");
 			}
 
 			return false;
-		}
-		else
-		{
+		} else {
 			throw new RuntimeException("属性必须使用双引号或者单引号");
 		}
 
 	}
 
-	protected void idToken()
-	{
+	protected void idToken() {
 
-		if (ts > cs.length)
-		{
+		if (ts > cs.length) {
 			throw new RuntimeException("解析错");
 		}
-		
+
 		char c = cs[ts];
 
-		if (this.isID(c))
-		{
+		if (this.isID(c)) {
 			int i = 1;
-			while (ts < cs.length)
-			{
+			while (ts < cs.length) {
 				c = cs[ts + i];
 
-				if (isID(c) || isDigit(c))
-				{
+				if (isID(c) || isDigit(c)) {
 					i++;
 					continue;
-				}
-				else
-				{
+				} else {
 					break;
 				}
 
@@ -404,36 +339,27 @@ class HTMLTagParser
 
 			t_forword(i);
 
-		}
-		else
-		{
+		} else {
 			status = -1;
 		}
 
 	}
 
-	protected boolean stripSpaceAndCR()
-	{
+	protected boolean stripSpaceAndCR() {
 		ts = index;
 		int i = 0;
 		boolean findCR = false;
 
-		while (ts < cs.length)
-		{
+		while (ts < cs.length) {
 			char c = cs[ts + i];
 
-			if (c == ' ' || c == '\t')
-			{
+			if (c == ' ' || c == '\t') {
 				i++;
 				continue;
-			}
-			else if (c == '\n' || c == '\r')
-			{
+			} else if (c == '\n' || c == '\r') {
 				i++;
 				findCR = true;
-			}
-			else
-			{
+			} else {
 				break;
 			}
 
@@ -444,21 +370,16 @@ class HTMLTagParser
 		return findCR;
 	}
 
-	protected void stripSpace()
-	{
+	protected void stripSpace() {
 		ts = index;
 		int i = 0;
-		while (ts < cs.length)
-		{
+		while (ts < cs.length) {
 			char c = cs[ts + i];
 
-			if (c == ' ' || c == '\t' || c == '\n' || c == '\r')
-			{
+			if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
 				i++;
 				continue;
-			}
-			else
-			{
+			} else {
 				break;
 			}
 
@@ -471,8 +392,7 @@ class HTMLTagParser
 	/**前移token指针
 	 * @param forward
 	 */
-	protected void t_forword(int forward)
-	{
+	protected void t_forword(int forward) {
 		te = ts + forward;
 
 	}
@@ -480,8 +400,7 @@ class HTMLTagParser
 	/**
 	 * token指针生效
 	 */
-	protected void t_consume()
-	{
+	protected void t_consume() {
 		index = te;
 		ts = te;
 		status = 0;
@@ -490,8 +409,7 @@ class HTMLTagParser
 	/**
 	 * token指针前移后生效
 	 */
-	protected void t_recover()
-	{
+	protected void t_recover() {
 		te = ts = index;
 
 	}
@@ -499,38 +417,30 @@ class HTMLTagParser
 	/** 索引前移
 	 * @param i
 	 */
-	protected void move(int i)
-	{
+	protected void move(int i) {
 		index = index + i;
 		ts = te = index;
 		status = 0;
 	}
 
-	protected String subString()
-	{
+	protected String subString() {
 		String str = new String(cs, ts, te - ts);
 		return str;
 	}
 
-	protected void findOneChar(char c)
-	{
+	protected void findOneChar(char c) {
 		int i = 0;
-		while ((this.ts + i) < this.cs.length)
-		{
+		while ((this.ts + i) < this.cs.length) {
 			char ch = this.cs[this.ts + i];
 
-			if (ch != c)
-			{
+			if (ch != c) {
 				i++;
-				if (ch == '\n' || ch == '\r')
-				{
+				if (ch == '\n' || ch == '\r') {
 					status = -1;
 					this.t_recover();
 					return;
 				}
-			}
-			else
-			{
+			} else {
 				this.t_forword(i);
 				return;
 			}
@@ -542,16 +452,12 @@ class HTMLTagParser
 
 	}
 
-	public void parserEnd()
-	{
+	public void parserEnd() {
 		this.findTagName();
-		if (match('>'))
-		{
+		if (match('>')) {
 			move(1);
 
-		}
-		else
-		{
+		} else {
 			throw new RuntimeException(this.tagName + "结束标签格式错");
 		}
 
@@ -560,55 +466,43 @@ class HTMLTagParser
 	/**
 	 * 判断是否是id joelli
 	 */
-	private boolean isID(char c)
-	{
-		if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_'|c == '-')
-		{
+	private boolean isID(char c) {
+		if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' | c == '-') {
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
 
-	private boolean isDigit(char c)
-	{
+	private boolean isDigit(char c) {
 		return c > '0' && c < '9';
 	}
 
-	public boolean isEmptyTag()
-	{
+	public boolean isEmptyTag() {
 		return this.isEmptyTag;
 	}
 
-	public int getIndex()
-	{
+	public int getIndex() {
 		return index;
 	}
 
-	public String getTagName()
-	{
+	public String getTagName() {
 		return tagName;
 	}
 
-	public Map<String, String> getExpMap()
-	{
+	public Map<String, String> getExpMap() {
 		return expMap;
 	}
 
-	public Map<String, Character> getQuatMap()
-	{
+	public Map<String, Character> getQuatMap() {
 		return this.quatMap;
 	}
 
-	public void setExpMap(Map<String, String> expMap)
-	{
+	public void setExpMap(Map<String, String> expMap) {
 		this.expMap = expMap;
 	}
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		String input = "<#bbsListTag a='1' \nc='${ kk }' var='page,dd' >hello ${a}</#bbsListTag>";
 		HTMLTagParser htmltag = new HTMLTagParser(input.toCharArray(), 2, "var", true);
 		htmltag.parser();

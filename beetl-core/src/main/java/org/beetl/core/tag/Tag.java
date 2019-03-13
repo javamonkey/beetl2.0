@@ -1,6 +1,6 @@
 /*
  [The "BSD license"]
- Copyright (c) 2011-2014 Joel Li (李家智)
+ Copyright (c) 2011-2019 Joel Li (李家智) xiandafu@126.com
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -25,8 +25,12 @@
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.beetl.core;
+package org.beetl.core.tag;
 
+import org.beetl.core.BodyContent;
+import org.beetl.core.ByteWriter;
+import org.beetl.core.Context;
+import org.beetl.core.GroupTemplate;
 import org.beetl.core.statement.Statement;
 
 /**
@@ -44,14 +48,19 @@ import org.beetl.core.statement.Statement;
  * 
  * <p></p>
  * 
+ * Beetl的标签函数可以转化HTML标签风格，参考{@link HTMLTagSupportWrapper}
+ * 
  * @author joeli
  */
 public abstract class Tag {
+	//标签函数参数，同Function，如果是HTML标签，则参数0是html标签内容，参数1是Map，所有的html属性
 	protected Object[] args = null;
 	protected GroupTemplate gt;
 	protected Context ctx;
 	protected ByteWriter bw;
+	//标签体
 	protected Statement bs;
+	//父标签
 	protected Tag parent;
 
 	protected void doBodyRender() {
@@ -60,6 +69,10 @@ public abstract class Tag {
 
 	}
 
+	/**
+	 * 渲染标签体，得到内容暂时保存在BodyContent。如果不需要保存直接输出，可以调用doBodyRender
+	 * @return
+	 */
 	protected BodyContent getBodyContent() {
 		ByteWriter writer = ctx.byteWriter;
 		ByteWriter tempWriter = ctx.byteWriter.getTempWriter(writer);

@@ -2,10 +2,7 @@ package org.beetl.core.tag;
 
 import java.util.Map;
 
-import org.beetl.core.Tag;
-import org.beetl.core.TagVarBinding;
-
-public class VarBindingLoopSampleTag extends Tag implements TagVarBinding
+public class VarBindingLoopSampleTag extends GeneralVarTagBinding
 {
 
 	@Override
@@ -13,20 +10,16 @@ public class VarBindingLoopSampleTag extends Tag implements TagVarBinding
 	{
 		Map attributes = (Map) this.args[1];
 		int loop = Integer.parseInt((String) attributes.get("value"));
+		String[] array = new String[]
+				{ "a", "b" };
 		for (int i = 0; i < loop; i++)
 		{
+			this.binds(array);
 			this.doBodyRender();
 		}
 
 	}
 
-	@Override
-	public Object[] bindVars()
-	{
-		String[] array = new String[]
-		{ "a", "b" };
-		return new Object[]
-		{ array };
-	}
+	
 
 }

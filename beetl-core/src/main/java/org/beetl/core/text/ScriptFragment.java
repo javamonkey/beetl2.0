@@ -20,8 +20,9 @@ public class ScriptFragment extends Fragment {
         while (!source.isEof()&&!source.isScriptEnd()) {
         	script.append(source.consumeAndGet());
         }
+        //补上一个回车
         if (source.sd.endIsCr) {
-            script.append(TextParser.systemCr);
+            script.append(TextParser.cr1);
         }
 
         if (source.isEof()) {

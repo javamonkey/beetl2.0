@@ -22,11 +22,8 @@ public class TextParser {
 	Source source = null;
 	StringBuilder script = new StringBuilder(64);
 	// 操作系统可能出现的回车换行符号
-	static char[] cr1 = "\n".toCharArray();
-	static char[] cr2 = "\r\n".toCharArray();
-	static char[] cr3 = "\r".toCharArray();
-	static char[] systemCr = System.getProperty("line.separator").toCharArray();
-	public static String systemCrStr = System.getProperty("line.separator");
+	final static char cr1 = '\n';
+	
 	List<Fragment> list = new LinkedList<Fragment>();
 	HtmlTagConfig htmlTagConfig = null;
 
@@ -107,7 +104,7 @@ public class TextParser {
 		ScriptDelimeter sd = new ScriptDelimeter("@".toCharArray(), null, "<%".toCharArray(), "%>".toCharArray());
 
 		HtmlTagConfig htmlConfig = new HtmlTagConfig();
-		String text = "hi\r\n<%delete() { %>\r\\n <%var a=1;%>\r\n<%}%>\r\nhello";
+		String text = "hi\r\n<%delete() { \r\n var a=1;}%>\r\nhello";
 		StringReader str = new StringReader(text);
 		TextParser textParser = new TextParser(pd, sd, htmlConfig);
 		textParser.doParse(str);

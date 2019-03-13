@@ -23,12 +23,15 @@ public class FragmentFormmater {
 		while (it.hasNext()) {
 			Fragment f = it.next();
 			if (f.startLine == start) {
+				//同行格式化
 				lineStatus.add(f);
 			} else {
-				Fragment nextFragment = lineStatus.lastFragment();
 				lineStatus.format();
+				Fragment nextFragment = lineStatus.lastFragment();
+				lineStatus.reset();
+				//如果最后一个一行跨行，加入到下一次格式化
 				if (nextFragment != null && nextFragment.startLine != nextFragment.endLine
-						&& nextFragment.endLine == f.startLine) {
+						) {
 					// 放到下一次比较
 					lineStatus.add(nextFragment);
 				}
@@ -37,6 +40,7 @@ public class FragmentFormmater {
 			}
 		}
 		lineStatus.format();
+		lineStatus.reset();
 
 	}
 
@@ -82,16 +86,10 @@ public class FragmentFormmater {
 		}
 
 		public void format() {
-			// 以下情况不需要格式化
-			if (!hasScript) {
-				return;
-			}
-			if (!hasText) {
-				return;
-			}
-
-			if (hasHolder) {
-				return;
+			
+			if(!(hasScript&&hasText&&!hasHolder)) {
+				//只有文本和脚本情况下需要格式化
+				return ;
 			}
 
 			// 格式化

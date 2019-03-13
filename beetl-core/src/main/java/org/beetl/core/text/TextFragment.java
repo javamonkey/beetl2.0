@@ -11,10 +11,10 @@ public class TextFragment extends Fragment {
 
 	@Override
 	public StringBuilder getScript() {
-		char[] cr = source.parser.systemCr;
+		
 		StringBuilder script = new StringBuilder();
 		if (insertCr) {
-			script.append(cr);
+			script.append(source.parser.cr1);
 
 		}
 		if (text.length() == 0) {
@@ -23,7 +23,7 @@ public class TextFragment extends Fragment {
 		Integer varName = source.getParser().getRandomeTextVarName();
 		script.append("<$" + varName + ">>");
 		for (int i = this.startLine + (insertCr ? 1 : 0); i < this.endLine; i++) {
-			script.append(source.parser.systemCr);
+			script.append(source.parser.cr1);
 		}
 		// 添加一个静态变量
 		source.parser.getTextVars().put(varName, text.toString());
@@ -39,7 +39,14 @@ public class TextFragment extends Fragment {
 				return new PlaceHolderFragment(source);
 			} else if (source.isScriptStart()) {
 				this.setEndLine();
-				return new ScriptFragment(source);
+				
+				ScriptFragment scriptFragement =  new ScriptFragment(source);
+				//在脚本内容里添加换行符
+				int crNum = (this.endLine-this.startLine)+(this.endWithCr()?1:0);
+				for(int i=0;i<crNum;i++) {
+					scriptFragement.script.append("\n");
+				}
+				return scriptFragement;
 			} else if (source.isHtmlTagStart()) {
 				this.setEndLine();
 				return new HtmlTagStartFragment(source);
@@ -61,14 +68,29 @@ public class TextFragment extends Fragment {
 
 
 	protected void setEndLine() {
+		
 		if(text.length()<0){
 			return ;
 		}
+		if(endWithCr()) {
+			this.endLine = source.curLine-1;;
+		}else {
+			this.endLine = source.curLine;
+		}
+		
+
+	}
+	
+	protected boolean endWithCr() {
+		
 		char lastChar = text.charAt(text.length()-1);
 		if(lastChar=='\n'||lastChar=='\r'){
-			this.endLine = source.curLine-1;
+			return true;
+		}else {
+			return false;
 		}
-
+		
+		
 	}
 
 	/**
@@ -78,14 +100,7 @@ public class TextFragment extends Fragment {
 		int len = text.length();
 		for (int i = len - 1; i > 0; i--) {
 			char c = text.charAt(i);
-			if (isCr(c)) {
-				// 去掉格式化部分
-				text.setLength(i + getCrLen(c, i) - 1);
-				// text.setLength(i);
-
-
-				return;
-			}
+			
 			if (!isSpace(c)) {
 				return;
 			}

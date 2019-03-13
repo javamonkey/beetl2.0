@@ -41,7 +41,7 @@ public class HtmlTagStartFragment extends Fragment {
 				String key = entry.getKey();
 				String value = entry.getValue();
 				if (html.crKey.contains(key)) {
-					script.append(source.parser.systemCr);
+					script.append(source.parser.cr1);
 				}
 				script.append(key).append(":");
 				String attrValue = this.parseAttr(quat.get(key), value);

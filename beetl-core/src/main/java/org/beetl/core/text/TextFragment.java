@@ -1,8 +1,12 @@
 package org.beetl.core.text;
 
+import java.util.*;
+
 public class TextFragment extends Fragment {
 	StringBuilder text = new StringBuilder();
 	boolean insertCr = false;
+	//TODO 改成数组
+	Set<Integer> spacesCheck = new HashSet<Integer>();
 
 	public TextFragment(Source source) {
 		super(source);
@@ -58,6 +62,10 @@ public class TextFragment extends Fragment {
 				text.append(source.consumeAndGetCR(matchCr));
 			}
 			else {
+				char c = source.consumeAndGet();
+				if(!isSpace(c)&&!spacesCheck.contains(source.curLine)){
+					spacesCheck.add(source.curLine);
+				}
 				text.append(source.consumeAndGet());
 			}
 		}
@@ -66,7 +74,9 @@ public class TextFragment extends Fragment {
 		return null;
 	}
 
-
+	public boolean containSpaceInLine(int line){
+		return !this.spacesCheck.contains(line);
+	}
 	protected void setEndLine() {
 		
 		if(text.length()<0){
@@ -98,45 +108,31 @@ public class TextFragment extends Fragment {
 	 */
 	public void formatEndPart() {
 		int len = text.length();
-		for (int i = len - 1; i > 0; i--) {
-			char c = text.charAt(i);
-			
+		int pos = len-1;
+		for (pos = len - 1; pos > 0; pos--) {
+			char c = text.charAt(pos);
 			if (!isSpace(c)) {
-				return;
+				text.setLength(pos);
+				return ;
 			}
 		}
-		text.setLength(0);
+
 
 	}
 
-	public void foramtSpace() {
-		int len = text.length();
-		for (int i = 0; i < len; i++) {
-			char c = text.charAt(i);
-			if (!isSpace(c)) {
-				return;
-			}
-		}
-		text.setLength(0);
-	}
 
 	public void formatStartPart() {
 		int len = text.length();
-		for (int i = 0; i < len; i++) {
-			char c = text.charAt(i);
-			if (isCr(c)) {
+		int pos=0;
+		for (pos = 0; pos < len; pos++) {
+			char c = text.charAt(pos);
 
-				text = text.delete(0, i + getCrLen(c, i));
-				// text = text.delete(0, i );
-				// 脚本记录需要插入一个cr以保证格式正确
-				insertCr = true;
-				return;
-			}
 			if (!isSpace(c)) {
+				text = new StringBuilder(text.substring(pos));
 				return;
 			}
 		}
-		text.setLength(0);
+
 	}
 
 	protected int getCrLen(char c, int i) {

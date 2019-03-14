@@ -576,7 +576,7 @@ public class GroupTemplate {
 
 		} catch (HTMLTagParserException e) {
 			ErrorGrammarProgram ep = new ErrorGrammarProgram(res, this,
-					text.systemCrStr != null ? text.systemCrStr : null);
+					String.valueOf(text.cr1) );
 			ep.setException(e);
 			e.pushResource(res);
 			return ep;

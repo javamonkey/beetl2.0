@@ -22,7 +22,7 @@ public class TextParser {
 	Source source = null;
 	StringBuilder script = new StringBuilder(64);
 	// 操作系统可能出现的回车换行符号
-	final static char cr1 = '\n';
+	public final static char cr1 = '\n';
 	
 	List<Fragment> list = new LinkedList<Fragment>();
 	HtmlTagConfig htmlTagConfig = null;

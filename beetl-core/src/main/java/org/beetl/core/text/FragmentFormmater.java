@@ -26,7 +26,7 @@ public class FragmentFormmater {
 				//同行格式化
 				lineStatus.add(f);
 			} else {
-				lineStatus.format();
+				lineStatus.format(start);
 				Fragment nextFragment = lineStatus.lastFragment();
 				lineStatus.reset();
 				//如果最后一个一行跨行，加入到下一次格式化
@@ -39,7 +39,7 @@ public class FragmentFormmater {
 				start = f.startLine;
 			}
 		}
-		lineStatus.format();
+		lineStatus.format(start);
 		lineStatus.reset();
 
 	}
@@ -85,33 +85,32 @@ public class FragmentFormmater {
 
 		}
 
-		public void format() {
+		public void format(int line) {
 			
 			if(!(hasScript&&hasText&&!hasHolder)) {
-				//只有文本和脚本情况下需要格式化
+				//同行只有文本和脚本情况下需要格式化
 				return ;
 			}
 
-			// 格式化
+			// 格式化，同行有TextFratment有内容容输出（非空），则不需要格式化，否则删除空字符
 			int size = list.size();
 			for (int i = 0; i < size; i++) {
 				Fragment f = list.get(i);
 				if (f instanceof TextFragment) {
-					TextFragment text = (TextFragment) f;
-					if (i == 0) {
-						text.formatEndPart();
-					} else if (i == size - 1) {
-						text.formatStartPart();
-					} else {
-						text.foramtSpace();
-
+					if(!((TextFragment) f).containSpaceInLine(line)){
+						return ;
 					}
 				}
-
-
+			}
+			Fragment text = list.get(0);
+			if(text instanceof  TextFragment){
+				((TextFragment) text).formatEndPart();
 			}
 
-			reset();
+			text = list.get(list.size()-1);
+			if(text instanceof  TextFragment){
+				((TextFragment) text).formatStartPart();
+			}
 
 		}
 

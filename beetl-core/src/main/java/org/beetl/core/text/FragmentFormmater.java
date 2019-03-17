@@ -97,21 +97,30 @@ public class FragmentFormmater {
 			for (int i = 0; i < size; i++) {
 				Fragment f = list.get(i);
 				if (f instanceof TextFragment) {
-					if(!((TextFragment) f).containSpaceInLine(line)){
+					if(!((TextFragment) f).onlySpaceInLine(line)){
+						//如果此行包含了非空静态文本，则不需要格式化
 						return ;
 					}
 				}
 			}
-			Fragment text = list.get(0);
-			if(text instanceof  TextFragment){
-				((TextFragment) text).formatEndPart();
+			
+			for(int i=0;i<size;i++) {
+				Fragment f = list.get(i);
+				if(f instanceof TextFragment) {
+					TextFragment text = (TextFragment)f;
+					if(i==0) {
+						text.formatEndPart();
+					}else if(i==(list.size()-1)&&f instanceof TextFragment){
+						text.formatStartPart();
+					}else {
+						//中间的空内容删除
+						text.clearForForamt();
+						
+					}
+				}
+				
 			}
-
-			text = list.get(list.size()-1);
-			if(text instanceof  TextFragment){
-				((TextFragment) text).formatStartPart();
-			}
-
+			
 		}
 
 		private void reset() {

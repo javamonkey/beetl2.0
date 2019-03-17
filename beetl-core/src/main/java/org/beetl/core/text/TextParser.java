@@ -21,8 +21,11 @@ public class TextParser {
 	ScriptDelimeter sd;
 	Source source = null;
 	StringBuilder script = new StringBuilder(64);
-	// 操作系统可能出现的回车换行符号
+	//脚本的回车符，antlr解析会忽略掉
 	public final static char cr1 = '\n';
+	// 操作系统回车换行符号
+	public final static String systemCrStr = System.getProperty("line.separator");
+	 
 	
 	List<Fragment> list = new LinkedList<Fragment>();
 	HtmlTagConfig htmlTagConfig = null;
@@ -104,7 +107,7 @@ public class TextParser {
 		ScriptDelimeter sd = new ScriptDelimeter("@".toCharArray(), null, "<%".toCharArray(), "%>".toCharArray());
 
 		HtmlTagConfig htmlConfig = new HtmlTagConfig();
-		String text = "hi\r\n<%delete() { \r\n var a=1;}%>\r\nhello";
+		String text = "hi\r\n<%delete() { \r\n var a=1;\r\n}%>\r\nhello";
 		StringReader str = new StringReader(text);
 		TextParser textParser = new TextParser(pd, sd, htmlConfig);
 		textParser.doParse(str);

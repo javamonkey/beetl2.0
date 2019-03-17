@@ -576,13 +576,13 @@ public class GroupTemplate {
 
 		} catch (HTMLTagParserException e) {
 			ErrorGrammarProgram ep = new ErrorGrammarProgram(res, this,
-					String.valueOf(text.cr1) );
+					text.systemCrStr);
 			ep.setException(e);
 			e.pushResource(res);
 			return ep;
 		} catch (IOException e) {
 			ErrorGrammarProgram ep = new ErrorGrammarProgram(res, this,
-					text.systemCrStr != null ? text.systemCrStr : null);
+					String.valueOf(text.cr1));
 			BeetlException ex = new BeetlException(BeetlException.TEMPLATE_LOAD_ERROR);
 			ex.pushResource(res);
 
@@ -591,7 +591,7 @@ public class GroupTemplate {
 			return ep;
 		} catch (BeetlException ex) {
 			ErrorGrammarProgram ep = new ErrorGrammarProgram(res, this,
-					text.systemCrStr != null ? text.systemCrStr : null);
+					text.systemCrStr);
 			ex.pushResource(res);
 			ep.setException(ex);
 			return ep;

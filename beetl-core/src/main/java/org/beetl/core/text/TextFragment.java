@@ -1,6 +1,7 @@
 package org.beetl.core.text;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TextFragment extends Fragment {
 	StringBuilder text = new StringBuilder();
@@ -63,10 +64,11 @@ public class TextFragment extends Fragment {
 			}
 			else {
 				char c = source.consumeAndGet();
+				//效率低，想个办法，总不能每读一个字符，就判断一下吧 TODO3
 				if(!isSpace(c)&&!spacesCheck.contains(source.curLine)){
 					spacesCheck.add(source.curLine);
 				}
-				text.append(source.consumeAndGet());
+				text.append(c);
 			}
 		}
 		this.setEndLine();
@@ -74,7 +76,7 @@ public class TextFragment extends Fragment {
 		return null;
 	}
 
-	public boolean containSpaceInLine(int line){
+	public boolean onlySpaceInLine(int line){
 		return !this.spacesCheck.contains(line);
 	}
 	protected void setEndLine() {
@@ -133,6 +135,10 @@ public class TextFragment extends Fragment {
 			}
 		}
 
+	}
+	
+	protected void clearForForamt() {
+		this.text.setLength(0);
 	}
 
 	protected int getCrLen(char c, int i) {

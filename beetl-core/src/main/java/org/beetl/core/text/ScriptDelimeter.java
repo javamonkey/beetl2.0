@@ -35,8 +35,8 @@ public class ScriptDelimeter extends Delimeter {
     }
 
     private boolean matchEnd(char[] end){
-        if (end1 != null) {
-            return source.matchAndSKip(end1);
+        if (end != null) {
+            return source.matchAndSKip(end);
         } else {
             int matchCount = source.isMatchCR();
             if (matchCount!=0) {

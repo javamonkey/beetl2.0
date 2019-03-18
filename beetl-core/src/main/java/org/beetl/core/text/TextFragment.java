@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class TextFragment extends Fragment {
 	StringBuilder text = new StringBuilder();
-	boolean insertCr = false;
+
 	//TODO 改成数组
 	Set<Integer> spacesCheck = new HashSet<Integer>();
 
@@ -18,18 +18,10 @@ public class TextFragment extends Fragment {
 	public StringBuilder getScript() {
 		
 		StringBuilder script = new StringBuilder();
-		if (insertCr) {
-			script.append(source.parser.cr1);
 
-		}
-		if (text.length() == 0) {
-			return script;
-		}
 		Integer varName = source.getParser().getRandomeTextVarName();
 		script.append("<$" + varName + ">>");
-		for (int i = this.startLine + (insertCr ? 1 : 0); i < this.endLine; i++) {
-			script.append(source.parser.cr1);
-		}
+
 		// 添加一个静态变量
 		source.parser.getTextVars().put(varName, text.toString());
 		return script;
@@ -94,7 +86,9 @@ public class TextFragment extends Fragment {
 	}
 	
 	protected boolean endWithCr() {
-		
+		if(text.length()==0){
+			return false;
+		}
 		char lastChar = text.charAt(text.length()-1);
 		if(lastChar=='\n'||lastChar=='\r'){
 			return true;

@@ -1,3 +1,1 @@
-${a}
-${user.name}
-\#{a}
+${json(user)}

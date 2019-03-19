@@ -19,7 +19,14 @@ public class HTMLTagSupportWrapper extends  Tag {
 	protected String tagRoot = null;
 	protected String tagSuffix = null;
 
-	
+	@Override
+	public void init(Context ctx, Object[] args, Statement st) {
+		super.inintBase(ctx,args,st);
+		//Parent tag 不在这里设置，而在正真的Tag里设置
+		tagRoot = ctx.gt.getConf().getResourceMap().get("tagRoot");
+		tagSuffix = ctx.gt.getConf().getResourceMap().get("tagSuffix");
+	}
+
 	@Override
 	public void render() {
 		if (args.length == 0 || args.length > 2) {
@@ -61,12 +68,7 @@ public class HTMLTagSupportWrapper extends  Tag {
 
 	}
 
-	@Override
-	public void init(Context ctx, Object[] args, Statement st) {
-		super.init(ctx, args, st);
-		tagRoot = ctx.gt.getConf().getResourceMap().get("tagRoot");
-		tagSuffix = ctx.gt.getConf().getResourceMap().get("tagSuffix");
-	}
+
 
 	public Map getAttrs() {
 		if (this.args.length == 1) {
@@ -83,7 +85,8 @@ public class HTMLTagSupportWrapper extends  Tag {
 		t = gt.getTemplate(path, this.ctx.getResourceId());
 
 		t.binding(ctx.globalVar);
-
+		//设置父tag
+		t.getCtx().setCurrentTag(this.ctx.getCurrentTag());
 		if (args.length == 2) {
 			Map<String, Object> map = (Map<String, Object>) args[1];
 			for (Entry<String, Object> entry : map.entrySet()) {
@@ -104,7 +107,6 @@ public class HTMLTagSupportWrapper extends  Tag {
 					ex.inTagBody = true;
 					throw ex;
 				}
-
 
 			}
 		});

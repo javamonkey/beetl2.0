@@ -112,6 +112,7 @@ public class FragmentFormmater {
 						text.formatEndPart();
 					}else if(i==(list.size()-1)&&f instanceof TextFragment){
 						text.formatStartPart();
+
 					}else {
 						//中间的空内容删除
 						text.clearForForamt();

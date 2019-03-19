@@ -33,6 +33,8 @@ import org.beetl.core.Context;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.statement.Statement;
 
+import java.util.Map;
+
 /**
  * 
  * 标签函数，用于处理一段模板快
@@ -63,6 +65,9 @@ public abstract class Tag {
 	//父标签
 	protected Tag parent;
 
+	/**
+	 *  主要方法：渲染标签体
+	 */
 	protected void doBodyRender() {
 
 		bs.execute(ctx);
@@ -70,7 +75,7 @@ public abstract class Tag {
 	}
 
 	/**
-	 * 渲染标签体，得到内容暂时保存在BodyContent。如果不需要保存直接输出，可以调用doBodyRender
+	 * 得到内容暂时保存在BodyContent。如果不需要保存直接输出，可以调用doBodyRender
 	 * @return
 	 */
 	protected BodyContent getBodyContent() {
@@ -89,11 +94,20 @@ public abstract class Tag {
 	}
 
 	public void init(Context ctx, Object[] args, Statement st) {
+		inintBase(ctx, args, st);
+		setTagParent();
+
+	}
+
+	protected void inintBase(Context ctx, Object[] args, Statement st){
 		this.ctx = ctx;
 		this.bw = ctx.byteWriter;
 		this.gt = ctx.gt;
 		this.args = args;
 		this.bs = st;
+	}
+
+	protected void setTagParent(){
 		this.parent = ctx.getCurrentTag();
 		ctx.setCurrentTag(this);
 	}
@@ -104,6 +118,24 @@ public abstract class Tag {
 
 	public Object[] getArgs() {
 		return this.args;
+	}
+
+	/**
+	 * 获取html属性，注意，html属性中“-”符号会去掉转为下一个首字母大写
+	 * @param attrName
+	 * @return
+	 */
+	public Object getHtmlAttribute(String attrName){
+		//html 标签 第一个参数是标签名字，第二个是所有属性
+		if(args.length!=2){
+			throw new IllegalStateException("非html标签");
+		}
+		Object obj = (Object) args[1];
+		if(!(obj instanceof Map)){
+			throw new IllegalStateException("非html标签");
+		}
+
+		return ((Map)obj).get(attrName);
 	}
 
 

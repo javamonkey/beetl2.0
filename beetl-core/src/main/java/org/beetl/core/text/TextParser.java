@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 /**
- * 文本解析成beetl脚本
+ * 文本解析成beetl脚本,按照各种定位符，html标记解析成对应的Fragment，然后再格式化，最后输出成beetl脚本
  * @author xiandafu
  *
  */
@@ -107,7 +107,9 @@ public class TextParser {
 		ScriptDelimeter sd = new ScriptDelimeter("@".toCharArray(), null, "<%".toCharArray(), "%>".toCharArray());
 
 		HtmlTagConfig htmlConfig = new HtmlTagConfig();
-		String text = "   @ a=1;\r\nabc";
+//		String text = "<%a=1;%>\nabcd";
+//		String text = "<%a=1;%>\n<%a=1;%>";
+		String text = "abc\n<%a=1;%>\n<#a id='1' ck='3'>\nabcd\n</#a>";
 		StringReader str = new StringReader(text);
 		TextParser textParser = new TextParser(pd, sd, htmlConfig);
 		textParser.doParse(str);

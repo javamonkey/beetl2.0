@@ -33,4 +33,10 @@ public class PlaceHolderFragment extends Fragment {
         return super.findNext();
     }
 
+    @Override
+    protected void appendLine(int num) {
+        //不可能調用
+        throw new IllegalStateException();
+    }
+
 }

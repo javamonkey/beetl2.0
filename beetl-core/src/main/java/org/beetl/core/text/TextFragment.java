@@ -16,15 +16,22 @@ public class TextFragment extends Fragment {
 
 	@Override
 	public StringBuilder getScript() {
-		
 		StringBuilder script = new StringBuilder();
-
+		if(text.length()==0){
+			return script;
+		}
 		Integer varName = source.getParser().getRandomeTextVarName();
 		script.append("<$" + varName + ">>");
 
 		// 添加一个静态变量
 		source.parser.getTextVars().put(varName, text.toString());
 		return script;
+	}
+
+	@Override
+	protected void appendLine(int num) {
+		//不可能調用
+		throw new IllegalStateException();
 	}
 
 	@Override
@@ -40,17 +47,22 @@ public class TextFragment extends Fragment {
 				ScriptFragment scriptFragement =  new ScriptFragment(source);
 				//在脚本内容里添加换行符
 				int crNum = (this.endLine-this.startLine)+(this.endWithCr()?1:0);
-				for(int i=0;i<crNum;i++) {
-					scriptFragement.script.append("\n");
-				}
+				scriptFragement.appendLine(crNum);
+
 				return scriptFragement;
 			} else if (source.isHtmlTagStart()) {
 				this.setEndLine();
-				return new HtmlTagStartFragment(source);
+				HtmlTagStartFragment htmlTagStart = new HtmlTagStartFragment(source);
+				int crNum = (this.endLine-this.startLine)+(this.endWithCr()?1:0);
+				htmlTagStart.appendLine(crNum);
+				return htmlTagStart;
 
 			} else if (source.isHtmlTagEnd()) {
 				this.setEndLine();
-				return new HtmlTagEndFragment(source);
+				HtmlTagEndFragment htmlTagEndFragment = new HtmlTagEndFragment(source);
+				int crNum = (this.endLine-this.startLine)+(this.endWithCr()?1:0);
+				htmlTagEndFragment.appendLine(crNum);
+				return htmlTagEndFragment;
 			} else if((matchCr=source.isMatchCR())!=0){
 				text.append(source.consumeAndGetCR(matchCr));
 			}
@@ -116,24 +128,39 @@ public class TextFragment extends Fragment {
 
 	}
 
-
+	/**
+	 * 删除静态文本中格式化部分内容,包含空格直到换行
+	 * @return
+	 */
 	public void formatStartPart() {
 		int len = text.length();
 		int pos=0;
+		char c = 0;
 		for (pos = 0; pos < len; pos++) {
-			char c = text.charAt(pos);
-
+			c = text.charAt(pos);
 			if (!isSpace(c)) {
-				text = new StringBuilder(text.substring(pos));
-				return;
+				break;
 			}
 		}
+		if(c=='\n'){
+			pos++;
+
+		}else if(c=='\r'){
+			pos++;
+			if(text.length()>pos+1&&text.charAt(pos+1)=='\n'){
+				pos++;
+			}
+		}
+		text = new StringBuilder(text.substring(pos));
+
 
 	}
 	
 	protected void clearForForamt() {
 		this.text.setLength(0);
 	}
+
+
 
 	protected int getCrLen(char c, int i) {
 		if (c == '\n') {

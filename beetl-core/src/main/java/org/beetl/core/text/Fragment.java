@@ -11,6 +11,7 @@ public abstract class Fragment {
     }
 
     public abstract StringBuilder getScript();
+    protected abstract void appendLine(int num);
 
     public abstract Fragment consumeAndReturnNext();
 
@@ -37,6 +38,7 @@ public abstract class Fragment {
     protected void setStartLine() {
         this.startLine = source.curLine;
     }
+
 
     protected void setEndLine() {
 

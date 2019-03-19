@@ -80,7 +80,8 @@ public class Context {
 	public Object[] vars;
 
 	/**
-	 * 这些变量来自于ProgrameMeta，模板的静态文本
+	 * 这些变量来自于ProgrameMeta，模板的静态文本，TODO，能否改成SoftRefernce，避免占用较大内存？
+	 * 或者采用其他机制
 	 */
 	public Object[] staticTextArray;
 
@@ -127,7 +128,9 @@ public class Context {
 	 * @param value
 	 */
 	public void set(String key, Object value) {
-		if (globalVar == null) globalVar = new HashMap<String, Object>();
+		if (globalVar == null) {
+			globalVar = new HashMap<String, Object>();
+		}
 		globalVar.put(key, value);
 	}
 
@@ -154,7 +157,9 @@ public class Context {
 	public void setCurrentTag(Tag tag) {
 		Map map = (Map) getGlobal("$page");
 		if (map == null) {
-			return;
+			map = new HashMap();
+			this.set("$page",map);
+
 		}
 		map.put("$parentTag", tag);
 	}

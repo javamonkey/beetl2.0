@@ -16,7 +16,7 @@ public class Test {
 	public static void main(String[] args) throws Exception {
 
 		
-		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("org/beetl/core/lab/");
+		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("lab/");
 		Configuration cfg = Configuration.defaultConfiguration();
 		cfg.setEngine("org.beetl.core.engine.OnlineTemplateEngine");
 		cfg.setDirectByteOutput(true);
@@ -31,7 +31,8 @@ public class Test {
 		cfg.setPlaceholderEnd2("}");
 		cfg.initOther();
 		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
-
+		gt.registerTag("table",TableTag.class);
+		gt.registerTag("col",ColTag.class);
 
 		for (int i = 0; i < 1; i++) {
 

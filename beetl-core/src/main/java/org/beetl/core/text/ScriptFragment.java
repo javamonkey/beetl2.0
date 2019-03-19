@@ -2,6 +2,7 @@ package org.beetl.core.text;
 
 public class ScriptFragment extends Fragment {
 
+
     Source source = null;
     StringBuilder script = new StringBuilder();
 
@@ -32,6 +33,13 @@ public class ScriptFragment extends Fragment {
         }
         return this.findNext();
 
+    }
+
+    @Override
+    protected void appendLine(int num) {
+        for(int i=0;i<num;i++) {
+            script.append("\n");
+        }
     }
 
 }

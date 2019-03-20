@@ -118,6 +118,16 @@
 				<artifactId>jodd-madvoc</artifactId>
 				<version>${jodd.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.ow2.asm</groupId>
+				<artifactId>asm</artifactId>
+				<version>${asm.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ow2.asm</groupId>
+				<artifactId>asm-commons</artifactId>
+				<version>${asm.version}</version>
+			</dependency>
 			<!-- 单元测试 -->
 			<dependency>
 				<groupId>org.testng</groupId>
@@ -192,6 +202,7 @@
 		<antlr4.version>4.2</antlr4.version>
 		<testng.version>6.8.7</testng.version>
 		<junit.version>4.11</junit.version>
+		<asm.version>5.2</asm.version>
 	</properties>
 	<build>
 		<pluginManagement>

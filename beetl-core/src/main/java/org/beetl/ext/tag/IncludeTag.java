@@ -32,8 +32,8 @@ import java.util.Map.Entry;
 
 import org.beetl.core.ByteWriter;
 import org.beetl.core.Resource;
-import org.beetl.core.Tag;
 import org.beetl.core.Template;
+import org.beetl.core.tag.Tag;
 
 public class IncludeTag extends Tag {
 

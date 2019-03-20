@@ -66,33 +66,9 @@ public class Source {
         return isSupportHtmlTag;
     }
 
-    public boolean matchCrAndSkip() {
 
-        char[] chs = doMatchCrAndSkip();
-        return chs != null;
-    }
 
-    protected char[] doMatchCrAndSkip() {
-        // window \r\n linux \n mac \r
-        if (isEof()) {
-            return null;
-        }
-        if (cs[p] == '\n') {
-            this.consume();
-            this.addLine();
-            return this.parser.cr1;
-        } else if (cs[p] == '\r') {
-            this.consume();
-            this.addLine();
-            if (p < size && cs[p] == '\n') {
-                this.consume();
-                return this.parser.cr2;
-            }
-            return this.parser.cr3;
 
-        }
-        return null;
-    }
 
     protected void addLine() {
         this.curLine++;
@@ -126,6 +102,42 @@ public class Source {
         return true;
     }
 
+    public int isMatchCR(){
+        // window \r\n linux \n mac \r
+        char c = cs[p];
+        if (c == '\n' ) {
+            return 1;
+        }
+        if(c=='\r'){
+            if(size>p+1){
+                if(cs[p+1]=='\n'){
+                    return 1+1;
+                }
+            }
+            return 1;
+        }
+
+        return 0;
+
+
+    }
+
+    public char consumeAndGet(){
+        char c = this.get();
+        this.consume();
+
+        return c;
+    }
+
+    public char[] consumeAndGetCR(int size){
+        char[] cs = new char[size];
+        for(int i=0;i<size;i++){
+            cs[i] = consumeAndGet();
+        }
+        this.addLine();
+        return cs;
+    }
+
     public void consume() {
         p++;
     }
@@ -134,23 +146,6 @@ public class Source {
         p = p + x;
     }
 
-    /**
-     * 通用读取方法 读取一个或者一个回车换行符号
-     * 
-     * @return
-     */
-    public char[] consumeAndGet() {
-        char c = cs[p];
-        if (c == '\n' || c == '\r') {
-            char[] cs = doMatchCrAndSkip();
-            return cs;
-        } else {
-            p++;
-            // 性能优化，重用这个数组
-            return new char[] {c};
-        }
-
-    }
 
     public char get() {
         return cs[p];

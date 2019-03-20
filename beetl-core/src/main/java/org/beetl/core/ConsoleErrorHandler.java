@@ -66,7 +66,7 @@ public class ConsoleErrorHandler implements ErrorHandler
 		int line = error.getErrorTokenLine();
 
 		StringBuilder sb = new StringBuilder(">>").append(this.getDateTime()).append(":").append(error.getType())
-				.append(":").append(error.getErrorTokenText()).append(" 位于").append(line).append("行").append(" 资源:")
+				.append(":").append(error.getErrorTokenText()).append(" 位于").append(line!=0?line+"行":"").append(" 资源:")
 				.append(getResourceName(ex.resource.id));
 
 		if (error.getErrorCode().equals(BeetlException.TEMPLATE_LOAD_ERROR))

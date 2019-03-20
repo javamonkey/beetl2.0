@@ -25,73 +25,67 @@
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.beetl.core;
+package org.beetl.core.tag;
 
+import java.util.LinkedHashMap;
+
+import org.beetl.core.Context;
 import org.beetl.core.statement.Statement;
 
 /**
- * 
- * 标签函数，用于处理一段模板快
- * 
- * <p></p>;
- * &lt;% cache(key){ %&gt;
- * <p></p>
- * ip=10.1.1.1
- * <p></p>
- * port=9090
- * <p></p>
- * &lt;%}&gt;
- * 
- * <p></p>
- * 
- * @author joeli
+ * {@link GeneralVarTagBinding} 的html标签封装，带变量绑定的html标签调用的标签
+ * @author joelli
+ *
  */
-public abstract class Tag {
-	protected Object[] args = null;
-	protected GroupTemplate gt;
-	protected Context ctx;
-	protected ByteWriter bw;
-	protected Statement bs;
-	protected Tag parent;
+public class HTMLTagVarBindingWrapper extends Tag 
+{
 
-	protected void doBodyRender() {
+	GeneralVarTagBinding tag = null;
 
-		bs.execute(ctx);
+	@Override
+	public void render()
+	{
+		tag.render();
 
 	}
 
-	protected BodyContent getBodyContent() {
-		ByteWriter writer = ctx.byteWriter;
-		ByteWriter tempWriter = ctx.byteWriter.getTempWriter(writer);
-		ctx.byteWriter = tempWriter;
-		doBodyRender();
-		ctx.byteWriter = writer;
-		return tempWriter.getTempConent();
+
+	public void mapName2Index(LinkedHashMap<String, Integer> map)
+	{
+		
+		tag.mapName2Index(map);
 	}
 
-	public abstract void render();
+	public void init(Context ctx, Object[] args, Statement st)
+	{
+		super.init(ctx, args, st);
+		if (args.length == 0 || args.length > 3)
+		{
+			throw new RuntimeException("参数错误，期望child,Map .....");
+		}
+		String child = (String) args[0];
+		// 已经注册的Tag
+		TagFactory tagFactory = null;
+		String functionTagName = child.replace(':', '.');
+		tagFactory = this.gt.getTagFactory(functionTagName);
+		if (tagFactory == null)
+		{
+			throw new RuntimeException("标签初始化错误，未找到指定的标签实现类" + functionTagName);
+		}
+		Tag temp = tagFactory.createTag();
+		if (temp == null)
+		{
+			throw new RuntimeException("找不到注册的Tag");
 
-	public void afterRender() {
-		ctx.setCurrentTag(parent);
+		}
+		else if (!(temp instanceof GeneralVarTagBinding))
+		{
+			throw new RuntimeException(tag.getClass() + " 必须是TagVarBinding的实现类");
+		}
+
+		this.tag = ((GeneralVarTagBinding)temp);
+		tag.init(ctx, args, st);
+
 	}
-
-	public void init(Context ctx, Object[] args, Statement st) {
-		this.ctx = ctx;
-		this.bw = ctx.byteWriter;
-		this.gt = ctx.gt;
-		this.args = args;
-		this.bs = st;
-		this.parent = ctx.getCurrentTag();
-		ctx.setCurrentTag(this);
-	}
-
-	public Tag getParent() {
-		return parent;
-	}
-
-	public Object[] getArgs() {
-		return this.args;
-	}
-
 
 }

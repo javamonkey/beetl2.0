@@ -32,9 +32,9 @@ import java.util.Map.Entry;
 
 import org.beetl.core.BodyContent;
 import org.beetl.core.Resource;
-import org.beetl.core.Tag;
 import org.beetl.core.Template;
 import org.beetl.core.exception.BeetlException;
+import org.beetl.core.tag.Tag;
 
 /**
  * 同layoutTag，采用html方式布局

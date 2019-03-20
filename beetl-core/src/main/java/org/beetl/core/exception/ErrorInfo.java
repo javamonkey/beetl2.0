@@ -283,4 +283,14 @@ public class ErrorInfo
 		ErrorInfo.errorLocalMap = errorLocalMap;
 	}
 
+	@Override
+	public String toString() {
+		return "ErrorInfo{" +
+				"errorTokenText='" + errorTokenText + '\'' +
+				", errorTokenLine=" + errorTokenLine +
+				", msg='" + msg + '\'' +
+				", cause=" + cause +
+				", errorCode='" + errorCode + '\'' +
+				'}';
+	}
 }

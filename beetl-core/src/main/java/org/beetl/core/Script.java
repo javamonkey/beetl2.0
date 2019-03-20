@@ -65,7 +65,7 @@ public class  Script<T> {
 		this.program = program;
 		this.cf = cf;
 		this.gt = gt;
-		ctx = new Context();
+		ctx = new Context(gt);
 	}
 
 	/**

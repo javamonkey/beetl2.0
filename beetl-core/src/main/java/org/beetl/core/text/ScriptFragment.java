@@ -2,6 +2,7 @@ package org.beetl.core.text;
 
 public class ScriptFragment extends Fragment {
 
+
     Source source = null;
     StringBuilder script = new StringBuilder();
 
@@ -20,8 +21,10 @@ public class ScriptFragment extends Fragment {
         while (!source.isEof()&&!source.isScriptEnd()) {
         	script.append(source.consumeAndGet());
         }
+
         if (source.sd.endIsCr) {
-            script.append(TextParser.systemCr);
+            //回车放到脚本里，添加一个换行符
+            script.append(TextParser.cr1);
         }
 
         if (source.isEof()) {
@@ -30,6 +33,13 @@ public class ScriptFragment extends Fragment {
         }
         return this.findNext();
 
+    }
+
+    @Override
+    protected void appendLine(int num) {
+        for(int i=0;i<num;i++) {
+            script.append("\n");
+        }
     }
 
 }

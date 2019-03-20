@@ -30,6 +30,8 @@ package org.beetl.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.beetl.core.tag.Tag;
+
 /**
  * 模板渲染的Context
  * @author joelli
@@ -72,13 +74,14 @@ public class Context {
 	public boolean byteOutputMode;
 
 	/**
-	 *  当前会话相关变量全局变量和临时变量都放在数组里，全局变量放在前面
+	 *  当前会话相关变量全局变量和临时变量都放在数组里，全局变量放在前面，Beetl并没有使用Map来存放变量名和值，世为了提高性能
 		
 	 */
 	public Object[] vars;
 
 	/**
-	 * 这些变量来自于ProgrameMeta，模板的静态文本
+	 * 这些变量来自于ProgrameMeta，模板的静态文本，TODO，能否改成SoftRefernce，避免占用较大内存？
+	 * 或者采用其他机制
 	 */
 	public Object[] staticTextArray;
 
@@ -125,7 +128,9 @@ public class Context {
 	 * @param value
 	 */
 	public void set(String key, Object value) {
-		if (globalVar == null) globalVar = new HashMap<String, Object>();
+		if (globalVar == null) {
+			globalVar = new HashMap<String, Object>();
+		}
 		globalVar.put(key, value);
 	}
 
@@ -152,7 +157,9 @@ public class Context {
 	public void setCurrentTag(Tag tag) {
 		Map map = (Map) getGlobal("$page");
 		if (map == null) {
-			return;
+			map = new HashMap();
+			this.set("$page",map);
+
 		}
 		map.put("$parentTag", tag);
 	}

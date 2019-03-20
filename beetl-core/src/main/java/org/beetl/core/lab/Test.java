@@ -2,7 +2,6 @@ package org.beetl.core.lab;
 
 
 import org.beetl.core.Configuration;
-import org.beetl.core.ContextBuffer;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Template;
 import org.beetl.core.resource.ClasspathResourceLoader;
@@ -16,10 +15,8 @@ import org.beetl.core.resource.ClasspathResourceLoader;
 public class Test {
 	public static void main(String[] args) throws Exception {
 
-		ContextBuffer.isSoft = true;
-		ContextBuffer.MAX_SIZE = 1024 * 10;
-		ContextBuffer.BYTE_MAX_SIZE = ContextBuffer.MAX_SIZE * 4;
-		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("org/beetl/core/lab/");
+		
+		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("lab/");
 		Configuration cfg = Configuration.defaultConfiguration();
 		cfg.setEngine("org.beetl.core.engine.OnlineTemplateEngine");
 		cfg.setDirectByteOutput(true);
@@ -34,7 +31,8 @@ public class Test {
 		cfg.setPlaceholderEnd2("}");
 		cfg.initOther();
 		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
-
+		gt.registerTag("table",TableTag.class);
+		gt.registerTag("col",ColTag.class);
 
 		for (int i = 0; i < 1; i++) {
 

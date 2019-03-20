@@ -2,7 +2,7 @@ package org.beetl.ext.tag;
 
 import java.io.IOException;
 
-import org.beetl.core.Tag;
+import org.beetl.core.tag.Tag;
 
 public class TrimHtml extends Tag
 {

@@ -38,6 +38,8 @@ public class BeetlKit {
 		
 	}
 
+	private static Map<String,Object> emptyMap =  new HashMap<String, Object>();
+
 	/* 模板部分 */
 
 	/** 渲染模板
@@ -72,7 +74,7 @@ public class BeetlKit {
 	 * @throws ScriptEvalError
 	 */
 	public static Map execute(String script, Map<String, Object> paras)  throws ScriptEvalError{
-		 return gt.runScript(script, Collections.emptyMap());
+		 return gt.runScript(script, emptyMap);
 	}
 
 	
@@ -83,7 +85,7 @@ public class BeetlKit {
 	 * @throws ScriptEvalError 
 	 */
 	public static Map execute(String script) throws ScriptEvalError {
-		return gt.runScript(script, Collections.emptyMap());
+		return gt.runScript(script, new HashMap<String, Object>());
 
 	}
 

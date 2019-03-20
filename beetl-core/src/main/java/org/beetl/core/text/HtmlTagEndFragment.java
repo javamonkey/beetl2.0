@@ -7,6 +7,7 @@ import org.beetl.core.statement.GrammarToken;
 
 public class HtmlTagEndFragment extends Fragment {
 	HTMLTagContentParser html = null;
+	StringBuilder script = new StringBuilder();
     public HtmlTagEndFragment(Source source) {
         super(source);
         // TODO Auto-generated constructor stub
@@ -16,7 +17,7 @@ public class HtmlTagEndFragment extends Fragment {
     public StringBuilder getScript() {
     	String tagName = null;
     	Stack<String> htmlTagStack = source.htmlTagConfig.htmlTagStack;
-    	StringBuilder script = new StringBuilder();
+
 		try
 		{
 			tagName = html.getTagName();
@@ -60,5 +61,12 @@ public class HtmlTagEndFragment extends Fragment {
 		source.move(html.index);
 		return super.findNext();
     }
+
+	@Override
+	protected void appendLine(int num) {
+		for(int i=0;i<num;i++) {
+			script.append("\n");
+		}
+	}
 
 }

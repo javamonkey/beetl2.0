@@ -8,7 +8,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * 文本解析成beetl脚本,按照各种定位符，html标记解析成对应的Fragment，然后再格式化，最后输出成beetl脚本
+ * @author xiandafu
+ *
+ */
 public class TextParser {
 
 	Map<Integer, String> textVars = new HashMap<Integer, String>();
@@ -17,12 +21,12 @@ public class TextParser {
 	ScriptDelimeter sd;
 	Source source = null;
 	StringBuilder script = new StringBuilder(64);
-	// 操作系统可能出现的回车换行符号
-	static char[] cr1 = "\n".toCharArray();
-	static char[] cr2 = "\r\n".toCharArray();
-	static char[] cr3 = "\r".toCharArray();
-	static char[] systemCr = System.getProperty("line.separator").toCharArray();
-	public static String systemCrStr = System.getProperty("line.separator");
+	//脚本的回车符，antlr解析会忽略掉
+	public final static char cr1 = '\n';
+	// 操作系统回车换行符号
+	public final static String systemCrStr = System.getProperty("line.separator");
+	 
+	
 	List<Fragment> list = new LinkedList<Fragment>();
 	HtmlTagConfig htmlTagConfig = null;
 
@@ -103,7 +107,9 @@ public class TextParser {
 		ScriptDelimeter sd = new ScriptDelimeter("@".toCharArray(), null, "<%".toCharArray(), "%>".toCharArray());
 
 		HtmlTagConfig htmlConfig = new HtmlTagConfig();
-		String text = "<#block name=\"block123\"><#input></#input></#block>";
+//		String text = "<%a=1;%>\nabcd";
+//		String text = "<%a=1;%>\n<%a=1;%>";
+		String text = "abc\n<%a=1;%>\n<#a id='1' ck='3'>\nabcd\n</#a>";
 		StringReader str = new StringReader(text);
 		TextParser textParser = new TextParser(pd, sd, htmlConfig);
 		textParser.doParse(str);

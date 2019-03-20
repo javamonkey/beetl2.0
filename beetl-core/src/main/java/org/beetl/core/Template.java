@@ -247,7 +247,7 @@ public class Template {
 
 
 	/**
-	 * 如果创建模板并没有渲染，调用render方法，这里可以回收，但这不符合逻辑，没有关系，buffer每次都回被创建，影响性能
+	 * 如果创建模板并没有渲染，调用render方法，这里可以回收，以防万一，try finally里已经回收了
 	 * @throws Throwable
 	 */
 	protected void finalize() throws Throwable {

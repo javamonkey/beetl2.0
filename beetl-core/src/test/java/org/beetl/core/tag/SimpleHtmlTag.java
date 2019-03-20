@@ -3,8 +3,6 @@ package org.beetl.core.tag;
 import java.io.IOException;
 import java.util.Map;
 
-import org.beetl.core.Tag;
-
 public class SimpleHtmlTag extends Tag
 {
 

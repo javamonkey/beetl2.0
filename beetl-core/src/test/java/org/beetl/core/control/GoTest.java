@@ -19,11 +19,6 @@ public class GoTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/control/go/continue_expected.html"), str);
 
-		t = gt.getTemplate("/control/go/continue_template.html");
-		this.bind(t, "dataList", data);
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/control/go/continue_expected.html"), str);
-
 	}
 
 	@Test

@@ -18,10 +18,6 @@ public class generalForTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/control/generalFor/general_expected.html"), str);
 
-		t = gt.getTemplate("/control/generalFor/general_template.html");
-		//this.bind(t, "dataList", data);
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/control/generalFor/general_expected.html"), str);
 
 	}
 
@@ -32,11 +28,6 @@ public class generalForTest extends BasicTestCase
 
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/control/generalFor/general_break_expected.html"), str);
-
-		//		t = gt.getTemplate("/control/generalFor/general_break_template.html");
-		//		//this.bind(t, "dataList", data);
-		//		str = t.render();
-		//		AssertJUnit.assertEquals(this.getFileContent("/control/generalFor/general_break_expected.html"), str);
 
 	}
 

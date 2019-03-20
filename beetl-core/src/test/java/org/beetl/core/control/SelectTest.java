@@ -18,10 +18,6 @@ public class SelectTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/control/select/select_expected.html"), str);
 
-		t = gt.getTemplate("/control/select/select_template.html");
-		this.bind(t, "dataList", data);
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/control/select/select_expected.html"), str);
 
 	}
 

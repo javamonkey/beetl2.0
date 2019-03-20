@@ -13,8 +13,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
-      <excludeFolder url="file://$MODULE_DIR$/src/test/java" />
-      <excludeFolder url="file://$MODULE_DIR$/src/test/resources" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -25,9 +23,7 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.9.6" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.fasterxml.jackson.core:jackson-core:2.9.6" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.alibaba:fastjson:1.2.30" level="project" />
-    <orderEntry type="library" name="Maven: org.antlr:antlr4-runtime:4.2" level="project" />
-    <orderEntry type="library" name="Maven: org.abego.treelayout:org.abego.treelayout.core:1.0.1" level="project" />
-    <orderEntry type="library" name="Maven: org.antlr:antlr4-annotations:4.2" level="project" />
+    <orderEntry type="library" name="Maven: org.antlr:antlr4-runtime:4.7.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.ibeetl:btjson:0.94" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-hibernate4:2.5.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.code.gson:gson:2.3.1" level="project" />

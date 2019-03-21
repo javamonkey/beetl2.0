@@ -10,6 +10,7 @@ public class Source {
     TextParser parser;
     int curLine = 0;
     boolean isSupportHtmlTag = false;
+    int lastCrSize = 0;
 
     public Source(char[] cs) {
         this.cs = cs;
@@ -90,6 +91,7 @@ public class Source {
         }
     }
 
+
     public boolean isMatch(char[] str) {
         int cur = p;
         for (int i = 0; i < str.length; i++) {
@@ -100,6 +102,16 @@ public class Source {
             }
         }
         return true;
+    }
+
+    public boolean isCrStart(){
+        int crLength = isMatchCR();
+        if(crLength==0){
+            return false;
+        }
+        this.lastCrSize = crLength;
+        return true;
+
     }
 
     public int isMatchCR(){

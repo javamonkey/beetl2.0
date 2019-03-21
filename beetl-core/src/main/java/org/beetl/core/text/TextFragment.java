@@ -5,9 +5,7 @@ import java.util.Set;
 
 public class TextFragment extends Fragment {
 	StringBuilder text = new StringBuilder();
-
-	//TODO 改成数组
-	Set<Integer> spacesCheck = new HashSet<Integer>();
+	boolean hasText = false;
 
 	public TextFragment(Source source) {
 		super(source);
@@ -38,39 +36,30 @@ public class TextFragment extends Fragment {
 	public Fragment consumeAndReturnNext() {
 		int matchCr = 0;
 		while (!source.isEof()) {
+
 			if (source.isPlaceHolderStart()) {
 				this.setEndLine();
 				return new PlaceHolderFragment(source);
 			} else if (source.isScriptStart()) {
 				this.setEndLine();
-				
 				ScriptFragment scriptFragement =  new ScriptFragment(source);
-				//在脚本内容里添加换行符
-				int crNum = (this.endLine-this.startLine)+(this.endWithCr()?1:0);
-				scriptFragement.appendLine(crNum);
-
 				return scriptFragement;
 			} else if (source.isHtmlTagStart()) {
 				this.setEndLine();
 				HtmlTagStartFragment htmlTagStart = new HtmlTagStartFragment(source);
-				int crNum = (this.endLine-this.startLine)+(this.endWithCr()?1:0);
-				htmlTagStart.appendLine(crNum);
 				return htmlTagStart;
 
 			} else if (source.isHtmlTagEnd()) {
 				this.setEndLine();
 				HtmlTagEndFragment htmlTagEndFragment = new HtmlTagEndFragment(source);
-				int crNum = (this.endLine-this.startLine)+(this.endWithCr()?1:0);
-				htmlTagEndFragment.appendLine(crNum);
 				return htmlTagEndFragment;
-			} else if((matchCr=source.isMatchCR())!=0){
-				text.append(source.consumeAndGetCR(matchCr));
+			} else if(source.isCrStart()){
+				CRFragment crFragment = new CRFragment(source);
 			}
 			else {
 				char c = source.consumeAndGet();
-				//效率低，想个办法，总不能每读一个字符，就判断一下吧 TODO3
-				if(!isSpace(c)&&!spacesCheck.contains(source.curLine)){
-					spacesCheck.add(source.curLine);
+				if(!this.isSpace(c)&&!hasText){
+					hasText = true;
 				}
 				text.append(c);
 			}
@@ -80,36 +69,8 @@ public class TextFragment extends Fragment {
 		return null;
 	}
 
-	public boolean onlySpaceInLine(int line){
-		return !this.spacesCheck.contains(line);
-	}
-	protected void setEndLine() {
-		
-		if(text.length()<0){
-			return ;
-		}
-		if(endWithCr()) {
-			this.endLine = source.curLine-1;;
-		}else {
-			this.endLine = source.curLine;
-		}
-		
 
-	}
 	
-	protected boolean endWithCr() {
-		if(text.length()==0){
-			return false;
-		}
-		char lastChar = text.charAt(text.length()-1);
-		if(lastChar=='\n'||lastChar=='\r'){
-			return true;
-		}else {
-			return false;
-		}
-		
-		
-	}
 
 	/**
 	 * 去掉文本部分用于格式化的部分，是文本最后一行的

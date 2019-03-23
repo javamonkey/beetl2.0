@@ -62,11 +62,6 @@ public class HtmlTagEndFragment extends Fragment {
 		return super.findNext();
     }
 
-	@Override
-	protected void appendLine(int num) {
-		for(int i=0;i<num;i++) {
-			script.append("\n");
-		}
-	}
+
 
 }

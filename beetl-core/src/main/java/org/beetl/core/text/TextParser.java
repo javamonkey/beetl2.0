@@ -4,10 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 /**
  * 文本解析成beetl脚本,按照各种定位符，html标记解析成对应的Fragment，然后再格式化，最后输出成beetl脚本
  * @author xiandafu
@@ -27,7 +25,7 @@ public class TextParser {
 	public final static String systemCrStr = System.getProperty("line.separator");
 	 
 	
-	List<Fragment> list = new LinkedList<Fragment>();
+	List<Fragment> list = new ArrayList<Fragment>();
 	HtmlTagConfig htmlTagConfig = null;
 
 	public TextParser(PlaceHolderDelimeter pd, ScriptDelimeter sd) {
@@ -80,8 +78,32 @@ public class TextParser {
 	 * 
 	 */
 	protected void scan2() {
+
+	    int baseLine = 0;
+	    int i = 0;
+	    int size = list.size();
+	    int lineStartIndex = 0;
+
+	    while(i<size){
+	    	Fragment fragment = list.get(i);
+	    	if(fragment instanceof CRFragment){
+	    		flag(list,lineStartIndex,i);
+	    		i++;
+	    		continue;
+			}
+	    	if(fragment.startLine!=baseLine){
+				lineStartIndex = i;
+				baseLine = fragment.startLine;
+				i++;
+			}
+		}
 		FragmentFormmater ff = new FragmentFormmater(list);
 		ff.format();
+
+	}
+
+	protected void flag(List<Fragment> list,int start,int end){
+
 
 	}
 

@@ -15,10 +15,6 @@ public class CRFragment extends Fragment {
         return new StringBuilder(cr.length).append(cr);
     }
 
-    @Override
-    protected void appendLine(int num) {
-        throw new IllegalStateException();
-    }
 
     @Override
     public Fragment consumeAndReturnNext() {

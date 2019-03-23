@@ -160,11 +160,6 @@ public class HtmlTagStartFragment extends Fragment {
 
 	}
 
-	@Override
-	protected void appendLine(int num) {
-		for(int i=0;i<num;i++) {
-			script.append("\n");
-		}
-	}
+
 
 }

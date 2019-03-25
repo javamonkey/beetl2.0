@@ -92,21 +92,29 @@ public abstract class Resource
 	{
 		// bug, 混合回车符号也许定位不到准确行数？
 		String lineSeparator = System.getProperty("line.separator");
-		Reader br = openReader();
-		BufferedReader reader = new BufferedReader(br);
-		String line = null;
-		StringBuilder sb = new StringBuilder();
-		int index = 0;
-		while((line=reader.readLine())!=null){
-			index++;
-			if(index>=start&&index<=end){
-				sb.append(line).append(lineSeparator);
-				if(index==end){
-					break;
+		Reader br  = null;
+		try {
+			br = openReader();
+			BufferedReader reader = new BufferedReader(br);
+			String line = null;
+			StringBuilder sb = new StringBuilder();
+			int index = 0;
+			while((line=reader.readLine())!=null){
+				index++;
+				if(index>=start&&index<=end){
+					sb.append(line).append(lineSeparator);
+					if(index==end){
+						break;
+					}
 				}
 			}
+			return sb.toString();
+		}finally {
+			if(br!=null) {
+				br.close();
+			}
 		}
-		return sb.toString();
+		
 
 	
 

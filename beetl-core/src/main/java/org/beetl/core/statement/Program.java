@@ -36,7 +36,7 @@ import org.beetl.core.Resource;
  * @author joelli
  *
  */
-public class Program
+public class Program 
 {
 	// 模板的所有脚本语句
 	public ProgramMetaData metaData = null;

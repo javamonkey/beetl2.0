@@ -28,13 +28,11 @@
 package org.beetl.ext.fn;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Reader;
 
 import org.beetl.core.Context;
 import org.beetl.core.Function;
 import org.beetl.core.Resource;
-import org.beetl.core.exception.BeetlException;
 
 /**
  * ${includeStatic(file)}
@@ -57,7 +55,13 @@ public class PrintFile implements Function
 			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
-		} 
+		} finally {
+			try {
+				reader.close();
+			} catch (IOException e) {
+				
+			}
+		}
 		
 		return "";
 

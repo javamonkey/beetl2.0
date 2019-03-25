@@ -642,6 +642,7 @@ public class GroupTemplate
 		Transformator sf = null;
 		try
 		{
+			//transform方法内部已经关闭
 			Reader reader = res.openReader();
 			if(isTextTemplate){
 				sf = new Transformator(conf.placeholderStart, conf.placeholderEnd, conf.statementStart, conf.statementEnd);
@@ -700,9 +701,10 @@ public class GroupTemplate
 	private Program loadScript(Resource res)
 	{
 
+		Reader scriptReader  = null;
 		try
 		{
-			Reader scriptReader = res.openReader();
+			scriptReader = res.openReader();
 			Program program = engine.createProgram(res, scriptReader, Collections.EMPTY_MAP,
 					System.getProperty("line.separator"), this);
 			return program;
@@ -715,6 +717,14 @@ public class GroupTemplate
 			ex.pushResource(res);
 			ep.setException(ex);
 			return ep;
+		}finally {
+			if(scriptReader!=null) {
+				try {
+					scriptReader.close();
+				} catch (IOException e) {
+					
+				}
+			}
 		}
 
 	}

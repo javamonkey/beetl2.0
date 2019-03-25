@@ -25,7 +25,8 @@ public class TextParser {
 	public final static String systemCrStr = System.getProperty("line.separator");
 	 
 	
-	List<Fragment> list = new ArrayList<Fragment>();
+//	List<Fragment> list = new ArrayList<Fragment>();
+	SourceFragement sourceFragement = new SourceFragement();
 	HtmlTagConfig htmlTagConfig = null;
 
 	public TextParser(PlaceHolderDelimeter pd, ScriptDelimeter sd) {
@@ -41,10 +42,10 @@ public class TextParser {
 	public void doParse(Reader orginal) throws IOException {
 
 		scan1(orginal);
-		scan2();
-		for (Fragment f : list) {
-			script.append(f.getScript());
-		}
+//		scan2();
+//		for (Fragment f : list) {
+//			script.append(f.getScript());
+//		}
 
 	}
 
@@ -63,11 +64,11 @@ public class TextParser {
 		source = new Source(cs);
 		source.init(this, pd, sd, htmlTagConfig);
 		Fragment test = new TextFragment(source);
-		list.add(test);
+		sourceFragement.add(test);
 		Fragment next = test.consumeAndReturnNext();
 		while (next != null) {
 			test = next.consumeAndReturnNext();
-			list.add(next);
+			sourceFragement.add(next);
 			next = test;
 		}
 
@@ -77,30 +78,30 @@ public class TextParser {
 	 * 格式化，把有些TextFragment用于格式化的静态内容删除,原则是在同一行的text和script，如果text只有空或者tab，则认为是控制符
 	 * 
 	 */
-	protected void scan2() {
-
-	    int baseLine = 0;
-	    int i = 0;
-	    int size = list.size();
-	    int lineStartIndex = 0;
-
-	    while(i<size){
-	    	Fragment fragment = list.get(i);
-	    	if(fragment instanceof CRFragment){
-	    		flag(list,lineStartIndex,i);
-	    		i++;
-	    		continue;
-			}
-	    	if(fragment.startLine!=baseLine){
-				lineStartIndex = i;
-				baseLine = fragment.startLine;
-				i++;
-			}
-		}
-		FragmentFormmater ff = new FragmentFormmater(list);
-		ff.format();
-
-	}
+//	protected void scan2() {
+//
+//	    int baseLine = 0;
+//	    int i = 0;
+//	    int size = list.size();
+//	    int lineStartIndex = 0;
+//
+//	    while(i<size){
+//	    	Fragment fragment = list.get(i);
+//	    	if(fragment instanceof CRFragment){
+//	    		flag(list,lineStartIndex,i);
+//	    		i++;
+//	    		continue;
+//			}
+//	    	if(fragment.startLine!=baseLine){
+//				lineStartIndex = i;
+//				baseLine = fragment.startLine;
+//				i++;
+//			}
+//		}
+//		FragmentFormmater ff = new FragmentFormmater(list);
+//		ff.format();
+//
+//	}
 
 	protected void flag(List<Fragment> list,int start,int end){
 

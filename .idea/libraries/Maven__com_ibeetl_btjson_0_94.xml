@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.ibeetl:btjson:0.94">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ibeetl/btjson/0.94/btjson-0.94.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ibeetl/btjson/0.94/btjson-0.94-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ibeetl/btjson/0.94/btjson-0.94-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

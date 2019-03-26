@@ -9,25 +9,49 @@ import java.util.List;
 public class SourceFragement {
     List<Fragment> list = new ArrayList<Fragment>();
     int currentLine = 0;
-    int currentIndx = 0;
+
     int startLineIndex = 0;
 
     public void add(Fragment fr){
         list.add(fr);
-        currentIndx++;
         if(fr instanceof  CRFragment){
-            trimSpacce();
+            trimSpace();
+            startLineIndex=list.size();
         }
-        if(fr.endLine)
 
+    }
+
+    /**
+     *
+     */
+    public void merge(){
+        for(int i=0;i<list.size();i++){
+            Fragment fr = list.get(i);
+            if(fr.status==FragmentStatus.del){
+                continue;
+            }
+            if(!(fr instanceof  TextFragment) ){
+                continue;
+            }
+
+            //往前看，合并CR和TextFragment
+            for(int z = i;z<list.size();z++){
+                Fragment nextFr = list.get(z);
+                if(nextFr instanceof  ScriptFragment || nextFr instanceof  PlaceHolderFragment){
+                    i=z;
+                    break;
+                }
+
+            }
+        }
     }
 
     /**
      * 格式化
      */
-    protected  void trimSpacce(){
+    protected  void trimSpace(){
         boolean hasScript = false;
-        for(int i=startLineIndex;i<currentIndx;i++){
+        for(int i=startLineIndex;i<list.size();i++){
             Fragment fr = list.get(i);
             if(fr instanceof CRFragment){
                 continue;
@@ -42,20 +66,27 @@ public class SourceFragement {
                 if(!textFragment.hashSpace()){
                     return ;
                 }
-            }else {
-                hasScript = true;
             }
+            //其他情况
+            hasScript = true;
         }
 
         if(!hasScript){
             return ;
         }
-        for(int i=startLineIndex;i<currentIndx;i++){
-            Fragment fr = list.get(startLineIndex);
+
+        //脚本和文本混合
+        Fragment lastScript = null;
+        for(int i=startLineIndex;i<list.size();i++){
+            Fragment fr = list.get(i);
             if(fr instanceof TextFragment){
                 fr.status = FragmentStatus.del;
             }else if(fr instanceof  CRFragment){
                 fr.status = FragmentStatus.del;
+                lastScript.appendCr();
+
+            }else{
+                lastScript = fr;
             }
         }
 

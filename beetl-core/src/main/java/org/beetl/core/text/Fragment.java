@@ -18,6 +18,8 @@ public abstract class Fragment {
 
     public abstract Fragment consumeAndReturnNext();
 
+    public abstract void appendCr();
+
     protected Fragment findNext() {
         if (source.isScriptStart()) {
             this.setEndLine();

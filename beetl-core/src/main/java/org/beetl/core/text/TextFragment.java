@@ -1,8 +1,5 @@
 package org.beetl.core.text;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class TextFragment extends Fragment {
 	StringBuilder text = new StringBuilder();
 	boolean hasText = false;
@@ -11,6 +8,20 @@ public class TextFragment extends Fragment {
 		super(source);
 
 	}
+	
+	
+	 
+	public void appendTextFragment(Fragment fr) {
+		if(fr instanceof TextFragment) {
+			text.append(fr.getScript());
+		}else if(fr instanceof CRFragment) {
+			text.append(((CRFragment) fr).cr);
+		}else {
+			throw new IllegalArgumentException(fr.getClass().getName());
+		}
+	}
+	
+	
 
 	@Override
 	public StringBuilder getScript() {
@@ -38,7 +49,7 @@ public class TextFragment extends Fragment {
 				return new PlaceHolderFragment(source);
 			} else if (source.isScriptStart()) {
 				this.setEndLine();
-				ScriptFragment scriptFragement =  new ScriptFragment(source);
+				ScriptBlockFragment scriptFragement =  new ScriptBlockFragment(source);
 				return scriptFragement;
 			} else if (source.isHtmlTagStart()) {
 				this.setEndLine();
@@ -78,6 +89,8 @@ public class TextFragment extends Fragment {
 		}
 		return  true;
 	}
+	
+	
 
 
 }

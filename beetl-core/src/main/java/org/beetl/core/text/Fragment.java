@@ -18,12 +18,12 @@ public abstract class Fragment {
 
     public abstract Fragment consumeAndReturnNext();
 
-    public abstract void appendCr();
+
 
     protected Fragment findNext() {
         if (source.isScriptStart()) {
             this.setEndLine();
-            return new ScriptFragment(source);
+            return new ScriptBlockFragment(source);
         } else if (source.isPlaceHolderStart()) {
             this.setEndLine();
             return new PlaceHolderFragment(source);

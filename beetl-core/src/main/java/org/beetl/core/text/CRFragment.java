@@ -24,7 +24,7 @@ public class CRFragment extends Fragment {
             if (source.isPlaceHolderStart()) {
                 return new PlaceHolderFragment(source);
             } else if (source.isScriptStart()) {
-                ScriptFragment scriptFragement = new ScriptFragment(source);
+                ScriptBlockFragment scriptFragement = new ScriptBlockFragment(source);
                 return scriptFragement;
             } else if (source.isHtmlTagStart()) {
                 HtmlTagStartFragment htmlTagStart = new HtmlTagStartFragment(source);
@@ -41,4 +41,6 @@ public class CRFragment extends Fragment {
         }
         return null;
     }
+    
+ 
 }

@@ -7,10 +7,9 @@ import java.util.Stack;
 import org.beetl.core.exception.HTMLTagParserException;
 import org.beetl.core.statement.GrammarToken;
 
-public class HtmlTagStartFragment extends Fragment {
+public class HtmlTagStartFragment extends ScriptFragment {
 	HTMLTagContentParser html = null;
-	StringBuilder script = new StringBuilder();
-
+	
 	public HtmlTagStartFragment(Source source) {
 		super(source);
 	}
@@ -158,6 +157,11 @@ public class HtmlTagStartFragment extends Fragment {
 		}
 		return sb.toString();
 
+	}
+	
+	public void appendCr() {
+		script.append(TextParser.cr1);
+		
 	}
 
 

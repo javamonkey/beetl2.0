@@ -1,12 +1,10 @@
 package org.beetl.core.text;
 
-public class ScriptFragment extends Fragment {
+public class ScriptBlockFragment extends ScriptFragment {
 
 
-    Source source = null;
-    StringBuilder script = new StringBuilder();
 
-    public ScriptFragment(Source source) {
+    public ScriptBlockFragment(Source source) {
         super(source);
         this.source = source;
     }
@@ -28,6 +26,11 @@ public class ScriptFragment extends Fragment {
         return this.findNext();
 
     }
+    
+	public void appendCr() {
+		script.append(TextParser.cr1);
+		
+	}
 
 
 

@@ -5,12 +5,10 @@ import java.util.Stack;
 import org.beetl.core.exception.HTMLTagParserException;
 import org.beetl.core.statement.GrammarToken;
 
-public class HtmlTagEndFragment extends Fragment {
+public class HtmlTagEndFragment extends ScriptFragment {
 	HTMLTagContentParser html = null;
-	StringBuilder script = new StringBuilder();
     public HtmlTagEndFragment(Source source) {
         super(source);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -61,6 +59,11 @@ public class HtmlTagEndFragment extends Fragment {
 		source.move(html.index);
 		return super.findNext();
     }
+
+	public void appendCr() {
+		script.append(TextParser.cr1);
+		
+	}
 
 
 

@@ -4,7 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 文本解析成beetl脚本,按照各种定位符，html标记解析成对应的Fragment，然后再格式化，最后输出成beetl脚本
@@ -42,10 +43,13 @@ public class TextParser {
 	public void doParse(Reader orginal) throws IOException {
 
 		scan1(orginal);
-//		scan2();
-//		for (Fragment f : list) {
-//			script.append(f.getScript());
-//		}
+		sourceFragement.merge();
+		for (Fragment f : sourceFragement.list) {
+			if(f.status==FragmentStatus.del) {
+				continue;
+			}
+			script.append(f.getScript());
+		}
 
 	}
 
@@ -74,39 +78,9 @@ public class TextParser {
 
 	}
 
-	/**
-	 * 格式化，把有些TextFragment用于格式化的静态内容删除,原则是在同一行的text和script，如果text只有空或者tab，则认为是控制符
-	 * 
-	 */
-//	protected void scan2() {
-//
-//	    int baseLine = 0;
-//	    int i = 0;
-//	    int size = list.size();
-//	    int lineStartIndex = 0;
-//
-//	    while(i<size){
-//	    	Fragment fragment = list.get(i);
-//	    	if(fragment instanceof CRFragment){
-//	    		flag(list,lineStartIndex,i);
-//	    		i++;
-//	    		continue;
-//			}
-//	    	if(fragment.startLine!=baseLine){
-//				lineStartIndex = i;
-//				baseLine = fragment.startLine;
-//				i++;
-//			}
-//		}
-//		FragmentFormmater ff = new FragmentFormmater(list);
-//		ff.format();
-//
-//	}
-
-	protected void flag(List<Fragment> list,int start,int end){
 
 
-	}
+
 
 	public StringBuilder getScript() {
 		return script;
@@ -132,7 +106,7 @@ public class TextParser {
 		HtmlTagConfig htmlConfig = new HtmlTagConfig();
 //		String text = "<%a=1;%>\nabcd";
 //		String text = "<%a=1;%>\n<%a=1;%>";
-		String text = "<% var a=1%>\n${abc}";
+		String text ="a   <% var a=1%>\n${abc}";
 		StringReader str = new StringReader(text);
 		TextParser textParser = new TextParser(pd, sd, htmlConfig);
 		textParser.doParse(str);

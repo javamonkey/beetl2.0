@@ -8,8 +8,6 @@ import java.util.List;
  */
 public class SourceFragement {
     List<Fragment> list = new ArrayList<Fragment>();
-    int currentLine = 0;
-
     int startLineIndex = 0;
 
     public void add(Fragment fr){
@@ -20,6 +18,8 @@ public class SourceFragement {
         }
 
     }
+    
+    
 
     /**
      *
@@ -33,14 +33,19 @@ public class SourceFragement {
             if(!(fr instanceof  TextFragment) ){
                 continue;
             }
-
+            TextFragment text = (TextFragment)fr;
+            
             //往前看，合并CR和TextFragment
             for(int z = i;z<list.size();z++){
                 Fragment nextFr = list.get(z);
-                if(nextFr instanceof  ScriptFragment || nextFr instanceof  PlaceHolderFragment){
+                if(nextFr instanceof  ScriptBlockFragment || nextFr instanceof  PlaceHolderFragment){
                     i=z;
                     break;
                 }
+                nextFr.status = FragmentStatus.del;
+                text.appendTextFragment(nextFr);
+                
+                
 
             }
         }
@@ -83,7 +88,7 @@ public class SourceFragement {
                 fr.status = FragmentStatus.del;
             }else if(fr instanceof  CRFragment){
                 fr.status = FragmentStatus.del;
-                lastScript.appendCr();
+                ((ScriptFragment)lastScript).appendCr();
 
             }else{
                 lastScript = fr;

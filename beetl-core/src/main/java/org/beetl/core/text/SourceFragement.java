@@ -9,14 +9,33 @@ import java.util.List;
 public class SourceFragement {
     List<Fragment> list = new ArrayList<Fragment>();
     int startLineIndex = 0;
-
+    int startLine = 0;
     public void add(Fragment fr){
         list.add(fr);
         if(fr instanceof  CRFragment){
             trimSpace();
-            startLineIndex=list.size();
+            moveNext(fr);
+            return ;
         }
 
+        if(fr.endLine!=startLine){
+            //跨行的script
+            trimSpace();
+            moveNext(fr);
+            return;
+        }
+
+
+
+    }
+
+    /**
+     * 下一次要比較的
+     * @param fr
+     */
+    protected  void moveNext(Fragment fr){
+        startLineIndex=list.size();
+        startLine=fr.endLine;
     }
     
     
@@ -27,7 +46,7 @@ public class SourceFragement {
     public void merge(){
         for(int i=0;i<list.size();i++){
             Fragment fr = list.get(i);
-            if(fr.status==FragmentStatus.del){
+            if(fr.getStatus()==FragmentStatus.del){
                 continue;
             }
             if(!(fr instanceof  TextFragment) ){
@@ -36,13 +55,13 @@ public class SourceFragement {
             TextFragment text = (TextFragment)fr;
             
             //往前看，合并CR和TextFragment
-            for(int z = i;z<list.size();z++){
+            for(int z = i+1;z<list.size();z++){
                 Fragment nextFr = list.get(z);
                 if(nextFr instanceof  ScriptBlockFragment || nextFr instanceof  PlaceHolderFragment){
                     i=z;
                     break;
                 }
-                nextFr.status = FragmentStatus.del;
+                nextFr.setStatus(FragmentStatus.del);
                 text.appendTextFragment(nextFr);
                 
                 
@@ -68,8 +87,10 @@ public class SourceFragement {
 
             if(fr instanceof TextFragment){
                 TextFragment textFragment = (TextFragment)fr;
-                if(!textFragment.hashSpace()){
+                if(!textFragment.onlySpace()){
                     return ;
+                }else{
+                    continue;
                 }
             }
             //其他情况
@@ -85,10 +106,12 @@ public class SourceFragement {
         for(int i=startLineIndex;i<list.size();i++){
             Fragment fr = list.get(i);
             if(fr instanceof TextFragment){
-                fr.status = FragmentStatus.del;
+                fr.setStatus(FragmentStatus.del);
             }else if(fr instanceof  CRFragment){
-                fr.status = FragmentStatus.del;
-                ((ScriptFragment)lastScript).appendCr();
+                if(lastScript!=null){
+                    fr.setStatus(FragmentStatus.del);
+                    ((ScriptFragment)lastScript).appendCr();
+                }
 
             }else{
                 lastScript = fr;

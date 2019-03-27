@@ -5,7 +5,7 @@ public abstract class Fragment {
     protected Source source;
     protected int startLine;
     protected int endLine;
-    protected FragmentStatus status = FragmentStatus.normal;
+    private FragmentStatus status = FragmentStatus.normal;
 
 
     public Fragment(Source source) {
@@ -53,8 +53,18 @@ public abstract class Fragment {
         this.endLine = source.curLine;
     }
 
+    public FragmentStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(FragmentStatus status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + " from " + this.startLine + " to " + this.endLine;
     }
+
+
 }

@@ -45,7 +45,7 @@ public class TextParser {
 		scan1(orginal);
 		sourceFragement.merge();
 		for (Fragment f : sourceFragement.list) {
-			if(f.status==FragmentStatus.del) {
+			if(f.getStatus()==FragmentStatus.del) {
 				continue;
 			}
 			script.append(f.getScript());
@@ -106,7 +106,7 @@ public class TextParser {
 		HtmlTagConfig htmlConfig = new HtmlTagConfig();
 //		String text = "<%a=1;%>\nabcd";
 //		String text = "<%a=1;%>\n<%a=1;%>";
-		String text ="a   <% var a=1%>\n${abc}";
+		String text ="  <% a=1;\n   cd%>  \n efg${abc}";
 		StringReader str = new StringReader(text);
 		TextParser textParser = new TextParser(pd, sd, htmlConfig);
 		textParser.doParse(str);

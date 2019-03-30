@@ -35,16 +35,16 @@ public class Source {
         return pd.matchStart();
     }
 
-    public boolean isPlaceHolderEnd() {
-        return pd.matchEnd();
+    public boolean isPlaceHolderEnd(StringBuilder script) {
+        return pd.matchEnd(script);
     }
 
     public boolean isScriptStart() {
         return sd.matchStart();
     }
 
-    public boolean isScriptEnd() {
-        return sd.matchEnd();
+    public boolean isScriptEnd(StringBuilder script) {
+        return sd.matchEnd(script);
     }
 
     public boolean isHtmlTagStart() {

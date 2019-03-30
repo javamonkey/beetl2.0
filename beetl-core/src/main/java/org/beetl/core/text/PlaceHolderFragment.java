@@ -22,7 +22,7 @@ public class PlaceHolderFragment extends Fragment {
             script = new StringBuilder("<#");
         }
 
-        while (!source.isPlaceHolderEnd()) {
+        while (!source.isPlaceHolderEnd(script)) {
             script.append(source.consumeAndGet());
         }
 

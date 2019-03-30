@@ -16,7 +16,7 @@ public class ScriptBlockFragment extends ScriptFragment {
 
     @Override
     public Fragment consumeAndReturnNext() {
-        while (!source.isEof()&&!source.isScriptEnd()) {
+        while (!source.isEof()&&!source.isScriptEnd(script)) {
         	script.append(source.consumeAndGet());
         }
         if (source.isEof()) {

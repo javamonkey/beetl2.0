@@ -37,7 +37,7 @@ public class Delimeter {
         return match;
     }
 
-    public boolean matchEnd() {
+    public boolean matchEnd(StringBuilder script) {
         if (isMatchFirstGroup) {
             return source.matchAndSKip(end);
         } else if (hasTwoGroup) {

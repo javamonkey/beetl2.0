@@ -23,18 +23,18 @@ public class ScriptDelimeter extends Delimeter {
     }
 
     @Override
-    public boolean matchEnd() {
+    public boolean matchEnd(StringBuilder script) {
         boolean match = false;
         if (isMatchFirstGroup) {
-            match = matchEnd(this.end);
+            match = matchEnd(this.end,script);
 
         } else if (this.hasTwoGroup) {
-            match = matchEnd(this.end1);
+            match = matchEnd(this.end1,script);
         }
         return match;
     }
 
-    private boolean matchEnd(char[] end){
+    private boolean matchEnd(char[] end,StringBuilder script){
         if (end != null) {
             return source.matchAndSKip(end);
         } else {
@@ -42,6 +42,7 @@ public class ScriptDelimeter extends Delimeter {
             if (matchCount!=0) {
                 endIsCr = true;
                 source.consumeAndGetCR(matchCount);
+                script.append("\n");
                 return true;
             }
         }

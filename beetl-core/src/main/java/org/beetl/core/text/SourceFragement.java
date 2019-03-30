@@ -35,7 +35,12 @@ public class SourceFragement {
      */
     protected  void moveNext(Fragment fr){
         startLineIndex=list.size();
-        startLine=fr.endLine;
+        if(fr instanceof CRFragment) {
+        	 startLine=fr.endLine+1;
+        }else {
+        	 startLine=fr.endLine;
+        }
+       
     }
     
     
@@ -44,6 +49,7 @@ public class SourceFragement {
      *
      */
     public void merge(){
+    	check();
         for(int i=0;i<list.size();i++){
             Fragment fr = list.get(i);
             if(fr.getStatus()==FragmentStatus.del){
@@ -68,6 +74,13 @@ public class SourceFragement {
 
             }
         }
+    }
+    
+    private void check() {
+    	if(startLineIndex!=list.size()) {
+    		//还有剩下的没有格式化
+    		trimSpace();
+    	}
     }
 
     /**

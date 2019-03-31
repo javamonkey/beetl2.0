@@ -29,10 +29,6 @@ public class NativeTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/nat/nat_attr_expected.html"), str);
 
-		t = gt.getTemplate("/nat/nat_attr_template.html");
-		this.bind(t, "test", test);
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/nat/nat_attr_expected.html"), str);
 	}
 
 	@Test
@@ -44,10 +40,6 @@ public class NativeTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/nat/nat_method_expected.html"), str);
 
-		t = gt.getTemplate("/nat/nat_method_template.html");
-		this.bind(t, "test", test);
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/nat/nat_method_expected.html"), str);
 	}
 
 	@Test
@@ -59,10 +51,7 @@ public class NativeTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/nat/nat_array_expected.html"), str);
 
-		t = gt.getTemplate("/nat/nat_array_template.html");
-		this.bind(t, "test", test);
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/nat/nat_array_expected.html"), str);
+		
 	}
 
 	@Test
@@ -74,10 +63,7 @@ public class NativeTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/nat/nat_method2_expected.html"), str);
 
-		t = gt.getTemplate("/nat/nat_method2_template.html");
-		this.bind(t, "test", test);
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/nat/nat_method2_expected.html"), str);
+		
 	}
 
 	@Test
@@ -89,10 +75,7 @@ public class NativeTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/nat/all_expected.html"), str);
 
-		t = gt.getTemplate("/nat/all_template.html");
-		this.bind(t, "test", test);
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/nat/all_expected.html"), str);
+	
 	}
 
 	@Test
@@ -104,10 +87,7 @@ public class NativeTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/nat/object_expected.html"), str);
 
-		t = gt.getTemplate("/nat/object_template.html");
-		this.bind(t, "test", test);
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/nat/object_expected.html"), str);
+		
 	}
 
 	@Test
@@ -119,10 +99,7 @@ public class NativeTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/nat/nat_private_method_expected.html"), str);
 
-		t = gt.getTemplate("/nat/nat_private_method_template.html");
-		this.bind(t, "test", Request.getRequest());
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/nat/nat_private_method_expected.html"), str);
+	
 	}
 	
 	

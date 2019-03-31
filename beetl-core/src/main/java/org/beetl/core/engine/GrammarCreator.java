@@ -296,7 +296,7 @@ public class GrammarCreator {
 
 	public IncDecExpression createIncDec(boolean isInc, boolean returnOrginal, GrammarToken token) {
 		check("IncDec");
-		IncDecExpression exp = new IncDecExpression(isInc, false, token);
+		IncDecExpression exp = new IncDecExpression(isInc, returnOrginal, token);
 		return exp;
 	}
 

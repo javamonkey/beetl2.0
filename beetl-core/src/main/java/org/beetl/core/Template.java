@@ -179,7 +179,6 @@ public class Template {
 
 		}finally {
 			this.ctx.destory();
-			this.ctx  = null;
 		}
 
 	}

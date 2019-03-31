@@ -1,16 +1,13 @@
 package org.beetl.core;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import org.beetl.core.exception.ScriptEvalError;
+import org.beetl.core.exception.BeetlException;
+import org.beetl.core.exception.ErrorInfo;
 import org.beetl.core.resource.StringTemplateResourceLoader;
-import org.beetl.ext.fn.GetValueFunction;
 
 /**
  *  一个综合展示Beetl功能代码
@@ -73,7 +70,7 @@ public class BeetlKit {
 	 * @return
 	 * @throws ScriptEvalError
 	 */
-	public static Map execute(String script, Map<String, Object> paras)  throws ScriptEvalError{
+	public static Map execute(String script, Map<String, Object> paras)  throws BeetlException{
 		 return gt.runScript(script, emptyMap);
 	}
 
@@ -84,7 +81,7 @@ public class BeetlKit {
 	 * @return
 	 * @throws ScriptEvalError 
 	 */
-	public static Map execute(String script) throws ScriptEvalError {
+	public static Map execute(String script) throws BeetlException {
 		return gt.runScript(script, new HashMap<String, Object>());
 
 	}
@@ -99,17 +96,23 @@ public class BeetlKit {
 	 * @return 模板渲染结果
 	 * @throws ScriptEvalError 
 	 */
-	public static String testTemplate(String template, String initValue) throws ScriptEvalError {
+	public static String testTemplate(String template, String initValue) throws BeetlException {
 		Map map = execute(initValue);
 		String result = render(template, map);
 		return result;
 	}
 
-	public static void main(String[] args) throws ScriptEvalError {
+	public static void main(String[] args) throws BeetlException {
 		BeetlKit.gt.getConf().setStatementStart("@");
 		BeetlKit.gt.getConf().setStatementEnd(null);
-		String initValue = "var a=1,c=2+a";
-		execute(initValue);
+		String json = "var a=".concat("[1,2,c+1 ]").concat(";");
+		Map map;
+		try {
+			map = BeetlKit.execute(json);
+		} catch (BeetlException e) {
+			ErrorInfo  info = new ErrorInfo(e);
+			System.out.println(info.toString());
+		}
 
 	}
 }

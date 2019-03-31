@@ -8,11 +8,9 @@ import org.beetl.core.Template;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
-public class FormatterTest extends BasicTestCase
-{
+public class FormatterTest extends BasicTestCase {
 	@Test
-	public void testCore() throws Exception
-	{
+	public void testCore() throws Exception {
 
 		gt.registerFormat("date.short", new ShortDateFormatter());
 
@@ -23,10 +21,6 @@ public class FormatterTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/formatter/formatter_expected.html"), str);
 
-		t = gt.getTemplate("/formatter/formatter_template.html");
-		t.binding(map);
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/formatter/formatter_expected.html"), str);
 	}
 
 }

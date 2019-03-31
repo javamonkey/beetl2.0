@@ -9,7 +9,7 @@ import org.beetl.core.statement.GrammarToken;
 
 public class HtmlTagStartFragment extends ScriptFragment {
 	HTMLTagContentParser html = null;
-	
+	boolean appendCr = false ;
 	public HtmlTagStartFragment(Source source) {
 		super(source);
 	}
@@ -81,6 +81,10 @@ public class HtmlTagStartFragment extends ScriptFragment {
 			} else {
 				// 记住开头
 				htmlTagStack.push(tagName);
+			}
+			
+			if(this.appendCr) {
+				script.append(TextParser.cr1);
 			}
 			return script;
 		} catch (RuntimeException re) {
@@ -160,7 +164,7 @@ public class HtmlTagStartFragment extends ScriptFragment {
 	}
 	
 	public void appendCr() {
-		script.append(TextParser.cr1);
+		appendCr = true;
 		
 	}
 

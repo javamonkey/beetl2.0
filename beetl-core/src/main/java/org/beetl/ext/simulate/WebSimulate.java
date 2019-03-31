@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.beetl.core.GroupTemplate;
-import org.beetl.core.exception.ScriptEvalError;
+import org.beetl.core.exception.BeetlException;
 import org.beetl.ext.web.WebRender;
 /**
  * 在渲染模板前，调用beetl脚本模拟数据，提供模板需要渲染的数据。能模拟
@@ -62,7 +62,7 @@ public class WebSimulate  extends BaseSimulate{
 			}
 
 		}
-		catch (ScriptEvalError e)
+		catch (BeetlException e)
 		{
 			throw new SimulateException("伪模型脚本有错！", e);
 		}
@@ -140,7 +140,7 @@ public class WebSimulate  extends BaseSimulate{
 		{
 			try {
 				commonData = gt.runScript(commonFile, new HashMap());
-			} catch (ScriptEvalError e) {
+			} catch (BeetlException e) {
 				throw new SimulateException("伪模型脚本有错！", e);
 			}
 		}

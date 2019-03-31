@@ -29,7 +29,8 @@ public class PojoMethodInvoker implements MethodInvoker
     {
         try
         {
-            return pd.getReadMethod().invoke(obj, null);
+        	pd.getReadMethod().setAccessible(true); 
+        	return pd.getReadMethod().invoke(obj, null);
         }
         catch (IllegalArgumentException e)
         {

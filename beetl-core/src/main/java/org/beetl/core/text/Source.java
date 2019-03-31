@@ -11,7 +11,8 @@ public class Source {
     int curLine = 0;
     boolean isSupportHtmlTag = false;
     int lastCrSize = 0;
-
+    
+  
     public Source(char[] cs) {
         this.cs = cs;
         this.p = 0;
@@ -29,6 +30,18 @@ public class Source {
             htmlTagConfig.init(this);
             isSupportHtmlTag = true;
         }
+    }
+    
+    public String findCr() {
+    	p =0;
+    	while(!isEof()) {
+    		int crCount = this.isMatchCR();
+    		if(crCount!=0) {
+    			return new String(this.consumeAndGetCR(crCount));
+    		}
+    		this.consume();
+    	}
+    	return null;
     }
 
     public boolean isPlaceHolderStart() {
@@ -118,6 +131,7 @@ public class Source {
         // window \r\n linux \n mac \r
         char c = cs[p];
         if (c == '\n' ) {
+        	
             return 1;
         }
         if(c=='\r'){

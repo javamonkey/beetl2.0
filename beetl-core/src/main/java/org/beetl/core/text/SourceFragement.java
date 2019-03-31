@@ -55,24 +55,24 @@ public class SourceFragement {
             if(fr.getStatus()==FragmentStatus.del){
                 continue;
             }
-            if(!(fr instanceof  TextFragment) ){
-                continue;
-            }
-            TextFragment text = (TextFragment)fr;
-            
-            //往前看，合并CR和TextFragment
-            for(int z = i+1;z<list.size();z++){
-                Fragment nextFr = list.get(z);
-                if(nextFr instanceof  ScriptBlockFragment || nextFr instanceof  PlaceHolderFragment){
-                    i=z;
-                    break;
-                }
-                nextFr.setStatus(FragmentStatus.del);
-                text.appendTextFragment(nextFr);
-                
-                
+            if(fr instanceof  TextFragment){
+            	 TextFragment text = (TextFragment)fr;
+                 
+                 //往前看，合并CR和TextFragment
+                 for(int z = i+1;z<list.size();z++){
+                     Fragment nextFr = list.get(z);
+                     if(nextFr instanceof  ScriptFragment || nextFr instanceof  PlaceHolderFragment){
+                         i=z;
+                         break;
+                     }
+                     nextFr.setStatus(FragmentStatus.del);
+                     text.appendTextFragment(nextFr);
+                     
+                     
 
+                 }
             }
+           
         }
     }
     
@@ -132,4 +132,7 @@ public class SourceFragement {
         }
 
     }
+
+	
+    
 }

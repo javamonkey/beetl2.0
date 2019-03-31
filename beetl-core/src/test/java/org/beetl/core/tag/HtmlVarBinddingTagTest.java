@@ -19,10 +19,7 @@ public class HtmlVarBinddingTagTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/tag/binding/tagbinding_expected.html"), str);
 
-		t = gt.getTemplate("/tag/binding/tagbinding_template.html");
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/tag/binding/tagbinding_expected.html"), str);
-
+	
 	}
 
 	@Test
@@ -36,10 +33,7 @@ public class HtmlVarBinddingTagTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/tag/binding/tagloopbinding_expected.html"), str);
 
-		t = gt.getTemplate("/tag/binding/tagloopbinding_template.html");
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/tag/binding/tagloopbinding_expected.html"), str);
-
+	
 	}
 
 	@Test
@@ -53,10 +47,7 @@ public class HtmlVarBinddingTagTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/tag/binding/tagseqbinding_expected.html"), str);
 
-		t = gt.getTemplate("/tag/binding/tagseqbinding_template.html");
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/tag/binding/tagseqbinding_expected.html"), str);
-
+		
 	}
 
 	@Test
@@ -70,10 +61,7 @@ public class HtmlVarBinddingTagTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/tag/binding/tagAttr_expected.html"), str);
 
-		t = gt.getTemplate("/tag/binding/tagAttr_template.html");
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/tag/binding/tagAttr_expected.html"), str);
-
+	
 	}
 
 }

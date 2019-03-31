@@ -61,54 +61,45 @@ import java.util.Map;
  </pre>
 
  */
-public abstract class GeneralVarTagBinding extends Tag 
-{
+public abstract class GeneralVarTagBinding extends Tag {
 	/**
 	 * 记录了变量名字应该放到Contxt.vars的哪一个位置
 	 */
 	private LinkedHashMap<String, Integer> name2Index = null;
 
-	
 
-	public void mapName2Index(LinkedHashMap<String, Integer> map)
-	{
+	public void mapName2Index(LinkedHashMap<String, Integer> map) {
 		name2Index = map;
 	}
 
 	/**按照标签变量声明的顺序绑定
 	 * @param array
 	 */
-	protected void binds(Object... array)
-	{
-		if(name2Index==null){
-			throw new RuntimeException("html标签没有定义绑定变量,但标签实现中试图绑定"+Arrays.asList(array));
+	protected void binds(Object... array) {
+		if (name2Index == null) {
+			throw new RuntimeException("html标签没有定义绑定变量,但标签实现中试图绑定" + Arrays.asList(array));
 		}
-		
+
 		Iterator<Integer> it = name2Index.values().iterator();
-		for (int i = 0; i < array.length; i++)
-		{
+		for (int i = 0; i < array.length; i++) {
 			int index = it.next();
 			ctx.vars[index] = array[i];
 		}
 	}
 
 
-
-	public Object getAttributeValue(String attrName)
-	{
+	public Object getAttributeValue(String attrName) {
 		Map map = (Map) this.args[1];
 		return map.get(attrName);
 
 	}
 
-	public String getHtmlTagName()
-	{
+	public String getHtmlTagName() {
 		return (String) this.args[0];
 	}
-	
-	public Map<String,Object> getAttributes()
-	{
-		return (Map<String,Object> )this.args[1];
+
+	public Map<String, Object> getAttributes() {
+		return (Map<String, Object>) this.args[1];
 	}
 
 }

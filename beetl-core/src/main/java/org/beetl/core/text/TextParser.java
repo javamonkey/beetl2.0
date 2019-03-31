@@ -29,6 +29,8 @@ public class TextParser {
 //	List<Fragment> list = new ArrayList<Fragment>();
 	SourceFragement sourceFragement = new SourceFragement();
 	HtmlTagConfig htmlTagConfig = null;
+	//文本里的回车
+	String textCr = null;
 
 	public TextParser(PlaceHolderDelimeter pd, ScriptDelimeter sd) {
 		this.pd = pd;
@@ -43,13 +45,25 @@ public class TextParser {
 	public void doParse(Reader orginal) throws IOException {
 
 		scan1(orginal);
+		//合并
 		sourceFragement.merge();
+		
+		//得到beetl脚本
 		for (Fragment f : sourceFragement.list) {
 			if(f.getStatus()==FragmentStatus.del) {
 				continue;
 			}
 			script.append(f.getScript());
 		}
+		
+		String cr =  source.findCr();
+		
+		if(cr!=null) {
+			this.textCr = cr;
+		}else {
+			this.textCr = systemCrStr;
+		}
+
 
 	}
 
@@ -68,14 +82,18 @@ public class TextParser {
 		source = new Source(cs);
 		source.init(this, pd, sd, htmlTagConfig);
 		Fragment test = new TextFragment(source);
-		sourceFragement.add(test);
-		Fragment next = test.consumeAndReturnNext();
-		while (next != null) {
-			test = next.consumeAndReturnNext();
-			sourceFragement.add(next);
-			next = test;
+		Fragment next = null;
+		while(true) {
+			next = test.consumeAndReturnNext();
+			sourceFragement.add(test);
+			if(next==null) {
+				break;
+			}else {
+				test = next;
+			}
 		}
-
+		
+	
 	}
 
 
@@ -98,6 +116,12 @@ public class TextParser {
 		this.textVars = textVars;
 	}
 
+	
+	
+	public String getTextCr() {
+		return textCr;
+	}
+
 	public static void main(String[] args) throws IOException {
 		PlaceHolderDelimeter pd = new PlaceHolderDelimeter("${".toCharArray(), "}".toCharArray(), "#{".toCharArray(),
 				"}".toCharArray());
@@ -105,7 +129,7 @@ public class TextParser {
 
 		HtmlTagConfig htmlConfig = new HtmlTagConfig();
 //		String text = "<%a=1;%>\nabcd";
-		String text = "  <%a=1;\n   a=2;%> \n   <%a=1;%>   ";
+		String text = "<#a>\n${abc}\n</#a>\n${abc}";
 //		String text ="  @a;";
 		StringReader str = new StringReader(text);
 		TextParser textParser = new TextParser(pd, sd, htmlConfig);

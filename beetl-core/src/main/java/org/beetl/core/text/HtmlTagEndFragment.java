@@ -7,6 +7,7 @@ import org.beetl.core.statement.GrammarToken;
 
 public class HtmlTagEndFragment extends ScriptFragment {
 	HTMLTagContentParser html = null;
+	boolean appendCr = false ;
     public HtmlTagEndFragment(Source source) {
         super(source);
     }
@@ -33,6 +34,10 @@ public class HtmlTagEndFragment extends ScriptFragment {
 			{
 				throw new RuntimeException("解析html tag出错,期望匹配标签" + lastTag);
 			}
+			
+			if(this.appendCr) {
+				script.append(TextParser.cr1);
+			}
 			return script;
 		}
 		catch (RuntimeException re)
@@ -57,11 +62,12 @@ public class HtmlTagEndFragment extends ScriptFragment {
 		html = new HTMLTagContentParser(source.cs, source.p, htmlTagBindingAttribute, false);
 		html.parser();
 		source.move(html.index);
+		this.endLine = this.startLine;
 		return super.findNext();
     }
 
 	public void appendCr() {
-		script.append(TextParser.cr1);
+		appendCr = true;
 		
 	}
 

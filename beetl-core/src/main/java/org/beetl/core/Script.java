@@ -27,23 +27,18 @@
  */
 package org.beetl.core;
 
-import org.beetl.core.exception.BeetlException;
-import org.beetl.core.exception.ErrorInfo;
-import org.beetl.core.io.ByteWriter_Byte;
-import org.beetl.core.io.ByteWriter_Char;
-import org.beetl.core.misc.BeetlUtil;
-import org.beetl.core.statement.AjaxStatement;
-import org.beetl.core.statement.ErrorGrammarProgram;
-import org.beetl.core.statement.GrammarToken;
-import org.beetl.core.statement.Program;
-
-import java.io.IOException;
-import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.beetl.core.exception.BeetlException;
+import org.beetl.core.exception.ErrorInfo;
+import org.beetl.core.io.ByteWriter_Char;
+import org.beetl.core.misc.BeetlUtil;
+import org.beetl.core.statement.ErrorGrammarProgram;
+import org.beetl.core.statement.Program;
 
 /** 模板类
  * @author joelli
@@ -165,7 +160,7 @@ public class  Script<T> {
 
 			program.metaData.initContext(ctx);
 			program.execute(ctx);
-
+			this.success =true;
 
 		} catch (BeetlException e) {
 			if (!(program instanceof ErrorGrammarProgram)) {

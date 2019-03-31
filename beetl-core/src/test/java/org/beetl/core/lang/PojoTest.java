@@ -24,19 +24,6 @@ public class PojoTest extends BasicTestCase
 
 	}
 	
-	@Test
-	public void testWrongSimple() throws Exception
-	{
-
-		Pojo2 p = new Pojo2();
-		Template t = gt.getTemplate("/lang/pojo2_template.html");
-		t.binding("p",p);
-		String str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/lang/pojo2_expected.html"), str);
-
-	}
-
-	
 	
 	
 }
@@ -47,6 +34,9 @@ class Pojo{
 	boolean isGood = true;
 	boolean girl = true;
 	boolean iGood = true;
+	
+	
+	
 	public String getcName() {
 		return cName;
 	}
@@ -84,27 +74,4 @@ class Pojo{
 	
 }
 
-/*不太规范的*/
-class Pojo2{
-	String cName="cName";
-	boolean iGood = true;
-	
-	public boolean isIGood() {
-		return iGood;
-	}
-	public void setIGood(boolean iGood) {
-		this.iGood = iGood;
-	}
-	public String getCName() {
-		return cName;
-	}
-	public void setCName(String cName) {
-		this.cName = cName;
-	}
-	
-	public Object get(String a){
-		return a+"cc";
-	}
-	
-	
-}
+

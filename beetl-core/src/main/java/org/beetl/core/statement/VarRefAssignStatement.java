@@ -29,6 +29,7 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 import org.beetl.core.exception.BeetlException;
+import org.beetl.core.om.ObjectSetterUtil;
 
 /**
  * var xxx.cc = exp;
@@ -56,14 +57,13 @@ public class VarRefAssignStatement extends VarAssignStatement {
 		if (lastVarAttribute instanceof VarSquareAttribute) {
 			key = (((VarSquareAttribute) lastVarAttribute).exp).evaluate(ctx);
 
-
 		} else {
 			key = lastVarAttribute.name;
 		}
 		try {
-			//TODO3.0
-			throw new UnsupportedOperationException();
-//			ObjectAA.defaultObjectAA().setValue(obj, key, value);
+			ObjectSetterUtil.set(obj, key, value);
+			
+			
 		} catch (ClassCastException ex) {
 			BeetlException bx = new BeetlException(BeetlException.ATTRIBUTE_INVALID, ex);
 			bx.pushToken(lastVarAttribute.token);

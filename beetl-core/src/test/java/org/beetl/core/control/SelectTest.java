@@ -29,11 +29,7 @@ public class SelectTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/control/select/select2_expected.html"), str);
 
-		t = gt.getTemplate("/control/select/select2_template.html");
-		this.bind(t, "dataList", data);
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/control/select/select2_expected.html"), str);
-
+	
 	}
 
 	@Test
@@ -44,11 +40,7 @@ public class SelectTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/control/select/default_expected.html"), str);
 
-		t = gt.getTemplate("/control/select/default_template.html");
-		this.bind(t, "dataList", data);
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/control/select/default_expected.html"), str);
-
+		
 	}
 
 }

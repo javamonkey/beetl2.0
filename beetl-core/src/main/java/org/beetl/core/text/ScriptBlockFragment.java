@@ -19,8 +19,8 @@ public class ScriptBlockFragment extends ScriptFragment {
         while (!source.isEof()&&!source.isScriptEnd(script)) {
         	script.append(source.consumeAndGet());
         }
+        this.setEndLine();
         if (source.isEof()) {
-            this.setEndLine();
             return null;
         }
         return this.findNext();

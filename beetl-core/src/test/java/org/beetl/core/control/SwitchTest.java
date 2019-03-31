@@ -18,11 +18,7 @@ public class SwitchTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/control/swi/switch_expected.html"), str);
 
-		t = gt.getTemplate("/control/swi/switch_template.html");
-		this.bind(t, "dataList", data);
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/control/swi/switch_expected.html"), str);
-
+		
 	}
 
 	@Test
@@ -33,11 +29,7 @@ public class SwitchTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/control/swi/switch2_expected.html"), str);
 
-		t = gt.getTemplate("/control/swi/switch2_template.html");
-		this.bind(t, "dataList", data);
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/control/swi/switch2_expected.html"), str);
-
+	
 	}
 
 	@Test

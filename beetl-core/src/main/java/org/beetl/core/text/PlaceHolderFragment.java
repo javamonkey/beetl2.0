@@ -9,7 +9,7 @@ public class PlaceHolderFragment extends Fragment {
 
     @Override
     public StringBuilder getScript() {
-        script.append(">>");
+       
         return script;
     }
 
@@ -26,6 +26,8 @@ public class PlaceHolderFragment extends Fragment {
             script.append(source.consumeAndGet());
         }
 
+        script.append(">>");
+        
         if (source.isEof()) {
             return null;
         }

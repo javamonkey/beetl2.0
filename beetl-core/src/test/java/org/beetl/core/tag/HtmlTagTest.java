@@ -22,9 +22,12 @@ public class HtmlTagTest extends BasicTestCase
 	static
 	{
 		Properties ps = new Properties();
-		ps.setProperty("FUNCTION_TAG_LIMITER", "<%;%>");
+		
 		ps.setProperty("DELIMITER_STATEMENT_START", "@");
 		ps.setProperty("DELIMITER_STATEMENT_END", "null");
+		ps.setProperty("DELIMITER_STATEMENT_START2", "<%");
+		ps.setProperty("DELIMITER_STATEMENT_END2", "%>");
+		
 		Configuration cf;
 		try
 		{
@@ -56,11 +59,7 @@ public class HtmlTagTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/tag/html_dilimeter_expected.html"), str);
 
-		t = newGt.getTemplate("/tag/html_dilimeter_template.html");
-		this.bind(t, "list", User.getTestUsers());
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/tag/html_dilimeter_expected.html"), str);
-
+		
 	}
 	
 	
@@ -90,11 +89,7 @@ public class HtmlTagTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/tag/html2_expected.html"), str);
 
-		t = gt.getTemplate("/tag/html2_template.html");
-		this.bind(t, "list", User.getTestUsers());
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/tag/html2_expected.html"), str);
-
+		
 	}
 
 	@Test
@@ -106,11 +101,7 @@ public class HtmlTagTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/tag/html3_expected.html"), str);
 
-		t = gt.getTemplate("/tag/html3_template.html");
-		this.bind(t, "list", User.getTestUsers());
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/tag/html3_expected.html"), str);
-
+	
 	}
 
 	@Test
@@ -122,11 +113,7 @@ public class HtmlTagTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/tag/html4_expected.html"), str);
 
-		t = gt.getTemplate("/tag/html4_template.html");
-		this.bind(t, "list", User.getTestUsers());
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/tag/html4_expected.html"), str);
-
+		
 	}
 
 	@Test
@@ -139,10 +126,7 @@ public class HtmlTagTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/tag/html5_expected.html"), str);
 
-		t = gt.getTemplate("/tag/html5_template.html");
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/tag/html5_expected.html"), str);
-
+	
 	}
 
 	@Test
@@ -154,10 +138,7 @@ public class HtmlTagTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/tag/html6_expected.html"), str);
 
-		t = gt.getTemplate("/tag/html6_template.html");
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/tag/html6_expected.html"), str);
-
+	
 	}
 
 	@Test
@@ -169,10 +150,7 @@ public class HtmlTagTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/tag/html7_expected.html"), str);
 
-		t = gt.getTemplate("/tag/html7_template.html");
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/tag/html7_expected.html"), str);
-
+	
 	}
 
 	@Test
@@ -184,11 +162,7 @@ public class HtmlTagTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/tag/html8_expected.html"), str);
 
-		t = gt.getTemplate("/tag/html8_template.html");
-		t.binding("a", 1);
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/tag/html8_expected.html"), str);
-
+	
 	}
 
 }

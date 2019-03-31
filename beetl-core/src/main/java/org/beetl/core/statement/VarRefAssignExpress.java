@@ -29,9 +29,10 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 import org.beetl.core.exception.BeetlException;
+import org.beetl.core.om.ObjectSetterUtil;
 
 /**
- * call(xxx.cc = exp);
+ * call(xxx.cc = exp); 返回是exp
  * @author joelli
  *
  */
@@ -71,9 +72,10 @@ public class VarRefAssignExpress extends Expression implements IVarIndex {
 		}
 
 		try {
-			//TODO3.0
-//			ObjectAA.defaultObjectAA().setValue(obj, key, value);
-			throw new UnsupportedOperationException();
+			
+			ObjectSetterUtil.set(obj, key, value);
+			return value;
+		
 		} catch (ClassCastException ex) {
 			BeetlException bx = new BeetlException(BeetlException.ATTRIBUTE_INVALID, ex);
 			bx.pushToken(lastVarAttribute.token);

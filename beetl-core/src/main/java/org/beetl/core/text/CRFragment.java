@@ -11,8 +11,14 @@ public class CRFragment extends Fragment {
 
     @Override
     public StringBuilder getScript() {
-        //优化
-        return new StringBuilder(cr.length).append(cr);
+    	StringBuilder script = new StringBuilder();
+    	Integer varName = source.getParser().getRandomeTextVarName();
+		script.append("<$" + varName + ">>");
+		script.append(cr);
+		
+		// 添加一个静态变量
+		source.parser.getTextVars().put(varName, new String(cr));
+        return script;
     }
 
 

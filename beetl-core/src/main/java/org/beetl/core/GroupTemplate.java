@@ -44,7 +44,6 @@ import org.beetl.core.cache.Cache;
 import org.beetl.core.cache.ProgramCacheFactory;
 import org.beetl.core.exception.BeetlException;
 import org.beetl.core.exception.HTMLTagParserException;
-import org.beetl.core.exception.ScriptEvalError;
 import org.beetl.core.fun.FunctionWrapper;
 import org.beetl.core.fun.ObjectUtil;
 import org.beetl.core.misc.BeetlUtil;
@@ -346,7 +345,7 @@ public class GroupTemplate {
 	 * @param paras
 	 * @return
 	 */
-	public Map runScript(String key, Map<String, Object> paras) throws ScriptEvalError {
+	public Map runScript(String key, Map<String, Object> paras) throws BeetlException {
 		return this.runScript(key, paras, new StringWriter());
 
 	}
@@ -357,7 +356,7 @@ public class GroupTemplate {
 	 * @param w
 	 * @return
 	 */
-	public Map runScript(String key, Map<String, Object> paras, Writer w) throws ScriptEvalError {
+	public Map runScript(String key, Map<String, Object> paras, Writer w) throws BeetlException {
 		return this.runScript(key, paras, w, this.resourceLoader);
 	}
 
@@ -371,7 +370,7 @@ public class GroupTemplate {
 	 * @throws ScriptEvalError
 	 */
 	public Map runScript(String key, Map<String, Object> paras, Writer w, ResourceLoader loader)
-			throws ScriptEvalError {
+			throws BeetlException {
 		Script t = loadScriptTemplate(key, loader);
 		t.fastBinding(paras);
 
@@ -380,7 +379,7 @@ public class GroupTemplate {
 			Map map = t.getResult();
 			return  map;
 		}else{
-			throw new ScriptEvalError(t.ex);
+			throw t.ex;
 		}
 
 	}
@@ -571,7 +570,7 @@ public class GroupTemplate {
 			text.doParse(reader);
 
 			Reader scriptReader = new StringReader(text.getScript().toString());
-			Program program = engine.createProgram(res, scriptReader, text.getTextVars(), text.systemCrStr, this);
+			Program program = engine.createProgram(res, scriptReader, text.getTextVars(), text.getTextCr(), this);
 			return program;
 
 		} catch (HTMLTagParserException e) {

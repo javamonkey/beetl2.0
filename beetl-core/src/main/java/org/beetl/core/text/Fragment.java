@@ -21,6 +21,9 @@ public abstract class Fragment {
 
 
     protected Fragment findNext() {
+    	if(source.isEof()) {
+    		return null;
+    	}
         if (source.isScriptStart()) {
             this.setEndLine();
             return new ScriptBlockFragment(source);

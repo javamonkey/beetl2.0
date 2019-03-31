@@ -45,9 +45,7 @@ public class TextFragment extends Fragment {
 
 	@Override
 	public Fragment consumeAndReturnNext() {
-		int matchCr = 0;
 		while (!source.isEof()) {
-
 			if (source.isPlaceHolderStart()) {
 				this.setEndLine();
 				return new PlaceHolderFragment(source);

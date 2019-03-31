@@ -16,10 +16,7 @@ public class WhileTest extends BasicTestCase
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/control/while/while_expected.html"), str);
 
-		t = gt.getTemplate("/control/while/while_template.html");
-		str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/control/while/while_expected.html"), str);
-
+		
 	}
 
 }

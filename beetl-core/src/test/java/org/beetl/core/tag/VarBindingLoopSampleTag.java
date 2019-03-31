@@ -12,9 +12,10 @@ public class VarBindingLoopSampleTag extends GeneralVarTagBinding
 		int loop = Integer.parseInt((String) attributes.get("value"));
 		String[] array = new String[]
 				{ "a", "b" };
+		Object paras1 = array;
 		for (int i = 0; i < loop; i++)
 		{
-			this.binds(array);
+			this.binds(paras1);
 			this.doBodyRender();
 		}
 

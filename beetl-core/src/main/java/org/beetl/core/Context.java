@@ -65,7 +65,7 @@ public class Context {
 	 */
 	public GroupTemplate gt = null;
 	/** 全局变量 */
-	public Map<String, Object> globalVar;
+	public Map<String, Object> globalVar = new HashMap<String, Object>();;
 
 
 	/**
@@ -128,9 +128,6 @@ public class Context {
 	 * @param value
 	 */
 	public void set(String key, Object value) {
-		if (globalVar == null) {
-			globalVar = new HashMap<String, Object>();
-		}
 		globalVar.put(key, value);
 	}
 

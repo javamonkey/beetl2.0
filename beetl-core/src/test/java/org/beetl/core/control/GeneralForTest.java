@@ -5,7 +5,7 @@ import org.beetl.core.Template;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
-public class generalForTest extends BasicTestCase
+public class GeneralForTest extends BasicTestCase
 {
 	Integer[] data = new Integer[]
 	{ 0, 1, 2 };
@@ -16,7 +16,8 @@ public class generalForTest extends BasicTestCase
 		Template t = gt.getTemplate("/control/generalFor/general_template.html");
 
 		String str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/control/generalFor/general_expected.html"), str);
+		String expected = this.getFileContent("/control/generalFor/general_expected.html");
+		AssertJUnit.assertEquals(expected, str);
 
 
 	}

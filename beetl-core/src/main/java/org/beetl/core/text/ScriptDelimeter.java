@@ -41,7 +41,8 @@ public class ScriptDelimeter extends Delimeter {
             int matchCount = source.isMatchCR();
             if (matchCount!=0) {
                 endIsCr = true;
-                source.consumeAndGetCR(matchCount);
+                source.consume(matchCount);;
+                source.addLine();
                 script.append("\n");
                 return true;
             }

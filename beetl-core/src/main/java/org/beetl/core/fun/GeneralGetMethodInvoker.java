@@ -58,6 +58,7 @@ public class GeneralGetMethodInvoker implements MethodInvoker
 
     @Override
     public void set(Object ins, Object value) {
+    	
         throw new RuntimeException("Genneral get 不支持");
 
     }

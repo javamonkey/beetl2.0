@@ -41,7 +41,7 @@ public class HtmlTagStartFragment extends ScriptFragment {
 				String key = entry.getKey();
 				String value = entry.getValue();
 				if (html.crKey.contains(key)) {
-					script.append(source.parser.cr1);
+					script.append(TextParser.cr1);
 				}
 				script.append(key).append(":");
 				String attrValue = this.parseAttr(quat.get(key), value);
@@ -108,6 +108,7 @@ public class HtmlTagStartFragment extends ScriptFragment {
 		html = new HTMLTagContentParser(source.cs, source.p, htmlTagBindingAttribute, true);
 		html.parser();
 		source.move(html.index);
+		this.endLine = this.startLine+html.crKey.size();
 		return super.findNext();
 	}
 
@@ -135,7 +136,9 @@ public class HtmlTagStartFragment extends ScriptFragment {
 				}
 			}
 
-			if (end == -1) throw new RuntimeException(attr + "标签属性错误，有站位符号，但找不到到结束符号");
+			if (end == -1){
+				throw new RuntimeException(attr + "标签属性错误，有站位符号，但找不到到结束符号");
+			}
 			if (index != 0) {
 				// 字符串
 				sb.append(q).append(attr.substring(start, index)).append(q).append("+");

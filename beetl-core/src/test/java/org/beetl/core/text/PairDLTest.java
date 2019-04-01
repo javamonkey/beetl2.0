@@ -24,6 +24,7 @@ public class PairDLTest extends BasicTestCase
 
 		GroupTemplate newGt = getGt();
 		Template t = newGt.getTemplate("/text/simple_pair_template.html");
+		String input = this.getFileContent("/text/simple_pair_template.html");
 		String str = t.render();
 		AssertJUnit.assertEquals(this.getFileContent("/text/simple_pair_expected.html"), str);
 

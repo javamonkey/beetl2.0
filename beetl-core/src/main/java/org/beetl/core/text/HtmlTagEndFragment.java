@@ -66,6 +66,7 @@ public class HtmlTagEndFragment extends ScriptFragment {
 		return super.findNext();
     }
 
+    @Override
 	public void appendCr() {
 		appendCr = true;
 		

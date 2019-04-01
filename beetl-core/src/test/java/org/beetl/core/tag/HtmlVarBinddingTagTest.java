@@ -63,5 +63,19 @@ public class HtmlVarBinddingTagTest extends BasicTestCase
 
 	
 	}
+	
+	@Test
+	public void testBindingExport() throws Exception
+	{
+
+		//测试通过特殊属性绑定
+		gt.registerTag("tagseqbinding", VarBindingSeqSampleTag.class);
+		//todo 会多出一个空行
+		Template t = gt.getTemplate("/tag/binding/tagAttrExport_template.html");
+		String str = t.render();
+		AssertJUnit.assertEquals(this.getFileContent("/tag/binding/tagAttrExport_expected.html"), str);
+
+	
+	}
 
 }

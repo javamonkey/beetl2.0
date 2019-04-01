@@ -61,10 +61,7 @@ import org.beetl.core.parser.BeetlParser.BlockContext;
 import org.beetl.core.parser.BeetlParser.BlockStContext;
 import org.beetl.core.parser.BeetlParser.BooleanLiteralContext;
 import org.beetl.core.parser.BeetlParser.BreakStContext;
-import org.beetl.core.parser.BeetlParser.ClassOrInterfaceTypeContext;
 import org.beetl.core.parser.BeetlParser.CommentTagStContext;
-import org.beetl.core.parser.BeetlParser.CommentTypeItemTagContext;
-import org.beetl.core.parser.BeetlParser.CommentTypeTagContext;
 import org.beetl.core.parser.BeetlParser.CompareExpContext;
 import org.beetl.core.parser.BeetlParser.ConstantsTextStatmentContext;
 import org.beetl.core.parser.BeetlParser.ContinueStContext;
@@ -124,8 +121,6 @@ import org.beetl.core.parser.BeetlParser.TextStatmentContext;
 import org.beetl.core.parser.BeetlParser.TextVarContext;
 import org.beetl.core.parser.BeetlParser.TextformatContext;
 import org.beetl.core.parser.BeetlParser.TryStContext;
-import org.beetl.core.parser.BeetlParser.TypeArgumentContext;
-import org.beetl.core.parser.BeetlParser.TypeArgumentsContext;
 import org.beetl.core.parser.BeetlParser.VarAttributeArrayOrMapContext;
 import org.beetl.core.parser.BeetlParser.VarAttributeContext;
 import org.beetl.core.parser.BeetlParser.VarAttributeGeneralContext;
@@ -631,14 +626,16 @@ public class AntlrProgramBuilder {
 		}
 
 		Expression[] expList = this.parseExpressionCtxList(list);
-		if (id.equals("htmltagvar")) {
+		if (id.equals("htmltagvar")||id.equals("htmltagexport")) {
 			int line = fc.functionNs().getStart().getLine();
 			// 标签具有绑定变量功能
 			Literal l = (Literal) expList[2];
 			String varList = (String) l.obj;
 			String[] vars = varList.split(",");
 			// 定义的变量仅仅在标签体内可见
-			this.pbCtx.enterBlock();
+			if(id.equals("htmltagvar")) {
+				this.pbCtx.enterBlock();
+			}
 			VarDefineNode[] varDefine = new VarDefineNode[vars.length];
 			for (int i = 0; i < vars.length; i++) {
 				VarDefineNode varNode = new VarDefineNode(this.getBTToken(vars[i].trim(), line));
@@ -647,8 +644,10 @@ public class AntlrProgramBuilder {
 			}
 			BlockContext blockCtx = fc.block();
 			Statement block = parseBlock(blockCtx.statement(), blockCtx);
-
-			this.pbCtx.exitBlock();
+			if(id.equals("htmltagvar")) {
+				this.pbCtx.exitBlock();
+			}
+			
 			TagFactory tf = this.gt.getTagFactory(id);
 			if (tf == null) {
 				BeetlException ex = new BeetlException(BeetlException.TAG_NOT_FOUND);

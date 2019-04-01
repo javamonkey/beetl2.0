@@ -51,6 +51,7 @@ class HTMLTagContentParser
 	//支持换行，记录属性后是否有换行。
 	List<String> crKey = new ArrayList<String>(1);
 	boolean hasVarBinding = false;
+	boolean hasExportBinding = false;
 	String varBidingStr = null;
 	// -1非期望
 	int status = 0;
@@ -59,7 +60,8 @@ class HTMLTagContentParser
 	int te;
 	String lastKey = null;
 	//默认是var
-	String bindingAttr = null;
+	String _var = null;
+	String _export = null;
 	static char ENT_TAG = '>';
 	static char[] ENT_TAGS = new char[]
 	{ '/', '>' };
@@ -69,11 +71,22 @@ class HTMLTagContentParser
 	public HTMLTagContentParser(char[] cs, int index, String bindingAttr, boolean isStart)
 	{
 		this.cs = cs;
-		this.bindingAttr = bindingAttr;
+		parseBindingAttr(bindingAttr);
 		this.index = index;
 		this.isStart = isStart;
 		this.ts = index;
 		this.te = index;
+	}
+	
+	private void parseBindingAttr(String bindingAttr) {
+		String[] bindConf = bindingAttr.split(",");
+		if(bindConf.length==1) {
+			_var = bindConf[0];
+			_export= "export";
+		}else {
+			_var = bindConf[0];
+			_export= bindConf[1];
+		}
 	}
 
 	public void parser()
@@ -212,9 +225,13 @@ class HTMLTagContentParser
 			String value = this.subString();
 			this.t_consume();
 			this.move(1);
-			if (lastKey.equals(this.bindingAttr))
+			if (lastKey.equals(this._var))
 			{
 				this.hasVarBinding = true;
+				this.varBidingStr = value;
+				return;
+			}else if(lastKey.equals(this._export)){
+				this.hasExportBinding = true;
 				this.varBidingStr = value;
 				return;
 			}
@@ -609,8 +626,8 @@ class HTMLTagContentParser
 
 	public static void main(String[] args)
 	{
-		String input = "<#bbsListTag a='1' \nc='${ kk }' var='page,dd' >hello ${a}</#bbsListTag>";
-		HTMLTagContentParser htmltag = new HTMLTagContentParser(input.toCharArray(), 2, "var", true);
+		String input = "<#bbsListTag a='1' \nc='${ kk }' export='page,dd' >hello ${a}</#bbsListTag>";
+		HTMLTagContentParser htmltag = new HTMLTagContentParser(input.toCharArray(), 2, "var,export", true);
 		htmltag.parser();
 		System.out.println(htmltag.getTagName());
 		System.out.println(htmltag.getExpMap());

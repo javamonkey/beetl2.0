@@ -129,7 +129,11 @@ public class TextParser {
 
 		HtmlTagConfig htmlConfig = new HtmlTagConfig();
 //		String text = "<%a=1;%>\nabcd";
-		String text = "<%a%>   \n   <%a%>\n${an}";
+		String text =""+
+				"<%a%>\n" +
+				"<%b%>   \n"
+				 ;
+
 //		String text ="  @a;";
 		StringReader str = new StringReader(text);
 		TextParser textParser = new TextParser(pd, sd, htmlConfig);

@@ -6,6 +6,7 @@ public class TextFragment extends Fragment {
 	int crCount = 0;
 	public TextFragment(Source source) {
 		super(source);
+		this.endLine = this.startLine;
 
 	}
 	
@@ -45,6 +46,7 @@ public class TextFragment extends Fragment {
 
 	@Override
 	public Fragment consumeAndReturnNext() {
+
 		while (!source.isEof()) {
 			if (source.isPlaceHolderStart()) {
 				this.setEndLine();
@@ -71,8 +73,6 @@ public class TextFragment extends Fragment {
 				text.append(c);
 			}
 		}
-		this.setEndLine();
-
 		return null;
 	}
 

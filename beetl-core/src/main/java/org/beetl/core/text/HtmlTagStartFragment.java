@@ -19,12 +19,16 @@ public class HtmlTagStartFragment extends ScriptFragment {
 		String tagName = null;
 		Stack<String> htmlTagStack = source.htmlTagConfig.htmlTagStack;
 		try {
-
-
+			if(html.hasVarBinding&&html.hasExportBinding) {
+				throw new RuntimeException("不能同时有var 和 export ，只能选一个");
+			}
 			if (html.hasVarBinding) {
 				script.append("htmltagvar");
 
-			} else {
+			} else if(html.hasExportBinding){
+				//AntlrProgramBuilder 遇到此htmltagexport 会认为是htmltagvar，但变量作用域不限制
+				script.append("htmltagexport");
+			}else {
 				script.append("htmltag");
 
 			}
@@ -55,7 +59,7 @@ public class HtmlTagStartFragment extends ScriptFragment {
 				script.append("}");
 			}
 
-			if (html.hasVarBinding) {
+			if (html.hasVarBinding||html.hasExportBinding) {
 				if (map.size() == 0) {
 					// 保持三个参数，第一个为标签函数名，第二个为属性，第三个为申明的变量
 					script.append(",{}");

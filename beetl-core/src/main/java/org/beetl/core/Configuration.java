@@ -215,25 +215,7 @@ public class Configuration {
 
 	public void initOther() {
 
-		if (this.placeholderStart2 != null) {
-			pd = new PlaceHolderDelimeter(placeholderStart.toCharArray(), placeholderEnd.toCharArray(),
-					placeholderStart2.toCharArray(), placeholderEnd2.toCharArray());
-		} else {
-			pd = new PlaceHolderDelimeter(placeholderStart.toCharArray(), placeholderEnd.toCharArray());
-		}
-
-		if (this.statementStart2 != null) {
-			sd = new ScriptDelimeter(statementStart.toCharArray(),
-					statementEnd != null ? statementEnd.toCharArray() : null, statementStart2.toCharArray(),
-					statementEnd2 != null ? statementEnd2.toCharArray() : null);
-		} else {
-			sd = new ScriptDelimeter(statementStart.toCharArray(),
-					statementEnd != null ? statementEnd.toCharArray() : null);
-		}
-
-		if (this.isHtmlTagSupport) {
-			tagConf = new HtmlTagConfig(getHtmlTagStart(), getHtmlTagEnd(), getHtmlTagBindingAttribute());
-		}
+		buildDelimeter();
 
 	}
 
@@ -450,7 +432,9 @@ public class Configuration {
 	}
 
 	public void setPlaceholderStart(String placeholderStart) {
+
 		this.placeholderStart = placeholderStart;
+		buildDelimeter();
 	}
 
 	public String getPlaceholderEnd() {
@@ -459,6 +443,7 @@ public class Configuration {
 
 	public void setPlaceholderEnd(String placeholderEnd) {
 		this.placeholderEnd = placeholderEnd;
+		buildDelimeter();
 	}
 
 	public String getStatementStart() {
@@ -467,6 +452,7 @@ public class Configuration {
 
 	public void setStatementStart(String statementStart) {
 		this.statementStart = statementStart;
+		buildDelimeter();
 	}
 
 	public String getStatementEnd() {
@@ -475,6 +461,7 @@ public class Configuration {
 
 	public void setStatementEnd(String statementEnd) {
 		this.statementEnd = statementEnd;
+		buildDelimeter();
 	}
 
 
@@ -742,6 +729,28 @@ public class Configuration {
 
 	public void setPs(Properties ps) {
 		this.ps = ps;
+	}
+
+	private void buildDelimeter(){
+		if (this.placeholderStart2 != null) {
+			pd = new PlaceHolderDelimeter(placeholderStart.toCharArray(), placeholderEnd.toCharArray(),
+					placeholderStart2.toCharArray(), placeholderEnd2.toCharArray());
+		} else {
+			pd = new PlaceHolderDelimeter(placeholderStart.toCharArray(), placeholderEnd.toCharArray());
+		}
+
+		if (this.statementStart2 != null) {
+			sd = new ScriptDelimeter(statementStart.toCharArray(),
+					statementEnd != null ? statementEnd.toCharArray() : null, statementStart2.toCharArray(),
+					statementEnd2 != null ? statementEnd2.toCharArray() : null);
+		} else {
+			sd = new ScriptDelimeter(statementStart.toCharArray(),
+					statementEnd != null ? statementEnd.toCharArray() : null);
+		}
+
+		if (this.isHtmlTagSupport) {
+			tagConf = new HtmlTagConfig(getHtmlTagStart(), getHtmlTagEnd(), getHtmlTagBindingAttribute());
+		}
 	}
 
 

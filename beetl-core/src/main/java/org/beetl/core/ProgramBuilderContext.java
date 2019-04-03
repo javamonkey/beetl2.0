@@ -58,7 +58,7 @@ public class ProgramBuilderContext
 	List<Object> listNodeEval = new LinkedList<Object>();
 	// 全局变量名以及描述
 	Map<String, VarDescrption> globalVar = new HashMap<String, VarDescrption>();
-	Map<String, String[]> globaVarAttr = new HashMap<String, String[]>();
+
 
 	// 为所有变量分配的空间长度
 	int varIndexSize = 0;
@@ -179,7 +179,7 @@ public class ProgramBuilderContext
 
 			VarDescrption vd = entry.getValue();
 			String[] attrs = vd.attrList.toArray(new String[0]);
-			globaVarAttr.put(entry.getKey(), attrs);
+
 			for (ASTNode node : vd.where)
 			{
 				((IVarIndex) node).setVarIndex(index);

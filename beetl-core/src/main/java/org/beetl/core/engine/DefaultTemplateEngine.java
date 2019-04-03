@@ -18,6 +18,7 @@ import org.beetl.core.parser.BeetlLexer;
 import org.beetl.core.parser.BeetlParser;
 import org.beetl.core.parser.BeetlParser.ProgContext;
 import org.beetl.core.parser.SyntaxErrorListener;
+import org.beetl.core.statement.AjaxStatement;
 import org.beetl.core.statement.Program;
 import org.beetl.core.statement.ProgramMetaData;
 
@@ -78,6 +79,13 @@ public class DefaultTemplateEngine implements TemplateEngine {
 
 			}
 
+		}
+
+		//如果ajax内容
+		for(AjaxStatement ajax:program.metaData.ajaxs.values()){
+			ProgramMetaData locaMetaData = ajax.getLocalProgramMetaData();
+			locaMetaData.staticTextArray = program.metaData.staticTextArray;
+			locaMetaData.lineSeparator = cr;
 		}
 
 		return program;

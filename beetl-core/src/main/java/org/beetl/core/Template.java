@@ -38,10 +38,7 @@ import org.beetl.core.exception.BeetlException;
 import org.beetl.core.io.ByteWriter_Byte;
 import org.beetl.core.io.ByteWriter_Char;
 import org.beetl.core.misc.BeetlUtil;
-import org.beetl.core.statement.AjaxStatement;
-import org.beetl.core.statement.ErrorGrammarProgram;
-import org.beetl.core.statement.GrammarToken;
-import org.beetl.core.statement.Program;
+import org.beetl.core.statement.*;
 
 /** 模板类
  * @author joelli
@@ -109,17 +106,19 @@ public class Template {
 					ctx.set(entry.getKey(), entry.getValue());
 				}
 			}
-			program.metaData.initContext(ctx);
+
 			if (ajaxId != null) {
 				AjaxStatement ajax = program.metaData.getAjax(ajaxId);
 				if (ajax == null) {
 					BeetlException be = new BeetlException(BeetlException.AJAX_NOT_FOUND);
-
 					be.pushToken(new GrammarToken(ajaxId, 0, 0));
 					throw be;
 				}
+				ProgramMetaData localMetaData = ajax.getLocalProgramMetaData();
+				localMetaData.initContext(ctx);
 				ajax.execute(ctx);
 			} else {
+				program.metaData.initContext(ctx);
 				program.execute(ctx);
 			}
 

@@ -243,11 +243,23 @@ public class AntlrProgramBuilder {
 		data.tempVarStartIndex = pbCtx.globalIndexMap.size();
 		data.statements = ls.toArray(new Statement[0]);
 		data.globalIndexMap = pbCtx.globalIndexMap;
-		data.globalVarAttr = pbCtx.globaVarAttr;
 		data.setTemplateRootScopeIndexMap(pbCtx.rootIndexMap);
 
 		return data;
 
+	}
+
+
+	private ProgramMetaData buildAjaxBlock(ProgramBuilderContext pbCtx,BlockStatement templateBlock ){
+		ProgramMetaData local = new ProgramMetaData();
+		pbCtx.anzlyszeGlobal();
+		pbCtx.anzlyszeLocal();
+		data.varIndexSize = pbCtx.varIndexSize;
+		data.tempVarStartIndex = pbCtx.globalIndexMap.size();
+		data.statements = new Statement[]{templateBlock};
+		data.globalIndexMap = pbCtx.globalIndexMap;
+		data.setTemplateRootScopeIndexMap(pbCtx.rootIndexMap);
+		return data;
 	}
 
 	private Statement parseStatment(ParserRuleContext node) {
@@ -417,11 +429,8 @@ public class AntlrProgramBuilder {
 
 		}
 
-
 		BlockContext blockCtx = ajaxCtx.block();
-
 		BlockStatement block = this.parseBlock(blockCtx.statement(), blockCtx);
-
 		AjaxStatement ajaxStat = gc.createAjax(block, token, flag.equals("render"));
 		if (this.data.ajaxs == null) {
 			this.data.ajaxs = new HashMap<String, AjaxStatement>();
@@ -437,8 +446,22 @@ public class AntlrProgramBuilder {
 			throw ex;
 		}
 		this.data.ajaxs.put(anchor, ajaxStat);
-
+		reParseAjax(ajaxStat,blockCtx);
 		return ajaxStat;
+	}
+
+	protected void reParseAjax(AjaxStatement ajaxStat,BlockContext blockCtx ) {
+		ProgramBuilderContext templateCtx = this.pbCtx;
+		//在来一次，将Ajax作为一个单独模板解析
+		this.pbCtx = new ProgramBuilderContext();
+		BlockStatement templateBlock  =  this.parseBlock(blockCtx.statement(), blockCtx);
+		this.pbCtx = templateCtx;
+		//部分内容解析完所有模板再填充
+		ProgramMetaData localMetaData = this.buildAjaxBlock(pbCtx,templateBlock);
+		ajaxStat.setLocalProgramMetaData(localMetaData);
+
+
+
 	}
 
 	protected SwitchStatement parseSwitch(SiwchStContext sctx) {
@@ -880,7 +903,9 @@ public class AntlrProgramBuilder {
 	protected String[] getExpressionString(ExpressionListContext expListCtx) {
 		{
 
-			if (expListCtx == null) return new String[0];
+			if (expListCtx == null){
+				return new String[0];
+			}
 			List<ExpressionContext> ecList = expListCtx.expression();
 			String[] exps = new String[ecList.size()];
 			for (int i = 0; i < ecList.size(); i++) {

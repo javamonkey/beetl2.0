@@ -39,6 +39,7 @@ public class AjaxStatement extends Statement {
 	// ajax 片段是否默认被渲染出来
 	boolean defaultRender = true;
 	String ajaxId = null;
+	ProgramMetaData localProgramMetaData = null;
 
 
 	public AjaxStatement(BlockStatement block, GrammarToken token, boolean defaultRender) {
@@ -59,5 +60,11 @@ public class AjaxStatement extends Statement {
 
 	}
 
+	public ProgramMetaData getLocalProgramMetaData() {
+		return localProgramMetaData;
+	}
 
+	public void setLocalProgramMetaData(ProgramMetaData localProgramMetaData) {
+		this.localProgramMetaData = localProgramMetaData;
+	}
 }

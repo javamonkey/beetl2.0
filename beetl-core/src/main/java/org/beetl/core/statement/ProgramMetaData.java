@@ -120,7 +120,7 @@ public class ProgramMetaData implements java.io.Serializable {
 		Map<String, Object> globalVar = ctx.globalVar;
 		if (globalVar == null) {
 			for (int i = 0; i < this.tempVarStartIndex; i++) {
-				ctx.vars[i] = ctx.NOT_EXIST_OBJECT;
+				ctx.vars[i] = Context.NOT_EXIST_OBJECT;
 			}
 			return;
 		}
@@ -132,7 +132,7 @@ public class ProgramMetaData implements java.io.Serializable {
 				ctx.vars[index] = globalVar.get(key);
 			} else {
 				// 不存在
-				ctx.vars[index] = ctx.NOT_EXIST_OBJECT;
+				ctx.vars[index] = Context.NOT_EXIST_OBJECT;
 			}
 		}
 	}
@@ -146,7 +146,7 @@ public class ProgramMetaData implements java.io.Serializable {
 		return templateRootScopeIndexMap;
 	}
 
-	/** 设置模板顶级临时变量的在变量素组里的索引
+	/** 设置模板顶级临时变量的在变量素组里的索引,顶级变量将作为脚本运行需要保存的变量
 	 * @param templateRootScopeIndexMap
 	 */
 	public void setTemplateRootScopeIndexMap(Map<String, Integer> templateRootScopeIndexMap) {

@@ -254,12 +254,12 @@ public class AntlrProgramBuilder {
 		ProgramMetaData local = new ProgramMetaData();
 		pbCtx.anzlyszeGlobal();
 		pbCtx.anzlyszeLocal();
-		data.varIndexSize = pbCtx.varIndexSize;
-		data.tempVarStartIndex = pbCtx.globalIndexMap.size();
-		data.statements = new Statement[]{templateBlock};
-		data.globalIndexMap = pbCtx.globalIndexMap;
-		data.setTemplateRootScopeIndexMap(pbCtx.rootIndexMap);
-		return data;
+		local.varIndexSize = pbCtx.varIndexSize;
+		local.tempVarStartIndex = pbCtx.globalIndexMap.size();
+		local.statements = new Statement[]{templateBlock};
+		local.globalIndexMap = pbCtx.globalIndexMap;
+		local.setTemplateRootScopeIndexMap(pbCtx.rootIndexMap);
+		return local;
 	}
 
 	private Statement parseStatment(ParserRuleContext node) {
@@ -455,9 +455,9 @@ public class AntlrProgramBuilder {
 		//在来一次，将Ajax作为一个单独模板解析
 		this.pbCtx = new ProgramBuilderContext();
 		BlockStatement templateBlock  =  this.parseBlock(blockCtx.statement(), blockCtx);
-		this.pbCtx = templateCtx;
 		//部分内容解析完所有模板再填充
 		ProgramMetaData localMetaData = this.buildAjaxBlock(pbCtx,templateBlock);
+		this.pbCtx = templateCtx;
 		ajaxStat.setLocalProgramMetaData(localMetaData);
 
 

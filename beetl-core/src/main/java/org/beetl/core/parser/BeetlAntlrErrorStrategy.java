@@ -119,9 +119,12 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 
 			throw exception;
 		}
+		
+		
+		
 	}
 
-	protected void reportNoViableAlternative(@NotNull Parser recognizer, @NotNull NoViableAltException e)
+	protected void reportNoViableAlternative(Parser recognizer,  NoViableAltException e)
 	{
 		TokenStream tokens = recognizer.getInputStream();
 		String input;
@@ -155,7 +158,7 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 	{
 		Token t1 = recognizer.getInputStream().LT(-1);
 		String msg = "缺少输入在 " + getTokenErrorDisplay(t1) + " 后面， 期望 "
-				+ e.getExpectedTokens().toString(recognizer.getTokenNames());
+				+ e.getExpectedTokens().toString(recognizer.getVocabulary());
 		BeetlException exception = new BeetlParserException(BeetlException.PARSER_MISS_ERROR, msg, e);
 		//		exception.token = this.getGrammarToken(e.getOffendingToken());
 		exception.pushToken(this.getGrammarToken(t1));
@@ -164,7 +167,7 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 
 	}
 
-	protected void reportFailedPredicate(@NotNull Parser recognizer, @NotNull FailedPredicateException e)
+	protected void reportFailedPredicate(Parser recognizer,  FailedPredicateException e)
 	{
 		String ruleName = recognizer.getRuleNames()[recognizer.getContext().getRuleIndex()];
 		BeetlException exception = new BeetlParserException(BeetlException.PARSER_PREDICATE_ERROR, ruleName, e);
@@ -220,7 +223,7 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 //		Token t = recognizer.getCurrentToken();
 		Token t = recognizer.getTokenStream().LT(-1);
 		IntervalSet expecting = getExpectedTokens(recognizer);
-		String expect = expecting.toString(recognizer.getTokenNames());
+		String expect = expecting.toString(recognizer.getVocabulary());
 		if(expects.containsKey(expect)){
 			expect = expects.get(expect);
 		}
@@ -245,7 +248,7 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 		throw exception;
 	}
 
-	protected void reportUnwantedToken(@NotNull Parser recognizer)
+	protected void reportUnwantedToken(Parser recognizer)
 	{
 		if (inErrorRecoveryMode(recognizer))
 		{
@@ -257,11 +260,19 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 		Token t = recognizer.getCurrentToken();
 		String tokenName = getTokenErrorDisplay(t);
 		IntervalSet expecting = getExpectedTokens(recognizer);
-		String msg = "多余输入 " + tokenName + " 期望 " + expecting.toString(recognizer.getTokenNames());
+		String key =  getErrorKey(expecting.toString(recognizer.getVocabulary()));
+		String msg = "多余输入 " + tokenName + " 期望 " + key;
 		BeetlException exception = new BeetlParserException(BeetlException.PARSER_MISS_ERROR, msg);
 		//		exception.token = this.getGrammarToken(t);
 		exception.pushToken(this.getGrammarToken(t));
 		throw exception;
+	}
+	
+	protected String getErrorKey(String key) {
+		if(key.equals("'>>'")) {
+			return "占位结束符号";
+		}
+		return key;
 	}
 
 	protected GrammarToken getGrammarToken(Token token)

@@ -27,8 +27,8 @@
     <property name="build.dist.dir">${build.dir}</property>
 
     <!-- compile option -->
-   <property name="javac.source">1.5</property>
-    <property name="javac.target">1.5</property>
+   <property name="javac.source">1.8</property>
+    <property name="javac.target">1.8</property>
     <property name="javac.encoding">utf-8</property>
 
     <!-- javadoc -->
@@ -80,7 +80,7 @@
     </target>
 
 	 <target name="buid.grammer">
-	        <property name="antlr.jar" value="${basedir}/lib/antlr-4.2.2-complete.jar" />
+	        <property name="antlr.jar" value="${basedir}/lib/antlr-4.7.2-complete.jar" />
 	        <property name="grammer.dir" value="${basedir}/src/main/java/org/beetl/core/parser/" />
 	        <java jar="${antlr.jar}" fork="yes" dir="${grammer.dir}">
 	            <arg value="BeetlLexer.g4" />

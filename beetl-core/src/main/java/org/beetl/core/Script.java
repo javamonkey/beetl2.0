@@ -93,7 +93,7 @@ public class  Script<T> {
 
 	public Map getResult(){
 		if(!success){
-			throw new IllegalStateException("脚本运行失败");
+			throw ex;
 		}
 		if(result==null){
 			result =  parseResult();

@@ -1,8 +1,8 @@
 <%
-/* dsfsdfsdf */
+/* dsfsdfsdf 
 var a=1;
 
-*/
+
 
 %>
 ${a}

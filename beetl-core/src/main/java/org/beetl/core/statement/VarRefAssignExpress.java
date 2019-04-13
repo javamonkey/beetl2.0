@@ -29,6 +29,7 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 import org.beetl.core.exception.BeetlException;
+import org.beetl.core.om.AttributeAccessFactory;
 import org.beetl.core.om.ObjectSetterUtil;
 
 /**
@@ -72,7 +73,7 @@ public class VarRefAssignExpress extends Expression implements IVarIndex {
 		}
 
 		try {
-			
+			AttributeAccessFactory.buildFiledAccessor()
 			ObjectSetterUtil.set(obj, key, value);
 			return value;
 		

@@ -29,8 +29,8 @@ public class ASMBeanFactoryByPropTest extends BasicTestCase {
 		user.setIsManager(false);
 		user.setHeight(1.73F);
 		user.setGender('M');
-		user.setAa(12);
-		user.setBB(13);
+		user.setAAa(12);
+		user.setABB(13);
 
 		ClassDescription classDescription = BeanEnhanceUtils.getClassDescription(CLASS_NAME);
 		for (List<PropertyDescriptor> propDescs : classDescription.propertyMap.values()) {

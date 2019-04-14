@@ -1,7 +1,9 @@
 package org.beetl.core.om.asm;
 
 
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
 
@@ -15,10 +17,9 @@ public class ASMBeanFactoryTest extends BasicTestCase {
 
 	private static final String CLASS_NAME = User.class.getName();
 
-	@Test
-	public void testAttrByAsm() throws Exception {
 
-		User user = new User();
+	static User user = new User();
+	static {
 		user.setName("shaozuo");
 		user.setAddress("北京");
 		user.setNumbers(15);
@@ -29,8 +30,12 @@ public class ASMBeanFactoryTest extends BasicTestCase {
 		user.setIsManager(false);
 		user.setHeight(1.73F);
 		user.setGender('M');
-		user.setAAa(12);
-		user.setABB(13);
+		user.setAaAa(12);
+		user.setAaBB(13);
+	}
+
+	@Test
+	public void testAttrByAsm() throws Exception {
 
 		ClassDescription classDescription = BeanEnhanceUtils.getClassDescription(CLASS_NAME, false);
 		ASMBeanFactory.setUsePropertyDescriptor(false);
@@ -45,12 +50,33 @@ public class ASMBeanFactoryTest extends BasicTestCase {
 		AssertJUnit.assertEquals("哈哈是", ASMBeanFactory.value(user, "填"));
 	}
 
-
 	private static Object getValue(User user, String attrName)
 			throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		Field field = user.getClass().getDeclaredField(attrName);
 		field.setAccessible(true);
 		return field.get(user);
 	}
+
+	@Test
+	public void testByProp() throws Exception {
+
+		ClassDescription classDescription = BeanEnhanceUtils.getClassDescription(CLASS_NAME);
+		for (List<PropertyDescriptor> propDescs : classDescription.propertyMap.values()) {
+			for (PropertyDescriptor propDesc : propDescs) {
+				System.out.println(propDesc.getName() + ":" + ASMBeanFactory.value(user, propDesc.getName()));
+				AssertJUnit.assertEquals(getValue(user, propDesc), ASMBeanFactory.value(user, propDesc.getName()));
+			}
+		}
+		AssertJUnit.assertEquals("哈哈是", ASMBeanFactory.value(user, "填写"));
+		AssertJUnit.assertEquals("哈哈是", ASMBeanFactory.value(user, "写"));
+		AssertJUnit.assertEquals("哈哈是", ASMBeanFactory.value(user, "填"));
+	}
+
+
+	private static Object getValue(User user, PropertyDescriptor propDesc)
+			throws InvocationTargetException, IllegalAccessException, IllegalArgumentException {
+		return propDesc.getReadMethod().invoke(user);
+	}
+
 
 }

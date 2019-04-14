@@ -1,6 +1,6 @@
 /*
  [The "BSD license"]
- Copyright (c) 2011-2014 Joel Li (李家智)
+ Copyright (c) 2011-2019  闲大赋 (李家智)
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -27,14 +27,10 @@
  */
 package org.beetl.core.statement;
 
-import java.util.List;
-import java.util.Map;
-
 import org.beetl.core.Context;
 import org.beetl.core.exception.BeetlException;
-import org.beetl.core.fun.ObjectUtil;
 import org.beetl.core.om.AttributeAccess;
-import org.beetl.core.om.AttributeAccessFactory;
+import org.beetl.core.om.AABuilder;
 
 /**
  * user.name
@@ -157,7 +153,7 @@ public class VarRef extends Expression implements IVarIndex {
 
 				}
 				
-				AttributeAccess aa = AttributeAccessFactory.buildFiledAccessor(root.getClass(), attr, ctx.gt);
+				AttributeAccess aa = AABuilder.buildFiledAccessor(root.getClass());
 				try {
 					value = aa.value(root, attr);
 				}catch(RuntimeException e) {

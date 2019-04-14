@@ -10,7 +10,7 @@ import org.beetl.core.misc.PrimitiveArrayUtil;
 
 public class ObjectSetterUtil {
 
-	public static void set(Object o, Object key, Object value) {
+	protected static void set(Object o, Object key, Object value) {
 
 		if (o instanceof Map) {
 			((Map) o).put(key, value);

@@ -34,7 +34,7 @@ public class Test {
 		gt.registerTag("table",TableTag.class);
 		gt.registerTag("col",ColTag.class);
 
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 1000; i++) {
 
 			Template t = gt.getTemplate("/hello.txt");
 			t.binding("a",1);

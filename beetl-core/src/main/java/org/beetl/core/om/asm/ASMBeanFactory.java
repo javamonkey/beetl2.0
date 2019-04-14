@@ -22,7 +22,7 @@ public class ASMBeanFactory extends ClassLoader {
 		return generatedBean == null ? null : generatedBean.value(bean, attrName);
 	}
 
-	public static AttributeAccess generateBean(Class<?> beanClass) {
+	public static synchronized  AttributeAccess generateBean(Class<?> beanClass) {
 		if (beanMap.containsKey(beanClass)) {
 			return beanMap.get(beanClass);
 		}

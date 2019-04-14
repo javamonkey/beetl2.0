@@ -36,7 +36,7 @@
     <property name="javadoc.title">${product.name} ${product.version} API</property>
     <property name="javadoc.access">public</property>
     <property name="javadoc.linksource">false</property>
-    <property name="javadoc.copyright">Copyright @ 2011-2014 by ${product.author}, Didu, China. All Rights Reserved.</property>
+    <property name="javadoc.copyright">Copyright @ 2011-2019 by ${product.author}, Didu, China. All Rights Reserved.</property>
 
     <!-- package files -->
     <property name="dist.jar">${build.dist.dir}/${product.name}-${product.version}.jar</property>

@@ -1,6 +1,6 @@
 /*
  [The "BSD license"]
- Copyright (c) 2011-2019 Joel Li (李家智) xiandafu@126.com
+ Copyright (c) 2011-2019  闲大赋 (李家智) xiandafu@126.com
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without

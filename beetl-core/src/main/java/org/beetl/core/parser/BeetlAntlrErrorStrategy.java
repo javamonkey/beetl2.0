@@ -1,6 +1,6 @@
 /*
  [The "BSD license"]
- Copyright (c) 2011-2014 Joel Li (李家智)
+ Copyright (c) 2011-2019  闲大赋 (李家智)
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -154,7 +154,7 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 		throw exception;
 	}
 
-	protected void reportInputMismatch(@NotNull Parser recognizer, @NotNull InputMismatchException e)
+	protected void reportInputMismatch(Parser recognizer,  InputMismatchException e)
 	{
 		Token t1 = recognizer.getInputStream().LT(-1);
 		String msg = "缺少输入在 " + getTokenErrorDisplay(t1) + " 后面， 期望 "
@@ -211,7 +211,7 @@ public class BeetlAntlrErrorStrategy extends DefaultErrorStrategy
 		throw new InputMismatchException(recognizer);
 	}
 
-	protected void reportMissingToken(@NotNull Parser recognizer)
+	protected void reportMissingToken(Parser recognizer)
 	{
 		if (inErrorRecoveryMode(recognizer))
 		{

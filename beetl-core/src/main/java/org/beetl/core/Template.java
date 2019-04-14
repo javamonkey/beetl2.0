@@ -1,6 +1,6 @@
 /*
  [The "BSD license"]
- Copyright (c) 2011-2014 Joel Li (李家智)
+ Copyright (c) 2011-2019  闲大赋 (李家智)
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -244,15 +244,6 @@ public class Template {
 
 
 
-	/**
-	 * 如果创建模板并没有渲染，调用render方法，这里可以回收，以防万一，try finally里已经回收了
-	 * @throws Throwable
-	 */
-	protected void finalize() throws Throwable {
-		if(this.ctx!=null){
-			ctx.destory();
-		}
-	}
 
 
 }

@@ -1,6 +1,6 @@
 /*
  [The "BSD license"]
- Copyright (c) 2011-2014 Joel Li (李家智)
+ Copyright (c) 2011-2019  闲大赋 (李家智)
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -36,5 +36,9 @@ public abstract class AttributeAccess implements java.io.Serializable
 {
 
 	public abstract Object value(Object o, Object name);
+
+	public void setValue(Object o,Object name,Object value){
+		ObjectSetterUtil.set(o,name,value);
+	}
 
 }

@@ -1,6 +1,6 @@
 /*
 [The "BSD license"]
-Copyright (c) 2011-2014 Joel Li (李家智)
+Copyright (c) 2011-2019  闲大赋 (李家智)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -31,8 +31,6 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.beetl.core.GroupTemplate;
-
 /**
  * 为一个特定类的方法生成AttributeAccess，如果类是
  * <ul>
@@ -44,25 +42,34 @@ import org.beetl.core.GroupTemplate;
  *
  * @author joelli
  */
-public class AttributeAccessFactory {
+public class DefaultAAFactory {
 
-    public static ListAA listAA = new ListAA();
-    public static MapAA mapAA = new MapAA();
-    public static ArrayAA arrayAA = new ArrayAA();
-    public static MapEntryAA mapEntryAA = new MapEntryAA();
-    public static ReflectBeanAA reflectBeanAA = new  ReflectBeanAA();
-    public static Map<Class, AttributeAccess> classAttrs = new ConcurrentHashMap<Class, AttributeAccess>();
+    protected  ListAA listAA = new ListAA();
+    protected  MapAA mapAA = new MapAA();
+    protected  ArrayAA arrayAA = new ArrayAA();
+    protected  MapEntryAA mapEntryAA = new MapEntryAA();
+    /**
+     *  可以替换成自己的实现，比如，允许属性上增加注解来设定返回的属性值
+     *
+     */
 
-    static {
+    protected  ReflectBeanAA reflectBeanAA = new  ReflectBeanAA();
+    protected  Map<Class, AttributeAccess> classAttrs = new ConcurrentHashMap<Class, AttributeAccess>();
+
+
+
+
+    public DefaultAAFactory(){
         classAttrs.put(HashMap.class, mapAA);
         classAttrs.put(ConcurrentHashMap.class, mapAA);
         classAttrs.put(LinkedHashMap.class, mapAA);
 
         classAttrs.put(ArrayList.class, listAA);
         classAttrs.put(Entry.class, mapEntryAA);
+
     }
 
-    public static AttributeAccess buildFiledAccessor(Class c, String attrExp, GroupTemplate gt) {
+    public  AttributeAccess buildFiledAccessor(Class c) {
 
         AttributeAccess aa = classAttrs.get(c);
         if (aa != null) {
@@ -80,17 +87,26 @@ public class AttributeAccessFactory {
             return listAA;
         }
 
+        if(Map.Entry.class.isAssignableFrom(c)){
+            return mapEntryAA;
+        }
+
 
         aa = registerClass(c);
         return aa;
 
-
     }
 
-    static public AttributeAccess registerClass(Class c) {
+    protected  AttributeAccess registerClass(Class c) {
         classAttrs.put(c,reflectBeanAA);
         return reflectBeanAA;
     }
 
+    public ListAA getListAA() {
+        return listAA;
+    }
 
+    public void setListAA(ListAA listAA) {
+        this.listAA = listAA;
+    }
 }

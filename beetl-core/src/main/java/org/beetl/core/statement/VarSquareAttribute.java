@@ -1,6 +1,6 @@
 /*
  [The "BSD license"]
- Copyright (c) 2011-2014 Joel Li (李家智)
+ Copyright (c) 2011-2019  闲大赋 (李家智)
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@ package org.beetl.core.statement;
 import org.beetl.core.Context;
 import org.beetl.core.misc.BeetlUtil;
 import org.beetl.core.om.AttributeAccess;
-import org.beetl.core.om.AttributeAccessFactory;
+import org.beetl.core.om.AABuilder;
 
 /**
  * a.[]
@@ -55,7 +55,7 @@ public class VarSquareAttribute extends VarAttribute {
 
 		try {
 			Object value = exp.evaluate(ctx);
-			AttributeAccess aa = AttributeAccessFactory.buildFiledAccessor(o.getClass(),name,ctx.gt);
+			AttributeAccess aa = AABuilder.buildFiledAccessor(o.getClass());
 			return aa.value(o, value);
 		} catch (ClassCastException ex) {
 			throw BeetlUtil.throwCastException(ex, ctx.gt);

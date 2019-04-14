@@ -1,6 +1,6 @@
 /*
  [The "BSD license"]
- Copyright (c) 2011-2014 Joel Li (李家智)
+ Copyright (c) 2011-2019  闲大赋 (李家智)
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -50,7 +50,7 @@ import org.beetl.core.misc.BeetlUtil;
 import org.beetl.core.misc.ByteClassLoader;
 import org.beetl.core.misc.ClassSearch;
 import org.beetl.core.misc.PrimitiveArrayUtil;
-import org.beetl.core.om.AttributeAccessFactory;
+import org.beetl.core.om.AABuilder;
 import org.beetl.core.resource.ClasspathResourceLoader;
 import org.beetl.core.statement.ErrorGrammarProgram;
 import org.beetl.core.statement.Program;
@@ -70,7 +70,7 @@ public class GroupTemplate {
 			: GroupTemplate.class.getClassLoader();
 
 	ByteClassLoader byteLoader = new ByteClassLoader(classLoader);
-	AttributeAccessFactory attributeAccessFactory = new AttributeAccessFactory();
+	AABuilder attributeAccessFactory = new AABuilder();
 	ResourceLoader resourceLoader = null;
 	Configuration conf = null;
 	TemplateEngine engine = null;
@@ -838,7 +838,7 @@ public class GroupTemplate {
 		return classSearch;
 	}
 
-	public AttributeAccessFactory getAttributeAccessFactory() {
+	public AABuilder getAttributeAccessFactory() {
 		return attributeAccessFactory;
 	}
 

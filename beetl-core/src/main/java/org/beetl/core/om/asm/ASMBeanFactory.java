@@ -16,13 +16,17 @@ public class ASMBeanFactory extends ClassLoader {
 
 	private static final Map<Class<?>, AttributeAccess> beanMap = new ConcurrentHashMap<>();
 
+	public static void setUsePropertyDescriptor(boolean usePropertyDescriptor) {
+		GeneratedBeanLoader.usePropertyDescriptor = usePropertyDescriptor;
+	}
+
 	public static Object value(Object bean, String attrName) {
 		Class<?> beanClass = bean.getClass();
 		AttributeAccess generatedBean = generateBean(beanClass);
 		return generatedBean == null ? null : generatedBean.value(bean, attrName);
 	}
 
-	public static synchronized  AttributeAccess generateBean(Class<?> beanClass) {
+	public static synchronized AttributeAccess generateBean(Class<?> beanClass) {
 		if (beanMap.containsKey(beanClass)) {
 			return beanMap.get(beanClass);
 		}

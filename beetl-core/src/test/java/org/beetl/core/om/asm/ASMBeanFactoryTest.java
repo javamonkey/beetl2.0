@@ -16,7 +16,7 @@ public class ASMBeanFactoryTest extends BasicTestCase {
 	private static final String CLASS_NAME = User.class.getName();
 
 	@Test
-	public void testGetter() throws Exception {
+	public void testAttrByAsm() throws Exception {
 
 		User user = new User();
 		user.setName("shaozuo");
@@ -32,7 +32,8 @@ public class ASMBeanFactoryTest extends BasicTestCase {
 		user.setAa(12);
 		user.setBB(13);
 
-		ClassDescription classDescription = BeanEnhanceUtils.getClassDescription(CLASS_NAME);
+		ClassDescription classDescription = BeanEnhanceUtils.getClassDescription(CLASS_NAME, false);
+		ASMBeanFactory.setUsePropertyDescriptor(false);
 		for (List<FieldNode> nodes : classDescription.fieldMap.values()) {
 			for (FieldNode node : nodes) {
 				System.out.println(node.name + ":" + ASMBeanFactory.value(user, node.name));

@@ -35,5 +35,9 @@ public final class PunctuationConstants {
 	 * 英文斜杆：/
 	 */
 	public static final char SLASH_CHAR = '/';
+	/**
+	 * 英文左括号：(
+	 */
+	public static final char LEFT_BRACKET = '(';
 
 }

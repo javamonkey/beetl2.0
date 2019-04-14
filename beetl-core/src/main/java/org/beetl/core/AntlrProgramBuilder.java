@@ -450,6 +450,8 @@ public class AntlrProgramBuilder {
 		return ajaxStat;
 	}
 
+
+
 	protected void reParseAjax(AjaxStatement ajaxStat,BlockContext blockCtx ) {
 		ProgramBuilderContext templateCtx = this.pbCtx;
 		//在来一次，将Ajax作为一个单独模板解析
@@ -530,6 +532,48 @@ public class AntlrProgramBuilder {
 		}
 		return vas;
 
+
+	}
+
+	/**
+	 * x+=5
+	 * @param selfExpContext
+	 * @return
+	 */
+	protected VarRefAssignExpress parseSelfAssingInExp(BeetlParser.AssingSelfExpContext selfExpContext) {
+
+		BeetlParser.GeneralAssingSelfExpContext selfExp = selfExpContext.generalAssingSelfExp();
+		VarRefContext varRefCtx = selfExp.varRef();
+		VarRef ref = this.parseVarRefInLeftExpression(varRefCtx);
+		Expression exp = parseExpress(selfExp.expression());
+		TerminalNode tn = (TerminalNode) selfExp.children.get(1);
+		short mode = 0;
+		if (selfExp.MUlTIP() != null) {
+			mode = ArthExpression.MUL;
+		} else if (selfExp.DIV() != null) {
+			mode = ArthExpression.DIV;
+		} else if (selfExp.ADD() != null) {
+			mode = ArthExpression.PLUS;
+		}else if(selfExp.MIN()!=null){
+			mode = ArthExpression.MIN;
+		}
+
+		ArthExpression arthExpression=  gc.createArth(ref, exp, mode, this.getBTToken(tn.getSymbol()));
+		VarRefAssignExpress vas = gc.createVarRefAssignExp(arthExpression, ref);
+		if (ref.attributes.length == 0) {
+			// 变量定义:
+			Token token = varRefCtx.Identifier().getSymbol();
+			if (pbCtx.hasDefined(token.getText()) != null) {
+				registerVar(vas);
+				return vas;
+			} else {
+				BeetlException ex = new BeetlException(BeetlException.VAR_NOT_DEFINED);
+				ex.pushToken(this.getBTToken(token));
+				throw ex;
+			}
+
+		}
+		return vas;
 
 	}
 
@@ -1191,10 +1235,15 @@ public class AntlrProgramBuilder {
 			VarRefAssignExpress vas = this.parseAssingInExp(agc);
 			return vas;
 
-		} else {
+		} else if(ctx instanceof BeetlParser.AssingSelfExpContext){
+			return parseSelfAssingInExp((BeetlParser.AssingSelfExpContext)ctx);
+		}
+		else {
 			throw new UnsupportedOperationException();
 		}
 	}
+
+
 
 	protected IncDecExpression parseIncDecOneContext(IncDecOneContext ctx) {
 		IncDecExpression exp = null;

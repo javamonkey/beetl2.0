@@ -10,7 +10,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.FieldNode;
 
-import net.sf.cglib.asm.Type;
+//import net.sf.cglib.asm.Type;
 
 /**
  * @author laozhaishaozuo@foxmail.com

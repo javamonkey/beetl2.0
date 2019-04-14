@@ -1,6 +1,8 @@
+${user.age}
 <%
 
-var a=1;
+
+user.age+=2;
 
 %>
-${a}
+${user.age}

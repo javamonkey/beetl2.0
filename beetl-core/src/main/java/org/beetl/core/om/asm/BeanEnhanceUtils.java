@@ -78,7 +78,8 @@ final class BeanEnhanceUtils {
 	private static Map<Integer, List<PropertyDescriptor>> buildPropertyMap(String clazzName)
 			throws ClassNotFoundException, IntrospectionException {
 		PropertyDescriptor[] propDescriptors = getPropertyDescriptors(clazzName);
-		List<PropertyDescriptor> propList = Arrays.asList(propDescriptors);
+		List<PropertyDescriptor> propList = new ArrayList<>(propDescriptors.length);
+		propList.addAll(Arrays.asList(propDescriptors));
 		Map<Integer, List<PropertyDescriptor>> propertyMap = new LinkedHashMap<>();
 		// 先对其按照hashCode进行排序，方便后续生产代码
 		propList.sort((p1, p2) -> Integer.compare(p1.getName().hashCode(), p2.getName().hashCode()));
@@ -87,6 +88,7 @@ final class BeanEnhanceUtils {
 		for (PropertyDescriptor prop : propList) {
 			if (prop.getReadMethod() != null && !ignoreSet.contains(prop.getReadMethod().getName())) {
 				hashCode = prop.getName().hashCode();
+				System.out.println("hashCode:" + hashCode + ",name:" + prop.getName());
 				props = propertyMap.get(hashCode);
 				if (props == null) {
 					props = new ArrayList<>();

@@ -15,8 +15,8 @@ public class User {
 	private char gender;
 	private byte flag;
 	private short age;
-	private int Aa;
-	private int BB;
+	private int aaAa;
+	private int aaBB;
 
 
 	public String getName() {
@@ -111,20 +111,20 @@ public class User {
 		this.isManager = isManager;
 	}
 
-	public int getAa() {
-		return Aa;
+	public int getAaAa() {
+		return aaAa;
 	}
 
-	public void setAa(int aa) {
-		Aa = aa;
+	public void setAaAa(int aa) {
+		aaAa = aa;
 	}
 
-	public int getBB() {
-		return BB;
+	public int getAaBB() {
+		return aaBB;
 	}
 
-	public void setBB(int bB) {
-		BB = bB;
+	public void setAaBB(int bB) {
+		aaBB = bB;
 	}
 
 	public Object get(Object key) {

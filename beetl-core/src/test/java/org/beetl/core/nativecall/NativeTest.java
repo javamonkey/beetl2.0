@@ -81,11 +81,12 @@ public class NativeTest extends BasicTestCase
 	@Test
 	public void testObjectReturn() throws Exception
 	{
-		NativeTest test = new NativeTest();
-		Template t = gt.getTemplate("/nat/object_template.html");
-		this.bind(t, "test", test);
-		String str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/nat/object_expected.html"), str);
+			NativeTest test = new NativeTest();
+			Template t = gt.getTemplate("/nat/object_template.html");
+			this.bind(t, "test", test);
+			String str = t.render();
+			AssertJUnit.assertEquals(this.getFileContent("/nat/object_expected.html"), str);
+
 
 		
 	}
@@ -94,10 +95,13 @@ public class NativeTest extends BasicTestCase
 	public void testPrivateMethodCall() throws Exception
 	{
 
-		Template t = gt.getTemplate("/nat/nat_private_method_template.html");
-		this.bind(t, "test", Request.getRequest());
-		String str = t.render();
-		AssertJUnit.assertEquals(this.getFileContent("/nat/nat_private_method_expected.html"), str);
+
+			Template t = gt.getTemplate("/nat/nat_private_method_template.html");
+			this.bind(t, "test", Request.getRequest());
+			String str = t.render();
+			AssertJUnit.assertEquals(this.getFileContent("/nat/nat_private_method_expected.html"), str);
+
+
 
 	
 	}

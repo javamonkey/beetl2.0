@@ -6,7 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.beetl.core.AntlrProgramBuilder;
 import org.beetl.core.Configuration;
@@ -30,14 +30,14 @@ public class DefaultTemplateEngine implements TemplateEngine {
 	@Override
 	public Program createProgram(Resource resource, Reader reader, Map<Integer, String> textMap, String cr,
 			GroupTemplate gt) {
-		ANTLRInputStream input;
+		
+		BeetlLexer lexer = null;;
 		try {
-			input = new ANTLRInputStream(reader);
-		} catch (IOException e) {
-			// 不可能发生
-			throw new RuntimeException(e);
+			lexer = new BeetlLexer(CharStreams.fromReader(reader));
+		} catch (IOException e1) {
+			// 不可能发生，
+			throw new IllegalStateException(e1);
 		}
-		BeetlLexer lexer = new BeetlLexer(input);
 		lexer.removeErrorListeners();
 		lexer.addErrorListener(syntaxError);
 
@@ -81,22 +81,44 @@ public class DefaultTemplateEngine implements TemplateEngine {
 
 		}
 
-		//如果ajax内容
-		for(AjaxStatement ajax:program.metaData.ajaxs.values()){
-			ProgramMetaData locaMetaData = ajax.getLocalProgramMetaData();
-			locaMetaData.staticTextArray = program.metaData.staticTextArray;
-			locaMetaData.lineSeparator = cr;
+		if(program.metaData.ajaxs!=null) {
+			//如果ajax内容
+			for(AjaxStatement ajax:program.metaData.ajaxs.values()){
+				ProgramMetaData locaMetaData = ajax.getLocalProgramMetaData();
+				locaMetaData.staticTextArray = program.metaData.staticTextArray;
+				locaMetaData.lineSeparator = cr;
+			}
 		}
+		
 
 		return program;
 	}
+	
+	/**
+	 *  子类可以加工Program，修改或者添加包括静态文本或者Statement语句
+	 * @param program
+	 */
+	protected void checkProgram(Program program){
+		
+	}
 
+	/**
+	 *  获取一个beetl模板的解析器，子类可以扩展
+	 * @param gt
+	 * @return
+	 */
 	protected AntlrProgramBuilder getAntlrBuilder(GroupTemplate gt) {
 		GrammarCreator gc = this.getGrammerCreator(gt);
 		AntlrProgramBuilder pb = new AntlrProgramBuilder(gt, gc);
 		return pb;
 	}
-
+	
+	
+	/**
+	 * 语法节点生成器，子类可以扩展射生成自己个性化节点解析，比如带有xss的输出的${}，限制循环个数的for语法
+	 * @param gt
+	 * @return
+	 */
 	protected GrammarCreator getGrammerCreator(GroupTemplate gt) {
 		GrammarCreator grammar = new GrammarCreator();
 		if (gt.getConf().isStrict()) {

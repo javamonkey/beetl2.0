@@ -18,7 +18,7 @@ public class Test {
 		
 		ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("lab/");
 		Configuration cfg = Configuration.defaultConfiguration();
-		cfg.setEngine("org.beetl.core.engine.OnlineTemplateEngine");
+
 		cfg.setDirectByteOutput(true);
 		cfg.getResourceMap().put("tagRoot", "");
 		cfg.getPkgList().add("org.beetl.core.lab.");
@@ -33,6 +33,8 @@ public class Test {
 		GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 		gt.registerTag("table",TableTag.class);
 		gt.registerTag("col",ColTag.class);
+		TestUser user = new TestUser("a");
+
 
 		for (int i = 0; i < 1; i++) {
 

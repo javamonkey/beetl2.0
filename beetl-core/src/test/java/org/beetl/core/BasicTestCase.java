@@ -39,6 +39,8 @@ public class BasicTestCase extends TestCase {
 
 		gt = new GroupTemplate(rs, cf);
 
+
+
 	}
 
 	public BasicTestCase()

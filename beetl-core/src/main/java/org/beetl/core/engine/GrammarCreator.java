@@ -109,7 +109,7 @@ public class GrammarCreator {
 
 	public PlaceholderST createTextOutputSt(Expression exp, FormatExpression format) {
 		check("TextOutputSt");
-		return new PlaceholderST(exp, format, null);
+			return new PlaceholderST(exp, format, null);
 	}
 
 	public PlaceholderST createTextOutputSt2(Expression exp, FormatExpression format) {

@@ -1,5 +1,6 @@
 package org.beetl.core.om.asm;
 
+import java.beans.PropertyDescriptor;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,5 +17,7 @@ class ClassDescription {
 	Map<Integer, List<FieldNode>> fieldMap;
 
 	Set<String> methodNameDescSet;
+
+	Map<Integer, List<PropertyDescriptor>> propertyMap;
 
 }

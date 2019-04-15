@@ -12,25 +12,31 @@ public class ContextLocalBuffers {
         this.bufferMax = bufferMax;
         queue = new ArrayBlockingQueue<ContextBuffer>(num);
         for(int i=0;i<num;i++){
-            ContextBuffer buffer = new ContextBuffer(bufferMax);
+            ContextBuffer buffer = new ContextBuffer(bufferMax,true);
             queue.add(buffer);
         }
     }
 
     public ContextBuffer getContextLocalBuffer(){
         ContextBuffer buffer =  queue.poll();
-        if(buffer==null){
-            return new ContextBuffer(bufferMax,false);
+        if(buffer!=null){
+            return buffer;
         }
+        //临时
+        return new ContextBuffer(bufferMax,false);
 
-        return buffer;
     }
 
     public  void putContextLocalBuffer(ContextBuffer buffer){
-        if(buffer.inner){
-            queue.add(buffer);
+
+        if(!buffer.inner){
+            //放弃，这是临时生成的
+          return ;
         }
-        //放弃，等待回收
+
+        queue.add(buffer);
+
+
 
     }
 

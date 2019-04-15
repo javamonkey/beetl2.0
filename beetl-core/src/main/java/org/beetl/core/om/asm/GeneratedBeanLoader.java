@@ -12,6 +12,7 @@ import java.io.IOException;
 public class GeneratedBeanLoader extends ClassLoader {
 
 	private static GeneratedBeanLoader loader = new GeneratedBeanLoader();
+	static boolean usePropertyDescriptor = true;
 
 	/**
 	 * 生成并加载增强类
@@ -49,7 +50,7 @@ public class GeneratedBeanLoader extends ClassLoader {
 	private static Class<?> createAndLoadGeneratedClass(final Class<?> beanClass, final String generatedBeanName) {
 		Class<?> generatedClass = null;
 		try {
-			byte[] code = EnhanceClassGenerator.generate(beanClass);
+			byte[] code = EnhanceClassGenerator.generate(beanClass, usePropertyDescriptor);
 			// TODO 是否需要
 			// writeClassToFile(code, beanClass, generatedBeanName);
 			generatedClass = loader.defineClass(generatedBeanName, code, 0, code.length);

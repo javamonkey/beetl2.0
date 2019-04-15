@@ -27,8 +27,8 @@
     <property name="build.dist.dir">${build.dir}</property>
 
     <!-- compile option -->
-   <property name="javac.source">1.5</property>
-    <property name="javac.target">1.5</property>
+   <property name="javac.source">1.8</property>
+    <property name="javac.target">1.8</property>
     <property name="javac.encoding">utf-8</property>
 
     <!-- javadoc -->
@@ -36,7 +36,7 @@
     <property name="javadoc.title">${product.name} ${product.version} API</property>
     <property name="javadoc.access">public</property>
     <property name="javadoc.linksource">false</property>
-    <property name="javadoc.copyright">Copyright @ 2011-2014 by ${product.author}, Didu, China. All Rights Reserved.</property>
+    <property name="javadoc.copyright">Copyright @ 2011-2019 by ${product.author}, Didu, China. All Rights Reserved.</property>
 
     <!-- package files -->
     <property name="dist.jar">${build.dist.dir}/${product.name}-${product.version}.jar</property>
@@ -80,7 +80,7 @@
     </target>
 
 	 <target name="buid.grammer">
-	        <property name="antlr.jar" value="${basedir}/lib/antlr-4.2.2-complete.jar" />
+	        <property name="antlr.jar" value="${basedir}/lib/antlr-4.7.2-complete.jar" />
 	        <property name="grammer.dir" value="${basedir}/src/main/java/org/beetl/core/parser/" />
 	        <java jar="${antlr.jar}" fork="yes" dir="${grammer.dir}">
 	            <arg value="BeetlLexer.g4" />
@@ -127,7 +127,7 @@
         <mkdir dir="${build.dist.dir}" />
         <jar jarfile="${dist.jar}" whenempty="fail" level="9">
             <fileset dir="${build.classes.dir}" includes="**" excludes="**/*.g4,**/*.xml, **/lab/**" />
-        	<zipfileset includes="**/*.class" src="lib/antlr4-runtime-4.2.2.jar">
+        	<zipfileset includes="**/*.class" src="lib/antlr4-runtime-4.7.2.jar">
         		<exclude name="**/tree/gui/**"/>
         		<exclude name="**/tree/pattern/**"/>
         		<exclude name="**/tree/xpath/**"/>

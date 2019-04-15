@@ -15,12 +15,14 @@ public class PojoMethodInvoker implements MethodInvoker
 {
 
     PropertyDescriptor pd  = null;
+
     /**
      * @param m 目标调用方法，应该是一个无参数的get方法
      */
     public PojoMethodInvoker(PropertyDescriptor pd)
     {
         this.pd = pd;
+        pd.getReadMethod().setAccessible(true);
 
     }
 
@@ -29,7 +31,7 @@ public class PojoMethodInvoker implements MethodInvoker
     {
         try
         {
-        	pd.getReadMethod().setAccessible(true); 
+
         	return pd.getReadMethod().invoke(obj, null);
         }
         catch (IllegalArgumentException e)

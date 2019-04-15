@@ -18,9 +18,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: org.antlr:antlr4-runtime:4.7.2" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.ibeetl:btjson:0.94" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-hibernate4:2.5.3" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.code.gson:gson:2.3.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.jfinal:jfinal:3.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: cglib:cglib-nodep:3.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.nutz:nutz:1.b.52" level="project" />
@@ -67,8 +64,8 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-core:2.0.31-beta" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy:0.6.14" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.objenesis:objenesis:2.1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.ow2.asm:asm:5.2" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.ow2.asm:asm-commons:5.2" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.ow2.asm:asm-tree:5.2" level="project" />
+    <orderEntry type="library" name="Maven: org.ow2.asm:asm:5.2" level="project" />
+    <orderEntry type="library" name="Maven: org.ow2.asm:asm-commons:5.2" level="project" />
+    <orderEntry type="library" name="Maven: org.ow2.asm:asm-tree:5.2" level="project" />
   </component>
 </module>

@@ -1,6 +1,6 @@
 /*
  [The "BSD license"]
- Copyright (c) 2011-2014 Joel Li (李家智)
+ Copyright (c) 2011-2019  闲大赋 (李家智)
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -93,7 +93,7 @@ public class  Script<T> {
 
 	public Map getResult(){
 		if(!success){
-			throw new IllegalStateException("脚本运行失败");
+			throw ex;
 		}
 		if(result==null){
 			result =  parseResult();

@@ -1,6 +1,6 @@
 /*
  [The "BSD license"]
- Copyright (c) 2011-2014 Joel Li (李家智)
+ Copyright (c) 2011-2019  闲大赋 (李家智)
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,8 @@ package org.beetl.core.statement;
 
 import org.beetl.core.Context;
 import org.beetl.core.exception.BeetlException;
-import org.beetl.core.om.ObjectSetterUtil;
+import org.beetl.core.om.AttributeAccess;
+import org.beetl.core.om.AABuilder;
 
 /**
  * var xxx.cc = exp;
@@ -60,10 +61,16 @@ public class VarRefAssignStatement extends VarAssignStatement {
 		} else {
 			key = lastVarAttribute.name;
 		}
+
+		if(obj==null){
+			BeetlException bx = new BeetlException(BeetlException.NULL);
+			bx.pushToken(varRef.token);
+			throw bx;
+		}
 		try {
-			ObjectSetterUtil.set(obj, key, value);
-			
-			
+			AttributeAccess aa= AABuilder.buildFiledAccessor(obj.getClass());
+			aa.setValue(obj,key,value);
+
 		} catch (ClassCastException ex) {
 			BeetlException bx = new BeetlException(BeetlException.ATTRIBUTE_INVALID, ex);
 			bx.pushToken(lastVarAttribute.token);

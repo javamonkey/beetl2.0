@@ -157,12 +157,17 @@ constantExpression
     |   expression OR expression    #orExp
     |   expression QUESTOIN expression? COLON? expression?  #ternaryExp
     |   LEFT_PAR expression RIGHT_PAR #parExp
-    |   generalAssignExp  #assignGeneralInExp 
+    |   generalAssignExp  #assignGeneralInExp
+    |   generalAssingSelfExp #assingSelfExp
+
     ;
     
 generalAssignExp: varRef ASSIN expression ;
 varRef:Identifier ( varAttribute)*  (safe_output)?
 ;
+
+generalAssingSelfExp: varRef (ADD|MIN|MUlTIP|DIV)   ASSIN expression;
+
 varAttribute :PERIOD Identifier   #varAttributeGeneral
              | VIRTUAL Identifier #varAttributeVirtual
              |LEFT_SQBR expression RIGHT_SQBR #varAttributeArrayOrMap

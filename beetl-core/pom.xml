@@ -4,7 +4,7 @@
 
 	<groupId>com.ibeetl</groupId>
 	<artifactId>beetl</artifactId>
-	<version>2.9.6</version>
+	<version>3.0.0.M1</version>
 	<packaging>jar</packaging>
 	<name>com.ibeetl:beetl</name>
 	<description>java template language</description>
@@ -36,13 +36,7 @@
 			<artifactId>antlr4-runtime</artifactId>
 			<version>4.7.2</version>
 		</dependency>
-		<dependency>
-			<groupId>com.ibeetl</groupId>
-			<artifactId>btjson</artifactId>
-			<scope>provided</scope>
-			<version>0.94</version>
-		</dependency>
-		
+
 		
 		<dependency>
 		    <groupId>com.jfinal</groupId>
@@ -190,13 +184,13 @@
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm</artifactId>
 			<version>5.2</version>
-			<scope>provided</scope>
+			<!--<scope>provided</scope>-->
 		</dependency>
 		<dependency>
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm-commons</artifactId>
 			<version>5.2</version>
-			<scope>provided</scope>
+			<!--<scope>provided</scope>-->
 		</dependency>
 	</dependencies>
 	<build>
@@ -265,20 +259,20 @@
 			</plugin>
 
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.5</version>
-				<executions>
-					<execution>
-						<id>sign-artifacts</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+			<!--<plugin>-->
+				<!--<groupId>org.apache.maven.plugins</groupId>-->
+				<!--<artifactId>maven-gpg-plugin</artifactId>-->
+				<!--<version>1.5</version>-->
+				<!--<executions>-->
+					<!--<execution>-->
+						<!--<id>sign-artifacts</id>-->
+						<!--<phase>verify</phase>-->
+						<!--<goals>-->
+							<!--<goal>sign</goal>-->
+						<!--</goals>-->
+					<!--</execution>-->
+				<!--</executions>-->
+			<!--</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>

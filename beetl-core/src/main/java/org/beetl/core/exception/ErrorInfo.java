@@ -1,6 +1,6 @@
 /*
  [The "BSD license"]
- Copyright (c) 2011-2014 Joel Li (李家智)
+ Copyright (c) 2011-2019  闲大赋 (李家智)
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -94,7 +94,7 @@ public class ErrorInfo
 				concat("解析HTML标签出错", BeetlException.PARSER_HTML_TAG_ERROR));
 
 		errorLocalMap.put(BeetlException.PARSER_UNKNOW_ERROR, concat("语法错误", BeetlException.PARSER_UNKNOW_ERROR));
-		errorLocalMap.put(BeetlException.PARSER_VIABLE_ERROR, concat("语法错误", BeetlException.PARSER_VIABLE_ERROR));
+		errorLocalMap.put(BeetlException.PARSER_VIABLE_ERROR, concat("语法错误，无法继续解析模板", BeetlException.PARSER_VIABLE_ERROR));
 		errorLocalMap.put(BeetlException.PARSER_MISS_ERROR, concat("缺少符号", BeetlException.PARSER_MISS_ERROR));
 		errorLocalMap.put(BeetlException.PARSER_PREDICATE_ERROR, concat("语法错误", BeetlException.PARSER_PREDICATE_ERROR));
 		errorLocalMap.put(BeetlException.TYPE_SEARCH_ERROR,

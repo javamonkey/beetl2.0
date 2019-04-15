@@ -1,6 +1,6 @@
 /*
  [The "BSD license"]
- Copyright (c) 2011-2013 Joel Li (李家智)
+ Copyright (c) 2011-2013  闲大赋 (李家智)
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -48,8 +48,10 @@ public class DateFormat implements Format
 
 	public Object format(Object data, String pattern)
 	{
-		if (data == null)
+		if (data == null){
 			return null;
+		}
+
 		if (Date.class.isAssignableFrom(data.getClass()))
 		{
 			SimpleDateFormat sdf = null;

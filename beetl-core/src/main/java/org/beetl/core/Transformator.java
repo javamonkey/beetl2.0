@@ -326,10 +326,15 @@ public class Transformator
 				script.append(",");
 			}
 
-			script.setLength(script.length() - 1);
+
+
 			if (map.size() != 0)
 			{
+				script.append(html.getHtmlColMapAsString());
 				script.append("}");
+			}else{
+				//去掉逗号
+				script.setLength(script.length()-1);
 			}
 
 			if (html.hasVarBinding)

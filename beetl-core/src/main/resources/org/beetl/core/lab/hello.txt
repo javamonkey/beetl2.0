@@ -1,0 +1,3 @@
+<#form name="12" var="age">
+${age}
+</#form>

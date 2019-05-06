@@ -27,10 +27,7 @@
  */
 package org.beetl.core;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 用于解析htmltag，转化成宏调用
@@ -50,6 +47,8 @@ class HTMLTagParser
 	Map<String, Character> quatMap = new LinkedHashMap<String, Character>();
 	//支持换行，记录属性后是否有换行。
 	List<String> crKey = new ArrayList<String>(1);
+	//记录了所有的转化后的属性名字和原来的html标签属性名字
+	Map<String,String> htmlAttributeNameMap = new HashMap<String,String>();
 	boolean hasVarBinding = false;
 	String varBidingStr = null;
 	// -1非期望
@@ -201,8 +200,9 @@ class HTMLTagParser
 			return;
 		}
 
-		lastKey = this.subString();
-		lastKey = convertAttr(lastKey);
+		String colName = this.subString();
+		lastKey = convertAttr(colName);
+		this.htmlAttributeNameMap.put(lastKey,colName);
 		this.t_consume();
 		this.stripSpace();
 		if (match('='))
@@ -258,7 +258,8 @@ class HTMLTagParser
 			
 			
 		}
-		return sb.toString();
+		String varName = sb.toString();
+		return varName;
 	}
 	
 
@@ -572,6 +573,22 @@ class HTMLTagParser
 		}
 	}
 
+	public  String getHtmlColMapAsString(){
+		if(this.htmlAttributeNameMap.isEmpty()){
+			return "$cols:{}";
+		}
+		StringBuilder sb = new StringBuilder("$cols:{");
+		for(Map.Entry<String,String> entry:this.htmlAttributeNameMap.entrySet()){
+			String varName = entry.getKey();
+			String colName = entry.getValue();
+			sb.append("'").append(entry.getKey()).append("':'").append(colName).append("',");
+
+		}
+
+		sb.setCharAt(sb.length()-1,'}');
+		return sb.toString();
+	}
+
 	private boolean isDigit(char c)
 	{
 		return c > '0' && c < '9';
@@ -609,7 +626,7 @@ class HTMLTagParser
 
 	public static void main(String[] args)
 	{
-		String input = "<#bbsListTag a='1' \nc='${ kk }' var='page,dd' >hello ${a}</#bbsListTag>";
+		String input = "<#bbsListTag  >hello ${a}</#bbsListTag>";
 		HTMLTagParser htmltag = new HTMLTagParser(input.toCharArray(), 2, "var", true);
 		htmltag.parser();
 		System.out.println(htmltag.getTagName());
@@ -617,6 +634,9 @@ class HTMLTagParser
 		System.out.println(htmltag.isEmptyTag());
 		System.out.println(htmltag.hasVarBinding);
 		System.out.println(htmltag.varBidingStr);
+		System.out.println(htmltag.htmlAttributeNameMap);
+		System.out.println(htmltag.getHtmlColMapAsString());
+
 
 	}
 }
